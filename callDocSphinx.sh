@@ -1,6 +1,6 @@
 PROJECT='filesysobjects'
-VERSION="0.0.2"
-RELEASE="0.0.2"
+VERSION="0.0.3"
+RELEASE="0.0.3"
 NICKNAME="Yggdrasil"
 AUTHOR='Arno-Can Uestuensoez'
 COPYRIGHT='Copyright (C) 2010,2011,2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez'
@@ -103,6 +103,7 @@ EOF
 #
 cat docsrc/pyfilesysobjects.rst > ${OUTDIR}/apidoc/sphinx/pyfilesysobjects.rst
 cat docsrc/filesysobjects.rst > ${OUTDIR}/apidoc/sphinx/filesysobjects.rst
+cat docsrc/pysourceinfo.rst > ${OUTDIR}/apidoc/sphinx/pysourceinfo.rst
 #
 
 #

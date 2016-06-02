@@ -12,30 +12,30 @@ __uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
 __docformat__ = "restructuredtext en"
 
 import unittest
-import os,sys
+import os
 
 #
 # set search for the call of 'myscript.sh'
 from filesysobjects.FileSysObjects import setUpperTreeSearchPath
 setUpperTreeSearchPath(None,'UseCases')
 
-import filesysobjects.FileSysObjects
+import filesysobjects.PySourceInfo
 
 #
 #######################
 #
 
 def _funcDummyLvl0(sx=2):
-    return (filesysobjects.FileSysObjects.getCallerName(sx), None, )
+    return (filesysobjects.PySourceInfo.getCallerName(sx), None, )
 
 def _funcDummyLvl1(sx=1):
-    return (filesysobjects.FileSysObjects.getCallerName(sx), _funcDummyLvl0(sx+1), )
+    return (filesysobjects.PySourceInfo.getCallerName(sx), _funcDummyLvl0(sx+1), )
 
 def _funcDummyLvl2(sx=1):
-    return (filesysobjects.FileSysObjects.getCallerName(sx), _funcDummyLvl1(sx+1), )
+    return (filesysobjects.PySourceInfo.getCallerName(sx), _funcDummyLvl1(sx+1), )
 
 def _funcDummyLvl3(sx=1):
-    return (filesysobjects.FileSysObjects.getCallerName(sx), _funcDummyLvl2(sx+1), )
+    return (filesysobjects.PySourceInfo.getCallerName(sx), _funcDummyLvl2(sx+1), )
 
 
 class CallUnits(unittest.TestCase):

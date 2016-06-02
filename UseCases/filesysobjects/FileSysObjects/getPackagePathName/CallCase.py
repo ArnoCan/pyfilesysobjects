@@ -18,10 +18,12 @@ _4test=sys.path
 for i in sys.path:
     print("4TEST: "+str(i))
 
-import filesysobjects.FileSysObjects
+import filesysobjects.PySourceInfo
+
+
 #
 # prefix from unchanged sys.path
-mySysPathPrefixRaw = filesysobjects.FileSysObjects.getPythonPathPrefixMatchFromSysPath(__file__)
+mySysPathPrefixRaw = filesysobjects.PySourceInfo.getPythonPathPrefixMatchFromSysPath(__file__)
 
 
 #
@@ -44,35 +46,35 @@ class CallUnits(unittest.TestCase):
     def testCase000(self):
         global mySysPathPrefix
 
-        ppn = filesysobjects.FileSysObjects.getCallerPackagePathName()
+        ppn = filesysobjects.PySourceInfo.getCallerPackagePathName()
         assert ppn == None
         pass
 
     def testCase001(self):
         global mySysPathPrefix
 
-        ppn = filesysobjects.FileSysObjects.getCallerPackagePathName(1)
+        ppn = filesysobjects.PySourceInfo.getCallerPackagePathName(1)
         assert ppn == None
         pass
 
     def testCase002(self):
         global mySysPathPrefix
 
-        ppn = filesysobjects.FileSysObjects.getCallerPackagePathName(2)
+        ppn = filesysobjects.PySourceInfo.getCallerPackagePathName(2)
         assert ppn == "/usr/lib64/python2.7/unittest/"
         pass
 
     def testCase003(self):
         global mySysPathPrefix
 
-        ppn = filesysobjects.FileSysObjects.getCallerPackagePathName(3)
+        ppn = filesysobjects.PySourceInfo.getCallerPackagePathName(3)
         assert ppn == "/usr/lib64/python2.7/unittest/"
         pass
 
     def testCase009(self):
         global mySysPathPrefix
 
-        ppn = filesysobjects.FileSysObjects.getCallerPackagePathName(9)
+        ppn = filesysobjects.PySourceInfo.getCallerPackagePathName(9)
         assert ppn == "/usr/lib/python2.7/site-packages/unittest2/"
         pass
 

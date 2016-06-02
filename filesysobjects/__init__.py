@@ -16,5 +16,6 @@ __docformat__ = "restructuredtext en"
 __package__ = 'filesysobjects'
 __all__=[
     "FileSysObjects",
+    "PySourceInfo",
 ]
 

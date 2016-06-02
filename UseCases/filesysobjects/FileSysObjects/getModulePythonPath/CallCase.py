@@ -12,9 +12,9 @@ __uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
 __docformat__ = "restructuredtext en"
 
 import unittest
-import os,sys
+import os
 
-import filesysobjects.FileSysObjects
+import filesysobjects.PySourceInfo
 
 
 #
@@ -28,17 +28,17 @@ class CallUnits(unittest.TestCase):
     output=False
 
     def testCase002(self):
-        f2 = filesysobjects.FileSysObjects.getCallerModuleFilePathName(2)
+        f2 = filesysobjects.PySourceInfo.getCallerModuleFilePathName(2)
 
-        p0 = filesysobjects.FileSysObjects.getPythonPathPrefixMatchFromSysPath(f2)
-        p1 = filesysobjects.FileSysObjects.getCallerModulePythonPath(2)
+        p0 = filesysobjects.PySourceInfo.getPythonPathPrefixMatchFromSysPath(f2)
+        p1 = filesysobjects.PySourceInfo.getCallerModulePythonPath(2)
         assert p0 == p1
 
     def testCase003(self):
-        f3 = filesysobjects.FileSysObjects.getCallerModuleFilePathName(2)
+        f3 = filesysobjects.PySourceInfo.getCallerModuleFilePathName(2)
 
-        p0 = filesysobjects.FileSysObjects.getPythonPathPrefixMatchFromSysPath(f3)
-        p1 = filesysobjects.FileSysObjects.getCallerModulePythonPath(3)
+        p0 = filesysobjects.PySourceInfo.getPythonPathPrefixMatchFromSysPath(f3)
+        p1 = filesysobjects.PySourceInfo.getCallerModulePythonPath(3)
         assert p0 == p1
 
 

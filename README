@@ -21,7 +21,11 @@ For the compliance tests extracted from IETF and ECMA standards refer to the dir
  
 **Downloads**:
 
-* Sourceforge.net: https://sourceforge.net/projects/pyfilesysobjects/files/
+* Sourceforge.net: https://sourceforge.net/projects/pyfilesysobjetcs/files/
+  
+**REMARK**: The pathname on sourceforge.net is a little odd for now
+  because this could not changed on-the-fly: 'filesysobjeTCcs' instead 'filesysobjeCTs' 
+
 
 * Github: https://github.com/ArnoCan/pyfilesysobjects/
 
@@ -104,7 +108,7 @@ VERSIONS and RELEASES
 * RELEASE: 00.05.00x - Production: Various performance enhancements.
 
 
-**Current Release: 00.00.002 - Pre-Alpha:**
+**Current Release: 00.00.004 - Pre-Alpha:**
 
 Major Changes:
 

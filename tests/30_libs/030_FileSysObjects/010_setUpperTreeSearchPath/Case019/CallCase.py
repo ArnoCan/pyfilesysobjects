@@ -5,7 +5,7 @@ from __future__ import absolute_import
 import unittest
 import os
 
-from filesysobjects.FileSysObjects import getPythonPathModuleRel
+from filesysobjects.PySourceInfo import getPythonPathModuleRel
 from filesysobjects.FileSysObjects import setUpperTreeSearchPath
 
 

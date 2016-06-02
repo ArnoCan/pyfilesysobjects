@@ -12,30 +12,30 @@ __uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
 __docformat__ = "restructuredtext en"
 
 import unittest
-import os,sys
+import os
 
 #
 # set search for the call of 'myscript.sh'
 from filesysobjects.FileSysObjects import setUpperTreeSearchPath
 setUpperTreeSearchPath(None,'UseCases')
 
-import filesysobjects.FileSysObjects
+import filesysobjects.PySourceInfo
 
 #
 #######################
 #
 
 def _funcDummyLvl0(sx=1):
-    return (filesysobjects.FileSysObjects.getCallerModuleName(sx), None, )
+    return (filesysobjects.PySourceInfo.getCallerModuleName(sx), None, )
 
 def _funcDummyLvl1(sx=1):
-    return (filesysobjects.FileSysObjects.getCallerModuleName(sx), _funcDummyLvl0(sx+1), )
+    return (filesysobjects.PySourceInfo.getCallerModuleName(sx), _funcDummyLvl0(sx+1), )
 
 def _funcDummyLvl2(sx=1):
-    return (filesysobjects.FileSysObjects.getCallerModuleName(sx), _funcDummyLvl1(sx+1), )
+    return (filesysobjects.PySourceInfo.getCallerModuleName(sx), _funcDummyLvl1(sx+1), )
 
 def _funcDummyLvl3(sx=1):
-    return (filesysobjects.FileSysObjects.getCallerModuleName(sx), _funcDummyLvl2(sx+1), )
+    return (filesysobjects.PySourceInfo.getCallerModuleName(sx), _funcDummyLvl2(sx+1), )
 
 
 class CallUnits(unittest.TestCase):
@@ -45,7 +45,7 @@ class CallUnits(unittest.TestCase):
     output=False
 
     def testCase000(self):
-        ret = filesysobjects.FileSysObjects.getCallerModuleName()
+        ret = filesysobjects.PySourceInfo.getCallerModuleName()
         retx =  'UseCases.filesysobjects.FileSysObjects.getModuleName.CallCase'
         assert retx == ret
 

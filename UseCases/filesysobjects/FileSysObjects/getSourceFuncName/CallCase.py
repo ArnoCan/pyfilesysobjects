@@ -12,14 +12,14 @@ __uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
 __docformat__ = "restructuredtext en"
 
 import unittest
-import os,sys
+import os
 
 #
 # set search for the call of 'myscript.sh'
 from filesysobjects.FileSysObjects import setUpperTreeSearchPath
 setUpperTreeSearchPath(None,'UseCases')
 
-import filesysobjects.FileSysObjects
+import filesysobjects.PySourceInfo
 
 #
 #######################
@@ -32,27 +32,27 @@ class CallUnits(unittest.TestCase):
     output=False
 
     def testCase000(self):
-        ret = filesysobjects.FileSysObjects.getSourceFuncName()
+        ret = filesysobjects.PySourceInfo.getSourceFuncName()
         retx = 'testCase000'
         assert retx == ret
 
     def testCase001(self):
-        ret = filesysobjects.FileSysObjects.getSourceFuncName(1)
+        ret = filesysobjects.PySourceInfo.getSourceFuncName(1)
         retx = 'testCase001'
         assert retx == ret
 
     def testCase002(self):
-        ret = filesysobjects.FileSysObjects.getSourceFuncName(2)
+        ret = filesysobjects.PySourceInfo.getSourceFuncName(2)
         retx = 'run'
         assert retx == ret
 
     def testCase003(self):
-        ret = filesysobjects.FileSysObjects.getSourceFuncName(3)
+        ret = filesysobjects.PySourceInfo.getSourceFuncName(3)
         retx = '__call__'
         assert retx == ret
 
     def testCase004(self):
-        ret = filesysobjects.FileSysObjects.getSourceFuncName(4)
+        ret = filesysobjects.PySourceInfo.getSourceFuncName(4)
         retx = '_wrapped_run'
         assert retx == ret
 

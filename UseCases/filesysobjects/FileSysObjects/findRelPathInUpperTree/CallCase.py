@@ -12,14 +12,15 @@ __uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
 __docformat__ = "restructuredtext en"
 
 import unittest
-import os,sys
+import os
 
 # #
 # # set search for the call of 'myscript.sh'
 # from filesysobjects.FileSysObjects import setUpperTreeSearchPath
 # setUpperTreeSearchPath(None,'UseCases')
 
-from filesysobjects.FileSysObjects import findRelPathInUpperTree,getPythonPathModuleRel
+from filesysobjects.FileSysObjects import findRelPathInUpperTree
+from filesysobjects.PySourceInfo import getPythonPathModuleRel
 
 
 #

@@ -1,6 +1,6 @@
-"""Distribute 'pyfilesysobjects', a generic unit test wrapper for commandline interfaces.
+"""Distribute 'filesysobjects', a generic unit test wrapper for commandline interfaces.
 
-   Installs 'pyfilesysobjects', adds/modifies the following helper features to standard
+   Installs 'filesysobjects', adds/modifies the following helper features to standard
    'setuptools' options.
 
    Args:
@@ -21,7 +21,7 @@
       --help-filesysobjects: Displays this help.
 
    Returns:
-      Results for success in installed 'pyfilesysobjects'.
+      Results for success in installed 'filesysobjects'.
 
    Raises:
       ffs.
@@ -41,7 +41,7 @@ __author__ = 'Arno-Can Uestuensoez'
 __author_email__ = 'acue_sf2@sourceforge.net'
 __license__ = "Artistic-License-2.0 + Forced-Fairplay-Constraints"
 __copyright__ = "Copyright (C) 2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez"
-__version__ = '0.0.2'
+__version__ = '0.0.4'
 __uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
 
 
@@ -185,7 +185,7 @@ if '--help-filesysobjects' in sys.argv:
 if '--exit' in sys.argv:
     sys.exit(0)
 
-# if pyfilesysobjects-specials only
+# if filesysobjects-specials only
 if len(sys.argv)==1:
     sys.exit(exit_code)
 
@@ -241,7 +241,7 @@ _package_data = {
             ],
 }
 
-#_download_url="https://github.com/ArnoCan/pyfilesysobjects/"
+#_download_url="https://github.com/ArnoCan/filesysobjects/"
 _download_url="https://sourceforge.net/projects/pyfilesysobjects/files/"
 
 _url='https://sourceforge.net/projects/pyfilesysobjects/'

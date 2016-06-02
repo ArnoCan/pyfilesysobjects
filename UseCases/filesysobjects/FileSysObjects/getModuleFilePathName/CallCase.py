@@ -12,14 +12,14 @@ __uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
 __docformat__ = "restructuredtext en"
 
 import unittest
-import os,sys
+import os
 
 #
 # set search for the call of 'myscript.sh'
 from filesysobjects.FileSysObjects import setUpperTreeSearchPath
 setUpperTreeSearchPath(None,'UseCases')
 
-import filesysobjects.FileSysObjects
+import filesysobjects.PySourceInfo
 
 #
 #######################
@@ -33,12 +33,12 @@ class CallUnits(unittest.TestCase):
 
     def testCase000(self):
         p0 = __file__
-        p1 = filesysobjects.FileSysObjects.getCallerModuleFilePathName()
+        p1 = filesysobjects.PySourceInfo.getCallerModuleFilePathName()
         assert p0 == p1
 
     def testCase001(self):
         p0 = __file__
-        p1 = filesysobjects.FileSysObjects.getCallerModuleFilePathName(1)
+        p1 = filesysobjects.PySourceInfo.getCallerModuleFilePathName(1)
         assert p0 == p1
 
 

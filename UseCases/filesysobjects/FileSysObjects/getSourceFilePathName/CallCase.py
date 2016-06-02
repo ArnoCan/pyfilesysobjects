@@ -12,14 +12,14 @@ __uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
 __docformat__ = "restructuredtext en"
 
 import unittest
-import os,sys
+import os
 
 #
 # set search for the call of 'myscript.sh'
 from filesysobjects.FileSysObjects import setUpperTreeSearchPath
 setUpperTreeSearchPath(None,'UseCases')
 
-import filesysobjects.FileSysObjects
+import filesysobjects.PySourceInfo
 
 #
 #######################
@@ -32,37 +32,37 @@ class CallUnits(unittest.TestCase):
     output=False
 
     def testCase000(self):
-        f0 = filesysobjects.FileSysObjects.getSourceFilePathName()
-        pp0 = filesysobjects.FileSysObjects.getCallerModulePythonPath()
-        ret = filesysobjects.FileSysObjects.getPythonPathModuleRel(f0,[pp0])
+        f0 = filesysobjects.PySourceInfo.getSourceFilePathName()
+        pp0 = filesysobjects.PySourceInfo.getCallerModulePythonPath()
+        ret = filesysobjects.PySourceInfo.getPythonPathModuleRel(f0,[pp0])
         retx = 'UseCases/filesysobjects/FileSysObjects/getSourceFilePathName/CallCase.py'
         assert retx == ret
 
     def testCase001(self):
-        f0 = filesysobjects.FileSysObjects.getSourceFilePathName(1)
-        pp0 = filesysobjects.FileSysObjects.getCallerModulePythonPath(1)
-        ret = filesysobjects.FileSysObjects.getPythonPathModuleRel(f0,[pp0])
+        f0 = filesysobjects.PySourceInfo.getSourceFilePathName(1)
+        pp0 = filesysobjects.PySourceInfo.getCallerModulePythonPath(1)
+        ret = filesysobjects.PySourceInfo.getPythonPathModuleRel(f0,[pp0])
         retx = 'UseCases/filesysobjects/FileSysObjects/getSourceFilePathName/CallCase.py'
         assert retx == ret
 
     def testCase002(self):
-        f0 = filesysobjects.FileSysObjects.getSourceFilePathName(2)
-        pp0 = filesysobjects.FileSysObjects.getCallerModulePythonPath(2)
-        ret = filesysobjects.FileSysObjects.getPythonPathModuleRel(f0,[pp0])
+        f0 = filesysobjects.PySourceInfo.getSourceFilePathName(2)
+        pp0 = filesysobjects.PySourceInfo.getCallerModulePythonPath(2)
+        ret = filesysobjects.PySourceInfo.getPythonPathModuleRel(f0,[pp0])
         retx = 'unittest/case.py'
         assert retx == ret
 
     def testCase003(self):
-        f0 = filesysobjects.FileSysObjects.getSourceFilePathName(3)
-        pp0 = filesysobjects.FileSysObjects.getCallerModulePythonPath(3)
-        ret = filesysobjects.FileSysObjects.getPythonPathModuleRel(f0,[pp0])
+        f0 = filesysobjects.PySourceInfo.getSourceFilePathName(3)
+        pp0 = filesysobjects.PySourceInfo.getCallerModulePythonPath(3)
+        ret = filesysobjects.PySourceInfo.getPythonPathModuleRel(f0,[pp0])
         retx = 'unittest/case.py'
         assert retx == ret
 
     def testCase004(self):
-        f0 = filesysobjects.FileSysObjects.getSourceFilePathName(4)
-        pp0 = filesysobjects.FileSysObjects.getCallerModulePythonPath(4)
-        ret = filesysobjects.FileSysObjects.getPythonPathModuleRel(f0,[pp0])
+        f0 = filesysobjects.PySourceInfo.getSourceFilePathName(4)
+        pp0 = filesysobjects.PySourceInfo.getCallerModulePythonPath(4)
+        ret = filesysobjects.PySourceInfo.getPythonPathModuleRel(f0,[pp0])
         retx = 'unittest2/suite.py'
         assert retx == ret
 

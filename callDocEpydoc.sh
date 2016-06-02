@@ -1,6 +1,6 @@
 PROJECT='epyunit'
-VERSION="0.0.1"
-RELEASE="0.0.1"
+VERSION="0.0.3"
+RELEASE="0.0.3"
 NICKNAME="Dromi"
 AUTHOR='Arno-Can Uestuensoez'
 COPYRIGHT='Copyright (C) 2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez'

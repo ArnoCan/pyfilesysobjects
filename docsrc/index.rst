@@ -1,26 +1,29 @@
 
-.. pyfilesysobjects documentation master file, created by
+.. filesysobjects documentation master file, created by
    sphinx-quickstart on `date`.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-'pyfilesysobjects' - Filesystemobjects
-======================================
+'filesysobjects' - Filesystem Objects
+=====================================
 
-The 'pyfilesysobjects' package provides utilities for the application of
+The 'filesysobjects' package provides utilities for the application of
 basic object oriented features onto filesystems.
 This includes basic coverage of the 'inspect' package for the simplified
 gathering of information on packages, modules, and files.
 
 The provided feature modules comprise the following list.
-For code examples refer to 'pyfilesysobjects.UseCases'.
+For code examples refer to 'filesysobjects.UseCases'.
 
 * `FileSysObjects <pyfilesysobjects.html>`_ : Manage branches of filesystem structures with support of basic file inheritance - *filesysobjects.FileSysObjects*.
+
+* `PySourceInfo <pysourceinfo.html>`_ : Provides runtime type information information on Python source components: packages, modules, and callers  - *filesysobjects.PySourceInfo*.
 
 .. toctree::
    :maxdepth: 3
 
    filesysobjects
+   pysourceinfo
    UseCases
    tests
 
@@ -28,7 +31,7 @@ For code examples refer to 'pyfilesysobjects.UseCases'.
 
   For help on extensions to standard options call onlinehelp:: 
 
-    python setup.py --help-pyfilesysobjects
+    python setup.py --help-filesysobjects
 
 
 
@@ -45,11 +48,11 @@ Resources
 
 For available downloads refer to:
 
-* Python Package Index: https://pypi.python.org/pypi/pyfilesysobjects
+* Python Package Index: https://pypi.python.org/pypi/filesysobjects
 
-* Sourceforge.net: https://sourceforge.net/projects/pyfilesysobjects/
+* Sourceforge.net: https://sourceforge.net/projects/filesysobjects/
 
-* github.com: https://github.com/ArnoCan/pyfilesysobjects/
+* github.com: https://github.com/ArnoCan/filesysobjects/
 
 For Licenses refer to enclosed documents:
 
