@@ -1,7 +1,7 @@
-PROJECT='epyunit'
-VERSION="0.0.3"
-RELEASE="0.0.3"
-NICKNAME="Dromi"
+PROJECT='pyfilesysobjects'
+VERSION="0.0.6"
+RELEASE="0.0.6"
+NICKNAME="Yggdrasil"
 AUTHOR='Arno-Can Uestuensoez'
 COPYRIGHT='Copyright (C) 2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez'
 LICENSE='Artistic-License-2.0 + Forced-Fairplay-Constraints'
@@ -23,7 +23,7 @@ export PYTHONPATH=$PYTHONPATH:$PWD:${MYPATH}
 
 # source entities
 FILEDIRS=""
-FILEDIRS="$FILEDIRS `find ${INDIR}epyunit -type f -name '*.py'`"
+FILEDIRS="$FILEDIRS `find ${INDIR}pyfilesysobjects -type f -name '*.py'`"
 FILEDIRS="$FILEDIRS `find ${INDIR}bin -type f -name '*.py'`"
 
 CALL=epydoc

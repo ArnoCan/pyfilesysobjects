@@ -14,10 +14,10 @@ __docformat__ = "restructuredtext en"
 import unittest
 import os
 
-# #
-# # set search for the call of 'myscript.sh'
-# from filesysobjects.FileSysObjects import setUpperTreeSearchPath
-# setUpperTreeSearchPath(None,'UseCases')
+#
+# set search for the call of 'myscript.sh'
+from filesysobjects.FileSysObjects import setUpperTreeSearchPath
+setUpperTreeSearchPath(None,'UseCases')
 
 from filesysobjects.FileSysObjects import findRelPathInUpperTree
 from filesysobjects.PySourceInfo import getPythonPathModuleRel
@@ -34,21 +34,21 @@ class CallUnits(unittest.TestCase):
     output=False
 
     def testCase000(self):
-        epy = findRelPathInUpperTree("test00")
+        epy = findRelPathInUpperTree("test00",os.path.dirname(__file__),'UseCases')
         epy = getPythonPathModuleRel(epy,[os.path.abspath(os.path.dirname(__file__)+'../../../../..')])
         x = "UseCases/filesysobjects/FileSysObjects/test00"
         assert epy == x
         pass
 
     def testCase001(self):
-        epy = findRelPathInUpperTree("test01")
+        epy = findRelPathInUpperTree("test01",os.path.dirname(__file__),'UseCases')
         epy = getPythonPathModuleRel(epy,[os.path.abspath(os.path.dirname(__file__)+'../../../../..')])
         x = "UseCases/filesysobjects/test01"
         assert epy == x
         pass
 
     def testCase002(self):
-        epy = findRelPathInUpperTree("test02")
+        epy = findRelPathInUpperTree("test02",os.path.dirname(__file__),'UseCases')
         epy = getPythonPathModuleRel(epy,[os.path.abspath(os.path.dirname(__file__)+'../../../../..')])
         x = "UseCases/test02"
         assert epy == x

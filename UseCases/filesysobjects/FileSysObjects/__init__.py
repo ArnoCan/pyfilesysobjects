@@ -10,7 +10,7 @@
 
 * getModulePathName - Get the pathname of a module. 
 
-* getSourceFilePathName - Get the source filepathname of the caller. 
+* getCallerFilePathName - Get the source filepathname of the caller. 
 
 * getSourceFuncName - Get the function name of the caller. 
 

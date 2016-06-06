@@ -15,7 +15,7 @@ gathering of information on packages, modules, and files.
 The provided feature modules comprise the following list.
 For code examples refer to 'filesysobjects.UseCases'.
 
-* `FileSysObjects <pyfilesysobjects.html>`_ : Manage branches of filesystem structures with support of basic file inheritance - *filesysobjects.FileSysObjects*.
+* `FileSysObjects <filesysobjects.html>`_ : Manage branches of filesystem structures with support of basic file inheritance - *filesysobjects.FileSysObjects*.
 
 * `PySourceInfo <pysourceinfo.html>`_ : Provides runtime type information information on Python source components: packages, modules, and callers  - *filesysobjects.PySourceInfo*.
 

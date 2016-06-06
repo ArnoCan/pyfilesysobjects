@@ -50,7 +50,7 @@ from __future__ import absolute_import
 __author__ = 'Arno-Can Uestuensoez'
 __license__ = "Artistic-License-2.0 + Forced-Fairplay-Constraints"
 __copyright__ = "Copyright (C) 2010-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez"
-__version__ = '0.0.3'
+__version__ = '0.0.6'
 __uuid__='9de52399-7752-4633-9fdc-66c87a9200b8'
 
 __docformat__ = "restructuredtext en"
@@ -62,11 +62,10 @@ if version < '2.7': # pragma: no cover
 
 import inspect 
 
-
 class PySourceInfoException(Exception):
     pass
 
-def getSourceFilePathName(spos=1):
+def getCallerFilePathName(spos=1):
     """Returns the pathname of caller source file.
 
     Args:
@@ -80,7 +79,21 @@ def getSourceFilePathName(spos=1):
     """
     return inspect.stack()[spos][1]
 
-def getSourceFuncName(spos=1):
+def getCallerFileName(spos=1):
+    """Returns the pathname of caller source file.
+
+    Args:
+        spos: Start position in the stack.
+
+    Returns:
+        Returns the filename.
+
+    Raises:
+        passed through exceptions:
+    """
+    return os.path.dirname(getCallerFilePathName(spos))
+
+def getCallerFuncName(spos=1):
     """Returns the name of caller function.
 
     Args:
@@ -94,7 +107,7 @@ def getSourceFuncName(spos=1):
     """
     return inspect.stack()[spos][3]
 
-def getSourceLinenumber(spos=1):
+def getCallerLinenumber(spos=1):
     """Returns the line number of caller.
 
     Args:
@@ -148,6 +161,20 @@ def getCallerNameOID(spos=1):
         _coid += "." + str(_pf.f_code.co_name)
     del _pf
     return _coid
+
+def getCallerPackageFilePathName(spos=1):
+    """Returns the name of the package containing the caller.
+
+    Args:
+        spos: Start position in the stack.
+
+    Returns:
+        Returns the package name.
+
+    Raises:
+        passed through exceptions:
+    """
+    return os.path.dirname(getCallerModuleFilePathName(spos+1))
 
 def getCallerPackageName(spos=1):
     """Returns the name of the package containing the caller.
@@ -205,20 +232,6 @@ def getCallerPackagePythonPath(spos=1):
     """
     return os.path.dirname(getCallerPackagePathName(spos+1))
 
-def getCallerPackageFilePathName(spos=1):
-    """Returns the name of the package containing the caller.
-
-    Args:
-        spos: Start position in the stack.
-
-    Returns:
-        Returns the package name.
-
-    Raises:
-        passed through exceptions:
-    """
-    return os.path.dirname(getCallerModuleFilePathName(spos+1))
-
 def getCallerModuleFilePathName(spos=1):
     """Returns the filepathname of the module.
 
@@ -260,6 +273,20 @@ def getCallerModuleName(spos=1):
     if module:
         return module.__name__
 
+def getCallerModulePathName(spos=1):
+    """Returns the pathname of the module.
+
+    Args:
+        m: Module name.
+
+    Returns:
+        Returns the filepathname of module.
+
+    Raises:
+        passed through exceptions:
+    """
+    return os.path.dirname(getCallerModuleFilePathName(spos+1))
+
 def getCallerModulePythonPath(spos=1):
     """Returns the prefix item from sys.path used for the caller module.
 
@@ -275,68 +302,9 @@ def getCallerModulePythonPath(spos=1):
     _mn = getCallerModuleName(spos+1).split('.')[:-1]
     _mn = os.sep.join(_mn)
     _r = getCallerModulePathName(spos+1).split(_mn)[0]
-    if _r[-1] != os.sep: # was rel for split
-        _r += os.sep
-    return _r    
-
-def getCallerModulePathName(spos=1):
-    """Returns the pathname of the module.
-
-    Args:
-        m: Module name.
-
-    Returns:
-        Returns the filepathname of module.
-
-    Raises:
-        passed through exceptions:
-    """
-    return os.path.dirname(getCallerModuleFilePathName(spos+1))+os.sep
-
-def getPythonPathPrefixMatchFromSysPath(pname,plist=None):
-    """Gets the first matching prefix from sys.path.
-    
-    Foreseen to be used for canonical base reference in unit tests.
-    This enables in particular for casual tests where absolute pathnames
-    are required.
-
-    Args:
-        pname: Pathname.
-
-    Returns:
-        Returns the first matching path prefix from sys.path.
-
-    Raises:
-        passed through exceptions:
-    """
-    if not plist:
-        plist = sys.path
-    for sp in plist:
-        if pname.startswith(sp):
-            if sp and sp[-1] == os.sep:
-                return sp
-            return sp+os.sep
-
-def getPythonPathModuleRel(fpname,plist=None):
-    """Returns the relative path name of the filepathname.
-
-    Args:
-        fpname: The filepathname.
-
-    Returns:
-        Returns the path prefix for fpname.
-
-    Raises:
-        passed through exceptions:
-    """
-    if not plist:
-        plist = sys.path
-    for _sp in plist:
-        if fpname.startswith(_sp):
-            _r = fpname.replace(_sp,"")
-            if _r and _r[0] == os.sep:
-                return _r[1:]
-            return _r
+    if _r[-1] == os.sep:
+        return _r[:-1]
+    return _r
 
 def getPythonPathForPackage(pname,plist=None):
     """Returns the item from sys.path for package.
@@ -360,3 +328,68 @@ def getPythonPathForPackage(pname,plist=None):
         _pp = _sp.split(pname)
         if len(_pp) > 1:
             return _pp[0]
+
+def getPythonPathModuleRel(fpname,plist=None):
+    """Returns the relative path name of the filepathname.
+
+    Args:
+        fpname: The filepathname.
+
+    Returns:
+        Returns the path prefix for fpname.
+
+    Raises:
+        passed through exceptions:
+    """
+    if not plist:
+        plist = sys.path
+    _fp = os.path.normpath(fpname) # for now dirs with terminating os.sep
+    
+    for _sp in plist:
+        _sp = os.path.normpath(_sp)
+        if _fp.startswith(_sp):
+            _r = _fp.replace(_sp,"")
+            if _r and _r[0] == os.sep:
+                return _r[1:]
+            return _r
+
+def getPythonPathPrefixMatchFromSysPath(pname,plist=None):
+    """Gets the first matching prefix from sys.path.
+    
+    Foreseen to be used for canonical base reference in unit tests.
+    This enables in particular for casual tests where absolute pathnames
+    are required.
+
+    Args:
+        pname: Pathname.
+
+    Returns:
+        Returns the first matching path prefix from sys.path.
+
+    Raises:
+        passed through exceptions:
+    """
+    if not plist:
+        plist = sys.path
+    for sp in plist:
+        if pname.startswith(sp):
+            return sp
+
+def getPythonPathRel(fpname,plist=None):
+    """Returns the relative path name of the filepathname to the first matched prefix from plist.
+
+    Args:
+        fpname: The filepathname.
+
+    Returns:
+        Returns the path prefix for fpname.
+
+    Raises:
+        passed through exceptions:
+    """
+    if not plist:
+        plist = sys.path
+    for _sp in plist:
+        if fpname.startswith(_sp):
+            return fpname.replace(_sp,"")
+

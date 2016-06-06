@@ -103,23 +103,37 @@ VERSIONS and RELEASES
 
 * RELEASE: 00.03.00x - Beta: Accomplish test cases for medium to high complexity.
 
-* RELEASE: 00.04.00x - Production: First production release. Estimated number of UnitTests := 100.
+* RELEASE: 00.04.00x - Production: First production release. Estimated number of UnitTests := 250.
 
 * RELEASE: 00.05.00x - Production: Various performance enhancements.
 
 
-**Current Release: 00.00.004 - Pre-Alpha:**
+**Current Release: 00.00.006 - Pre-Alpha:**
+
+OS-Support:
+
+* Linux: OK(Fedora)
+
+* UNIX: todo(should work)
+
+* Windows: todo(issues with normpath)
+
+* Mac-OS: todo
+
 
 Major Changes:
 
-* Introduce initial version.
+* Split into generic FileSysObjects, and Python Source code RTTI/inspect PySourceInfo.
 
+* Extend on Linux platform.
+
+* Did some basic concept work on PATH names in conformance to IEEE/1003.1, including URIs for 'file://'
 
 Current test status:
 
-* UnitTests: >8
+* UnitTests: >70
 
-* Use-Cases as UnitTests: >58
+* Use-Cases as UnitTests: >56
 
-**Total**: >66
+**Total**: >120
 

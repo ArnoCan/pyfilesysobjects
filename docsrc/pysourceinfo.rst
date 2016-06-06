@@ -6,17 +6,21 @@
 Functions
 ---------
 
-getSourceFilePathName
-^^^^^^^^^^^^^^^^^^^^^^
-	.. autofunction:: getSourceFilePathName
+getCallerFilePathName
+^^^^^^^^^^^^^^^^^^^^^
+	.. autofunction:: getCallerFilePathName
 
-getSourceFuncName
+getCallerFileName
 ^^^^^^^^^^^^^^^^^
-	.. autofunction:: getSourceFuncName
+	.. autofunction:: getCallerFileName
 
-getSourceLinenumber
+getCallerFuncName
+^^^^^^^^^^^^^^^^^
+	.. autofunction:: getCallerFuncName
+
+getCallerLinenumber
 ^^^^^^^^^^^^^^^^^^^
-	.. autofunction:: getSourceLinenumber
+	.. autofunction:: getCallerLinenumber
 
 getCallerName
 ^^^^^^^^^^^^^
@@ -25,6 +29,10 @@ getCallerName
 getCallerNameOID
 ^^^^^^^^^^^^^^^^
 	.. autofunction:: getCallerNameOID
+
+getCallerPackageFilePathName
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	.. autofunction:: getCallerPackageFilePathName
 
 getCallerPackageName
 ^^^^^^^^^^^^^^^^^^^^
@@ -38,35 +46,34 @@ getCallerPackagePythonPath
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 	.. autofunction:: getCallerPackagePythonPath
 
-getCallerPackageFilePathName
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-	.. autofunction:: getCallerPackageFilePathName
-
 getCallerModuleFilePathName
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 	.. autofunction:: getCallerModuleFilePathName
 
 getCallerModuleName
 ^^^^^^^^^^^^^^^^^^^
-	.. autofunction:: getCallerModuleName
-
-getCallerModulePythonPath
-^^^^^^^^^^^^^^^^^^^^^^^^^
-	.. autofunction:: getCallerModulePythonPath
+	.. autofunction:: getCallerModuleName 
 
 getCallerModulePathName
 ^^^^^^^^^^^^^^^^^^^^^^^
 	.. autofunction:: getCallerModulePathName
 
-getPythonPathPrefixMatchFromSysPath
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-	.. autofunction:: getPythonPathPrefixMatchFromSysPath
-
-getPythonPathModuleRel
-^^^^^^^^^^^^^^^^^^^^^^
-	.. autofunction:: getPythonPathModuleRel
+getCallerModulePythonPath
+^^^^^^^^^^^^^^^^^^^^^^^^^
+	.. autofunction:: getCallerModulePythonPath
 
 getPythonPathForPackage
 ^^^^^^^^^^^^^^^^^^^^^^^
 	.. autofunction:: getPythonPathForPackage
 
+getPythonPathModuleRel
+^^^^^^^^^^^^^^^^^^^^^^
+	.. autofunction:: getPythonPathModuleRel
+
+getPythonPathPrefixMatchFromSysPath
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	.. autofunction:: getPythonPathPrefixMatchFromSysPath
+
+getPythonPathRel
+^^^^^^^^^^^^^^^^
+	.. autofunction:: getPythonPathRel
