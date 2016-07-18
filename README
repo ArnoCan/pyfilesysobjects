@@ -9,13 +9,14 @@ gathering of information on packages, modules, and files.
 The provided feature modules comprise the following list.
 For code examples refer to 'filesysobjects.UseCases'.
 
-The package 'filesysobjects' is a spin off from the project 'UnifiedSessionsManager-2.0'.
- 
+The package 'filesysobjects' is a spin off from the project 'UnifiedSessionsManager-2.0',
+see 'https://sourceforge.net/projects/ctys/'.
+
 The main interface classes are:
 
 * **FileSysObjects** - Filesystem objects.
 
-For the compliance tests extracted from IETF and ECMA standards refer to the directories:
+For UseCases refer to subdirectory:
 
 * UseCases
  
@@ -23,9 +24,7 @@ For the compliance tests extracted from IETF and ECMA standards refer to the dir
 
 * Sourceforge.net: https://sourceforge.net/projects/pyfilesysobjetcs/files/
   
-**REMARK**: The pathname on sourceforge.net is a little odd for now
-  because this could not changed on-the-fly: 'filesysobjeTCcs' instead 'filesysobjeCTs' 
-
+* Sourceforge.net: https://sourceforge.net/projects/pyfilesysobjects/files/
 
 * Github: https://github.com/ArnoCan/pyfilesysobjects/
 
@@ -42,6 +41,8 @@ The installer adds a few options to the standard setuptools options.
 * *build_sphinx*: Creates documentation for runtime system by Sphinx, html only. Calls 'callDocSphinx.sh'.
 
 * *build_epydoc*: Creates documentation for runtime system by Epydoc, html only. Calls 'callDocEpydoc.sh'.
+
+* *instal_doc*: Install a local copy of the previously build documents in accordance to PEP-370.
 
 * *test*: Runs PyUnit tests by discovery.
 
@@ -71,13 +72,13 @@ Project Data
 
 * MISSION: Extend the standard PyUnit package for arbitrary ExecUnits.
 
-* VERSION: 00.00
+* VERSION: 00.01
 
-* RELEASE: 00.00
+* RELEASE: 00.01.001
 
 * NICKNAME: 'Yggdrasil'
 
-* STATUS: pre-alpha
+* STATUS: alpha
 
 * AUTHOR: Arno-Can Uestuensoez
 
@@ -108,32 +109,48 @@ VERSIONS and RELEASES
 * RELEASE: 00.05.00x - Production: Various performance enhancements.
 
 
-**Current Release: 00.00.006 - Pre-Alpha:**
+**Current Release: 00.01.001 - Alpha:**
 
-OS-Support:
+OS-Support - Tested by PyUnit/Eclipse with Success:
 
-* Linux: OK(Fedora)
+* Linux: Fedora - others should work, ToDo: CentOS, Debian, and SuSE 
 
-* UNIX: todo(should work)
+* Windows: Win10 - others see Cygwin
 
-* Windows: todo(issues with normpath)
+* Mac-OS: Snow Leopard - others should work
 
-* Mac-OS: todo
+* Cygwin: 2.874/64 bit
+
+
+OS-Support - ToDo: Going to follow soon.
+
+* BSD: ToDo: OpenBSD, FreeBSD - others should work
+
+* UNIX: ToDo: Solaris-11 - should work
 
 
 Major Changes:
 
-* Split into generic FileSysObjects, and Python Source code RTTI/inspect PySourceInfo.
+* Did some basic concept work on PATH names in conformance to IEEE/1003.1, UNC, CIFS/SMB,
+  including URIs for 'file://'
 
-* Extend on Linux platform.
+**ToDo**:
 
-* Did some basic concept work on PATH names in conformance to IEEE/1003.1, including URIs for 'file://'
+* Full scale UNC
+
+* Fix bugs in SMB share conversion 
+
+* Test for remote and autonomous operations on arbitrary filesystems 
+
+Known Issues:
+
+* Some minor failures of units, 1 on MacOS, will be fixed for a.s.a.p. 
 
 Current test status:
 
-* UnitTests: >70
+* UnitTests: >580
 
-* Use-Cases as UnitTests: >56
+* Use-Cases as UnitTests: >110
 
-**Total**: >120
+**Total**: >690
 

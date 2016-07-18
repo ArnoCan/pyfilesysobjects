@@ -14,7 +14,10 @@
 
 * `filesysobjects.PySourceInfo [source] <_modules/filesysobjects/PySourceInfo.html#>`_
 
+* `filesysobjects.NetFiles [source] <_modules/filesysobjects/NetFiles.html#>`_
+
 
 .. include:: filesysobjects.rst
 .. include:: pysourceinfo.rst
+.. include:: netfiles.rst
 

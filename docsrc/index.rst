@@ -4,28 +4,65 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-'filesysobjects' - Filesystem Objects
-=====================================
+Abstract
+========
 
-The 'filesysobjects' package provides utilities for the application of
-basic object oriented features onto filesystems.
-This includes basic coverage of the 'inspect' package for the simplified
-gathering of information on packages, modules, and files.
+The 'filesysobjects' package provides utilities for the simplified navigation in filesystem 
+hierarchies. 
+This comprises basic functions for the application of object oriented patterns 
+onto files, directories, and branches.
 
-The provided feature modules comprise the following list.
-For code examples refer to 'filesysobjects.UseCases'.
+* **Gears for Filesystem Objects - Files, Directories, and Branches**
 
-* `FileSysObjects <filesysobjects.html>`_ : Manage branches of filesystem structures with support of basic file inheritance - *filesysobjects.FileSysObjects*.
+  The package provides a set of basic functions for implementing file system items 
+  conceptually as classes and objects. Just a few interfaces are required in order to represent 
+  some basic OO features on filesystems. This in particular comprises superposition 
+  and encapsulation, polymorphism, class and object hierachies.
 
-* `PySourceInfo <pysourceinfo.html>`_ : Provides runtime type information information on Python source components: packages, modules, and callers  - *filesysobjects.PySourceInfo*.
+  * Filesystem elements as classes and objects with multiple search and iteration sets `[details] <path_syntax.html#filesystem-elements-as-objects>`_
 
+  * Standards compliant multiplatform native path support: `[details] <path_syntax.html#syntax-elements>`_ 
+    `[examples] <path_syntax_examples.html>`_.
+
+    
+  * Programming Interface: 
+    `[API] <shortcuts.html#filesysobjects-filesysobjects>`_,
+    `[UseCases] <UseCases.html>`_.
+      .
+
+* **Yet another attempt for file address processing on network storage**
+
+  Evaluation for an extension modul of the interface 'os.path.normpath'.
+  Thus the function is named for now 'filesysobjects.NetFiles.normpathX'.
+
+  * `Extended Filesystems - Network Features <path_netfiles.html>`_
+      .
+
+* **RTTI for native Python source files** see
+  `PySourceInfo @ https://pypi.python.org/pypi/pysourceinfo <https://pypi.python.org/pypi/pysourceinfo>`_
+ 
+
+`Shortcuts <shortcuts.html>`_
+============================
+
+* `Programming Interface <shortcuts.html>`_
+
+* `Selected Common UsesCases <usecases.html>`_
+
+Table of Contents
+=================
+   
+ 
 .. toctree::
    :maxdepth: 3
 
+   shortcuts
+   usecases
    filesysobjects
-   pysourceinfo
+   netfiles
    UseCases
    tests
+   testdata
 
 * setup.py
 

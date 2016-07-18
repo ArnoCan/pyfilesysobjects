@@ -2,10 +2,14 @@
 
 These tests could either be called from the command line,
 or within Eclipse by the plugin PyDev / PyUnit.
+'setup.py' also supports the call by the parameter 'usecases'.
 
-* CLI: '*python setup.py test*' 
+* setup.py: '*python setup.py usecases*'
 
-* Eclipse: Install PyDev, open the view PyUnit and proceed.
+* CLI: '*python -m unittest discover -s UseCases -p CallCase.py*' 
+
+* Eclipse: Install PyDev, open the view PyUnit and proceed by
+  'UseCases' package.
 
 """
 __author__ = 'Arno-Can Uestuensoez'

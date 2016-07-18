@@ -1,12 +1,12 @@
 PROJECT='filesysobjects'
-VERSION="0.0.6"
-RELEASE="0.0.6"
+VERSION="0.1.1"
+RELEASE="0.1.1"
 NICKNAME="Yggdrasil"
 AUTHOR='Arno-Can Uestuensoez'
 COPYRIGHT='Copyright (C) 2010,2011,2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez'
 LICENSE='Artistic-License-2.0 + Forced-Fairplay-Constraints'
 STATUS='pre-alpha'
-MISSION='Support extensions for executables as Units of PyUnit.'
+MISSION='Support advanced navigation on filesystems.'
 
 # the absolute pathname for this source
 MYPATH=${BASH_SOURCE%/*}/
@@ -35,9 +35,13 @@ STATIC="${OUTDIR}/apidoc/sphinx/_static"
 
 # source entities
 FILEDIRS=""
-FILEDIRS="${INDIR}epydoc"
+FILEDIRS="${INDIR}filesysobjects"
 FILEDIRS="$FILEDIRS ${INDIR}UseCases"
 FILEDIRS="$FILEDIRS ${INDIR}tests"
+FILEDIRS="$FILEDIRS ${INDIR}testdata"
+
+#FILEDIRS="$FILEDIRS ${INDIR}setup.py"
+#FILEDIRS="$FILEDIRS ${INDIR}bin"
 
 CALL=""
 CALL="$CALL export PYTHONPATH=$PWD:$MYPATH:$PYTHONPATH;"
@@ -52,7 +56,8 @@ CALL="$CALL $@"
 
 #
 #build=patches
-DOCHTML=${OUTDIR}apidoc/sphinx/_build/html/index.html
+DOCHTMLDIR=${OUTDIR}apidoc/sphinx/_build/
+DOCHTML=${DOCHTMLDIR}html/index.html
 cat <<EOF
 #
 # Create apidoc builder...
@@ -67,8 +72,61 @@ for fx in ${FX[@]};do
 	eval $CALL "$fx"
 done
 
-echo "extensions.append('sphinx.ext.intersphinx.')" >> ${OUTDIR}/apidoc/sphinx/conf.py
-echo "sys.path.insert(0, os.path.abspath('$PWD/..'))" >> ${OUTDIR}/apidoc/sphinx/conf.py
+# echo "extensions.append('sphinx.ext.intersphinx.')" >> ${OUTDIR}/apidoc/sphinx/conf.py
+# echo "sys.path.insert(0, os.path.abspath('$PWD/..'))" >> ${OUTDIR}/apidoc/sphinx/conf.py
+{
+cat <<EOF 
+
+extensions.append('sphinx.ext.intersphinx.')
+sys.path.insert(0, os.path.abspath('$PWD/..'))
+
+html_logo = "_static/pyfilesysobjects-64x64.png"
+#html_favicon = None
+
+#html_theme = "classic"
+#html_theme = "pyramid"
+#html_theme = "agogo"
+#html_theme = "bizstyle"
+html_theme_options = {
+#    "rightsidebar": "true",
+#    "relbarbgcolor": "black",
+    "externalrefs": "true",
+    "sidebarwidth": "290",
+    "stickysidebar": "true",
+#    "collapsiblesidebar": "true",
+
+#    "footerbgcolor": "",
+#    "footertextcolor": "",
+#    "sidebarbgcolor": "",
+#    "sidebarbtncolor": "",
+#    "sidebartextcolor": "",
+#    "sidebarlinkcolor": "",
+#    "relbarbgcolor": "",
+#    "relbartextcolor": "",
+#    "relbarlinkcolor": "",
+#    "bgcolor": "",
+#    "textcolor": "",
+#    "linkcolor": "",
+#    "visitedlinkcolor": "",
+#    "headbgcolor": "",
+#    "headtextcolor": "",
+#    "headlinkcolor": "",
+#    "codebgcolor": "",
+#    "codetextcolor": "",
+#    "bodyfont": "",
+#    "headfont": "",
+
+}
+
+# def setup(app):
+#     app.add_stylesheet('css/custom.css')
+
+EOF
+} >> ${OUTDIR}/apidoc/sphinx/conf.py
+mkdir "${STATIC}/css/"
+cp docsrc/custom.css "${STATIC}/css/custom.css"
+cp docsrc/pyfilesysobjects-64x64.png "${STATIC}/"
+
 
 # put the docs together
 #
@@ -103,15 +161,23 @@ EOF
 #
 cat docsrc/pyfilesysobjects.rst > ${OUTDIR}/apidoc/sphinx/pyfilesysobjects.rst
 cat docsrc/filesysobjects.rst > ${OUTDIR}/apidoc/sphinx/filesysobjects.rst
-cat docsrc/pysourceinfo.rst > ${OUTDIR}/apidoc/sphinx/pysourceinfo.rst
+cat docsrc/netfiles.rst > ${OUTDIR}/apidoc/sphinx/netfiles.rst
+cat docsrc/shortcuts.rst > ${OUTDIR}/apidoc/sphinx/shortcuts.rst
+cat docsrc/usecases.rst > ${OUTDIR}/apidoc/sphinx/usecases.rst
 #
-
+cat docsrc/path_syntax.rst > ${OUTDIR}/apidoc/sphinx/path_syntax.rst
+cat docsrc/path_syntax_examples.rst > ${OUTDIR}/apidoc/sphinx/path_syntax_examples.rst
+#
+cat docsrc/path_netfiles.rst > ${OUTDIR}/apidoc/sphinx/path_netfiles.rst
+#
 #
 # static - literal data
 cat ArtisticLicense20.html > "${STATIC}/ArtisticLicense20.html"
 cat licenses-amendments.txt > "${STATIC}/licenses-amendments.txt"
 #
-#cp docsrc/lionwhisperer.png "${STATIC}"
+cp docsrc/filesysobjectsnav.png "${STATIC}"
+cp docsrc/pathname_types.png "${STATIC}"
+cp docsrc/pathname_functions.png "${STATIC}"
 
 #CALL="SPHINXOPTS= "
 CALL=" "
@@ -131,6 +197,12 @@ EOF
 echo "CALL=<$CALL>"
 eval $CALL
 
+DOCDIR="${DOCDIR:-doc/en/html/man3/$PROJECT}"
+if [ ! -e "${DOCDIR}" ];then
+	mkdir -p "${DOCDIR}"
+fi
+cp -a "${DOCHTMLDIR}"/html/* "${DOCDIR}"
 echo
 echo "display with: firefox -P preview.simple ${DOCHTML}"
+echo "display with: firefox -P preview.simple ${DOCDIR}/index.html"
 echo

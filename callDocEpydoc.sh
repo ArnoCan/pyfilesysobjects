@@ -1,6 +1,6 @@
-PROJECT='pyfilesysobjects'
-VERSION="0.0.6"
-RELEASE="0.0.6"
+PROJECT='filesysobjects'
+VERSION="0.1.1"
+RELEASE="0.1.1"
 NICKNAME="Yggdrasil"
 AUTHOR='Arno-Can Uestuensoez'
 COPYRIGHT='Copyright (C) 2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez'
@@ -23,7 +23,7 @@ export PYTHONPATH=$PYTHONPATH:$PWD:${MYPATH}
 
 # source entities
 FILEDIRS=""
-FILEDIRS="$FILEDIRS `find ${INDIR}pyfilesysobjects -type f -name '*.py'`"
+FILEDIRS="$FILEDIRS `find ${INDIR}filesysobjects -type f -name '*.py'`"
 FILEDIRS="$FILEDIRS `find ${INDIR}bin -type f -name '*.py'`"
 
 CALL=epydoc
@@ -43,6 +43,15 @@ EOF
 echo "CALL=<$CALL>"
 eval $CALL
 
+DOCHTMLDIR=${OUTDIR}apidoc/epydoc/
+DOCHTML=${DOCHTMLDIR}index.html
+# docdir
+DOCDIR="${DOCDIR:-doc/en/html/man3/$PROJECT.epydoc}"
+if [ ! -e "${DOCDIR}" ];then
+	mkdir -p "${DOCDIR}"
+fi
+cp -a "${DOCHTMLDIR}"/* "${DOCDIR}"
 echo
-echo "call: firefox -P preview.simple -new-instance ${OUTDIR}/epydoc/index.html"
+echo "call: firefox -P preview.simple ${DOCHTML}"
+echo "call: firefox -P preview.simple ${DOCDIR}/index.html"
 echo
