@@ -134,7 +134,7 @@ from __builtin__ import True
 __author__ = 'Arno-Can Uestuensoez'
 __license__ = "Artistic-License-2.0 + Forced-Fairplay-Constraints"
 __copyright__ = "Copyright (C) 2010-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez"
-__version__ = '0.1.5'
+__version__ = '0.1.6'
 __uuid__ = '9de52399-7752-4633-9fdc-66c87a9200b8'
 
 __docformat__ = "restructuredtext en"
@@ -309,7 +309,7 @@ def addPathToSearchPath(spath, plist=None, **kargs):
         elif os.path.exists(os.path.curdir + os.sep + spath):
             return _add(os.path.normpath(os.path.curdir + os.sep + spath))
         else: 
-            for s in _splist:
+            for s in _splist[:]:
                 if os.path.exists(s + os.sep + spath):
                     pos = _add(s + os.sep + spath)
     else:
@@ -318,7 +318,7 @@ def addPathToSearchPath(spath, plist=None, **kargs):
         elif os.path.exists(os.path.curdir + os.sep + spath):
             return _add(os.path.normpath(os.path.curdir + os.sep + spath))
         else: 
-            for s in _splist:
+            for s in _splist[:]:
                 if os.path.exists(s + os.sep + spath):
                     pos = _add(s + os.sep + spath)
     return pos

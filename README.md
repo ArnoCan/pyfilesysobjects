@@ -109,7 +109,7 @@ VERSIONS and RELEASES
 * RELEASE: 00.05.00x - Production: Various performance enhancements.
 
 
-**Current Release: 00.01.005 - Alpha:**
+**Current Release: 00.01.006 - Alpha:**
 
 OS-Support - Tested by PyUnit/Eclipse with Success:
 
@@ -131,13 +131,8 @@ OS-Support - ToDo: Going to follow soon.
 
 Major Changes:
 
-* Dropped 'findRelPathInUpperTree', is provided by others
+* Bugfixes
 
-* Minor fixes
-
-* Added some UseCases for glob input/output
-
-* Changed to absolute paths of subcalls of pzsourceinfo for platform independency
 
 **ToDo**:
 
