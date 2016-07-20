@@ -88,6 +88,11 @@ The following options are generic and common to multiple interfaces:
         
         default := sys.path
 
+    **matchidx=#idx**: Matches on the provided index count only
+        ::
+        
+           #idx==2 - ignores 0,1 and >2, matches idx==2
+
     **matchcnt=#num**: The maximal number of matches returned when
         multiple occur::
         
@@ -129,7 +134,7 @@ from __builtin__ import True
 __author__ = 'Arno-Can Uestuensoez'
 __license__ = "Artistic-License-2.0 + Forced-Fairplay-Constraints"
 __copyright__ = "Copyright (C) 2010-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez"
-__version__ = '0.1.1'
+__version__ = '0.1.5'
 __uuid__ = '9de52399-7752-4633-9fdc-66c87a9200b8'
 
 __docformat__ = "restructuredtext en"
@@ -224,8 +229,12 @@ def addPathToSearchPath(spath, plist=None, **kargs):
 
     Args:
         spath: A path to be added to 'plist'.
-            Supports glob.
             See common options for details.
+            Valid scope types:
+
+                * literal : X
+                * re      : -
+                * blob    : -
 
             default := caller-file-position.
 
@@ -236,20 +245,20 @@ def addPathToSearchPath(spath, plist=None, **kargs):
             default := sys.path
 
         **kargs:
-            prepend: Prepend, this is equal to
-                pos=0.
-                
             append: Append, this is equal to
                 pos=len(plist).
                 
+            exist: Checks whether exists, else nothing is done. 
+
             pos=#pos: A specific position for insertion
                 within range(0,len(plist)).
             
+            prepend: Prepend, this is equal to
+                pos=0.
+                
             relative=<base>: Add relative subpath to 
                 provided base.
                 
-            exist: Checks whether exists, else nothing is done. 
-
     Returns:
         When successful returns insertion position, else a 'value<0'.
         The insertion position in case of multiple items is the position 
@@ -350,15 +359,15 @@ def clearPath(plist=None, **kargs):
                  from bottom-up to top-down. Takes effect on
                  'redundant' only.
 
-            withinItemOnly: Performs any action for each 
-                item of 'plist' only.
-            
             shrink: Drops resulting empty items. 
 
             split: Forces split of multiple paths items within
                 one item into seperate item entries.
 
                 default := noSplit
+            withinItemOnly: Performs any action for each 
+                item of 'plist' only.
+            
 
     Returns:
         When successful returns 'True', else returns either 'False', 
@@ -504,8 +513,12 @@ def delPathFromSearchPath(dellist, plist=None, **kargs):
 
     Args:
         dellist: A list of paths to be deleted 
-            from 'plist'. Supported scope is
-                (literal|regexpr|glob)
+            from 'plist'. Valid scope types:
+
+                * literal : X
+                * re      : X
+                * glob    : X
+
             see kargs[regexpr|glob].
 
             default := None
@@ -515,19 +528,24 @@ def delPathFromSearchPath(dellist, plist=None, **kargs):
             default := sys.path
 
         **kargs:
-            The following keys are additiv before 
-            comparison, on 'dellist' only when not
+            The following keys are additional before 
+            comparison, on 'dellist' only when no
             match pattern is provided:
-                norm: Calls on both: os.path.normpath
-                
-                real: Calls on both: os.path.realpath
-                
+
                 case: Calls on both: os.path.normcase
     
+                esc: Calls on both: escapeFilePath/unescapeFilePath
+                
                 exist: Calls on both: os.path.exists
                 
                 noexist: Calls on both: not os.path.exists
             
+                normX: Calls on both: normpathX
+
+                norm: Calls on both: os.path.normpath
+
+                real: Calls on both: os.path.realpath
+                
             regexpr|glob: Input is a list of
                 regexpr: regular expressions,
                     just processed by 
@@ -630,7 +648,12 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
         spath:=(literal|glob): A path to be hooked into 
             'plist[]' when present. Could be either a 
             literal, or a glob as an relative or absolute
-            path.
+            path. Valid scope types:
+
+                * literal : X
+                * re      : -
+                * blob    : X
+
             See common options for details.
 
         plist: List of potential hooks for 'spath'.
@@ -642,6 +665,14 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
             ias: Treats for local file names any 
                 number of subsequent '/' only as one.
 
+            isDir: Is a directory.
+
+            isFile: Is a file.
+
+            isLink: Is a symbolic link.
+
+            isPathByLink: Has a symbolic link in path.
+
             matchidx=#idx: Ignore matches '< #idx', 
                 return match '== #idx'. Depends on
                 'reverse'
@@ -650,21 +681,13 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
 
             noglob: Suppress application of 'glob'.
 
+            not: Inverts to does not matched defined
+                criteria.
+
             raw: Suppress normalization by call of 
                 'os.path.normpath'.
 
             reverse: Reversed search order.
-
-            isLink: Is a symbolic link.
-
-            isDir: Is a directory.
-
-            isFile: Is a file.
-
-            isPathByLink: Has a symbolic link in path.
-
-            not: Inverts to does not matched defined
-                criteria.
 
     Returns:
         When successful returns the absolute pathname, 
@@ -784,8 +807,11 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
             continue
         _b = True
         
-        _px = os.path.normpath(os.path.abspath(p + os.sep + _sp))
-        
+        if os.path.isabs(_sp):
+            _px = normpathX(_sp)
+        else:
+            _px = normpathX(os.path.abspath(p + os.sep + _sp))
+
         if os.path.exists(_px):
             _b = _checkit(_px)
 
@@ -826,93 +852,6 @@ def findRelPathInSearchPathIter(spath, plist=None, **kargs):
             yield r
     pass
 
-def findRelPathInUpperTree(spath, start=None, top=None, plist=None, **kargs):
-    """Finds a filesystem branch in the path slice.
-    
-    Args:
-        spath: A path to be hooked into 'plist'.
-            See common options for details.
-
-        start: Start components of a path string.
-            See common options for details.
-
-            default := caller-file-position.
-        
-        top: End component of a path string.
-            See common options for details.
-
-            default := <same-as-start>
-
-        plist: List for the storage.
-            See common options for details.
-            
-            default := sys.path
-
-        **kargs:
-            matchidx=#idx: Ignore matches '< #idx', 
-                return match '== #idx'.
-
-                default := 0 # first match
-
-            matchcnt=#num: The maximal number of matches
-                returned when multiple occur.
-
-            matchlvl=#num: Increment of match
-                for top node when multiple are in 
-                the path. 
-
-                See common options for details.
-
-            matchlvlupward=#num: Increment of match
-                for top node when multiple are in 
-                the path. 
-
-                See common options for details.
-
-            relonly: The paths are inserted relative to the
-                top node only. This is mainly for test 
-                purposes. The intermix of relative and
-                absolute path entries is not verified.
-
-            prepend: Prepends the set of search paths.
-                This is default.
-
-            append: Appends the set of search paths.
-            
-            unique: Insert non-present only, else present
-                entries are not checked, thus the search order
-                is changed in general for 'prepend', while
-                for 'append' the present still covers the new
-                entry. 
-            
-            reverse: This reverses the resulting search order 
-                 from bottom-up to top-down.
-
-            raw: Suppress normalization by call of 
-                'os.path.normpath'.
-
-            ias: Treats for local file names any 
-                number of subsequent '/' only as one.
-                
-                See common options for details.
-
-    Returns:
-        When successful returns 'True', else returns either 
-        'False', or raises an exception.
-
-    Raises:
-        passed through exceptions:
-    """
-    #
-    # FIXME: performance
-    if type(plist) != NoneType:
-        _plist = plist[:]
-    else:
-        _plist = []
-
-    setUpperTreeSearchPath(start, top, _plist, **kargs)
-    return findRelPathInSearchPath(spath, _plist, **kargs)
-
 def getTopFromPathString(spath, plist=None, **kargs):
     """Searches for a partial path in search paths from a provided list.
 
@@ -924,7 +863,7 @@ def getTopFromPathString(spath, plist=None, **kargs):
     
     Performs string operations only, the file system is neither
     checked, not utilized. 
- 
+    
     Args:
         spath: A path to be added to 'plist'.
             See common options for details.
@@ -935,6 +874,20 @@ def getTopFromPathString(spath, plist=None, **kargs):
             default := sys.path
          
         **kargs:
+            abs: Return absolute path.
+
+            hook: Returns the found part of the 'plist' 
+                entry only.
+
+            ias: Treats for local file names any 
+                number of subsequent '/' only as one.
+
+            includeapp: Includes appspecific into search.
+                E.g. 
+                    input   :   '//hostname/a/hostame/x/y/z'
+                    not set => '//hostname/a/hostame'
+                    set     => '//hostname'
+
             matchidx=#idx: Ignore matches '< #idx', 
                 return match '== #idx'.
 
@@ -951,22 +904,6 @@ def getTopFromPathString(spath, plist=None, **kargs):
                 the path. 
 
                 See common options for details.
-
-            raw: Suppress normalization by call of 
-                'os.path.normpath'.
-
-            reverse: This reverses the resulting search order 
-                 from bottom-up to top-down. Takes effect on
-                 'redundant' only.
-
-            ias: Treats for local file names any 
-                number of subsequent '/' only as one.
-
-            includeapp: Includes appspecific into search.
-                E.g. 
-                    input   :   '//hostname/a/hostame/x/y/z'
-                    not set => '//hostname/a/hostame'
-                    set     => '//hostname'
 
             pattern: Scope and type of match pattern.
                 literal: Literal node by node match
@@ -979,10 +916,22 @@ def getTopFromPathString(spath, plist=None, **kargs):
                 path to be resolved. The value 'full' forces a full match
                 of 'spath' within a 'plist' item.               
 
-            abs: Return absolute path.
+            raw: Suppress normalization by call of 
+                'os.path.normpath'.
+
+            reverse: This reverses the resulting search order 
+                 from bottom-up to top-down. Takes effect on
+                 'redundant' only.
+
+            split: Returns the splitted path prefix matched on search list,  
+                and the relative sub path outside search list.
 
     Returns:
         When successful returns a path, else None.
+
+        Returns by default the expanded pathname including the searched.
+         
+ 
 
     Raises:
         passed through exceptions:
@@ -997,6 +946,7 @@ def getTopFromPathString(spath, plist=None, **kargs):
     ias = False
     incap = False
     _abs= 0
+    _hook= False
     _pat = 0
     _patlvl = 0
     matchlvl = 0
@@ -1029,6 +979,12 @@ def getTopFromPathString(spath, plist=None, **kargs):
             _rev = True
         elif k == 'abs':
             _abs = True
+        elif k == 'hook':
+            _hook = True
+            _split = False
+        elif k == 'split':
+            _hook = False
+            _split = True
         elif k == 'patternlvl':
             if not v == 'full' and ( not type(v) is int or v < 0 ): 
                 raise FileSysObjectsException("Requires int>0 patternlvl=" + str(v))
@@ -1165,11 +1121,14 @@ def getTopFromPathString(spath, plist=None, **kargs):
                     else:
                         _ucnt = 0
                     
-                if _fin and m >= _patlvl:  # full match in front of pos m    
-                    if _c and m == len(sp) - 1:
-                        _spx = [_c]
-                    else:
-                        _spx = sp[m:]
+                if _fin and m >= _patlvl:  # full match in front of pos m
+                    if _hook:
+                        _spx = ''
+                    else:    
+                        if _c and m == len(sp) - 1:
+                            _spx = [_c]
+                        else:
+                            _spx = sp[m:]
 
                     if matchidx == 0:
                         _r = _prefix
@@ -1228,16 +1187,20 @@ def getTopFromPathString(spath, plist=None, **kargs):
                         _dcnt = 0
                     
                 if _fin and m >= _patlvl:  # full match in front of pos m    
-                    if _c and m == len(sp) - 1:
-                        _spx = [_c]
-                    else:
-                        _spx = sp[m:]
+                    if _hook:
+                        _spx = ''
+                    else:    
+                        if _c and m == len(sp) - 1:
+                            _spx = [_c]
+                        else:
+                            _spx = sp[m:]
                     if matchidx == 0:
                         _r = _prefix
-                        if os.sep.join(s[:si + m]):
+                        _j = os.sep.join(s[:si + m])
+                        if _j:
                             if _r or os.path.isabs(sl):
                                 _r += os.sep
-                            _r += os.sep.join(s[:si + m])
+                            _r += _j
                         if _spx:
                             if _r:
                                 _r += os.sep
@@ -1269,15 +1232,22 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
     Args:
         start: Start components of a path string.
             See common options for details.
+            Valid scope types:
 
-            scope: literal
+                * literal : X
+                * re      : -
+                * blob    : -
+
             default := caller-file-position.
         
         top: End component of a path string.
             The node 'top' is included.
-            See common options for details.
+            Valid scope types:
 
-            scope: literal
+                * literal : X
+                * re      : -
+                * blob    : -
+
             default := <same-as-start>
 
         plist: List to for the storage.
@@ -1286,6 +1256,11 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
             default := sys.path
 
         **kargs:
+            append: Appends the set of search paths.
+            
+            ias: Treats for local file names any 
+                number of subsequent '/' only as one.
+
             matchidx=#idx: Ignore matches '< #idx', 
                 adds match '== #idx' and returns.
 
@@ -1306,47 +1281,44 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
 
                 See common options for details.
 
-            relonly: The paths are inserted relative to the
-                top node only. This is mainly for test 
-                purposes. The intermix of relative and
-                absolute path entries is not verified.
-
-            prepend: Prepends the set of search paths.
-                This is default.
-
-            append: Appends the set of search paths.
-            
-            unique: Insert non-present only, else present
-                entries are not checked, thus the search order
-                is changed in general for 'prepend', while
-                for 'append' the present still covers the new
-                entry. 
-            
-            reverse: This reverses the resulting search order 
-                 from bottom-up to top-down.
-
-            raw: Suppress normalization by call of 
-                'os.path.normpath'.
-
-            ias: Treats for local file names any 
-                number of subsequent '/' only as one.
-
             noTypeCheck: Supress required identical types
                 of 'top' and 'start'. As a rule of thum for current
                 version, the search component has to be less
                 restrictive typed than the searched. 
                 The default applicable type matches are::
 
-                    top     ¦ start
-                    --------+-----------------
-                    LFSYS   ¦ LFSYS, LDSYS
-                    SHARE   ¦ SHARE
-                    SMB     ¦ SMB
-                    CIFS    ¦ CIFS
-                    IAS     ¦ IAS
+                     top    ¦ start
+                    --------+---------------------
+                     LFSYS  ¦ LFSYS, LDSYS, SHARE
+                            | SMB, CIFS, IAS
+                     LDSYS  ¦ LDSYS
+                     SHARE  ¦ SHARE
+                     SMB    ¦ SMB
+                     CIFS   ¦ CIFS
+                     IAS    ¦ IAS
 
                 See common options for details.
 
+            prepend: Prepends the set of search paths.
+                This is default.
+
+            raw: Suppress normalization by call of 
+                'os.path.normpath'.
+
+            relonly: The paths are inserted relative to the
+                top node only. This is mainly for test 
+                purposes. The intermix of relative and
+                absolute path entries is not verified.
+
+            reverse: This reverses the resulting search order 
+                 from bottom-up to top-down.
+
+            unique: Insert non-present only, else present
+                entries are not checked, thus the search order
+                is changed in general for 'prepend', while
+                for 'append' the present still covers the new
+                entry. 
+            
     Returns:
         When successful returns 'True', else returns either 'False', 
         or raises an exception.
@@ -1468,11 +1440,15 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
     if _tchk:
         if _top_elems and _start_elems: 
             if _top_elems[0] != _start_elems[0]:
-                if _top_elems[0]  in ( 'LFSYS', ) and  _start_elems[0] in ( 'LDSYS', 'LFSYS', ):
-                    pass
-                elif _top_elems[0]  in ( 'LFSYS', ) and  _start_elems[0] in ( 'SHARE', ):
-                    if os.path.isabs(_top_elems[3]):
-                        raise FileSysObjectsException("LFSYS in SHARE requires relative pathname for LFSYS, given: "+str(_top_elems[3]))
+                
+                #TODO: still to enhance..
+                if _top_elems[0]  in ( 'LFSYS', ):
+                    if os.path.realpath(_top_elems[3]):
+                        pass
+                    elif _start_elems[0] in ( 'LDSYS', 'LFSYS', ):
+                        pass
+                    else:
+                        raise FileSysObjectsException("LFSYS combined with "+str(_start_elems[0])+" requires relative pathname for LFSYS, given: "+str(_top_elems[3]))
                     pass
                 else:
                     raise FileSysObjectsException("This version requires compatible types: start("+str(_start_elems[0])+") =! top("+str(_top_elems[0])+")")
@@ -1565,23 +1541,6 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
     # so we have actually at least one top within valid range and a remaining sub-path - let us start
     #
     
-    #
-    # IF: top as prefix, following cases are possible/tested:
-    #  'top'                 => [ '', '', ]
-    #  'top/x/top'           => [ '', '/x/', '', ]
-    #  'top/x/top/'          => [ '', '/x/', '/', ]
-    #
-    # ELSE: various combinations
-    #  '/top/x/y'            => [ '/', '/x/y', ]
-    #  '/top/x/top/y'        => [ '/', 'x', 'y', ]
-    #  '/top/x/top/y/top'    => [ '/', '/x/', '/y/', '' ]
-    #  '/top/x/top'          => [ '/', '/x/' , '', ]
-    #  '/top/x/y/'           => [ '/', '/x/y/', ]
-    #  '/top/x/top/y/'       => [ '/', '/x/', '/y/', ]
-    #  '/top/x/top/y/top/v'  => [ '/', '/x/', '/y/', '/v' ]
-    #  '/top/x/top/'         => [ '/', '/x/', '/', ]
-    #  '/top/x/top/'         => [ '/', '/x/', '/', ]
-    #
     if a == ['', '']:  # top == start
         if matchlvl > 0:
             raise FileSysObjectsException("Match count out of range:" + str(matchlvl) + "> 0")
@@ -1599,6 +1558,7 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
             mcnt = matchlvl
 
         _spath = top.join(a[mcnt + 1:])  # sub-path for search recursion
+
     else:
         
         # get index for requested number of ignored/contained matches

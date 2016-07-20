@@ -11,12 +11,15 @@ Manage Search Paths
   +===============================================+======================================+
   | Create and use a search lists                 | `createAndUseSearchLists`_           |
   +-----------------------------------------------+--------------------------------------+
+  | Create and use a search lists from glob       | `createAndUseSearchListsFromGlob`_   |
+  +-----------------------------------------------+--------------------------------------+
   | Add and remove entries                        | `addAndRemoveEntries`_               |
   +-----------------------------------------------+--------------------------------------+
   | Normalize search path lists                   | `normalizeSearchPathLists`_          |
   +-----------------------------------------------+--------------------------------------+
 
-.. _createAndUseSearchLists: UseCases.FileSysObjects.createAndUseSearchLists.html#
+.. _createAndUseSearchLists: UseCases.FileSysObjects.createAndUseSearchLists.from_literal.html#
+.. _createAndUseSearchListsFromGlob: UseCases.FileSysObjects.createAndUseSearchLists.from_glob.html#
 .. _addAndRemoveEntries: UseCases.FileSysObjects.addAndRemoveEntries.html#
 .. _normalizeSearchPathLists: UseCases.FileSysObjects.normalizeSearchPathLists.html#
 
@@ -41,6 +44,14 @@ Search for Files, Directories, and Branches
   +-----------------------------------------------+-------------------------------------------+
   | Create and use a search path slice            | `createAndUseSearchPathSegment`_          |
   +-----------------------------------------------+-------------------------------------------+
+  | Search by literal(L)                          | `search.InUpperTree.by_literal`_          |
+  +-----------------------------------------------+-------------------------------------------+
+  | Search by glob(G)                             | `search.InUpperTree.by_glob`_             |
+  +-----------------------------------------------+-------------------------------------------+
+  | Search by regexpr(R)                          | `search.InUpperTree.by_regexpr`_          |
+  +-----------------------------------------------+-------------------------------------------+
+  | Search by mixed literal+regexpr+glob (LRG)    | `search.InUpperTree.by_LRG`_              |
+  +-----------------------------------------------+-------------------------------------------+
 
 .. _searchBottomUp: UseCases.FileSysObjects.branches.searchBottomUp.html#
 .. _searchTopDown: UseCases.FileSysObjects.branches.searchTopDown.html#
@@ -49,6 +60,11 @@ Search for Files, Directories, and Branches
 .. _searchHookDifferencesOfPointsAndSlices: UseCases.FileSysObjects.branches.searchHookDifferencesOfPointsAndSlices.html#
 .. _iterateSearchList: UseCases.FileSysObjects.branches.iterateSearchList.html#
 .. _createAndUseSearchPathSegment: UseCases.FileSysObjects.branches.createAndUseSearchPathSegment.html#
+
+.. _search.InUpperTree.by_literal: UseCases.FileSysObjects.search.InUpperTree.by_literal.html#
+.. _search.InUpperTree.by_glob: UseCases.FileSysObjects.search.InUpperTree.by_glob.html#
+.. _search.InUpperTree.by_regexpr: UseCases.FileSysObjects.search.InUpperTree.by_regexpr.html#
+.. _search.InUpperTree.by_LRG: UseCases.FileSysObjects.search.InUpperTree.by_LRG.html#
 
 Match on Path Strings
 ^^^^^^^^^^^^^^^^^^^^^

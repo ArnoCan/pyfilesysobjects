@@ -12,6 +12,11 @@ hierarchies.
 This comprises basic functions for the application of object oriented patterns 
 onto files, directories, and branches.
 
+* **Manage Multiple Search Lists and support 're' and 'glob' for path search**
+
+  Provides the creation and usage of multiple search paths including the
+  full scale pattern matching on search paths by 're' and 'glob' `[details] <path_syntax.html#variants-of-pathname-parameters-literals-regexpr-and-glob>`_.
+
 * **Gears for Filesystem Objects - Files, Directories, and Branches**
 
   The package provides a set of basic functions for implementing file system items 

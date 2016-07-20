@@ -74,7 +74,7 @@ Project Data
 
 * VERSION: 00.01
 
-* RELEASE: 00.01.001
+* RELEASE: 00.01.004
 
 * NICKNAME: 'Yggdrasil'
 
@@ -109,7 +109,7 @@ VERSIONS and RELEASES
 * RELEASE: 00.05.00x - Production: Various performance enhancements.
 
 
-**Current Release: 00.01.001 - Alpha:**
+**Current Release: 00.01.005 - Alpha:**
 
 OS-Support - Tested by PyUnit/Eclipse with Success:
 
@@ -131,8 +131,13 @@ OS-Support - ToDo: Going to follow soon.
 
 Major Changes:
 
-* Did some basic concept work on PATH names in conformance to IEEE/1003.1, UNC, CIFS/SMB,
-  including URIs for 'file://'
+* Dropped 'findRelPathInUpperTree', is provided by others
+
+* Minor fixes
+
+* Added some UseCases for glob input/output
+
+* Changed to absolute paths of subcalls of pzsourceinfo for platform independency
 
 **ToDo**:
 

@@ -6,9 +6,9 @@
 Functions
 ---------
 
-normpathX
-^^^^^^^^^
-	.. autofunction:: normpathX
+netNormpathX
+^^^^^^^^^^^^
+	.. autofunction:: netNormpathX
 
 See also
 --------

@@ -1,6 +1,6 @@
 PROJECT='filesysobjects'
-VERSION="0.1.1"
-RELEASE="0.1.1"
+VERSION="0.1.4"
+RELEASE="0.1.4"
 NICKNAME="Yggdrasil"
 AUTHOR='Arno-Can Uestuensoez'
 COPYRIGHT='Copyright (C) 2010,2011,2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez'

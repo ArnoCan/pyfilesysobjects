@@ -1,6 +1,19 @@
 API Shortcuts - filesysobjects
 ==============================
 
+The applicable match scope for a filepathname input is displayed
+in the column `[scope] <path_syntax.html#variants-of-pathname-parameters-literals-regexpr-and-glob>`_.
+Upper case letters indicate active resolution, lower case letters indicate passive string acceptance.
+The search path list is supported as literal only.
+
+* L,l: literal
+
+* R,r: regexpr by 're'
+
+* G,g: 'glob'
+
+Function calls which access the filesystem are marked in the column '[fs]'.
+
 filesysobjects.FileSysObjects
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Filesystem Positions and Navigation for *sys.path*, and extended alternatives.
@@ -8,20 +21,17 @@ Filesystem Positions and Navigation for *sys.path*, and extended alternatives.
 
 * manage search paths - checks filesystem
 
-  match-scope: 
-  `[literal, glob, semi-glob(==glob), regexpr(for delPathFromSearchPath)] <path_syntax.html#variants-of-pathname-parameters-literals-regexpr-and-glob>`_
-
-  +---------------------------------+----------------------------------------------------+
-  | [docs]                          | [source]                                           | 
-  +=================================+====================================================+
-  | `addPathToSearchPath`_          | `FileSysObjects.addPathToSearchPath`_              |
-  +---------------------------------+----------------------------------------------------+
-  | `clearPath`_                    | `FileSysObjects.clearPath`_                        |
-  +---------------------------------+----------------------------------------------------+
-  | `delPathFromSearchPath`_        | `FileSysObjects.delPathFromSearchPath`_            |
-  +---------------------------------+----------------------------------------------------+
-  | `setUpperTreeSearchPath`_       | `FileSysObjects.setUpperTreeSearchPath`_           |
-  +---------------------------------+----------------------------------------------------+
+  +---------------------------------+----------------------------------------------------+---------+------+
+  | [docs]                          | [source]                                           | [scope] | [fs] |
+  +=================================+====================================================+=========+======+
+  | `addPathToSearchPath`_          | `FileSysObjects.addPathToSearchPath`_              | L       | X    |
+  +---------------------------------+----------------------------------------------------+---------+------+
+  | `clearPath`_                    | `FileSysObjects.clearPath`_                        | L       | X    |
+  +---------------------------------+----------------------------------------------------+---------+------+
+  | `delPathFromSearchPath`_        | `FileSysObjects.delPathFromSearchPath`_            | LRG     | X    |
+  +---------------------------------+----------------------------------------------------+---------+------+
+  | `setUpperTreeSearchPath`_       | `FileSysObjects.setUpperTreeSearchPath`_           | L       | X    |
+  +---------------------------------+----------------------------------------------------+---------+------+
 
 .. _FileSysObjects.addPathToSearchPath: _modules/filesysobjects/FileSysObjects.html#addPathToSearchPath
 .. _FileSysObjects.delPathFromSearchPath: _modules/filesysobjects/FileSysObjects.html#delPathFromSearchPath
@@ -35,40 +45,30 @@ Filesystem Positions and Navigation for *sys.path*, and extended alternatives.
 
 
 * search for appended paths of files, directories, and branches - checks filesystem
- 
-  match-scope:
-  `[literal, gllob, semi-glob(==glob)] <path_syntax.html#variants-of-pathname-parameters-literals-regexpr-and-glob>`_
 
-  +---------------------------------+----------------------------------------------------+
-  | [docs]                          | [source]                                           | 
-  +=================================+====================================================+
-  | `findRelPathInSearchPath`_      | `FileSysObjects.findRelPathInSearchPath`_          |
-  +---------------------------------+----------------------------------------------------+
-  | `findRelPathInSearchPathIter`_  | `FileSysObjects.findRelPathInSearchPathIter`_      |
-  +---------------------------------+----------------------------------------------------+
-  | `findRelPathInUpperTree`_       | `FileSysObjects.findRelPathInUpperTree`_           |
-  +---------------------------------+----------------------------------------------------+
+  +---------------------------------+----------------------------------------------------+---------+------+
+  | [docs]                          | [source]                                           | [scope] | [fs] |
+  +=================================+====================================================+=========+======+
+  | `findRelPathInSearchPath`_      | `FileSysObjects.findRelPathInSearchPath`_          | LG      | X    |
+  +---------------------------------+----------------------------------------------------+---------+------+
+  | `findRelPathInSearchPathIter`_  | `FileSysObjects.findRelPathInSearchPathIter`_      | LG      | X    |
+  +---------------------------------+----------------------------------------------------+---------+------+
 
 .. _FileSysObjects.findRelPathInSearchPath: _modules/filesysobjects/FileSysObjects.html#findRelPathInSearchPath
 .. _FileSysObjects.findRelPathInSearchPathIter: _modules/filesysobjects/FileSysObjects.html#findRelPathInSearchPathIter
-.. _FileSysObjects.findRelPathInUpperTree: _modules/filesysobjects/FileSysObjects.html#findRelPathInUpperTree
 
 .. _findRelPathInSearchPath: filesysobjects.html#findrelpathinsearchpath
 .. _findRelPathInSearchPathIter: filesysobjects.html#findrelpathinsearchpathiter
-.. _findRelPathInUpperTree: filesysobjects.html#findrelpathinuppertree
 
 * match files, directories, and branches into path strings - works on strings only
 
-  match-scope:
-  `[literal, regexpr, semi-regexpr] <path_syntax.html#variants-of-pathname-parameters-literals-regexpr-and-glob>`_
-
-  +---------------------------------+----------------------------------------------------+
-  | [docs]                          | [source]                                           | 
-  +=================================+====================================================+
-  | `getTopFromPathString`_         | `FileSysObjects.getTopFromPathString`_             |
-  +---------------------------------+----------------------------------------------------+
-  | `getTopFromPathStringIter`_     | `FileSysObjects.getTopFromPathStringIter`_         |
-  +---------------------------------+----------------------------------------------------+
+  +---------------------------------+----------------------------------------------------+---------+------+
+  | [docs]                          | [source]                                           | [scope] | [fs] | 
+  +=================================+====================================================+=========+======+
+  | `getTopFromPathString`_         | `FileSysObjects.getTopFromPathString`_             | LRg     | --   |
+  +---------------------------------+----------------------------------------------------+---------+------+
+  | `getTopFromPathStringIter`_     | `FileSysObjects.getTopFromPathStringIter`_         | LRg     | --   |
+  +---------------------------------+----------------------------------------------------+---------+------+
 
 .. _FileSysObjects.getTopFromPathString: _modules/filesysobjects/FileSysObjects.html#getTopFromPathString
 .. _FileSysObjects.getTopFromPathStringIter: _modules/filesysobjects/FileSysObjects.html#getTopFromPathStringIter
@@ -81,19 +81,19 @@ Canonical Node Address
 
 * Manage pathnames - files, directories, and branches
 
-  +---------------------------------+----------------------------------------------------+
-  | [docs]                          | [source]                                           | 
-  +=================================+====================================================+
-  | `escapeFilePath`_               | `FileSysObjects.escapeFilePath`_                   |
-  +---------------------------------+----------------------------------------------------+
-  | `getAppPrefixLocalPath`_        | `FileSysObjects.getAppPrefixLocalPath`_            |
-  +---------------------------------+----------------------------------------------------+
-  | `normpathX`_                    | `FileSysObjects.normpathX`_                        |
-  +---------------------------------+----------------------------------------------------+
-  | `splitAppPrefix`_               | `FileSysObjects.splitAppPrefix`_                   |
-  +---------------------------------+----------------------------------------------------+
-  | `unescapeFilePath`_             | `FileSysObjects.unescapeFilePath`_                 |
-  +---------------------------------+----------------------------------------------------+
+  +---------------------------------+----------------------------------------------------+---------+------+
+  | [docs]                          | [source]                                           | [scope] | [fs] |
+  +=================================+====================================================+=========+======+
+  | `escapeFilePath`_               | `FileSysObjects.escapeFilePath`_                   | lg      | --   |
+  +---------------------------------+----------------------------------------------------+---------+------+
+  | `getAppPrefixLocalPath`_        | `FileSysObjects.getAppPrefixLocalPath`_            | lrg     | --   |
+  +---------------------------------+----------------------------------------------------+---------+------+
+  | `normpathX`_                    | `FileSysObjects.normpathX`_                        | l       | --   |
+  +---------------------------------+----------------------------------------------------+---------+------+
+  | `splitAppPrefix`_               | `FileSysObjects.splitAppPrefix`_                   | lrg     | --   |
+  +---------------------------------+----------------------------------------------------+---------+------+
+  | `unescapeFilePath`_             | `FileSysObjects.unescapeFilePath`_                 | lg      | --   |
+  +---------------------------------+----------------------------------------------------+---------+------+
 
 .. _FileSysObjects.escapeFilePath: _modules/filesysobjects/FileSysObjects.html#escapeFilePath
 .. _FileSysObjects.getAppPrefixLocalPath: _modules/filesysobjects/FileSysObjects.html#getAppPrefixLocalPath
@@ -111,14 +111,14 @@ Canonical Node Address
 * For now experimental and non-productive, for review and comments
   `[docs] <netfiles.html#>`_
 
-  +---------------------------------+-------------------------------------------------+
-  | [docs]                          | [source]                                        | 
-  +=================================+=================================================+
-  | `netNormpathX`_                    | `NetFiles.netNormpathX`_                     |
-  +---------------------------------+-------------------------------------------------+
+  +---------------------------------+-------------------------------------------------+---------+------+
+  | [docs]                          | [source]                                        | [scope] | [fs] |
+  +=================================+=================================================+=========+======+
+  | `netNormpathX`_                    | `NetFiles.netNormpathX`_                     |         |      |
+  +---------------------------------+-------------------------------------------------+---------+------+
 
 .. _netNormpathX: netfiles.html#filesysobjects.NetFiles.netNormpathX
-.. _NetFiles.normpathX: _modules/filesysobjects/NetFiles.html#normpathX
+.. _NetFiles.netNormpathX: _modules/filesysobjects/NetFiles.html#netnormpathx
 
 
 

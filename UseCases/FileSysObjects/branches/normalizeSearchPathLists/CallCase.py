@@ -32,7 +32,6 @@ Calling elementary functions.
 """
 from __future__ import absolute_import
 from __future__ import print_function
-import filesysobjects
 
 __author__ = 'Arno-Can Uestuensoez'
 __license__ = "Artistic-License-2.0 + Forced-Fairplay-Constraints"
@@ -47,9 +46,7 @@ import os,sys
 
 from filesysobjects.FileSysObjects import setUpperTreeSearchPath
 from filesysobjects.FileSysObjects import findRelPathInSearchPath
-from filesysobjects.FileSysObjects import findRelPathInUpperTree
 from filesysobjects.FileSysObjects import clearPath
-from pysourceinfo.PySourceInfo import getPythonPathRel
 
 #
 #######################
@@ -61,7 +58,6 @@ class CallUnits(unittest.TestCase):
         _s = sys.path[:]
 
         import testdata
-        import filesysobjects.FileSysObjects
           
         s = os.sep
         
