@@ -22,7 +22,7 @@ import pysourceinfo
 #
 
 
-class CallUnits(unittest.TestCase):
+class UseCase(unittest.TestCase):
 
     def root_from_string(self):
         _s = sys.path[:]

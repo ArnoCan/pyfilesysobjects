@@ -25,7 +25,7 @@ from filesysobjects.FileSysObjects import clearPath
 #######################
 #
 
-class CallUnits(unittest.TestCase):
+class UseCase(unittest.TestCase):
 
     def testCase100(self):
         """The scope of the start node is literal+glob(LG). 

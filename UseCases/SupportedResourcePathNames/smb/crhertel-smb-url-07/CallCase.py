@@ -19,7 +19,7 @@ from filesysobjects.FileSysObjects import normpathX
 #
 
 
-class CallUnits(tests.CheckEscUnesc.CheckEscUnesc):
+class UseCase(tests.CheckEscUnesc.CheckEscUnesc):
 
     def testCase040(self):
         _in        = r'smb://'

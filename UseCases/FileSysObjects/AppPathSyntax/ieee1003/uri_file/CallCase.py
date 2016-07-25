@@ -20,7 +20,7 @@ import filesysobjects.FileSysObjects
 #
 
 
-class CallUnits(unittest.TestCase):
+class UseCase(unittest.TestCase):
 
     def testCase_generic_share(self):
         apstr = os.path.normpath('//hostname/share/a/b/c')

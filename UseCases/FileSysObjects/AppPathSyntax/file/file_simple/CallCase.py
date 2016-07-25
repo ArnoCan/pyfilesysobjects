@@ -12,7 +12,7 @@ from filesysobjects.FileSysObjects import setUpperTreeSearchPath,getTopFromPathS
 #
 #######################
 #
-class CallUnits(unittest.TestCase):
+class UseCase(unittest.TestCase):
     
     def testCase_simple_file_abs(self):
         _s = sys.path[:]

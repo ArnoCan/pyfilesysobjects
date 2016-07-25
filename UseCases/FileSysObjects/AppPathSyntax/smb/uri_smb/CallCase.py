@@ -20,7 +20,7 @@ import filesysobjects.FileSysObjects
 #
 
 
-class CallUnits(unittest.TestCase):
+class UseCase(unittest.TestCase):
 
     def testCase_uri_smb(self):
         apstr = 'smb://'+os.path.normpath('hostname/share/a/b/c')

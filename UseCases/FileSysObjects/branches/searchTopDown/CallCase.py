@@ -50,7 +50,7 @@ from filesysobjects.FileSysObjects import clearPath
 #######################
 #
 
-class CallUnits(unittest.TestCase):
+class UseCase(unittest.TestCase):
     
     def testCase000(self):
         _s = sys.path[:]

@@ -16,7 +16,7 @@ from filesysobjects.FileSysObjects import setUpperTreeSearchPath,getAppPrefixLoc
 #
 #######################
 #
-class CallUnits(unittest.TestCase):
+class UseCase(unittest.TestCase):
     
     def testCase_SharedDriveC(self):
         #for now windows only

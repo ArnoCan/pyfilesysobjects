@@ -248,6 +248,9 @@ def addPathToSearchPath(spath, plist=None, **kargs):
             append: Append, this is equal to
                 pos=len(plist).
                 
+            checkreal: Checks redundancy py resolving realpath,
+                else literlaly.
+
             exist: Checks whether exists, else nothing is done. 
 
             pos=#pos: A specific position for insertion
@@ -256,9 +259,14 @@ def addPathToSearchPath(spath, plist=None, **kargs):
             prepend: Prepend, this is equal to
                 pos=0.
                 
+            redundant: Add relative, allow redundant when
+                same is already present.
+
             relative=<base>: Add relative subpath to 
                 provided base.
-                
+
+            searchplist: Alternative list to search for checks.
+
     Returns:
         When successful returns insertion position, else a 'value<0'.
         The insertion position in case of multiple items is the position 
@@ -275,6 +283,8 @@ def addPathToSearchPath(spath, plist=None, **kargs):
     pos = 0
     relative = None
     _exist = False
+    _red = False
+    _chkr = False
     for k, v in kargs.items():
         if k == 'prepend':
             pos = 0
@@ -287,11 +297,24 @@ def addPathToSearchPath(spath, plist=None, **kargs):
         elif k == 'relative':
             relative = v.split(os.pathsep)
         elif k == 'exists':
-            _exist = True
+            _exist = v
+        elif k == 'redundant':
+            _red = v
+        elif k == 'checkreal':
+            _chkr = v
 
     def _add(s):
         if relative:
             s = getPythonPathRel(s, relative)
+        if not _red:
+            if _chkr:
+                for sx in map(lambda x:os.path.realpath(x), plist):
+                    if os.path.realpath(s) == sx:
+                        return
+            else:
+                if s in plist:
+                    return
+
         if pos == -1:
             plist.append(s)
             return len(plist) - 1
@@ -464,8 +487,9 @@ def clearPath(plist=None, **kargs):
     if _split:
         _pn = []
         for p in pn:
-            for px in p.split(os.pathsep):
-                _pn.append(px)
+            if p:
+                for px in p.split(os.pathsep):
+                    _pn.append(px)
         pn = _pn
 
     #
@@ -547,18 +571,20 @@ def delPathFromSearchPath(dellist, plist=None, **kargs):
                 real: Calls on both: os.path.realpath
                 
             regexpr|glob: Input is a list of
+
                 regexpr: regular expressions,
                     just processed by 
                         're.match(dl,pl)'
  
                 glob: process glob, and check 
                     containment in set
-            
+
     Returns:
         When successful returns True, else False.
 
     Raises:
-        passed through exceptions:
+        passed through exceptions
+        
     """
     if type(plist) == NoneType:
         plist = sys.path
@@ -570,6 +596,7 @@ def delPathFromSearchPath(dellist, plist=None, **kargs):
     _real = kargs.get('real', False)
     _norm = kargs.get('norm', False)
     _case = kargs.get('case', False)
+
     for k, v in kargs.items():  # @UnusedVariable
         if k == 'exist':
             _exist = True
@@ -592,7 +619,6 @@ def delPathFromSearchPath(dellist, plist=None, **kargs):
         dellist = [dellist]
 
     for dl in dellist:
-
         for pl in reversed(plist):
             if not _raw:
                 if dl and len(dl) > 6 and dl[0:7] == 'file://':
@@ -623,13 +649,13 @@ def delPathFromSearchPath(dellist, plist=None, **kargs):
             if _rg:
                 if _reg:
                     if re.match(dl, pl):
-                        plist.pop()
+                        plist.pop(plist.index(pl))
                 elif _glob:
                     if pl in glob.glob(dl):
-                        plist.pop()
+                        plist.pop(plist.index(pl))
             else:
                 if dl == pl:
-                    plist.pop()
+                    plist.pop(plist.index(pl))
 
     return True
 
@@ -652,7 +678,7 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
 
                 * literal : X
                 * re      : -
-                * blob    : X
+                * glob    : X
 
             See common options for details.
 
@@ -695,6 +721,7 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
 
     Raises:
         passed through exceptions:
+        
     """
     if type(plist) == NoneType:
         plist = sys.path
@@ -722,25 +749,25 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
         elif k == 'ias':
             ias = v
         elif k == 'not':
-            _not = True
+            _not = v
         elif k == 'raw':
-            raw = True
+            raw = v
         elif k == 'reverse':
-            _rev = True
+            _rev = v
         elif k == 'noglob':
-            _ng = True
+            _ng = v
         elif k == 'isLink':
             _chkT = True
-            _isL = True
+            _isL = v
         elif k == 'isDir':
             _chkT = True
-            _isD = True
+            _isD = v
         elif k == 'isFile':
             _chkT = True
-            _isF = True
+            _isF = v
         elif k == 'isPathByLink':
             _chkT = True
-            _isPL = True
+            _isPL = v
         else:
             raise FileSysObjectsException("Unknown param: " + str(k) + ":" + str(v))
 
@@ -794,8 +821,6 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
 
         return None
 
-    
-    
     # now look for hooks of relative paths in plist
     if _rev:
         _pl = reversed(plist)

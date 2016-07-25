@@ -67,21 +67,20 @@ __docformat__ = "restructuredtext en"
 import unittest
 import os,sys
 
-from filesysobjects.FileSysObjects import escapeFilePath
 from filesysobjects.FileSysObjects import setUpperTreeSearchPath
 from filesysobjects.FileSysObjects import findRelPathInSearchPath
-from filesysobjects.FileSysObjects import getTopFromPathString,getTopFromPathStringIter
+from filesysobjects.FileSysObjects import getTopFromPathString
 
 #
 #######################
 #
 
-class UseCase(unittest.TestCase):
+class CallUnits(unittest.TestCase):
     
     def __init__(self,*args,**kargs):
         """Initialize common refence and data"""
         
-        super(UseCase,self).__init__(*args,**kargs)
+        super(CallUnits,self).__init__(*args,**kargs)
         
         _s = sys.path[:]
 
@@ -105,80 +104,84 @@ class UseCase(unittest.TestCase):
         #    adds each directory from spath to its matching 
         #    subnode  "a/b"
         #
-        setUpperTreeSearchPath(spath,os.path.normpath('examples/a'), self._plist)
+        setUpperTreeSearchPath(spath,os.path.normpath(r'a/b0'), self._plist)
         self._plist_ref = [ # expected plist
             os.path.normpath(testdata.mypath+'/examples/a/b0/c/a/b0/c'),
             os.path.normpath(testdata.mypath+'/examples/a/b0/c/a/b0'),
             os.path.normpath(testdata.mypath+'/examples/a/b0/c/a'),
             os.path.normpath(testdata.mypath+'/examples/a/b0/c'),
             os.path.normpath(testdata.mypath+'/examples/a/b0'),
-            os.path.normpath(testdata.mypath+'/examples/a'),
         ]
         assert self._plist_ref == self._plist 
 
 
-        _tmplist = []
-        _tmp_start = testdata.mypath + os.path.normpath('/examples/a/b0/a/b0/c/F')
-        setUpperTreeSearchPath(_tmp_start,os.path.normpath('examples/a'), _tmplist)
-        _tmplist_ref = [ # expected plist
-            os.path.normpath(testdata.mypath+'/examples/a/b0/a/b0/c'),
-            os.path.normpath(testdata.mypath+'/examples/a/b0/a/b0'),
-            os.path.normpath(testdata.mypath+'/examples/a/b0/a'),
-            os.path.normpath(testdata.mypath+'/examples/a/b0'),
-            os.path.normpath(testdata.mypath+'/examples/a'),
-        ]
-        assert _tmplist_ref == _tmplist
-        self._plist.extend(_tmplist) 
- 
-        _tmplist = []
-        _tmp_start = testdata.mypath + os.path.normpath('/examples/a/b2/a/b0/c/F')
-        setUpperTreeSearchPath(_tmp_start,os.path.normpath('examples/a'), _tmplist)
-        _tmplist_ref = [ # expected plist
-            os.path.normpath(testdata.mypath+'/examples/a/b2/a/b0/c'),
-            os.path.normpath(testdata.mypath+'/examples/a/b2/a/b0'),
-            os.path.normpath(testdata.mypath+'/examples/a/b2/a'),
-            os.path.normpath(testdata.mypath+'/examples/a/b2'),
-            os.path.normpath(testdata.mypath+'/examples/a'),
-        ]
-        assert _tmplist_ref == _tmplist
-        self._plist.extend(_tmplist) 
+    def testCase001(self):
+        """1. search and create a path for a side branch"""
+        import testdata
 
-        _tmplist = []
-        _tmp_start = testdata.mypath + os.path.normpath('/examples/a/b1/c/F')
-        setUpperTreeSearchPath(_tmp_start,os.path.normpath('examples/a'), _tmplist)
-        _tmplist_ref = [ # expected plist
-            os.path.normpath(testdata.mypath+'/examples/a/b1/c'),
-            os.path.normpath(testdata.mypath+'/examples/a/b1'),
-            os.path.normpath(testdata.mypath+'/examples/a'),
-        ]
-        assert _tmplist_ref == _tmplist
-        self._plist.extend(_tmplist) 
+        sp = os.path.normpath('a/b0/F[0-7]*')
+        expected = os.path.normpath(testdata.mypath+'/examples/a/b0/F[0-7]*')
+        rp = getTopFromPathString(sp,self._plist)
+        assert expected == rp 
 
-    def testCase010(self):
+    def testCase001b(self):
+        """1. search and create a path for a side branch"""
+        import testdata
+
+        sp = os.path.normpath('a/b[0123]/F[0-7]*')
+        expected = os.path.normpath(testdata.mypath+'/examples/a/b[0123]/F[0-7]*')
+        rp = getTopFromPathString(sp,self._plist)
+        assert expected == rp 
+
+    def testCase001c(self):
+        """1. search and create a path for a side branch"""
+        import testdata
+
+        sp = os.path.normpath('a/b[0123]/F[0-7]*')
+        expected = os.path.normpath(testdata.mypath+'/examples/a/b0/F[0-7]*')
+        rp = getTopFromPathString(sp,self._plist,**{'pattern':'regnode'})
+        assert expected == rp 
+
+    def testCase001d(self):
+        """2. search and create a path for a side branch - use the second plist entry""" 
+        import testdata
+
+        sp0 = os.path.normpath('.*/.*/.*/F')
+        rp0 = getTopFromPathString(sp0,self._plist,**{'pattern':'regnode'})
+        sp1 = os.path.normpath('/.*/.*/.*/F')
+        rp1 = getTopFromPathString(sp1,self._plist,**{'pattern':'regnode'})
+
+        assert rp0 == rp1
+        _x0 = rp0.split(os.sep)
+        _x1 = rp1.split(os.sep)
+        assert len(_x0) == 5
+        assert len(_x1) == 5
+
+    def testCase002(self):
+        """2. search and create a path for a side branch - use the second plist entry""" 
+        import testdata
+
+        sp = testdata.mypath+os.path.normpath('/.*/.*/.*/F')
+        expected = os.path.normpath(testdata.mypath+'/examples/a/b0/F')
+        rp = getTopFromPathString(sp,self._plist,**{'pattern':'regnode','matchidx':1})
+        assert expected == rp 
+
+    def testCase003(self):
         """3. search and create a path for a side branch - use the second plist entry + reverse the order"""        
         import testdata
 
-#TODO:
-#        sp  = testdata.mypath+os.path.normpath('/examples/[a-z]/b[02]/[a]:')
-#        sp += os.pathsep+testdata.mypath+os.path.normpath('/examples/[a-z]/b[02]/[F]:')
+        sp = testdata.mypath+os.path.normpath('/examples/[a-z]/*/*/*/F')
+        expected = os.path.normpath(testdata.mypath+'/examples/a//*/*/*/F')
+        rp = getTopFromPathString(sp,self._plist,**{'pattern':'regnode','matchidx':1})
+        assert expected == rp 
 
-#        sp = testdata.mypath+os.path.normpath('/examples/[a-z]/b[02]/[aF]')
-        sp = os.path.normpath('examples/[a-z]/b[02]/[ac]')
-        expected = os.path.normpath(testdata.mypath+'/examples/a/*/*/*/F')
-
-        a = 0
-        for it in getTopFromPathStringIter(sp,self._plist,**{'pattern':'regnode','patternlvl':3}):
-            a += 1
-
-        #assert expected == rp 
-
-#         import glob
-#         gx = glob.glob(rp)
-#         gref = [
-#             os.path.normpath(testdata.mypath+'/examples/a/b2/a/b0/F'),
-#             os.path.normpath(testdata.mypath+'/examples/a/b0/a/b0/F'),
-#         ]
-#         assert gref.sort() == gx.sort()
+        import glob
+        gx = glob.glob(rp)
+        gref = [
+            os.path.normpath(testdata.mypath+'/examples/a/b2/a/b0/F'),
+            os.path.normpath(testdata.mypath+'/examples/a/b0/a/b0/F'),
+        ]
+        assert gref.sort() == gx.sort()
 
     def testCase003a(self):
         """3. search and create a path for a side branch - use the second plist entry + reverse the order"""        
@@ -187,7 +190,7 @@ class UseCase(unittest.TestCase):
         sp = testdata.mypath+os.path.normpath('/examples/.*/[a-z]*/*/*/F')
         expected = os.path.normpath(testdata.mypath+'/examples/a/[a-z]*/*/*/F')
         rp = getTopFromPathString(sp,self._plist,**{'pattern':'regnode','matchidx':1})
-        assert escapeFilePath(expected) == escapeFilePath(rp) 
+        assert expected == rp 
 
         import glob
         gx = glob.glob(rp)

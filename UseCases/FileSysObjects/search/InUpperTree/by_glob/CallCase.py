@@ -22,7 +22,7 @@ from filesysobjects.FileSysObjects import getTopFromPathString
 #######################
 #
 
-class CallUnits(unittest.TestCase):
+class UseCase(unittest.TestCase):
     def testCase000(self):
 
         # *** save sys.path ***

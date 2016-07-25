@@ -76,12 +76,12 @@ from filesysobjects.FileSysObjects import getTopFromPathString
 #######################
 #
 
-class CallUnits(unittest.TestCase):
+class UseCase(unittest.TestCase):
     
     def __init__(self,*args,**kargs):
         """Initialize common refence and data"""
         
-        super(CallUnits,self).__init__(*args,**kargs)
+        super(UseCase,self).__init__(*args,**kargs)
         
         _s = sys.path[:]
 

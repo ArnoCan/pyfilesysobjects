@@ -11,7 +11,7 @@ from filesysobjects.FileSysObjects import setUpperTreeSearchPath
 #
 #######################
 #
-class CallUnits(unittest.TestCase):
+class UseCase(unittest.TestCase):
     
 
     

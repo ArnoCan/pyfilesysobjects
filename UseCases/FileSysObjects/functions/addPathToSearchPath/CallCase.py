@@ -24,7 +24,7 @@ from pysourceinfo.PySourceInfo import getPythonPathRel
 #######################
 #
 
-class CallUnits(unittest.TestCase):
+class UseCase(unittest.TestCase):
     
 
     

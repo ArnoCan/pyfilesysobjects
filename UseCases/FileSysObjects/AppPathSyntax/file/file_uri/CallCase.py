@@ -14,7 +14,7 @@ from unittest.case import SkipTest
 #
 #######################
 #
-class CallUnits(unittest.TestCase):
+class UseCase(unittest.TestCase):
     
     def testCase_file_uri(self):
         

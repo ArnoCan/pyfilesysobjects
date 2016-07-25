@@ -12,7 +12,7 @@ from unittest.case import SkipTest
 #
 #######################
 #
-class CallUnits(unittest.TestCase):
+class UseCase(unittest.TestCase):
 
     def testCase_drive_and_driveless_path(self):
 

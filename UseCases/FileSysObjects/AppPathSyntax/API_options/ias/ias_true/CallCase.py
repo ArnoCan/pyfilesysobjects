@@ -10,7 +10,7 @@ from filesysobjects.FileSysObjects import setUpperTreeSearchPath,splitAppPrefix,
 #
 #######################
 #
-class CallUnits(unittest.TestCase):
+class UseCase(unittest.TestCase):
     
     def testCase_IAS_True(self):
         _s = sys.path[:]
