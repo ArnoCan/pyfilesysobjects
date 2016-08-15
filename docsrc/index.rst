@@ -50,9 +50,30 @@ onto files, directories, and branches.
 `Shortcuts <shortcuts.html>`_
 ============================
 
+Concepts and workflows:
+
+* Filesystem Elements as Objects
+  `[details] <path_syntax.html#filesystem-elements-as-objects>`_
+
+* Variants of Pathname Parameters - Literals, RegExpr, and Glob 
+  `[details] <path_syntax.html#variants-of-pathname-parameters-literals-regexpr-and-glob>`_
+
+* Syntax Elements 
+  `[details] <path_syntax.html#syntax-elements>`_
+
+* Call Parameters of the API 
+  `[details] <path_syntax.html#call-parameters-of-the-api>`_
+
+Common Interfaces:
+
 * `Programming Interface <shortcuts.html>`_
 
 * `Selected Common UsesCases <usecases.html>`_
+
+Complete technical API:
+
+* `API by Epydoc <epydoc/index.html>`_
+
 
 Table of Contents
 =================

@@ -1,6 +1,6 @@
 PROJECT='filesysobjects'
-VERSION="0.1.6"
-RELEASE="0.1.6"
+VERSION="0.1.8"
+RELEASE="0.1.8"
 NICKNAME="Yggdrasil"
 AUTHOR='Arno-Can Uestuensoez'
 COPYRIGHT='Copyright (C) 2010,2011,2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez'
@@ -35,7 +35,7 @@ STATIC="${OUTDIR}/apidoc/sphinx/_static"
 
 # source entities
 FILEDIRS=""
-FILEDIRS="${INDIR}filesysobjects"
+#FILEDIRS="${INDIR}filesysobjects"
 FILEDIRS="$FILEDIRS ${INDIR}UseCases"
 FILEDIRS="$FILEDIRS ${INDIR}tests"
 FILEDIRS="$FILEDIRS ${INDIR}testdata"
@@ -72,17 +72,40 @@ for fx in ${FX[@]};do
 	eval $CALL "$fx"
 done
 
-# echo "extensions.append('sphinx.ext.intersphinx.')" >> ${OUTDIR}/apidoc/sphinx/conf.py
-# echo "sys.path.insert(0, os.path.abspath('$PWD/..'))" >> ${OUTDIR}/apidoc/sphinx/conf.py
+# rst files
+for d in docsrc/*.rst;do cat $d > ${OUTDIR}/apidoc/sphinx/${d##*/}; done
+
+#
+# static - literal data
+#
+# images
+for d in docsrc/*.{png,jpg};do cp $d "${STATIC}"; done
+
+# html
+for d in docsrc/*.html;do cp $d "${STATIC}"; done
+
+# txt
+for d in docsrc/*.txt;do cp $d "${STATIC}"; done
+
+# css
+for d in docsrc/*.css;do cp $d "${STATIC}"; done
+
+cp ArtisticLicense20.html "${STATIC}"
+cp licenses-amendments.txt "${STATIC}"
+
+
 {
 cat <<EOF 
 
+import sys,os
 extensions.append('sphinx.ext.intersphinx.')
 sys.path.insert(0, os.path.abspath('$PWD/..'))
+sys.path.insert(0, os.path.abspath('$PWD'))
 
 html_logo = "_static/pyfilesysobjects-64x64.png"
 #html_favicon = None
 
+html_theme = "default"
 #html_theme = "classic"
 #html_theme = "pyramid"
 #html_theme = "agogo"
@@ -123,9 +146,9 @@ html_theme_options = {
 
 EOF
 } >> ${OUTDIR}/apidoc/sphinx/conf.py
-mkdir "${STATIC}/css/"
-cp docsrc/custom.css "${STATIC}/css/custom.css"
-cp docsrc/pyfilesysobjects-64x64.png "${STATIC}/"
+# mkdir "${STATIC}/css/"
+# cp docsrc/custom.css "${STATIC}/css/custom.css"
+# cp docsrc/pyfilesysobjects-64x64.png "${STATIC}/"
 
 
 # put the docs together
@@ -158,26 +181,26 @@ Project data summary:
 EOF
 } >> ${OUTDIR}/apidoc/sphinx/index.rst 
 
-#
-cat docsrc/pyfilesysobjects.rst > ${OUTDIR}/apidoc/sphinx/pyfilesysobjects.rst
-cat docsrc/filesysobjects.rst > ${OUTDIR}/apidoc/sphinx/filesysobjects.rst
-cat docsrc/netfiles.rst > ${OUTDIR}/apidoc/sphinx/netfiles.rst
-cat docsrc/shortcuts.rst > ${OUTDIR}/apidoc/sphinx/shortcuts.rst
-cat docsrc/usecases.rst > ${OUTDIR}/apidoc/sphinx/usecases.rst
-#
-cat docsrc/path_syntax.rst > ${OUTDIR}/apidoc/sphinx/path_syntax.rst
-cat docsrc/path_syntax_examples.rst > ${OUTDIR}/apidoc/sphinx/path_syntax_examples.rst
-#
-cat docsrc/path_netfiles.rst > ${OUTDIR}/apidoc/sphinx/path_netfiles.rst
-#
-#
-# static - literal data
-cat ArtisticLicense20.html > "${STATIC}/ArtisticLicense20.html"
-cat licenses-amendments.txt > "${STATIC}/licenses-amendments.txt"
-#
-cp docsrc/filesysobjectsnav.png "${STATIC}"
-cp docsrc/pathname_types.png "${STATIC}"
-cp docsrc/pathname_functions.png "${STATIC}"
+# #
+# cat docsrc/pyfilesysobjects.rst > ${OUTDIR}/apidoc/sphinx/pyfilesysobjects.rst
+# cat docsrc/filesysobjects.rst > ${OUTDIR}/apidoc/sphinx/filesysobjects.rst
+# cat docsrc/netfiles.rst > ${OUTDIR}/apidoc/sphinx/netfiles.rst
+# cat docsrc/shortcuts.rst > ${OUTDIR}/apidoc/sphinx/shortcuts.rst
+# cat docsrc/usecases.rst > ${OUTDIR}/apidoc/sphinx/usecases.rst
+# #
+# cat docsrc/path_syntax.rst > ${OUTDIR}/apidoc/sphinx/path_syntax.rst
+# cat docsrc/path_syntax_examples.rst > ${OUTDIR}/apidoc/sphinx/path_syntax_examples.rst
+# #
+# cat docsrc/path_netfiles.rst > ${OUTDIR}/apidoc/sphinx/path_netfiles.rst
+# #
+# #
+# # static - literal data
+# cat ArtisticLicense20.html > "${STATIC}/ArtisticLicense20.html"
+# cat licenses-amendments.txt > "${STATIC}/licenses-amendments.txt"
+# #
+# cp docsrc/filesysobjectsnav.png "${STATIC}"
+# cp docsrc/pathname_types.png "${STATIC}"
+# cp docsrc/pathname_functions.png "${STATIC}"
 
 #CALL="SPHINXOPTS= "
 CALL=" "
@@ -201,8 +224,8 @@ DOCDIR="${DOCDIR:-doc/en/html/man3/$PROJECT}"
 if [ ! -e "${DOCDIR}" ];then
 	mkdir -p "${DOCDIR}"
 fi
-cp -a "${DOCHTMLDIR}"/html/* "${DOCDIR}"
-echo
-echo "display with: firefox -P preview.simple ${DOCHTML}"
-echo "display with: firefox -P preview.simple ${DOCDIR}/index.html"
+# cp -a "${DOCHTMLDIR}"/html/* "${DOCDIR}"
+# echo
+# echo "display with: firefox -P preview.simple ${DOCHTML}"
+# echo "display with: firefox -P preview.simple ${DOCDIR}/index.html"
 echo

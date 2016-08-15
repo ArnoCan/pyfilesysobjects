@@ -74,7 +74,7 @@ Project Data
 
 * VERSION: 00.01
 
-* RELEASE: 00.01.004
+* RELEASE: 00.01.008
 
 * NICKNAME: 'Yggdrasil'
 
@@ -109,30 +109,11 @@ VERSIONS and RELEASES
 * RELEASE: 00.05.00x - Production: Various performance enhancements.
 
 
-**Current Release: 00.01.006 - Alpha:**
-
-OS-Support - Tested by PyUnit/Eclipse with Success:
-
-* Linux: Fedora - others should work, ToDo: CentOS, Debian, and SuSE 
-
-* Windows: Win10 - others see Cygwin
-
-* Mac-OS: Snow Leopard - others should work
-
-* Cygwin: 2.874/64 bit
-
-
-OS-Support - ToDo: Going to follow soon.
-
-* BSD: ToDo: OpenBSD, FreeBSD - others should work
-
-* UNIX: ToDo: Solaris-11 - should work
-
+**Current Release: 00.01.008 - Alpha:**
 
 Major Changes:
 
-* Bugfixes
-
+* Extended document creation, embedded Epydoc output into Sphinx output.
 
 **ToDo**:
 
