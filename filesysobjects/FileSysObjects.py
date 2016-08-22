@@ -134,7 +134,7 @@ from __builtin__ import True
 __author__ = 'Arno-Can Uestuensoez'
 __license__ = "Artistic-License-2.0 + Forced-Fairplay-Constraints"
 __copyright__ = "Copyright (C) 2010-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez"
-__version__ = '0.1.8'
+__version__ = '0.1.9'
 __uuid__ = '9de52399-7752-4633-9fdc-66c87a9200b8'
 
 __docformat__ = "restructuredtext en"
@@ -792,11 +792,11 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
         if _chkT:
             if _isF and not os.path.isfile(_px):
                 _b = False
-            if _isD and not os.path.isdir(_px):
+            elif _isD and not os.path.isdir(_px):
                 _b = False
-            if _isL and not os.path.islink(_px):
+            elif _isL and not os.path.islink(_px):
                 _b = False
-            if _isPL and not os.path.isfile(_px):
+            elif _isPL and not os.path.isfile(_px):
                 _b = False
         return _b
 

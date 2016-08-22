@@ -109,11 +109,11 @@ VERSIONS and RELEASES
 * RELEASE: 00.05.00x - Production: Various performance enhancements.
 
 
-**Current Release: 00.01.008 - Alpha:**
+**Current Release: 00.01.009 - Alpha:**
 
 Major Changes:
 
-* Extended document creation, embedded Epydoc output into Sphinx output.
+* Minor fixes.
 
 **ToDo**:
 

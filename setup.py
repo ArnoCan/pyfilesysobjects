@@ -53,7 +53,7 @@ __author__ = 'Arno-Can Uestuensoez'
 __author_email__ = 'acue_sf2@sourceforge.net'
 __license__ = "Artistic-License-2.0 + Forced-Fairplay-Constraints"
 __copyright__ = "Copyright (C) 2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez"
-__version__ = '0.1.8'
+__version__ = '0.1.9'
 __uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
 
 #_NAME = 'pyfilesysobjects' # legacy
@@ -340,12 +340,12 @@ if 'tests' in sys.argv or 'test' in sys.argv:
         print "# putenv:PATH[0]="+str(p0)
     
     print "#"
-    print "# Check 'inspect' paths - call in: tests"
-    exit_code  = os.system('python -m unittest discover -s tests -p CallCase.py') # traverse tree
-    print "# Check 'inspect' paths - call in: tests.30_libs"
-    exit_code += os.system('python -m unittest discover -s tests.30_libs -p CallCase.py') # traverse tree
     print "# Check 'inspect' paths - call in: tests.30_libs.040_FileSysObjects"
     exit_code += os.system('python -m unittest discover -s tests.30_libs.040_FileSysObjects -p CallCase.py') # traverse tree
+    print "# Check 'inspect' paths - call in: tests.30_libs"
+    exit_code += os.system('python -m unittest discover -s tests.30_libs -p CallCase.py') # traverse tree
+    print "# Check 'inspect' paths - call in: tests"
+    exit_code  = os.system('python -m unittest discover -s tests -p CallCase.py') # traverse tree
     print "#"
     print "Called/Finished PyUnit tests => exit="+str(exit_code)
     print "exit setup.py now: exit="+str(exit_code)
@@ -494,7 +494,6 @@ if __debug__:
         print "#---------------------------------------------------------"
         print "package_data="+str(_package_data)
         print "#---------------------------------------------------------"
-
 
 
 #
