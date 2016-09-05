@@ -45,6 +45,8 @@ from filesysobjects.FileSysObjects import setUpperTreeSearchPath
 from filesysobjects.FileSysObjects import findRelPathInSearchPath
 from filesysobjects.FileSysObjects import getTopFromPathString
 
+import testdata
+
 #
 #######################
 #
@@ -57,9 +59,6 @@ class UseCase(unittest.TestCase):
         super(UseCase,self).__init__(*args,**kargs)
         
         _s = sys.path[:]
-
-        import testdata
-          
         s = os.sep
         
         # start of upward search - file is converted into it's containing directory node
@@ -86,26 +85,22 @@ class UseCase(unittest.TestCase):
             os.path.normpath(testdata.mypath+'/examples/a/b0/c'),
             os.path.normpath(testdata.mypath+'/examples/a/b0'),
         ]
-        assert self._plist_ref == self._plist 
+        self.assertEqual(self._plist_ref, self._plist) 
 
 
     def testCase001(self):
         """1. search and create a path for a side branch by a single point hook"""
-        import testdata
-
         sp = os.path.normpath('a/new/branch')
         expected = os.path.normpath(testdata.mypath+'/examples/a/new/branch')
         rp = getTopFromPathString(sp,self._plist)
-        assert expected == rp 
+        self.assertEqual(expected, rp) 
 
     def testCase002(self):
         """1. search and create a path for a side branch by a multipoint hook as a slice"""
-        import testdata
-
-        sp = os.path.normpath('c/a/new/branch')
+        sp = os.path.normpath('b0/c/a/new/branch')
         expected = os.path.normpath(testdata.mypath+'/examples/a/b0/c/a/new/branch')
         rp = getTopFromPathString(sp,self._plist)
-        assert expected == rp 
+        self.assertEqual(expected, rp) 
 
 
 #

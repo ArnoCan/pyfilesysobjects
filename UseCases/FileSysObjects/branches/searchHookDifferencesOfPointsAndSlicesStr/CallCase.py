@@ -86,7 +86,7 @@ class UseCase(unittest.TestCase):
             os.path.normpath(testdata.mypath+'/examples/a/b0/c'),
             os.path.normpath(testdata.mypath+'/examples/a/b0'),
         ]
-        assert self._plist_ref == self._plist 
+        self.assertEqual(self._plist_ref, self._plist) 
 
 
     def testCase001(self):
@@ -96,16 +96,16 @@ class UseCase(unittest.TestCase):
         sp = os.path.normpath('a/new/branch')
         expected = os.path.normpath(testdata.mypath+'/examples/a/new/branch')
         rp = getTopFromPathString(sp,self._plist)
-        assert expected == rp 
+        self.assertEqual(expected, rp )
 
     def testCase002(self):
         """1. search and create a path for a side branch by a multipoint hook as a slice"""
         import testdata
 
-        sp = os.path.normpath('c/a/new/branch')
+        sp = os.path.normpath('b0/c/a/new/branch')
         expected = os.path.normpath(testdata.mypath+'/examples/a/b0/c/a/new/branch')
         rp = getTopFromPathString(sp,self._plist)
-        assert expected == rp 
+        self.assertEqual(expected, rp )
 
 
 #

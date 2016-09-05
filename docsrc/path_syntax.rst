@@ -294,10 +294,12 @@ Assembles a tuple of components into a path name for access.
 
 The escape and unescape funtions work basically similar to 'os.path.normpath'.
 The behaviour is:
+
 * `escapeFilePath`_
 
   Escape backshlashes only, consider specific control characters recognized by the 're' module.
   Any arbitrary number of seperator characters are normalized appropriately, including shares.
+
 * `unescapeFilePath`_
 
   Unescape, this simply reverses the escape of a single character.

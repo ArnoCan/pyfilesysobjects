@@ -1,108 +1,109 @@
 # -*- coding: utf-8 -*-
-"""The FileSysObjects package provides operations on paths, path parts and side branches. 
+"""The FileSysObjects package provides operations on paths, path parts and side branches.
 
 For extended additional information refer to the manuals, offline, or online at
 "https://pythonhosted.org/pyfilesysobjects/".
-Create manuals from sources by: "python setup.py build_sphinx" 
+Create manuals from sources by: "python setup.py build_sphinx"
 and "python setup.py build_epydoc"
 
-The current version calls 'os.path.normpath' by default - when 'raw' is 
+The current version calls 'os.path.normpath' by default - when 'raw' is
 not selected. This is consistent for all path related parameters including
-search paths: start, top, plist, spath, etc.. Thus generally clears double 
+search paths: start, top, plist, spath, etc.. Thus generally clears double
 slashes, but also replaces symbolic links, so later literal post processing
 e.g. for match based processing should be normalized too.
-        
+
 There is one exception due to for leading '//' and '\\\\', see option 'ias'
 and  IEEE Std 1003.1(TM), UNC, and SMB/CIFS for Pathname Resolution.
-Current supported URIs for filenames are: 'file://', 'smb://', and 
+Current supported URIs for filenames are: 'file://', 'smb://', and
 'cifs://'.
 
 The following options are generic and common to multiple interfaces:
 
-    **spath**: An existing path to be added to an entry 
+    **spath**: An existing path to be added to an entry
         from 'plist'. The following cases are supported,
         for further specifics refer to the interfaces.
 
         0. Independent path entry:
            spath is absolute, just added.
-           
+
         1. Subpath of current directory
            spath is relative and present in
            current working directory, added
            py prefixing 'pwd'.
-            
-        2. Arbitrary side-branch of a provided path 
+
+        2. Arbitrary side-branch of a provided path
            spath is relative, searched in plist
-           for an insertion hook, added when 
+           for an insertion hook, added when
            found as absolute.
-           
-        3. Pattern matching - see manual 'Semi-Literals':
-           regexpr: Regular expressions are applicable for 
-               match on 'plist' only. Thus the part to be 
-               matched on the filesystem is required to be a 
-               literal. 
-           glob: Glob expressions are applicable on the filesystem
+
+        3. Pattern matching - see manual 'Semi-Literals'
+        and shortcut tables in manual:
+           regexpr: Regular expressions are applicable for
+               match on 'plist' only. Thus the part to be
+               matched on the file system is required to be a
+               literal.
+           glob: Glob expressions are applicable on the file system
                itself only, thus the part to be matched on the
                'plist' is required to be a literal.
 
         4. Is absolute path:
-            Is checked to be a subpath of at least one of 'plist',
-            than applied. 
+            Is checked to be a sub path of at least one of 'plist',
+            than applied.
 
-    **start**: Start directory or file, when a file is provided the 
+    **start**: Start directory or file, when a file is provided the
         directory portion is used as the starting pointer.
 
         Each part is compared separately, but as a whole string.
-    
-    **top**: The topmost path within a directory tree as an end point 
-        for a search operation. This is defined by the end of 
-        a directory path name string. E.g. the the bottom-up search 
+
+    **top**: The topmost path within a directory tree as an end point
+        for a search operation. This is defined by the end of
+        a directory path name string. E.g. the the bottom-up search
         beginning at the start directory::
 
-           start=/a/b/c/d/e/f/g 
-    
+           start=/a/b/c/d/e/f/g
+
         is terminated by""::
 
            top=d
-           
+
         at::
 
            /a/b/c/d
-        
-        This is used as a match string for processing literally 
-        on the parts of the provided start directory. The match 
+
+        This is used as a match string for processing literally
+        on the parts of the provided start directory. The match
         is checked after application of
         'os.path.normpath'. Providing absolute paths still match,
         because of the string, but eventually match multiple times
-        when equal subpaths exist and the match order is changed 
-        to bottom-up search. 
-        
-        The containment of 'top' within the absolute 'start' path 
-        is verified. 
+        when equal sub paths exist and the match order is changed
+        to bottom-up search.
+
+        The containment of 'top' within the absolute 'start' path
+        is verified.
 
         Each part is compared separately, but as a whole string.
-        
+
     **plist**: List of strings to be searched. By default first match
-        is used. Each is splitted into it's components and matched
+        is used. Each is split into it's components and matched
         separately.
-        
+
         default := sys.path
 
     **matchidx=#idx**: Matches on the provided index count only
         ::
-        
+
            #idx==2 - ignores 0,1 and >2, matches idx==2
 
     **matchcnt=#num**: The maximal number of matches returned when
         multiple occur::
-        
+
            #num==0 - all
            #num>0  - number of matches returned
 
-    **matchlvl=#num**: Increment of match for top node when multiple 
+    **matchlvl=#num**: Increment of match for top node when multiple
         are in the path. The counter starts at top, so #num(1) will
         match M(1) in::
-        
+
             /a/b/M/c/M/d/M/w/e/M/bottom
                  0   1   2     3
                  |   *
@@ -112,17 +113,17 @@ The following options are generic and common to multiple interfaces:
     **matchlvlupward=#num**: Increment of match for top node when multiple
         are in the path. The counter starts from the bottom, so #num(2)
         will match M(2) in::
-        
+
             /a/b/M/c/M/d/M/w/e/M/bottom
                  3   2   1     0
                      *
 
-    **raw**: Suppress normalization by call of 'os.path.normpath'. The 
-        caller has than to take care for appropriate measures for 
-        a feasible match. 
+    **raw**: Suppress normalization by call of 'os.path.normpath'. The
+        caller has than to take care for appropriate measures for
+        a feasible match.
 
-    **ias**: Treats for local file names any number of 
-        subsequent '/' only as one, also leading pattern '//[^/]+'. 
+    **ias**: Treats for local file names any number of
+        subsequent '/' only as one, also leading pattern '//[^/]+'.
         URI prefixes are treated correctly.
 
         See also "IEEE Std 1003.1(TM), 2013 Edition; Chap. 4.12".
@@ -134,7 +135,7 @@ from __builtin__ import True
 __author__ = 'Arno-Can Uestuensoez'
 __license__ = "Artistic-License-2.0 + Forced-Fairplay-Constraints"
 __copyright__ = "Copyright (C) 2010-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez"
-__version__ = '0.1.9'
+__version__ = '0.1.10'
 __uuid__ = '9de52399-7752-4633-9fdc-66c87a9200b8'
 
 __docformat__ = "restructuredtext en"
@@ -147,6 +148,12 @@ if version < '2.7':  # pragma: no cover
 from types import NoneType
 import re, glob
 import platform
+
+if platform.system() == 'Windows':
+    # Seems to require init on Windows before import/call of pysource.
+    # Missing that API call, use following dummy for now.
+    import inspect
+    __dummy4Init = inspect.stack()
 
 from pysourceinfo.PySourceInfo import getCallerModuleFilePathName,getCallerModulePathName, getPythonPathRel,getCallerPathName
 
@@ -165,15 +172,9 @@ _mydebug = False
 # FIXME: if os....
 _CPREP = re.compile(ur"^[/\\\\]*(.*)[/\\\\]*$")  # prepares split
 ISAPPPATHc = re.compile(ur'[/\\\\]{2}([^/\\\\]+)[/\\\\]+(.*)')  # splits app part from path - IEEE-1003.1, CIFS/SMB/UNC(simple)
-# _DIRSPLT = re.compile(ur"""^([a-z][:])*(.*)$""")
 
-
-# types 
 PTYPES     = ( 'SHARE', 'SMB', 'CIFS',  'SHARE', 'LDSYS',  'LFSYS', 'IAS',)
-
-# type of regexpr groups
-PGTYPE     = ( 'SHARE', 'SMB', 'CIFS',  'SHARE', 'LDSYS', 'LFSYS', 'LDSYS', 'LDSYS', 'IAS', 'LFSYS',)
-
+"""Known file pathname address types."""
 
 #
 # *** checks type ***
@@ -184,7 +185,7 @@ _COMPT = re.compile(ur"""
  |((cifs://)()(.*))                                   # cifs
  |(([/\\\\])()([/\\\\][^/\\\\]{0,1}.*))               # share
  |((file://)([a-zA-Z][:])([/\\\\]*?[/\\\\]{0,1}.*))   # file and drive, could not be a share, thus nothing to ignore
- |((file://)[/\\\\]*?()([/\\\\]{0,1}.*))              # local file, could not be a share, thus nothing to ignore 
+ |((file://)[/\\\\]*?()([/\\\\]{0,1}.*))              # local file, could not be a share, thus nothing to ignore
  |(()([a-zA-Z][:])[/\\\\]*?([/\\\\].*))               # drive-path win, could not be a share, thus nothing to ignore
  |(()([a-zA-Z][:])[/\\\\]*?(.*))                      # drive-path win, could not be a share, thus nothing to ignore
  |((ias://)()(.*))                                    # ias - internal type for test 'IgnoreAppSeperator'
@@ -192,43 +193,91 @@ _COMPT = re.compile(ur"""
  """,
  re.X
 )
+"""Scanner for types"""
+
 _COMPTg    = [ 1,       5,     9,       13,      17,      21,      25,      29,      33,     37,      ]
-#PGTYPE    = ( 'SHARE', 'SMB', 'CIFS',  'SHARE', 'LDSYS', 'LFSYS', 'LDSYS', 'LDSYS', 'IAS',  'LFSYS', )
+"""Entry points into sub strings of types."""
+
+PGTYPE     = ( 'SHARE', 'SMB', 'CIFS',  'SHARE', 'LDSYS', 'LFSYS', 'LDSYS', 'LDSYS', 'IAS', 'LFSYS',)
+"""Type labels of scanned regexpr groups."""
 
 #
 # *** splits into type specifc components ***
 #
-# extended pathname with basic network prefix
-_COMPX = re.compile(ur"""
+_COMPXstr = ur"""
  ((file:///[/\\\\]{2})(.{0,1}[^/\\\\]+)[/\\\\]+([^/\\\\]+)[/\\\\]*(.*))#  2: ('file:///' +2SEP) +(SPECIALNODE) +varSEP    +(share-name) +(path)
- |((smb://)([^/]{01}[^/\\\\]*)[/\\\\]+([^/\\\\]+)[/\\\\]*(.*))         #  7: ('smb://'  )          +(SPECIALNODE) +varSEP    +(share-name) +(path)
- |((cifs://)([^/]{01}[^/\\\\]*)[/\\\\]+([^/\\\\]+)[/\\\\]*(.*))        # 12: ('cifs://'  )           +(SPECIALNODE) +varSEP    +(share-name) +(path)
- |(([/\\\\]{2})([^/\\\\]+)[/\\\\]*([^/\\\\]+)[/\\\\]+(.*))             # 17: (2SEP    )          +(SPECIALNODE) +varSEP    +(share-name) +(path) # in general a share present - on POSIX too???
- |((file://)()([a-zA-Z]:)[/\\\\]*?([/\\\\]{0,1}.*))                    # 22: ('file://'     )         +()                            +varSEP    +(drive)             +(path)
- |((file://)()()(.*))                                                  # 27: ('file://'     )         +()                            +varSEP    +()                     +(path)
- |(()()([a-zA-Z]:)[/\\\\]*?([/\\\\].*))                                # 32: ()                       +()                            +()              +(drive)             +(path)
- |(()()([a-zA-Z]:)[/\\\\]*?(.*))                                       # 37: ()                       +()                            +()              +(drive)             +(path)
- |((ias://)()()(.*))                                                   # 27: ('ias://'     )        +()                            +varSEP    +()                      +(path-for-test)
- |(()()()(.*))                                                         # 42: ()                        +()                            +nSEP       +()                     +(path)
- """,
- re.X
-)
-_COMPXg    = [ 2,       7,     12,      17,      22,      27,      32,      37,      42,     47,      ]
-#PGTYPE    = ( 'SHARE', 'SMB', 'CIFS',  'SHARE', 'LDSYS', 'LFSYS', 'LDSYS', 'LDSYS', 'IAS',  'LFSYS', )
+ |((smb://)([^/]{01}[^/\\\\]*)[/\\\\]+([^/\\\\]+)[/\\\\]*(.*))         #  7: ('smb://')         +(SPECIALNODE) +varSEP    +(share-name) +(path)
+ |((cifs://)([^/]{01}[^/\\\\]*)[/\\\\]+([^/\\\\]+)[/\\\\]*(.*))        # 12: ('cifs://')        +(SPECIALNODE) +varSEP    +(share-name) +(path)
+ |(([/\\\\]{2})([^/\\\\]+)[/\\\\]*([^/\\\\]+)[/\\\\]+(.*))             # 17: (2SEP)             +(SPECIALNODE) +varSEP    +(share-name) +(path) # in general a share present - on POSIX too???
+ |((file://)()([a-zA-Z]:)[/\\\\]*?([/\\\\]{0,1}.*))                    # 22: ('file://')        +()            +varSEP    +(drive)      +(path)
+ |((file://)()()(.*))                                                  # 27: ('file://')        +()            +varSEP    +()           +(path)
+ |(()()([a-zA-Z]:)[/\\\\]*?([/\\\\].*))                                # 32: ()                 +()            +()        +(drive)      +(path)
+ |(()()([a-zA-Z]:)[/\\\\]*?(.*))                                       # 37: ()                 +()            +()        +(drive)      +(path)
+ |((ias://)()()(.*))                                                   # 27: ('ias://')         +()            +varSEP    +()           +(path-for-test)
+ |(()()()(.*))                                                         # 42: ()                 +()            +nSEP      +()           +(path)
+ """
+"""Scanner syntax for types of extended pathname with basic network prefix."""
 
+_COMPX = re.compile(_COMPXstr,re.X)
+"""Compiled scanner for types of extended pathname with basic network prefix."""
+
+_COMPXg    = [ 2,       7,     12,      17,      22,      27,      32,      37,      42,     47,      ]
+"""Entry points into sub strings of types."""
+
+#
+# search path, multiple path entries
+_NOSEP="""
+  (([\\\\]["""+os.pathsep+"""][^"""+os.pathsep+"""]*)+
+  | ([^"""+os.pathsep+"""]*)
+  )
+"""
+"""The tail of a path atom including possible escaped os.pathsep as ordinary character"""
+
+_DUMMY="""
+  (()|())
+"""
+"""Dummy for same group count for processing."""
+
+_CSPLITPATH = re.compile(
+ur"""((
+ ((file:///[/\\\\]{2})(.{0,1}[^/\\\\]+)[/\\\\]+([^/\\\\]+)[/\\\\]*("""+_NOSEP+"""))   #  4: ('file:///' +2SEP) +(SPECIALNODE) +varSEP    +(share-name) +(path)
+ |((smb://)([^/]{01}[^/\\\\]*)[/\\\\]+([^/\\\\]+)[/\\\\]*("""+_NOSEP+"""))            # 12: ('smb://')         +(SPECIALNODE) +varSEP    +(share-name) +(path)
+ |((cifs://)([^/]{01}[^/\\\\]*)[/\\\\]+([^/\\\\]+)[/\\\\]*("""+_NOSEP+"""))           # 20: ('cifs://')        +(SPECIALNODE) +varSEP    +(share-name) +(path)
+ |(([/\\\\]{2})([^/\\\\]+)[/\\\\]*([^/\\\\]+)[/\\\\]+("""+_NOSEP+"""))                # 28: (2SEP)             +(SPECIALNODE) +varSEP    +(share-name) +(path) # in general a share present - on POSIX too???
+ |((file://)()([a-zA-Z]:)[/\\\\]*?([/\\\\]{0,1}"""+_NOSEP+"""))                       # 36: ('file://')        +()            +varSEP    +(drive)      +(path)
+ |((file://)()()("""+_NOSEP+"""))                                                     # 44: ('file://')        +()            +varSEP    +()           +(path)
+ |(()()([a-zA-Z]:)([/\\\\]+?"""+_NOSEP+"""))                                          # 52: ()                 +()            +()        +(drive)      +(path)
+ |(()()([a-zA-Z]:)("""+_NOSEP+"""))                                                   # 60: ()                 +()            +()        +(drive)      +(path)
+ |(()()([a-zA-Z]:)("""+_DUMMY+"""))                                                   # 68: ()                 +()            +()        +(drive)      +()
+ |((ias://)()()("""+_NOSEP+"""))                                                      # 76: ('ias://')         +()            +varSEP    +()           +(path-for-test)
+ |(()()()([^"""+os.pathsep+"""]+)(()()))                                              # 84: ()                 +()            +()        +()           +(path)
+ |(()()()()(()())(?=["""+os.pathsep+"""]))                                            # 92: ()                 +()            +()        +()           +()
+)"""+os.pathsep+"""?)                                                                 # os.pathsep
+""",
+    re.X
+)
+"""The main regular expression for split of PATH variables with support for URIs."""
+
+_CSPLITPATHg = (4, 12, 20, 28, 36, 44, 52, 60, 68, 76, 84, 92,)
+"""Helper with group indexes pointing onto the supported syntax terms."""
+
+PGSTYPE     = ( 'SHARE', 'SMB', 'CIFS',  'SHARE', 'LDSYS', 'LFSYS', 'LDSYS', 'LDSYS', 'LDSYS', 'IAS', 'LFSYS', 'LFSYS', )
+"""Helper with human readable enums for types of path variable elements."""
 
 def addPathToSearchPath(spath, plist=None, **kargs):
-    """Adds a path to 'plist'. 
+    """Adds a path to 'plist'.
 
-    In case of relative paths searches in provided 
-    'plist', or 'kargs[searchplist]'a hook, when found 
-    verifies the existence within file system, in case 
+    In case of relative paths searches in provided
+    'plist', or 'kargs[searchplist]'a hook, when found
+    verifies the existence within file system, in case
     of success adds the completed path to 'plist' the list.
-    
+
     In case of 'glob' adds all entries.
 
     Args:
-        spath: A path to be added to 'plist'.
+        spath:
+
+            A path to be added to 'plist'.
             See common options for details.
             Valid scope types:
 
@@ -238,38 +287,48 @@ def addPathToSearchPath(spath, plist=None, **kargs):
 
             default := caller-file-position.
 
-        plist: List to for the storage, and by default
+        plist:
+
+            List to for the storage, and by default
             search list too.
             See common options for details.
-        
+
             default := sys.path
 
         **kargs:
-            append: Append, this is equal to
+            append:
+                Append, this is equal to
                 pos=len(plist).
-                
-            checkreal: Checks redundancy py resolving realpath,
-                else literlaly.
 
-            exist: Checks whether exists, else nothing is done. 
+            checkreal:
+                Checks redundancy by resolving real path,
+                else literally.
 
-            pos=#pos: A specific position for insertion
+            exist:
+                Checks whether exists, else nothing is done.
+
+            pos=#pos:
+                A specific position for insertion
                 within range(0,len(plist)).
-            
-            prepend: Prepend, this is equal to
+
+            prepend:
+                Prepend, this is equal to
                 pos=0.
-                
-            redundant: Add relative, allow redundant when
+
+            redundant:
+                Add relative, allow redundant when
                 same is already present.
 
-            relative=<base>: Add relative subpath to 
+            relative=<base>:
+                Add relative sub path to
                 provided base.
 
-            searchplist: Alternative list to search for checks.
+            searchplist:
+                Alternative list to search for checks.
 
     Returns:
         When successful returns insertion position, else a 'value<0'.
-        The insertion position in case of multiple items is the position 
+        The insertion position in case of multiple items is the position
         of the last.
 
     Raises:
@@ -331,7 +390,7 @@ def addPathToSearchPath(spath, plist=None, **kargs):
             return _add(spath)
         elif os.path.exists(os.path.curdir + os.sep + spath):
             return _add(os.path.normpath(os.path.curdir + os.sep + spath))
-        else: 
+        else:
             for s in _splist[:]:
                 if os.path.exists(s + os.sep + spath):
                     pos = _add(s + os.sep + spath)
@@ -340,7 +399,7 @@ def addPathToSearchPath(spath, plist=None, **kargs):
             return _add(spath)
         elif os.path.exists(os.path.curdir + os.sep + spath):
             return _add(os.path.normpath(os.path.curdir + os.sep + spath))
-        else: 
+        else:
             for s in _splist[:]:
                 if os.path.exists(s + os.sep + spath):
                     pos = _add(s + os.sep + spath)
@@ -348,52 +407,66 @@ def addPathToSearchPath(spath, plist=None, **kargs):
 
 def clearPath(plist=None, **kargs):
     """Clears, splits and joins a list of path variables by various criteria.
-    
+
     Args:
-        plist: List of paths to be cleared.
+        plist:
+            List of paths to be cleared.
             See common options for details.
-            
+
             default := sys.path
 
         **kargs:
-            abs: Converts all entries into absolute pathnames.
-            
-            existent: Removes all existing items. For test 
+            abs:
+                Converts all entries into absolute pathnames.
+
+            existent:
+                Removes all existing items. For test
                 and verification.
 
-            ias: Treats for local file names any 
+            ias:
+                Treats for local file names any
                 number of subsequent '/' only as one.
-                
+
                 See common options for details.
 
-            non-existent: Removes all items which do not exist.
-            
-            non-redundant: Removes all items which are not redundant.
-                Results e.g. in multiple incarnations of the same 
+            non-existent:
+                Removes all items which do not exist.
+
+            non-redundant:
+                Removes all items which are not redundant.
+                Results e.g. in multiple incarnations of the same
                 file/path type.
 
-            normpath: Calls 'os.path.normpath' on each result.
+            normpath:
+                Calls 'os.path.normpath' on each result.
 
-            redundant: Clears all items from redundancies.
+            redundant:
+                Clears all items from redundancies.
 
-            rel:  Converts all entries into relative pathnames.
+            rel:
+                Converts all entries into relative pathnames.
 
-            reverse: This reverses the resulting search order 
-                 from bottom-up to top-down. Takes effect on
-                 'redundant' only.
+            reverse:
+                This reverses the resulting search order
+                from bottom-up to top-down. Takes effect on
+                'redundant' only.
 
-            shrink: Drops resulting empty items. 
+            shrink:
+                Drops resulting empty items.
 
-            split: Forces split of multiple paths items within
-                one item into seperate item entries.
+            split:
+                Forces split of multiple paths items within
+                one item into separate item entries.
 
                 default := noSplit
-            withinItemOnly: Performs any action for each 
+
+            withinItemOnly:
+                Performs any action for each
                 item of 'plist' only.
-            
+
 
     Returns:
-        When successful returns 'True', else returns either 'False', 
+        When successful returns 'True', else returns either 'False',
         or raises an exception.
 
     Raises:
@@ -401,7 +474,7 @@ def clearPath(plist=None, **kargs):
     """
     if plist == None:
         plist = sys.path
-    
+
     _abs = False
     _existent = False
     _ias = False
@@ -446,7 +519,7 @@ def clearPath(plist=None, **kargs):
 
     def clearIt(px, ref=None):
         """the actual workhorse
-        
+
         px:  patch to process
         ref: reference path
         """
@@ -461,7 +534,7 @@ def clearPath(plist=None, **kargs):
         if _ias and px[:2] == os.sep + os.sep:
             px = px[1:]
         if _rel:
-            px = getPythonPathRel(px, plist)        
+            px = getPythonPathRel(px, plist)
         return px
 
     def clrred(x):
@@ -477,13 +550,13 @@ def clearPath(plist=None, **kargs):
     if not _wio:
         clearPath._clearlst = []
     pn = plist[:] # input list
-    
-    if _reverse: #reveser input list 
+
+    if _reverse: #revese input list
         pn.reverse()
     for p in range(len(plist)): plist.pop() # clear source for new items - in place of caller
 
     #
-    # split items into subitems as seeprate new items
+    # split items into sub items as separate new items
     if _split:
         _pn = []
         for p in pn:
@@ -500,21 +573,21 @@ def clearPath(plist=None, **kargs):
         if _wio:
             clearPath._clearlst = []
         pn = ''
-        
+
         # reverse order
         if _reverse:
             plx = p.split(os.pathsep)
             plx.reverse()
         else:
             plx = p.split(os.pathsep)
-        
+
         #clear redundancies
         for p1 in plx:
             if _redundant: px = clrred(clearIt(p1))
             else: px = clearIt(p1)
             if _shrink:
                 if px: pn += os.pathsep + px
-            else: 
+            else:
                 if px: pn += os.pathsep + px
                 else: pn += os.pathsep
 
@@ -523,20 +596,21 @@ def clearPath(plist=None, **kargs):
             plx = pn.split(os.pathsep)
             plx.reverse()
             pn = os.pathsep.join(plx)
-        
-        # schrink
-        if _shrink:  
+
+        # shrink
+        if _shrink:
             if pn: plist.append(pn)
         else: plist.append(pn)
 
-    if _reverse: 
+    if _reverse:
         plist.reverse()
 
 def delPathFromSearchPath(dellist, plist=None, **kargs):
-    """Deletes a list of paths from 'plist'. 
+    """Deletes a list of paths from 'plist'.
 
     Args:
-        dellist: A list of paths to be deleted 
+        dellist:
+            A list of paths to be deleted
             from 'plist'. Valid scope types:
 
                 * literal : X
@@ -547,36 +621,47 @@ def delPathFromSearchPath(dellist, plist=None, **kargs):
 
             default := None
 
-        plist: List of search paths.
-        
+        plist:
+            List of search paths.
+
             default := sys.path
 
         **kargs:
-            The following keys are additional before 
+            The following keys are additional before
             comparison, on 'dellist' only when no
             match pattern is provided:
 
-                case: Calls on both: os.path.normcase
-    
-                esc: Calls on both: escapeFilePath/unescapeFilePath
-                
-                exist: Calls on both: os.path.exists
-                
-                noexist: Calls on both: not os.path.exists
-            
-                normX: Calls on both: normpathX
+                case:
+                    Calls on both: os.path.normcase
 
-                norm: Calls on both: os.path.normpath
+                esc:
+                    Calls on both: escapeFilePath/unescapeFilePath
 
-                real: Calls on both: os.path.realpath
-                
-            regexpr|glob: Input is a list of
+                exist:
+                    Calls on both: os.path.exists
 
-                regexpr: regular expressions,
-                    just processed by 
+                noexist:
+                    Calls on both: not os.path.exists
+
+                normX:
+                    Calls on both: normpathX
+
+                norm:
+                    Calls on both: os.path.normpath
+
+                real:
+                    Calls on both: os.path.realpath
+
+            regexpr|glob:
+                Input is a list of
+
+                regexpr:
+                    regular expressions,
+                    just processed by
                         're.match(dl,pl)'
- 
-                glob: process glob, and check 
+
+                glob:
+                    process glob, and check
                     containment in set
 
     Returns:
@@ -584,7 +669,7 @@ def delPathFromSearchPath(dellist, plist=None, **kargs):
 
     Raises:
         passed through exceptions
-        
+
     """
     if type(plist) == NoneType:
         plist = sys.path
@@ -622,28 +707,28 @@ def delPathFromSearchPath(dellist, plist=None, **kargs):
         for pl in reversed(plist):
             if not _raw:
                 if dl and len(dl) > 6 and dl[0:7] == 'file://':
-                    dl = os.sep + dl[7:].lstrip(os.sep) 
+                    dl = os.sep + dl[7:].lstrip(os.sep)
                 if pl and len(pl) > 6 and pl[0:7] == 'file://':
-                    pl = os.sep + pl[7:].lstrip(os.sep) 
+                    pl = os.sep + pl[7:].lstrip(os.sep)
             if _real:
-                if not _rg: 
+                if not _rg:
                     dl = os.path.realpath(dl)
                 pl = os.path.realpath(pl)
             if _norm:
-                if not _rg: 
+                if not _rg:
                     dl = os.path.normpath(dl)
                 pl = os.path.normpath(pl)
             if _case:
-                if not _rg: 
+                if not _rg:
                     dl = os.path.normcase(dl)
                 pl = os.path.normcase(pl)
 
             if _exists:
                 if _exist:
-                    if not _rg: 
-                        if not os.path.exists(pl) or not os.path.exists(dl): 
+                    if not _rg:
+                        if not os.path.exists(pl) or not os.path.exists(dl):
                             continue
-                    elif os.path.exists(pl): 
+                    elif os.path.exists(pl):
                         continue
 
             if _rg:
@@ -660,19 +745,19 @@ def delPathFromSearchPath(dellist, plist=None, **kargs):
     return True
 
 def findRelPathInSearchPath(spath, plist=None, **kargs):
-    """Searches the list for matching objects in side-branches.
+    """Searches the provided path list for existing filesystem objects 'spath'.
+    The file system objects are searched as side-branches
+    of the provided plist as a list of hooks(pathx[-1])
+    suitable to 'spath'. The path items are treated as entry point hooks
+    for specific extension branches.
 
-    Searches the paths provided by plist for hooks(pathx[-1]) 
-    suitable to 'spath', which are entry points for specific 
-    extension branches.
-    
-    The parameters of type 'is' are recommended when the 
-    iterator is applied. This enhances the performance vs. 
+    The parameters of name type 'is*' are recommended when the
+    iterator is applied. This enhances the performance vs.
     the post filtering.
-    
+
     Args:
-        spath:=(literal|glob): A path to be hooked into 
-            'plist[]' when present. Could be either a 
+        spath:=(literal|glob): A path to be hooked into
+            'plist[]' when present. Could be either a
             literal, or a glob as an relative or absolute
             path. Valid scope types:
 
@@ -682,49 +767,91 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
 
             See common options for details.
 
-        plist: List of potential hooks for 'spath'.
-            See common options for details.
+        plist:
+            List of potential hooks for 'spath'.
+            The following formats are provided:
+
+                1. list of single paths - used literally
+                2. list of search path strings - each search path is split
+                3. string with search path - split into it's components
+                4. string with a single path - used literally
+
+            The default behavior is:
+
+                * first: #1
+                * second: #3, this contains #4
+
+            The case #2 has to be forced by the key-option: 'subsplit',
+            or to be prepared by the call 'clearPath(split=True,)'.
+
+            Due to performance the case #1 should be preferred in order
+            to save repetitive automatic conversion.
+
+            See common options for further details.
+
 
             default := sys.path
 
         **kargs:
-            ias: Treats for local file names any 
+            ias:
+                Treats for local file names any
                 number of subsequent '/' only as one.
 
-            isDir: Is a directory.
+            isDir:
+                Is a directory.
 
-            isFile: Is a file.
+            isFile:
+                Is a file.
 
-            isLink: Is a symbolic link.
+            isLink:
+                Is a symbolic link.
 
-            isPathByLink: Has a symbolic link in path.
+            isPathByLink:
+                Has a symbolic link in path.
 
-            matchidx=#idx: Ignore matches '< #idx', 
+            matchidx=#idx:
+                Ignore matches '< #idx',
                 return match '== #idx'. Depends on
                 'reverse'
 
                 default := 0 # first match
 
-            noglob: Suppress application of 'glob'.
+            noglob:
+                Suppress application of 'glob'.
 
-            not: Inverts to does not matched defined
+            not:
+                Inverts to does not matched defined
                 criteria.
 
-            raw: Suppress normalization by call of 
+            raw:
+                Suppress normalization by call of
                 'os.path.normpath'.
 
-            reverse: Reversed search order.
+            reverse:
+                Reversed search order.
+
+            subsplit:
+                Splits each item part of a 'plist' option.
 
     Returns:
-        When successful returns the absolute pathname, 
+        When successful returns the absolute pathname,
         else 'None'. For a list refer to iterator.
 
     Raises:
         passed through exceptions:
-        
+
     """
-    if type(plist) == NoneType:
+    if not spath:
+        return
+
+    if type(plist) is list:
+        pass
+    elif type(plist) is NoneType:
         plist = sys.path
+    elif type(plist) in (str,unicode):
+        plist = splitPathVar(plist)
+    else:
+        raise FileSysObjectsException("Unknown type:"+str(plist))
 
     raw = False
     ias = False
@@ -737,9 +864,11 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
     _isD = False
     _isF = False
     _isPL = False
-    
+
     _not = False
     _ng = False
+
+    _ssplit = False
 
     for k, v in kargs.items():
         if k == 'matchidx':
@@ -767,9 +896,14 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
             _isF = v
         elif k == 'isPathByLink':
             _chkT = True
-            _isPL = v
+        elif k == 'subsplit':
+            _ssplit = True
         else:
             raise FileSysObjectsException("Unknown param: " + str(k) + ":" + str(v))
+
+    if _ssplit: # split sub paths, but do not alter the callers source
+        plist = plist[:]
+        clearPath(plist,split=True)
 
     # use canonical copy
     if not raw:
@@ -779,13 +913,13 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
             sp = os.path.normpath(spath)
 
         if ias:
-            sp = os.sep + sp.lstrip(os.sep) 
+            sp = os.sep + sp.lstrip(os.sep)
 
     if spath and len(spath) > 6 and spath[0:7] == 'file://':
-        _sp = os.sep + spath[7:].lstrip(os.sep) 
+        _sp = os.sep + spath[7:].lstrip(os.sep)
     else:
         _sp = spath[:]
-        
+
     def _checkit(p):
         _b = True
 
@@ -801,19 +935,19 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
         return _b
 
     # short it up for absolute input of existing paths, thus is a literal too!
-    if os.path.isabs(_sp) and os.path.exists(_sp):  # exists as absolute    
+    if os.path.isabs(_sp) and os.path.exists(_sp):  # exists as absolute
         _b = _checkit(_sp)
         for p in plist:
             if not p:
                 continue
             if p.startswith(_sp):
-                
+
                 _b &= True
 
                 if _b and matchidx != 0:
                     _b = False
                     matchidx -= 1
-                
+
                 return os.path.normpath(_sp)
 
         if _b and not _not:
@@ -826,12 +960,12 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
         _pl = reversed(plist)
     else:
         _pl = plist
-    
+
     for p in _pl:
         if not p:
             continue
         _b = True
-        
+
         if os.path.isabs(_sp):
             _px = normpathX(_sp)
         else:
@@ -843,7 +977,7 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
             if _b and matchidx != 0:
                 _b = False
                 matchidx -= 1
-            
+
             if _b and not _not:
                 return _px
 
@@ -853,16 +987,16 @@ def findRelPathInSearchPath(spath, plist=None, **kargs):
             # try a glob
             for gm in glob.glob(_px):
                 _b = _checkit(gm)
-    
+
                 if _b and matchidx != 0:
                     _b = False
                     matchidx -= 1
-                
+
                 if _b and not _not:
                     return gm
-    
+
                 continue
-            
+
     return None
 
 def findRelPathInSearchPathIter(spath, plist=None, **kargs):
@@ -877,86 +1011,107 @@ def findRelPathInSearchPathIter(spath, plist=None, **kargs):
             yield r
     pass
 
+def getHome():
+    """Gets home directory with complete local file path name, eventually drive.
+    """
+    if sys.platform in ('win32',):
+        return os.environ['HOMEDRIVE']+os.environ['HOMEPATH']
+    elif sys.platform in ('linux2', 'cygwin', 'darwin', ):
+        return os.environ['HOME']
+    else: # eventually may not yet work if not unix
+        return os.environ['HOME']
+
 def getTopFromPathString(spath, plist=None, **kargs):
     """Searches for a partial path in search paths from a provided list.
 
     Searches for a given path component by various constraints
-    on each string of provided 'plist' until the match of a break 
-    condition. The match is performed by default left-to-right, which 
-    results in top-down scan of a path hierarchy, or right-to-left as 
+    on each string of provided 'plist' until the match of a break
+    condition. The match is performed by default left-to-right, which
+    results in top-down scan of a path hierarchy, or right-to-left as
     an upward bottom-up search.
-    
-    Performs string operations only, the file system is neither
-    checked, not utilized. 
-    
-    Args:
-        spath: A path to be added to 'plist'.
-            See common options for details.
-            
-        plist: List of search strings for match.
-            See common options for details.
-        
-            default := sys.path
-         
-        **kargs:
-            abs: Return absolute path.
 
-            hook: Returns the found part of the 'plist' 
+    Performs string operations only, the file system is neither
+    checked, not utilized.
+
+    Args:
+        spath:
+            A path to be added to 'plist'.
+            See common options for details.
+
+        plist:
+            List of search strings for match.
+            See common options for details.
+
+            default := sys.path
+
+        **kargs:
+            abs:
+                Return absolute path.
+
+            hook:
+                Returns the found part of the 'plist'
                 entry only.
 
-            ias: Treats for local file names any 
+            ias:
+                Treats for local file names any
                 number of subsequent '/' only as one.
 
-            includeapp: Includes appspecific into search.
-                E.g. 
+            includeapp:
+                Includes application specifics into search.
+                E.g.
                     input   :   '//hostname/a/hostame/x/y/z'
                     not set => '//hostname/a/hostame'
                     set     => '//hostname'
 
-            matchidx=#idx: Ignore matches '< #idx', 
+            matchidx=#idx:
+                Ignore matches '< #idx',
                 return match '== #idx'.
 
                 default := 0 # first match
 
-            matchlvl=#num: Increment of match
-                for top node when multiple are in 
-                the path. 
+            matchlvl=#num:
+                Increment of match for top node when multiple
+                are in the path.
 
                 See common options for details.
 
-            matchlvlupward=#num: Increment of match
-                for top node when multiple are in 
-                the path. 
+            matchlvlupward=#num:
+                Increment of match for top node when multiple
+                are in the path.
 
                 See common options for details.
 
-            pattern: Scope and type of match pattern.
+            pattern:
+                Scope and type of match pattern.
                 literal: Literal node by node match
 
-                regnode: Match regular expression for 
-                    individual nodes, implies no contained 
+                regnode:
+                    Match regular expression for
+                    individual nodes, implies no contained
                     'os.sep' and no 'os.pathsep'
 
-            patternlvl: Defines the level of subnodes of the search
+            patternlvl:
+                Defines the level of sub nodes of the search
                 path to be resolved. The value 'full' forces a full match
-                of 'spath' within a 'plist' item.               
+                of 'spath' within a 'plist' item.
 
-            raw: Suppress normalization by call of 
+            raw:
+                Suppress normalization by call of
                 'os.path.normpath'.
 
-            reverse: This reverses the resulting search order 
-                 from bottom-up to top-down. Takes effect on
-                 'redundant' only.
+            reverse:
+                This reverses the resulting search order
+                from bottom-up to top-down. Takes effect on
+                'redundant' only.
 
-            split: Returns the splitted path prefix matched on search list,  
+            split:
+                Returns the split path prefix matched on search list,
                 and the relative sub path outside search list.
 
     Returns:
         When successful returns a path, else None.
 
         Returns by default the expanded pathname including the searched.
-         
- 
 
     Raises:
         passed through exceptions:
@@ -968,8 +1123,8 @@ def getTopFromPathString(spath, plist=None, **kargs):
 
     _rev = False
     raw = False
-    ias = False
-    incap = False
+#     ias = False
+#     incap = False
     _abs= 0
     _hook= False
     _pat = 0
@@ -1011,7 +1166,7 @@ def getTopFromPathString(spath, plist=None, **kargs):
             _hook = False
             _split = True
         elif k == 'patternlvl':
-            if not v == 'full' and ( not type(v) is int or v < 0 ): 
+            if not v == 'full' and ( not type(v) is int or v < 0 ):
                 raise FileSysObjectsException("Requires int>0 patternlvl=" + str(v))
             _patlvl = v
         elif k == 'pattern':
@@ -1023,20 +1178,20 @@ def getTopFromPathString(spath, plist=None, **kargs):
 #                 _pat = 2
         else:
             raise FileSysObjectsException("Unknown option: " + str(k) + ":" + str(v))
-    
+
     def _comp(p, b):
 #         if _pat == 2:
-#             return a == b        
+#             return a == b
         if _pat == 1:
             if p == '*':  # assume a glob expression, thus terminate re-processing now
-                return 
+                return
             pc = re.compile(ur'^' + p + ur'$')
-            px = pc.match(b)         
+            px = pc.match(b)
             if px:
-                return px.string[px.start():px.end()]         
+                return px.string[px.start():px.end()]
         elif _pat == 0:
             if p == b:
-                return b        
+                return b
 
     # define processed portion, save prefix for later prepend on result
     if not raw:
@@ -1067,13 +1222,13 @@ def getTopFromPathString(spath, plist=None, **kargs):
                 _cxe= getAppPrefixLocalPath(_sp_elems)
                 if _cxe.startswith(os.sep+sp[1]):
                     _contained = True
-            if not _contained : 
+            if not _contained :
                 return None
             sp = sp[1:]
-    
+
     if _patlvl == 'full':
         _patlvl = len(sp)-1
-        
+
     si0 = -1
     if _rev:
         _pl = reversed(plist)
@@ -1084,8 +1239,8 @@ def getTopFromPathString(spath, plist=None, **kargs):
         si0 += 1
         if not sl:
             continue
-        
-        if not raw:  # canonical        
+
+        if not raw:  # canonical
             # manage app paths - current network only
             _rtype, _host, _share, sl = splitAppPrefix(sl, **{'rtype':True})
             _prefix = _rtype + _host
@@ -1108,7 +1263,7 @@ def getTopFromPathString(spath, plist=None, **kargs):
         if s[-1] == '':
             s = s[:-1]
 
-        if matchlvlupward > -1:  # count reversed within the path nodes, this is not the index 
+        if matchlvlupward > -1:  # count reversed within the path nodes, this is not the index
             _len = len(s)
             si = len(s)
             _fin = False
@@ -1145,11 +1300,11 @@ def getTopFromPathString(spath, plist=None, **kargs):
                         continue
                     else:
                         _ucnt = 0
-                    
+
                 if _fin and m >= _patlvl:  # full match in front of pos m
                     if _hook:
                         _spx = ''
-                    else:    
+                    else:
                         if _c and m == len(sp) - 1:
                             _spx = [_c]
                         else:
@@ -1169,7 +1324,7 @@ def getTopFromPathString(spath, plist=None, **kargs):
                             return os.path.abspath(_r)
                         return _r
                     matchidx -= 1
-        
+
         else:  # if matchlvl > -1:
             si = -1
             _fin = False
@@ -1210,11 +1365,11 @@ def getTopFromPathString(spath, plist=None, **kargs):
                         continue
                     else:
                         _dcnt = 0
-                    
-                if _fin and m >= _patlvl:  # full match in front of pos m    
+
+                if _fin and m >= _patlvl:  # full match in front of pos m
                     if _hook:
                         _spx = ''
-                    else:    
+                    else:
                         if _c and m == len(sp) - 1:
                             _spx = [_c]
                         else:
@@ -1247,15 +1402,52 @@ def getTopFromPathStringIter(spath, plist=None, **kargs):
             yield r
     pass
 
+def getDirUserData():
+    """Gets data directory with complete local file path name, eventually drive.
+    """
+    if sys.platform in ('win32','cygwin', ):
+        return os.environ['LOCALAPPDATA']
+    elif sys.platform in ('linux2',):
+        return os.environ['HOME']
+    elif sys.platform in ('darwin', ):
+        return os.environ['HOME']
+    else: # eventually may not yet work if not unix
+        return os.environ['HOME']
+
+def getDirUserConfigData():
+    """Gets data directory for configuration.
+    """
+    if sys.platform in ('win32','cygwin',):
+        return os.environ['LOCALAPPDATA']
+    elif sys.platform in ('linux2',):
+        return os.environ['HOME']+os.sep+'.config'
+    elif sys.platform in ('darwin', ):
+        return os.environ['HOME']
+    else: # eventually may not yet work if not unix
+        return os.environ['HOME']
+
+def getDirUserAppData():
+    """Gets data directory for applications.
+    """
+    if sys.platform in ('win32','cygwin',):
+        return os.environ['APPDATA']
+    elif sys.platform in ('linux2',):
+        return os.environ['HOME']+os.sep+'.local/share'
+    elif sys.platform in ('darwin', ):
+        return os.environ['HOME']
+    else: # eventually may not yet work if not unix
+        return os.environ['HOME']
+
 def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
     """Extends the 'plist' based search by each subdirectory from 'start' on upward to 'top'.
-    
-    Prepends a set of search paths into plist. The set of search 
-    paths contains of each directory beginning with provided start 
+
+    Prepends a set of search paths into plist. The set of search
+    paths contains of each directory beginning with provided start
     position. The inserted path is normalized by default
-    
+
     Args:
-        start: Start components of a path string.
+        start:
+            Start components of a path string.
             See common options for details.
             Valid scope types:
 
@@ -1264,8 +1456,9 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
                 * blob    : -
 
             default := caller-file-position.
-        
-        top: End component of a path string.
+
+        top:
+            End component of a path string.
             The node 'top' is included.
             Valid scope types:
 
@@ -1275,41 +1468,47 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
 
             default := <same-as-start>
 
-        plist: List to for the storage.
+        plist:
+            List to for the storage.
             See common options for details.
-            
+
             default := sys.path
 
         **kargs:
-            append: Appends the set of search paths.
-            
-            ias: Treats for local file names any 
+            append:
+                Appends the set of search paths.
+
+            ias:
+                Treats for local file names any
                 number of subsequent '/' only as one.
 
-            matchidx=#idx: Ignore matches '< #idx', 
+            matchidx=#idx:
+                Ignore matches '< #idx',
                 adds match '== #idx' and returns.
 
                 default := 0 # all
 
-            matchcnt=#num: The maximal number of matches
+            matchcnt=#num:
+                The maximal number of matches
                 returned when multiple occur.
 
-            matchlvl=#num: Increment of match
-                for top node when multiple are in 
-                the path. 
+            matchlvl=#num:
+                Increment of match for top node when
+                multiple are in the path.
 
                 See common options for details.
 
-            matchlvlupward=#num: Increment of match
-                for top node when multiple are in 
-                the path. 
+            matchlvlupward=#num:
+                Increment of match for top node when
+                multiple are in the path.
 
                 See common options for details.
 
-            noTypeCheck: Supress required identical types
-                of 'top' and 'start'. As a rule of thum for current
+            noTypeCheck:
+                Suppress required identical types of 'top' and
+                'start'. As a rule of thumb for current
                 version, the search component has to be less
-                restrictive typed than the searched. 
+                restrictive typed than the searched.
                 The default applicable type matches are::
 
                      top    ¦ start
@@ -1324,28 +1523,33 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
 
                 See common options for details.
 
-            prepend: Prepends the set of search paths.
+            prepend:
+                Prepends the set of search paths.
                 This is default.
 
-            raw: Suppress normalization by call of 
+            raw:
+                Suppress normalization by call of
                 'os.path.normpath'.
 
-            relonly: The paths are inserted relative to the
-                top node only. This is mainly for test 
+            relonly:
+                The paths are inserted relative to the
+                top node only. This is mainly for test
                 purposes. The intermix of relative and
                 absolute path entries is not verified.
 
-            reverse: This reverses the resulting search order 
+            reverse:
+                This reverses the resulting search order
                  from bottom-up to top-down.
 
-            unique: Insert non-present only, else present
+            unique:
+                Insert non-present only, else present
                 entries are not checked, thus the search order
                 is changed in general for 'prepend', while
                 for 'append' the present still covers the new
-                entry. 
-            
+                entry.
+
     Returns:
-        When successful returns 'True', else returns either 'False', 
+        When successful returns 'True', else returns either 'False',
         or raises an exception.
 
     Raises:
@@ -1353,14 +1557,14 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
     """
     if type(plist) == NoneType:
         plist = sys.path
-    
+
     _relo = False
     _matchcnt = 0
     _matchidx = 0
-    
+
     setUpperTreeSearchPath._matchcnt = 0
     setUpperTreeSearchPath._matchidx = 0
-    
+
     matchlvl = 0
     matchlvlupward = -1
     reverse = False
@@ -1408,10 +1612,10 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
             _sitem = True
         elif k == 'noTypeCheck':
             _tchk = False
-        
+
     if matchlvl > 0:
         matchlvlupward = -1
-        
+
     #
     # Prepare search path list
     # if decided to normalize, and whether to ignore leading '//'
@@ -1448,7 +1652,7 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
     if os.path.isfile(start):
         start = os.path.dirname(start)  # we need dir
     if not os.path.exists(start):
-        raise FileSysObjectsException("Missing start:" + str(start)) 
+        raise FileSysObjectsException("Missing start:" + str(start))
 
     # 1. prep top dir
 
@@ -1463,9 +1667,9 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
 
     # ptype
     if _tchk:
-        if _top_elems and _start_elems: 
+        if _top_elems and _start_elems:
             if _top_elems[0] != _start_elems[0]:
-                
+
                 #TODO: still to enhance..
                 if _top_elems[0]  in ( 'LFSYS', ):
                     if os.path.realpath(_top_elems[3]):
@@ -1479,14 +1683,14 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
                     raise FileSysObjectsException("This version requires compatible types: start("+str(_start_elems[0])+") =! top("+str(_top_elems[0])+")")
 
     # share
-#     if _top_elems[2]: 
+#     if _top_elems[2]:
 #         if _top_elems[2] != _start_elems[2]:
 #             raise FileSysObjectsException("Top is not in start:" + str(_top_elems[2]) + " != " + str(_top_elems[2]))
 #     else:
-#         _top_elems[2]  = _start_elems[2] 
+#         _top_elems[2]  = _start_elems[2]
 
     # node
-#     if _top_elems[1]: 
+#     if _top_elems[1]:
 #         if _top_elems[1] != _start_elems[1]:
 #             raise FileSysObjectsException("Top is not in start:" + str(_top_elems[1]) + " != " + str(_top_elems[1]))
 #     else:
@@ -1510,7 +1714,7 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
     if os.path.isabs(top):
         if not os.path.exists(top):
                 raise FileSysObjectsException("Top does not exist:" + str(top))
-    
+
     #
     # start upward recursion now
     #
@@ -1542,7 +1746,7 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
 
         _sx = re.sub(_CPREP, r"\1", top)
 
-        # for now works literally 
+        # for now works literally
         a = start.split(top)
         if len(a) == 1:
             raise FileSysObjectsException("Top is not in start:" + str(top))
@@ -1565,7 +1769,7 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
     #
     # so we have actually at least one top within valid range and a remaining sub-path - let us start
     #
-    
+
     if a == ['', '']:  # top == start
         if matchlvl > 0:
             raise FileSysObjectsException("Match count out of range:" + str(matchlvl) + "> 0")
@@ -1585,7 +1789,7 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
         _spath = top.join(a[mcnt + 1:])  # sub-path for search recursion
 
     else:
-        
+
         # get index for requested number of ignored/contained matches
         if matchlvlupward >= 0:
             mcnt = len(a) - 1 - matchlvlupward
@@ -1597,7 +1801,7 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
             _tpath = top
             _spath = (os.sep + top + os.sep).join(a[mcnt:])  # sub-path for search recursion
         elif not a[mcnt-1]: # tail
-            _tpath = (os.sep + top + os.sep).join(a[:mcnt]) 
+            _tpath = (os.sep + top + os.sep).join(a[:mcnt])
             _spath = ''
         else:
             _tpath = (os.sep + top + os.sep).join(a[:mcnt]) + os.sep + top  # top path as search hook
@@ -1630,19 +1834,22 @@ def setUpperTreeSearchPath(start=None, top=None, plist=None, **kargs):
     return True
 
 def splitAppPrefix(apstr, **kargs):
-    """Splits application prefix from resource-path - IEEE-1003.1/SMB/CIFS
-    
+    """Splits application prefix from a single resource-path - IEEE-1003.1/SMB/CIFS.
+    For a search path containing mulltiple single-path entries refer to 'splitPathVar'
+    `[see] <#splitpathvar>`_.
+
+
     The supported application type prefixes are as follows,
     for detailed information refer to the chapter
     **Syntax Elements** `[details] <path_syntax.html#syntax-elements>`_
       ::
 
         PREFIXKEY := (
-             'file:///' + 2SEP + SPECIALNODE + varSEP + share-name 
+             'file:///' + 2SEP + SPECIALNODE + varSEP + share-name
            | 'file://'
            | 'smb://' + SPECIALNODE + varSEP + share-name
            | 2SEP  SPECIALNODE  [varSEP]
-           | nSEP       
+           | nSEP
         )
         SPECIALNODE := (
            <networknode>
@@ -1653,69 +1860,59 @@ def splitAppPrefix(apstr, **kargs):
 
 
     Args:
-        apstr: A path containing an application part.
+        apstr:
+            A path containing an application part.
 
         **kargs:
-            ias: Ignore application separator, this
-                just normalizes the pathname by 
+            ias:
+                This option is foreseen for test purposes.
+
+                Ignore application separator, this
+                normalizes the pathname by
                 eliminating the PREFIXKEY property.
-    
-            raw: Suppress any normalization.
+                This results in consequence into::
 
-            rtype: Displays raw type prefix.
+                  file://///hostname/share/a/b => /hostname/share/a/b
 
-            tpf: Target platform for the filepathname.
+                where the pathname is created without any application
+                recognition on the base of::
 
-                win:   MS-Windows with os.sep= '\\'
+                  /////hostname/share/a/b => /hostname/share/a/b
 
-                posix: POSIX  based, with os.sep = '/'
+            raw:
+                Displays the type prefix as provided raw sub string - see 'rtype' -
+                and suppress any normalization of the resulting 'pathname' sub string.
 
-                keep: keeps as provides, also intermixed,
-                    os.sep, just escapes '/'
+            rtype:
+                Displays the type prefix as provided raw sub string.
 
-                else: adapts to current os.sep, similar 
-                    'os.path.normpath'
-
-                cnp: cross native posix
-    
-                    emulates native behaviour of 'os.path.normpath' 
-                    on posix platform, e.g.::
-    
-                        d:/  => d:
-                        d:\\  => d:/
-                
-                cnw:cross native win
-    
-                    emulates native behaviour of 'os.path.normpath' 
-                    on win platform, e.g.::
-    
-                        d:/  => d:/
-                        d:\\  => d:
-                
-                else: adapt os.sep, local os native
+            tpf:
+                Target platform for the file pathname, for details refer to 'normpathX'
+                `[see normpathX] <#normpathx>`_.
 
     Returns:
         When split successful returns a tuple containing:
           ::
 
             (TYPE, host-name, share-name, pathname)
-             
-              TYPE := (SMB|SHARE|LFSYS|LDSYS)
+
+              TYPE := (RAW|CIFS|SMB|SHARE|LFSYS|LDSYS)
                  SMB := ('file:///'+2SEP|'smb://')
                  SHARE := 2SEP
-                 LFSYS := ('file://'|'') 
-                 LDSYS := [a-z]':' 
+                 LFSYS := ('file://'|'')
+                 LDSYS := [a-z]':'
               host-name =: (host-name|'')
               share-name := (valid-share-name|'')
               valid-share-name := (
-                   smb-share-name
+                   raw
+                 | smb-share-name
                  | cifs-share-name
                  | win-drive-share-name
                  | win-drive-os
                  | win-special-share-name
               )
               pathname := "pathname on target"
- 
+
         else:
           ::
 
@@ -1730,7 +1927,7 @@ def splitAppPrefix(apstr, **kargs):
     ias = kargs.get('ias', False)
     raw = kargs.get('raw', False)
     rtype = kargs.get('rtype', False)
-    
+
     if not raw:
         if ias:
             _cg = _COMPT.match(apstr)
@@ -1751,7 +1948,7 @@ def splitAppPrefix(apstr, **kargs):
                     continue  # should not occur, anyhow...
                 if not rtype:
                     return (PGTYPE[(g - 2) / 5], i.group(g + 1), i.group(g + 2), normpathX(i.group(g + 3),**kargs))
-                else: 
+                else:
                     return (i.group(g), i.group(g + 1), i.group(g + 2), normpathX(i.group(g + 3),**kargs))
             return None
     else:
@@ -1766,52 +1963,369 @@ def splitAppPrefix(apstr, **kargs):
             return None
     return ('', apstr)
 
-def getAppPrefixLocalPath(elems,**kargs):
-    """Joins app elements to a path for local access.
-    
+def splitPathVar(pathvar, **kargs):
+    """Splits PATH variables which may include URI type prefixes into a list of single path entries.
+
+    The default behavior is to split a search path into a list of contained path entries.
+    E.g::
+
+       p = 'file:///a/b/c:/d/e::x/y:smb://host/share/q/w'
+
+    Is split into:
+        ::
+
+            px = [
+                'file:///a/b/c',
+                '/d/e',
+                '',
+                'x/y',
+                'smb://host/share/q/w',
+            ]
+
+    With 'appsplit'
+      ::
+
+            px = [
+                ('LFSYS' ,'', '', '/a/b/c'),
+                ('LFSYS' ,'', '', '/d/e'),
+                ('LFSYS' ,'', '', ''),
+                ('LFSYS' ,'', '', 'x/y'),
+                ('SMB' ,'host', 'share', 'q/w'),
+            ]
+
+    The supported application type prefixes are the same as by 'splitAppPrefix'
+    `[see] <#splitappprefix>`_.
+    For reserved prefix keywords parts of the name may be escaped in order to
+    avoid filtering when required.
+
     Args:
-        elems: Elements as provided by 'splitAppPrefix' 
+        pathvar:
+            A search path compatible to 'splitAppPrefix'
+            `[see] <#splitappprefix>`_.
 
         **kargs:
-            tpf: Target platform for the filepathname.
+            The provided key-options are also passed through transparently to
+             'normpathX' `[see] <#normpathx>`_ if not 'raw'.
 
-                win:   MS-Windows with os.sep= '\\'
+            appsplit:
+                Splits into tuples of application entries.
 
-                posix: POSIX  based, with os.sep = '/'
+                For further details refer to 'splitAppPrefix' `[see] <#splitappprefix>`_.
 
-                cnp: cross native posix
-    
-                    emulates native behaviour of 'os.path.normpath' 
-                    on posix platform, e.g.::
-    
-                        d:/  => d:
-                        d:\\  => d:/
-                
-                cnw:cross native win
-    
-                    emulates native behaviour of 'os.path.normpath' 
-                    on win platform, e.g.::
-    
-                        d:/  => d:/
-                        d:\\  => d:
-                
-                cnp: cross native posix
-    
-                    emulates native behaviour of 'os.path.normpath' 
-                    on posix platform, e.g.::
-    
-                        d:/  => d:
-                        d:\\  => d:/
-                
-                cnw:cross native win
-    
-                    emulates native behaviour of 'os.path.normpath' 
-                    on win platform, e.g.::
-    
-                        d:/  => d:/
-                        d:\\  => d:
-                
-                else: adapt os.sep, local os native
+                    appsplit = (True|False)
+
+            ias:
+                This option is foreseen for test purposes.
+
+                For further details refer to 'splitAppPrefix' `[see] <#splitappprefix>`_.
+
+                    ias = (True|False)
+
+            raw:
+                Displays a list of unaltered split path items, superposes 'rpath'
+                and 'rtype'.
+
+                    raw = (True|False)
+
+            rpath:
+                Displays the path as provided raw sub string.
+
+                For further details refer to 'splitAppPrefix' `[see] <#splitappprefix>`_.
+
+                    rpath = (True|False)
+
+            rtype:
+                Displays the type prefix as provided raw sub string.
+
+                For further details refer to 'splitAppPrefix' `[see] <#splitappprefix>`_.
+
+                    rtype = (True|False)
+
+            tpf:
+                Target platform for the file pathname, for details refer to 'normpathX'
+                `[see normpathX] <#normpathx>`_.
+
+    Returns:
+        When split successful returns a list of tuples:
+          ::
+
+            appsplit == False
+
+                [
+                    <pathvar-item>,
+                    ...
+                ]
+
+            appsplit == True
+
+                [
+                    (TYPE, host-name, share-name, pathname),
+                    ...
+                ]
+
+        The tuple contains:
+          ::
+
+            (TYPE, host-name, share-name, pathname)
+
+              TYPE := (RAW|CIFS|SMB|SHARE|LFSYS|LDSYS)
+                 RAW := (<raw-pathvar-item>)
+                 CIFS := ('cifs://')
+                 SMB := ('file:///'+2SEP|'smb://')
+                 SHARE := 2SEP
+                 LFSYS := ('file://'|'')
+                 LDSYS := [a-z]':'
+              host-name := (host-name|'')
+              share-name := (valid-share-name|'')
+              valid-share-name := (
+                 smb-share-name
+                 | cifs-share-name
+                 | win-drive-share-name
+                 | win-drive-os
+                 | win-special-share-name
+              )
+              pathname := "pathname on target"
+
+            specials:
+
+              ias := ('IAS', '', '', ias-pathvar-item)
+              raw := ('RAW', '', '', raw-pathvar-item)
+              rpath := (TYPE, host-name, share-name, raw-pathname>)
+              rtype := (raw-type, host-name, share-name, pathname)
+              rtype + rpath := (raw-type, host-name, share-name, raw-pathname>)
+
+        else:
+          ::
+
+             (LFSYS, '', '', apstr)
+
+        REMARK: The hostname may contain in current release
+            any suboption, but is not tested with options at all.
+
+        Refer also to 'splitAppPrefix' `[see] <#splitappprefix>`_.
+
+
+    Raises:
+        passed through exceptions:
+
+    """
+    appsplit = kargs.get('appsplit', False) #: control application tuples, else ordinary path
+    ias = kargs.get('ias', False) #: control IAS
+    raw = kargs.get('raw', False) #: control RAW
+    rpath = kargs.get('rpath', False) #: control RAW-PATH
+    rtype = kargs.get('rtype', False) #: control RAW-TYPE
+
+    #
+    # prep appsplit
+    #
+    if not appsplit:
+        if ias:
+            raise FileSysObjectsException("IAS requires 'appsplit'")
+        if not raw:
+            rtype = True
+
+    # prep format
+    if ias and raw:
+        raise FileSysObjectsException("Options are supported EXOR: IAS exor RAW")
+
+
+    ret = [] #: collect result
+    g = 0 #: preserve for final analysis outside the loop
+
+
+    def getraw(i,g):
+        """Get raw string.
+
+        Args:
+            i: iterator
+            g: current group
+
+        Returns:
+            (s,e): for sub string
+        """
+        # get start string position without APP-PREFIX
+        s = i.start(g+1)
+        if s == -1:
+            s = i.start(g+2)
+            if s == -1:
+                s = i.start(g+3)
+
+        # get end string position
+        e = i.end(g+3)
+        if e == -1:
+            e = i.end(g+2)
+            if e == -1:
+                e = i.end(g+1)
+
+        return (s,e,)
+
+    if not pathvar: # shortcut for empty input - None and 0/length-string
+        if not appsplit:
+            return []
+        if ias:
+            return [('IAS', '', '', '')]
+        if raw:
+            return [('RAW', '', '', '')]
+        if rtype or (rpath and rtype):
+            return [('', '', '', '')]
+        else:
+            return [('LFSYS', '', '', '')]
+
+    for i in _CSPLITPATH.finditer(pathvar):
+        for g in _CSPLITPATHg: # do this for getting the syntax term
+
+            if i.start(g) == -1: # if there is a match at all
+                continue
+
+            if g == 92: # shortcut for empty group == empty path entry
+                if ias:
+                    ret.append(('IAS', '', '', ''))
+                elif raw : # raw prio higher
+                    ret.append(('RAW', '', '', ''))
+                elif rtype or (rpath and rtype):
+                    ret.append(('', '', '', ''))
+                elif rpath:
+                    ret.append(('LFSYS', '', '', ''))
+                else:
+                    ret.append(('LFSYS', '', '', ''))
+                break
+
+            if ias: # ignore application separator
+                if i.group(g + 3) or i.group(g):  # 4:local file system / 0:uri or IEEE/UNC/SMB
+                    pass
+                elif i.group(g + 2):  # 2:DOS-DRIVE - only
+                    pass
+                else:
+                    continue  # should not occur, anyhow...
+
+                __r=''
+                if i.group(g+1):
+                    __r += os.sep+i.group(g+1)
+                if i.group(g+2):
+                    if i.group(g+1) != '':
+                        __r += os.sep+i.group(g+2) # share is present see path for drive /<drive>/path
+                    else:
+                        __r += i.group(g+2) # share may not be present, else in path /<drive>/path
+
+                if i.group(g+3):
+                    if rpath:
+                        s,e = getraw(i,g)
+
+                        if -1 in (s,e,):
+                            ret.append(('', '', '', '')) # should not occur
+                            break
+
+                        # now get the raw string
+                        if s > 0 and pathvar[s-1] == os.sep:
+                            __r += os.sep+pathvar[s-1:e]
+                        else:
+                            __r += os.sep+pathvar[s:e]
+                    else:
+                        if __r:
+                            __r += os.sep+i.group(g+3)
+                        else:
+                            __r += i.group(g+3)
+
+                else:  # here: 0,1,2,3 => empty group
+                    ret.append(('IAS', '', '', __r)) # shortcut break - ignore 0
+                    break
+
+                if rtype and rpath:
+                    ret.append((i.group(g), '', '', __r))
+                elif rtype:
+                    ret.append((i.group(g), '', '', normpathX(__r,**kargs)))
+                elif rpath:
+                    ret.append(('IAS', '', '', __r))
+                else:
+                    ret.append(('IAS', '', '', normpathX(__r,**kargs)))
+                break
+
+            #
+            # was not IAS - before - spare the 'else'
+            #
+            if i.group(g + 3) or i.group(g):  # 4:local file system / 0:uri or IEEE/UNC/SMB
+                pass
+            elif i.group(g + 2):  # 2:DOS-DRIVE - only
+                if raw:
+                    ret.append(('RAW', '', '', pathvar[i.start(g):i.start(g+3)]))
+                elif rtype and rpath:
+                    ret.append((i.group(g), i.group(g + 1), i.group(g + 2), ''))
+                elif rpath:
+                    ret.append((PGSTYPE[(g - 4) / 8], i.group(g + 1), i.group(g + 2), ''))
+                elif rtype:
+                    ret.append((i.group(g), i.group(g + 1), i.group(g + 2), ''))
+                else:
+                    ret.append((PGSTYPE[(g - 4) / 8], i.group(g + 1), i.group(g + 2), ''))
+                break
+            elif not i.group(g + 1):  # here: 0,1,2,3 => empty group
+                ret.append(('LFSYS', '', '', ''))
+                break
+            else:
+                continue  # should not occur, anyhow...
+
+            if raw:
+                ret.append(('RAW', '', '', pathvar[i.start(g):i.end(g+3)]))
+            elif rtype and rpath:
+                ret.append((i.group(g), i.group(g + 1), i.group(g + 2), i.group(g+3)))
+            elif rpath:
+                ret.append((PGSTYPE[(g - 4 ) / 8 ], i.group(g + 1), i.group(g + 2), i.group(g+3)))
+            elif rtype:
+                ret.append((i.group(g), i.group(g + 1), i.group(g + 2), normpathX(i.group(g + 3),**kargs)))
+            else:
+                ret.append((PGSTYPE[(g - 4 ) / 8 ], i.group(g + 1), i.group(g + 2), normpathX(i.group(g + 3),**kargs)))
+
+    #*
+    #* the case empty group regexpr at the end of the search path else complicates the regexpr at all
+    #*
+    if i.end(g-1) != -1 and i.end(g-1) < len(pathvar): # empty group at the end of string
+        if ias:
+            ret.append(('IAS', '', '', ''))
+        elif raw:
+            ret.append(('RAW', '', '', ''))
+        elif rtype:
+            ret.append(('', '', '', ''))
+        else:
+            ret.append(('LFSYS', '', '', ''))
+
+    if not appsplit: # ordinary pathsplit
+        _ret = []
+        if raw:
+            _ret = map(lambda x: x[3],ret)
+        else: # expects 'rtype', and valid entries
+            for r in ret:
+                _r = ''
+                if r[1]:
+                    _r += os.path.sep + r[1]
+                if r[2]:
+                    if r[0] in ("LDSYS", "") and not r[1]: # r[1] should be empty
+                        _r += r[2]
+                    else: # r[1] mus not be empty (!?)
+                        _r += os.path.sep + r[2]
+                if r[3]:
+                    if r[0] in ("LDSYS", ""): # drive only
+                        _r += r[3]
+                    else:
+                        if r[1] and r[2]: #share
+                            _r += os.sep+r[3]
+                        else:
+                            _r += r[3]
+
+                _r = os.pathsep + _r
+                _ret.append(_r[1:])
+        return _ret
+    return ret
+
+def getAppPrefixLocalPath(elems,**kargs):
+    """Joins app elements to a path for local access.
+
+    Args:
+        elems:
+            Elements as provided by 'splitAppPrefix'
+
+        **kargs:
+            tpf:
+                Target platform for the file pathname, for details refer to 'normpathX'
+                `[see normpathX] <#normpathx>`_.
 
     Returns:
         When access path when successful, else None.
@@ -1846,77 +2360,78 @@ def getAppPrefixLocalPath(elems,**kargs):
             ret += elems[3]
     elif elems:
         ret += elems[3]
-    
-    return ret    
+
+    return ret
 
 
 #***
 # Static 're' components
 #
-# match pattern for path names - could be applied on any OS, 
+# match pattern for path names - could be applied on any OS,
 # but required mandatory on MS-Windows
 #
-alist= [                                 # escapes path names
+alist= [                                        #   escapes path names
 
-    r'((?<![\\\\])[\\\\]*([\a]))',            # controls of 're' and others
-    r'((?<![\\\\])[\\\\]*([\b]))',#4
+    r'((?<![\\\\])[\\\\]*([\a]))',              #   controls of 're' and others
+    r'((?<![\\\\])[\\\\]*([\b]))',              #4
     r'((?<![\\\\])[\\\\]*([\f]))',
     r'((?<![\\\\])[\\\\]*([\n]))',
-    r'((?<![\\\\])[\\\\]*([\r]))',   #10
+    r'((?<![\\\\])[\\\\]*([\r]))',              #10
     r'((?<![\\\\])[\\\\]*([\t]))',
     r'((?<![\\\\])[\\\\]*([\v]))',
 
-    r'(^(file://///)(?![/\\\\]))',                   # some URIs, suppress slash reduction 
-    r'(^(file:///[\\][\\])(?![/\\\\]))',                   # some URIs, suppress slash reduction 
-    r'(^(file://[\\][\\])(?![/\\\\]))',   #20           # some URIs, suppress slash reduction 
-    r'(^(file://))',       
-    r'(^(smb://))',  #24   
-    r'(^(cifs://))',     
-    r'(^(ias://))',                       #      special, proprietary for test purposes     
+    r'(^(file://///)(?![/\\\\]))',              #   some URIs, suppress slash reduction
+    r'(^(file:///[\\][\\])(?![/\\\\]))',        #   some URIs, suppress slash reduction
+    r'(^(file://[\\][\\])(?![/\\\\]))',         #20 some URIs, suppress slash reduction
+    r'(^(file://))',
+    r'(^(smb://))',                             #24
+    r'(^(cifs://))',
+    r'(^(ias://))',                             #   special, proprietary for test purposes
 
-    r'(^([\\\\][\\\\])(?![\\\\]))',  #30    # os.sep on win
+    r'(^([\\\\][\\\\])(?![\\\\]))',             #30 os.sep on win
     r'((^[\\\\]+)$)',
-    
+
     r'(([\\\\]+[.][\\\\]+))',
     r'(([\\\\]+[.]$))',
     r'((^[.][\\\\]+))',
-    
-    r'((?<=[a-zA-Z]:)([\\\\]+)$)',  #40
+
+    r'((?<=[a-zA-Z]:)([\\\\]+)$)',              #40
     r'((?<![\\\\])([\\\\]+)$)',
-    r'((?<![\\\\])([\\\\][\\\\])(?![\\\\]))', 
+    r'((?<![\\\\])([\\\\][\\\\])(?![\\\\]))',
     r'((?<![\\\\])([\\\\]+)(?![\\\\]))',
     r'(^([\\\\])(?![\\\\]))',
 
-    r'(^(//)(?!/))',        #50             # os.sep on Linux, UNIX, OS-X
+    r'(^(//)(?!/))',                            #50 os.sep on Linux, UNIX, OS-X
     r'(^(/)$)',
 
     r'(([^/]+/+\.\./*))',
     r'((?<=[^/])(/+[^/]+/+\.\.))',
     r'(([^/]+/+\.\./+))',
-    r'((?=[^.]*)(\.\./+))', #60 
-    
-    r'((/+[.])+/*$)', 
-    r'((/+[.]/+))', 
-    r'((?=[^.]*)(\./+))', 
+    r'((?=[^.]*)(\.\./+))',                     #60
 
-    r'(^(///+)(?!/))', 
-    r'((?<=[a-zA-Z]:)(/+)$)', #70 
-    r'((/+)(?:$))', 
-    r'((/+)(?![/]))', 
+    r'((/+[.])+/*$)',
+    r'((/+[.]/+))',
+    r'((?=[^.]*)(\./+))',
+
+    r'(^(///+)(?!/))',
+    r'((?<=[a-zA-Z]:)(/+)$)',                   #70
+    r'((/+)(?:$))',                             #72
+    r'((/+)(?![/]))',                           #74
 
 ]
 _rx = re.compile('|'.join(alist))
+"""Regexpr scanner for 'escapeFilePath', also used in 'normpathX'."""
 
 #
-# map matches to actual controlsequneces
+# map matches to actual control sequences
 #
 DOIT = 11111 # out of range
 ASCII_CTRL = {
-    2 :  '\a',
-    4 :  '\b',
-    6 :  '\f',
-    8 :  '\n',
-    10 :  '\r', 
+    2 :   '\a',
+    4 :   '\b',
+    6 :   '\f',
+    8 :   '\n',
+    10 :  '\r',
     12 :  '\t',
     14 :  '\v',
 
@@ -1927,7 +2442,7 @@ ASCII_CTRL = {
     24 :  'smb://',
     26 :  'cifs://',
     28 :  'ias://',
-    
+
     30:  '\\\\',
     32 :  DOIT,
     34 :  DOIT,
@@ -1983,12 +2498,12 @@ ASCII_REPLACE_CNP = {
     34 :  r'/',
     36 :  r'/',
     38 :  r'/',
-    40 :  '',
+    40 :  '\\',
     42 :  '',
     44 :  r'/',
     46 :  r'/',
     48 :  r'/',
-    
+
     50 :  '//',
     52 :  '/',
     54 :  '',
@@ -1999,7 +2514,7 @@ ASCII_REPLACE_CNP = {
     64 :  '/',
     66 :  '',
     68 :  '/',
-    70 :  '/',
+    70 :  '',
     72:  '',
     74 :  '/',
 }
@@ -2008,10 +2523,10 @@ ASCII_REPLACE_CNP = {
 #* *** cross native win - backslash *** emulates normpath on posix for remote win
 #*
 ASCII_REPLACE_CNW = {
-    2 :    r'\\a',
-    4 :    r'\\b',
-    6 :    r'\\f',
-    8 :    r'\\n',
+    2 :   r'\\a',
+    4 :   r'\\b',
+    6 :   r'\\f',
+    8 :   r'\\n',
     10 :  r'\\r',
     12 :  r'\\t',
     14 :  r'\\v',
@@ -2046,7 +2561,7 @@ ASCII_REPLACE_CNW = {
     64 :  r'\\',
     66 :  r'',
     68 :  r'\\',
-    70 :  r'',
+    70 :  '\\',
     72 :  '',
     74 :  r'\\',
 }
@@ -2055,10 +2570,10 @@ ASCII_REPLACE_CNW = {
 #* *** keep ***
 #*
 ASCII_REPLACE_K = {
-    2 :    r'\\a',
-    4 :    r'\\b',
-    6 :    r'\\f',
-    8 :    r'\\n',
+    2 :   r'\\a',
+    4 :   r'\\b',
+    6 :   r'\\f',
+    8 :   r'\\n',
     10 :  r'\\r',
     12 :  r'\\t',
     14 :  r'\\v',
@@ -2078,7 +2593,7 @@ ASCII_REPLACE_K = {
     38 :  r'\\',
 
     40 :  r'\\',
-    42 :  '',
+    42 :  r'\\',
     44 :  r'\\',
     46 :  r'\\',
     48 :  r'\\',
@@ -2094,17 +2609,17 @@ ASCII_REPLACE_K = {
     66 :  '',
     68 :  '/',
     70 :  '/',
-    72 :  '',
+    72 :  '/',
     74 :  '/',
 }
 #*
 #* *** replace with backslash ***
 #*
 ASCII_REPLACE_B = {
-    2 :    r'\\a',
-    4 :    r'\\b',
-    6 :    r'\\f',
-    8 :    r'\\n',
+    2 :   r'\\a',
+    4 :   r'\\b',
+    6 :   r'\\f',
+    8 :   r'\\n',
     10 :  r'\\r',
     12 :  r'\\t',
     14 :  r'\\v',
@@ -2148,10 +2663,10 @@ ASCII_REPLACE_B = {
 #* *** replace with slash ***
 #*
 ASCII_REPLACE_S= {
-    2 :    r'/a',
-    4 :    r'/b',
-    6 :    r'/f',
-    8 :    r'/n',
+    2 :   r'/a',
+    4 :   r'/b',
+    6 :   r'/f',
+    8 :   r'/n',
     10 :  r'/r',
     12 :  r'/t',
     14 :  r'/v',
@@ -2174,7 +2689,7 @@ ASCII_REPLACE_S= {
     44 :  r'/',
     46 :  r'/',
     48 :  r'/',
-    
+
     50 :  '//',
     52 :  '/',
     54 :  '',
@@ -2185,10 +2700,17 @@ ASCII_REPLACE_S= {
     64 :  '/',
     66 :  '',
     68 :  '/',
-    70 :  '',
+    70 :  '/',
     72:  '',
     74 :  '/',
 }
+
+
+#*
+#* *** normalize mixed separators for posix/windows ***
+#*
+#FIXME: ffs. MIXED_SEP = re.compile(ur"""(/[\\\\]{2})|([\\\\]{2}/)""")
+
 
 def sub_esc_keep(it):
     """To be used by re.sub() - keeps mixed
@@ -2249,68 +2771,75 @@ def escapeFilePath(p,tps=None):
     """Normalize 'os.sep' by re module.
 
     Considers any os.sep seperated item as path part.
-    Manages os.sep including flags of 're' as special 
+    Manages os.sep including flags of 're' as special
     characters,e.g. 'a', 'b', and 'x'.
 
     Args:
         p: A path.
-        
-        tps: Target path seperator:
 
-            s: slash
+        tps:
+            Target path seperator:
 
-            b: backslash
+                s: slash
 
-            k: keep 
-                
-                keeps, also intermixed, just escapes backslash
-                
-            cnp: cross native posix
+                b: backslash
 
-                emulates native behaviour of 'os.path.normpath' 
-                on posix platform, e.g.::
+                k: keep
 
-                    d:/  => d:
-                    d:\\  => d:/
-            
-            cnw:cross native win
+                    keeps, also intermixed, just escapes backslash
 
-                emulates native behaviour of 'os.path.normpath' 
-                on win platform, e.g.::
+                cnp: cross native posix
 
-                    d:/  => d:/
-                    d:\\  => d:
-            
-            else: adapt os.sep, local os native
+                    Emulates native behavior of 'os.path.normpath'
+                    on posix platform(Linux, MacOS, ...), e.g.::
+
+                        d:/  => d:
+                        d:\\  => d:\\
+
+                cnw:cross native win
+
+                    Emulates native behavior of 'os.path.normpath'
+                    on win platform, e.g.::
+
+                        d:/  => d:\\
+                        d:\\  => d:\\
+
+                else: adapt os.sep, local os native
 
     Returns:
         Path.
     """
     if tps not in ('s','b','k', 'cnw', 'cnp', ):
         if platform.system() == 'Windows':
+#FIXME:             p = MIXED_SEP.sub("\\\\", p)
             return _rx.sub(sub_esc_b, p)
         else:
+#FIXME:             p = MIXED_SEP.sub("//", p)
             return _rx.sub(sub_esc_s, p)
-        
+
     if tps == 's':
+#FIXME:         p = MIXED_SEP.sub("//", p)
         return _rx.sub(sub_esc_s, p)
     elif tps == 'b':
+#FIXME:         p = MIXED_SEP.sub("\\\\", p)
         return _rx.sub(sub_esc_b, p)
     elif tps == 'k':
         return _rx.sub(sub_esc_keep, p)
     elif tps == 'cnw':
+#FIXME:         p = MIXED_SEP.sub("\\\\", p)
         return _rx.sub(sub_esc_cnw, p)
     elif tps == 'cnp':
+#FIXME:         p = MIXED_SEP.sub("//", p)
         return _rx.sub(sub_esc_cnp, p)
-    
+
     # just for the paranoid...
     return _rx.sub(sub_esc_keep, p)
 
 #***
-#* Static 're' components for table driven remapping
+#* Static 're' components for table driven re-map
 #*
 
-# match pattern for path names - could be applied on any OS, 
+# match pattern for path names - could be applied on any OS,
 # but required mandatory on MS-Windows
 #
 blist= [
@@ -2322,19 +2851,19 @@ blist= [
     r'((?<![\\\\])¦(?=^)([\\\\][\\\\][t]))',
     r'((?<![\\\\])¦(?=^)([\\\\][\\\\][v]))',
 
-    r'(^(file:///[\\][\\][\\][\\])(?![/\\\\]))',                   # some URIs, suppress slash reduction 
-    r'(^(file://[\\][\\][\\][\\])(?![/\\\\]))',   #18           # some URIs, suppress slash reduction 
+    r'(^(file:///[\\][\\][\\][\\])(?![/\\\\]))',                   # some URIs, suppress slash reduction
+    r'(^(file://[\\][\\][\\][\\])(?![/\\\\]))',   #18           # some URIs, suppress slash reduction
 
     r'(^([\\\\][\\\\][\\\\][\\\\])(?![\\\\]))', #20
     r'(^([\\\\][\\\\])(?![\\\\]))',
-    r'((?<![\\\\])([\\\\][\\\\][\\\\][\\\\])$)',  
+    r'((?<![\\\\])([\\\\][\\\\][\\\\][\\\\])$)',
     r'((?<![\\\\])([\\\\][\\\\][\\\\][\\\\])(?![\\\\]))',
     r'((?<![\\\\])([\\\\][\\\\])$)',
     r'((?<![\\\\])([\\\\][\\\\])(?![\\\\]))', #30
 ]
 _ry = re.compile('|'.join(blist))
 #
-# map matches to actual controlsequneces
+# map matches to actual control sequences
 #
 ASCII_ESC = {
     2 :    r'\\a',
@@ -2344,7 +2873,7 @@ ASCII_ESC = {
     10 :  r'\\r',
     12 :  r'\\t',
     14 :  r'\\v',
-    
+
     16 :  r'file:///\\\\',
     18 :  r'file://\\\\',
 
@@ -2355,7 +2884,7 @@ ASCII_ESC = {
     28 :  r'\\',
     30 :  r'\\',
 }
- 
+
 #
 # map matches to appropriate replacement
 #
@@ -2366,8 +2895,8 @@ ASCII_DEESC = {
     8 :  '\n',
     10 :  '\r',
     12 :  '\t',
-    14 :  '\v', 
-      
+    14 :  '\v',
+
     16 :  r'file:///\\',
     18 :  r'file://\\',
 
@@ -2407,51 +2936,132 @@ def unescapeFilePath(p):
     return _ry.sub(sub_unesc, p)
 
 def normpathX(p,**kargs):
-    """Normalize path similar to re module.
+    """Normalize path similar to os.path.normpath() function, but with optional extensions.
+    This provides a simple interface for preparing valid pathnames across multiple platforms.
+    The 'normpathX' processes a single path, when multiple are required either split them before
+    or use 'splitPathVar' to do.
 
-    Considers all os.sep and os.pathsep of supported
-    as valid path characters and treats tem as reserved characters.
-
+    Considers all os.sep and os.pathsep of supported OS
+    as valid path characters and treats them as reserved characters.
     In advance of os.path.normpath this supports the following simple
-    URIs:
-        smb, cifs, file
-    
+    URIs for file system paths:
+        smb, cifs, file  `[see normpathX] <#splitappprefix>`_.
+
+
+    The normpathX is in particular e.g. aware of special characters of the 're' module like
+    '\\\\a' and '\\\\b'. These are masked by the *escapeFilePath* and *unescapeFilePath* functions.
+
     Args:
-        p: A path.
+        p: A single path entry - no valid 'os.pathsep'. In case of required
+            search path including semantic 'os.pathsep' use 'splitPathVar()'.
 
         **kargs:
-            tpf: Target platform for the filepathname.
+            tpf: Target platform for the file pathname.
 
-                win:   MS-Windows with os.sep= '\\'
+                Due to some deviations from the expected behavior in case of cross
+                platform development the following options are defined:
 
-                posix: POSIX  based, with os.sep = '/'
+                    +-----------+------------+----------------------------------------------------------+
+                    | tpf       | compatible | behaviour                                                |
+                    +===========+============+==========================================================+
+                    | cnp       | to POSIX   | as os.path.normpath() on POSIX OS, transforms to '/'     |
+                    +-----------+------------+----------------------------------------------------------+
+                    | cnw       | to Win     | as os.path.normpath() on Windows  OS, transforms to '\\\\' |
+                    +-----------+------------+----------------------------------------------------------+
+                    | keep      | n.a.       | keeps literal                                            |
+                    +-----------+------------+----------------------------------------------------------+
+                    | local     | yes        | compatible to local os.path.normpath()                   |
+                    +-----------+------------+----------------------------------------------------------+
+                    | posix     | no         | keeps all separators as '/'                              |
+                    +-----------+------------+----------------------------------------------------------+
+                    | win       | no         | keeps all separators as '\\\\'                             |
+                    +-----------+------------+----------------------------------------------------------+
+                    | <default> | no         | adapts 'win' or 'posix' to local os                      |
+                    +-----------+------------+----------------------------------------------------------+
 
-                keep: Keeps as provided, also intermixed,
-                    os.sep, just escapes '/'
+                **cnp**: cross native posix
 
-                else: similar to 'os.path.normpath', 
-                    transforms to current 'os.sep'
+                    Emulates compatible native behavior of 'os.path.normpath'
+                    on POSIX platforms(Linux, MacOS, ...), e.g.::
 
-                cnp: cross native posix
-    
-                    emulates native behaviour of 'os.path.normpath' 
-                    on posix platform, e.g.::
-    
                         d:/  => d:
-                        d:\\  => d:/
-                
-                cnw:cross native win
-    
-                    emulates native behaviour of 'os.path.normpath' 
-                    on win platform, e.g.::
-    
+                        d:\\  => d:\\
+
+                    On POSIX OS::
+
+                        Xposix = os.path.normpath(x)
+
+                    On POSIX OS::
+
+                        Xposix == filesysobjects.FileSysObjects(x,**{'tpf':'local'})
+                        Xposix == filesysobjects.FileSysObjects(x,**{'tpf':'cnp'})
+
+                    On Windows OS::
+
+                        Xposix == filesysobjects.FileSysObjects(x,**{'tpf':'cnp'})
+
+                **cnw**:cross native win
+
+                    Emulates compatible native behavior of 'os.path.normpath'
+                    on Windows platforms, e.g.::
+
+                        d:/  => d:\\
+                        d:\\  => d:\\
+
+                    On Windows OS::
+
+                        Xwin = os.path.normpath(x)
+
+                    On Windows OS::
+
+                        Xwin == filesysobjects.FileSysObjects(x,**{'tpf':'local'})
+                        Xwin == filesysobjects.FileSysObjects(x,**{'tpf':'cnw'})
+
+                    On POSIX OS::
+
+                        Xwin == filesysobjects.FileSysObjects(x,**{'tpf':'cnw'})
+
+                **keep**:
+
+                    Keeps as provided, also intermixed styles of os.path.sep and
+                    os.pathsep, just escapes '\\'. The user is responsible for adaption
+                    to the local file system interfaces.
+
+                **local**:
+
+                    Compatible to local 'os.path.normpath()'.
+
+                **posix**: POSIX style
+
+                    POSIX  based style with os.sep = '/'.
+                    E.g. Linux, MacOS, BSD, Solaris, etc.::
+
                         d:/  => d:/
-                        d:\\  => d:
-                
-                else: adapt os.sep, local os native
+                        d:\\  => d:/
+
+                    This mode is literally compatible across all supported platforms.
+
+                **win**: Windows style
+
+                    MS-Windows style with os.sep= '\\\\'.::
+
+                        d:/  => d:\\
+                        d:\\  => d:\\
+
+                    This mode is literally compatible across all supported platforms.
+
+                **else**:
+
+                    Adapt 'os.path.sep' and 'os.pathsep' to local native os, else wise
+                    the same behavior as the modes 'posix' or 'win'.
+
+                    This mode is in term of the structure including drives of Windows based file
+                    systems compatible across all supported platforms. But the os.path.sep, and
+                    the os.pathsep are adapted to the local platform.
 
     Returns:
-        Path.
+        Normalized path.
+
     """
     tpf = kargs.get('tpf',platform.system())
     if tpf in ('Windows', 'win',):
@@ -2464,6 +3074,12 @@ def normpathX(p,**kargs):
         p = escapeFilePath(p,'k')
         p = unescapeFilePath(p)
 
+    elif tpf == 'local':
+#FIXME:
+#         p = escapeFilePath(p,'cnw')
+#         p = unescapeFilePath(p)
+        p = os.path.normpath(p)
+
     elif tpf == 'cnw':
         p = escapeFilePath(p,'cnw')
         p = unescapeFilePath(p)
@@ -2474,4 +3090,5 @@ def normpathX(p,**kargs):
     else:
         p = escapeFilePath(p,)
         p = unescapeFilePath(p)
+
     return p

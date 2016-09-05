@@ -1,6 +1,5 @@
 from __future__ import absolute_import
-from linecache import getline
-
+import os,sys
 __author__ = 'Arno-Can Uestuensoez'
 __license__ = "Artistic-License-2.0 + Forced-Fairplay-Constraints"
 __copyright__ = "Copyright (C) 2010-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez"
@@ -27,6 +26,18 @@ class CheckNormpathX(unittest.TestCase):
     def check_normpathX(self,_in,_norm,ty=None):
         if self.printit:
             print 'Test:'
+        if sys.platform == 'win32':
+            if ty in ('cnw',):
+                _normNative = os.path.normpath(_norm)
+                if _normNative != _norm:
+                    raise Exception("normpath-platform native behaviour mismatch:"+str(_norm)+" => "+str(_normNative))
+
+        else:
+            if ty in ('cnp',):
+                _normNative = os.path.normpath(_norm)
+                if _normNative != _norm:
+                    raise Exception("normpath-platform native behaviour mismatch:"+str(_norm)+" => "+str(_normNative))
+
         l0 = len(_in)
         l1 = len(_norm)
 

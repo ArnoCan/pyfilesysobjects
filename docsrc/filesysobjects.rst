@@ -38,6 +38,22 @@ getAppPrefixLocalPath
 ^^^^^^^^^^^^^^^^^^^^^^^^
 	.. autofunction:: getAppPrefixLocalPath
 
+getHome
+^^^^^^^
+	.. autofunction:: getHome
+
+getDirUserData
+^^^^^^^^^^^^^^
+	.. autofunction:: getDirUserData
+
+getDirUserConfigData
+^^^^^^^^^^^^^^^^^^^^
+	.. autofunction:: getDirUserConfigData
+
+getDirUserAppData
+^^^^^^^^^^^^^^^^^
+	.. autofunction:: getDirUserAppData
+
 getTopFromPathString
 ^^^^^^^^^^^^^^^^^^^^
 	.. autofunction:: getTopFromPathString
@@ -57,6 +73,10 @@ setUpperTreeSearchPath
 splitAppPrefix
 ^^^^^^^^^^^^^^
 	.. autofunction:: splitAppPrefix
+
+splitPathVar
+^^^^^^^^^^^^
+	.. autofunction:: splitPathVar
 
 unescapeFilePath
 ^^^^^^^^^^^^^^^^

@@ -1,4 +1,4 @@
-"""Demonstrates the application of hierarchical search paths on shared drives on Microsoft-Windows(TM). 
+"""Demonstrates the application of hierarchical search paths on shared drives on Microsoft-Windows(TM).
 
 Type: SHARE
 
@@ -17,7 +17,7 @@ from filesysobjects.FileSysObjects import setUpperTreeSearchPath,getAppPrefixLoc
 #######################
 #
 class UseCase(unittest.TestCase):
-    
+
     def testCase_SharedDriveC(self):
         #for now windows only
         if platform.system() != 'Windows':
@@ -26,15 +26,15 @@ class UseCase(unittest.TestCase):
         if not os.path.exists('\\\\localhost\\C$'):
             unittest.SkipTest("Requires share for this test - skipped!")
             return True
-         
+
         _s = sys.path[:]
- 
+
         _rtype = 'SHARE'
         _host = 'localhost'
         _share,sp = os.path.splitdrive(os.path.abspath(os.path.dirname(__file__))+os.path.normpath('/a/b///c/d/b/c///'))
         _share = 'C$'
         start = getAppPrefixLocalPath((_rtype, _host, _share,sp,))
- 
+
         s = os.sep
 
         _rtype = 'SHARE'
@@ -46,43 +46,42 @@ class UseCase(unittest.TestCase):
 
         _res = []
         ret = setUpperTreeSearchPath(start,top,_res,**{'reverse':True,}) #@UnusedVariable
-         
+
         forDebugOnly = sys.path #@UnusedVariable
-       
+
         _rtype = 'SHARE'
         _host = 'localhost'
         _share = 'C$'
         sp = sp
         mystart = getAppPrefixLocalPath((_rtype, _host, _share,sp,))
-         
+
         mystart  = getTopFromPathString(top,[mystart])
         myplist = [mystart,]
         res = []
         for i in range(len(_res)):
-            res.append(getPythonPathRel(_res[i],myplist)) 
-             
+            res.append(getPythonPathRel(_res[i],myplist))
+
         resx = [
             '.',
-            'UseCases',
-            'UseCases/FileSysObjects',
-            'UseCases/FileSysObjects/AppPathSyntax',
-            'UseCases/FileSysObjects/AppPathSyntax/win_share',
-            'UseCases/FileSysObjects/AppPathSyntax/win_share/share_drives',
-            'UseCases/FileSysObjects/AppPathSyntax/win_share/share_drives/a',
-            'UseCases/FileSysObjects/AppPathSyntax/win_share/share_drives/a/b',
-            'UseCases/FileSysObjects/AppPathSyntax/win_share/share_drives/a/b/c',
-            'UseCases/FileSysObjects/AppPathSyntax/win_share/share_drives/a/b/c/d',
-            'UseCases/FileSysObjects/AppPathSyntax/win_share/share_drives/a/b/c/d/b',
-            'UseCases/FileSysObjects/AppPathSyntax/win_share/share_drives/a/b/c/d/b/c',
+            'FileSysObjects',
+            'FileSysObjects/AppPathSyntax',
+            'FileSysObjects/AppPathSyntax/win_share',
+            'FileSysObjects/AppPathSyntax/win_share/share_drives',
+            'FileSysObjects/AppPathSyntax/win_share/share_drives/a',
+            'FileSysObjects/AppPathSyntax/win_share/share_drives/a/b',
+            'FileSysObjects/AppPathSyntax/win_share/share_drives/a/b/c',
+            'FileSysObjects/AppPathSyntax/win_share/share_drives/a/b/c/d',
+            'FileSysObjects/AppPathSyntax/win_share/share_drives/a/b/c/d/b',
+            'FileSysObjects/AppPathSyntax/win_share/share_drives/a/b/c/d/b/c',
         ]
         resx = map(os.path.normpath,resx)
- 
+
         [ sys.path.pop() for x in range(len(sys.path)) ] #@UnusedVariable
         sys.path.extend(_s)
 
         assert resx == res
         pass
- 
+
 if __name__ == '__main__':
     unittest.main()
 

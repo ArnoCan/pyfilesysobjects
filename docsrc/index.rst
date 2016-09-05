@@ -1,23 +1,30 @@
-
-.. filesysobjects documentation master file, created by
-   sphinx-quickstart on `date`.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Abstract
 ========
+
+The 'filesysobjects' package provides utilities for the simplified navigation in filesystem 
+hierarchies. 
+This comprises advanced search features with the management of multiple
+search path lists and 'sys.path', including the mixed application of 're' and 'glob' patterns.
+
+The additional enhancement results in providing OO features on files and
+directory trees by enhanced search features,
+This comprises patterns and functions on files, directories, and branches.
+
+
+Blueprint
+=========
 
 The 'filesysobjects' package provides utilities for the simplified navigation in filesystem 
 hierarchies. 
 This comprises basic functions for the application of object oriented patterns 
 onto files, directories, and branches.
 
-* **Manage Multiple Search Lists and support 're' and 'glob' for path search**
+* **Manage multiple search lists and support 're' and 'glob' for path search**
 
   Provides the creation and usage of multiple search paths including the
   full scale pattern matching on search paths by 're' and 'glob' `[details] <path_syntax.html#variants-of-pathname-parameters-literals-regexpr-and-glob>`_.
 
-* **Gears for Filesystem Objects - Files, Directories, and Branches**
+* **Gears for filesystem objects - Files, Directories, and Branches**
 
   The package provides a set of basic functions for implementing file system items 
   conceptually as classes and objects. Just a few interfaces are required in order to represent 
@@ -43,12 +50,55 @@ onto files, directories, and branches.
   * `Extended Filesystems - Network Features <path_netfiles.html>`_
       .
 
-* **RTTI for native Python source files** see
+* **RTTI for native Python source files** 
+
+  see
   `PySourceInfo @ https://pypi.python.org/pypi/pysourceinfo <https://pypi.python.org/pypi/pysourceinfo>`_
+
+Fur further information on concepts and workflows refer to:
+
+* Filesystem Elements as Objects
+  `[details] <path_syntax.html#filesystem-elements-as-objects>`_
+
+* Variants of Pathname Parameters - Literals, RegExpr, and Glob 
+  `[details] <path_syntax.html#variants-of-pathname-parameters-literals-regexpr-and-glob>`_
+
+* Syntax Elements 
+  `[details] <path_syntax.html#syntax-elements>`_
+
+* Call Parameters of the API 
+  `[details] <path_syntax.html#call-parameters-of-the-api>`_
+
+See the API and subdocument collection in section 
+:ref:`'Shortcuts' <shortcs>`
  
+Install - HowTo - FAQ - Help
+============================
+
+* **Install**:
+
+  Standard procedure online local install by sources::
+
+    python setup.py install --user
+
+  Custom procedure offline by::
+
+    python setup.py install --user --offline
+
+  Documents, requires Sphinx and Epydoc::
+
+    python setup.py build_doc install_doc
+
+* **Introduction**:
+
+  For now refer to the listed API and subdocument collection in section 
+  :ref:`'Shortcuts' <shortcs>`
+
 
 `Shortcuts <shortcuts.html>`_
 ============================
+
+.. _shortcs:
 
 Concepts and workflows:
 
@@ -72,7 +122,7 @@ Common Interfaces:
 
 Complete technical API:
 
-* `API by Epydoc <epydoc/index.html>`_
+* Interface in javadoc-style `[API] <epydoc/index.html>`_
 
 
 Table of Contents
@@ -111,7 +161,7 @@ Resources
 
 For available downloads refer to:
 
-* Python Package Index: https://pypi.python.org/pypi/filesysobjects
+* Python Package Index: https://pypi.python.org/pypi/pyfilesysobjects
 
 * Sourceforge.net: https://sourceforge.net/projects/filesysobjects/
 

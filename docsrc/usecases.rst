@@ -42,8 +42,6 @@ Search for Files, Directories, and Branches
   +-----------------------------------------------+-------------------------------------------+
   | Iterate a search path list                    | `iterateSearchList`_                      |
   +-----------------------------------------------+-------------------------------------------+
-  | Create and use a search path slice            | `createAndUseSearchPathSegment`_          |
-  +-----------------------------------------------+-------------------------------------------+
   | Search by literal(L)                          | `search.InUpperTree.by_literal`_          |
   +-----------------------------------------------+-------------------------------------------+
   | Search by glob(G)                             | `search.InUpperTree.by_glob`_             |
@@ -59,7 +57,6 @@ Search for Files, Directories, and Branches
 .. _searchHookSliceForSideBranch: UseCases.FileSysObjects.branches.searchHookSliceForSideBranch.html#
 .. _searchHookDifferencesOfPointsAndSlices: UseCases.FileSysObjects.branches.searchHookDifferencesOfPointsAndSlices.html#
 .. _iterateSearchList: UseCases.FileSysObjects.branches.iterateSearchList.html#
-.. _createAndUseSearchPathSegment: UseCases.FileSysObjects.branches.createAndUseSearchPathSegment.html#
 
 .. _search.InUpperTree.by_literal: UseCases.FileSysObjects.search.InUpperTree.by_literal.html#
 .. _search.InUpperTree.by_glob: UseCases.FileSysObjects.search.InUpperTree.by_glob.html#
@@ -98,8 +95,6 @@ Patterns for Library Functions
   +---------------------------------------------------------------+--------------------------------------+
   | Iterates over all possible matches                            | `findRelPathInSearchPathIter`_       |
   +---------------------------------------------------------------+--------------------------------------+
-  | Finds a hook within a segment of the directory tree           | `findRelPathInUpperTree`_            |
-  +---------------------------------------------------------------+--------------------------------------+
   | Finds the topmost hook within a segment of the directory tree | `getTopFromPathString`_              |
   +---------------------------------------------------------------+--------------------------------------+
   | Iterates over all possible matches                            | `getTopFromPathStringIter`_          |
@@ -110,7 +105,6 @@ Patterns for Library Functions
 .. _addPathToSearchPath: UseCases.FileSysObjects.functions.addPathToSearchPath.html#
 .. _findRelPathInSearchPath: UseCases.FileSysObjects.functions.findRelPathInSearchPath.html#
 .. _findRelPathInSearchPathIter: UseCases.FileSysObjects.functions.findRelPathInSearchPathIter.html#
-.. _findRelPathInUpperTree: UseCases.FileSysObjects.functions.findRelPathInUpperTree.html#
 .. _getTopFromPathString: UseCases.FileSysObjects.functions.getTopFromPathString.html#
 .. _getTopFromPathStringIter: UseCases.FileSysObjects.functions.getTopFromPathStringIter.html#
 .. _setUpperTreeSearchPath: UseCases.FileSysObjects.functions.setUpperTreeSearchPath.html#

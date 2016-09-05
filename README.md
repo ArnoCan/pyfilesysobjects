@@ -104,16 +104,42 @@ VERSIONS and RELEASES
 
 * RELEASE: 00.03.00x - Beta: Accomplish test cases for medium to high complexity.
 
-* RELEASE: 00.04.00x - Production: First production release. Estimated number of UnitTests := 250.
+* RELEASE: 00.04.00x - Production: First production release. Estimated number of UnitTests := 1250.
 
 * RELEASE: 00.05.00x - Production: Various performance enhancements.
 
+* RELEASE: 00.06.00x - Production: Security review.
 
-**Current Release: 00.01.009 - Alpha:**
+* RELEASE: >         - Production: Stable and compatible continued development.
+
+**Current Release: 00.01.010 - Alpha:**
+
+OS-Support - Tested by PyUnit/Eclipse with Success:
+
+* Linux: Fedora - others should work, ToDo: CentOS, Debian, and SuSE 
+
+* Windows: Win10 - others see Cygwin
+
+* Mac-OS: Snow Leopard - others should work
+
+* Cygwin: 2.874/64 bit
+
+
+OS-Support - ToDo: Going to follow soon.
+
+* BSD: ToDo: OpenBSD, FreeBSD - others should work
+
+* UNIX: ToDo: Solaris-11 - should work
 
 Major Changes:
 
 * Minor fixes.
+
+* Documentation enhancements.
+
+* Added 'splitPathVar' with full scope of supported URI's, same as 'splitAppPrefix'.
+
+* Canonical functions for user directories.
 
 **ToDo**:
 
@@ -127,11 +153,13 @@ Known Issues:
 
 * Some minor failures of units, 1 on MacOS, will be fixed for a.s.a.p. 
 
+* Mixed types of os.path.sep with multiple groups of each: Escape to target, but does not clean all redundant.
+
 Current test status:
 
-* UnitTests: >580
+* UnitTests: >1000
 
-* Use-Cases as UnitTests: >110
+* Use-Cases as UnitTests: >120
 
-**Total**: >690
+**Total**: >1100
 

@@ -72,6 +72,8 @@ from filesysobjects.FileSysObjects import setUpperTreeSearchPath
 from filesysobjects.FileSysObjects import findRelPathInSearchPath
 from filesysobjects.FileSysObjects import getTopFromPathString
 
+import testdata
+
 #
 #######################
 #
@@ -82,11 +84,10 @@ class UseCase(unittest.TestCase):
         """Initialize common refence and data"""
         
         super(UseCase,self).__init__(*args,**kargs)
-        
-        _s = sys.path[:]
 
-        import testdata
-          
+    @classmethod
+    def setUpClass(self):
+        _s = sys.path[:]
         s = os.sep
         
         # start of upward search - file is converted into it's containing directory node
@@ -118,8 +119,6 @@ class UseCase(unittest.TestCase):
 
     def testCase001(self):
         """1. search and create a path for a side branch"""
-        import testdata
-
         sp = os.path.normpath('a/new/branch')
         expected = os.path.normpath(testdata.mypath+'/examples/a/new/branch')
         rp = getTopFromPathString(sp,self._plist)
@@ -127,35 +126,27 @@ class UseCase(unittest.TestCase):
 
     def testCase002(self):
         """2. search and create a path for a side branch - use the second plist entry""" 
-        import testdata
-
-        sp = os.path.normpath('c/new/branch')
+        sp = os.path.normpath('b0/c/new/branch')
         expected = os.path.normpath(testdata.mypath+'/examples/a/b0/c/a/b0/c/new/branch')
         rp = getTopFromPathString(sp,self._plist,**{'matchidx':1})
         assert expected == rp 
 
     def testCase003(self):
         """3. search and create a path for a side branch - use the second plist entry + reverse the order"""        
-        import testdata
-
-        sp = os.path.normpath('c/new/branch')
+        sp = os.path.normpath('b0/c/new/branch')
         expected = os.path.normpath(testdata.mypath+'/examples/a/b0/c/new/branch')
         rp = getTopFromPathString(sp,self._plist,**{'matchidx':1,'reverse':True,})
-        assert expected == rp 
+        self.assertEqual(expected,rp) 
 
     def testCase004(self):
         """4. search and create a path for a side branch - match a path entry with and use the second match within a path entry"""        
-        import testdata
-
-        sp = os.path.normpath('c/new/branch')
+        sp = os.path.normpath('b0/c/new/branch')
         expected = os.path.normpath(testdata.mypath+'/examples/a/b0/c/a/b0/c/new/branch')
         rp = getTopFromPathString(sp,self._plist,**{'matchlvl':1,})
-        assert expected == rp 
+        self.assertEqual(expected,rp) 
 
     def testCase005(self):
         """5. search and create a path for a side branch UPWARD - match a path entry with and use the second match within a path entry"""        
-        import testdata
-
         sp = os.path.normpath('c/new/branch')
         expected = os.path.normpath(testdata.mypath+'/examples/a/b0/c/new/branch')
         rp = getTopFromPathString(sp,self._plist,**{'matchlvlupward':1,})
