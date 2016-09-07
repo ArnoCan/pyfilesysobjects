@@ -112,7 +112,7 @@ VERSIONS and RELEASES
 
 * RELEASE: >         - Production: Stable and compatible continued development.
 
-**Current Release: 00.01.010 - Alpha:**
+**Current Release: 00.01.011 - Alpha:**
 
 OS-Support - Tested by PyUnit/Eclipse with Success:
 
@@ -138,6 +138,8 @@ Major Changes:
 * Documentation enhancements.
 
 * Added 'splitPathVar' with full scope of supported URI's, same as 'splitAppPrefix'.
+
+* Parameter 'subsplit'.
 
 * Canonical functions for user directories.
 
