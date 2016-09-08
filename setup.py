@@ -366,7 +366,7 @@ if 'tests' in sys.argv or 'test' in sys.argv:
     
 
 # call of complete UseCases by 'discover'
-if 'usecases' in sys.argv or 'usecase' in sys.argv:
+if 'usecases' in sys.argv or 'UseCases' in sys.argv or 'usecase' in sys.argv:
     if os.path.dirname(__file__)+os.pathsep not in os.environ['PATH']:
         p0 = os.path.dirname(__file__)
         os.putenv('PATH', p0+os.pathsep+os.getenv('PATH',''))
