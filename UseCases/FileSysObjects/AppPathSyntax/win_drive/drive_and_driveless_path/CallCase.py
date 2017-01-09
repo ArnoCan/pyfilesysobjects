@@ -1,12 +1,22 @@
 from __future__ import absolute_import
 
-import unittest
 import os,sys
+version = '{0}.{1}'.format(*sys.version_info[:2])
+if version in ('2.6',): # pragma: no cover
+    import unittest2 as unittest
+    from unittest2 import SkipTest
+elif version in ('2.7',): # pragma: no cover
+    import unittest
+    from unittest import SkipTest
+    #from unittest.case import SkipTest
+else:
+    print >>sys.stderr, "ERROR:Requires Python-2.6(.6+) or 2.7"
+    sys.exit(1)
+
 import platform
 
 from pysourceinfo.PySourceInfo import getPythonPathRel,getPythonPathFromSysPath
 from filesysobjects.FileSysObjects import setUpperTreeSearchPath,FileSysObjectsException,splitAppPrefix,getAppPrefixLocalPath,getTopFromPathString,unescapeFilePath
-from unittest.case import SkipTest
 
 
 #

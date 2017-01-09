@@ -10,8 +10,17 @@ __uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
 
 __docformat__ = "restructuredtext en"
 
-import unittest
 import os,sys
+version = '{0}.{1}'.format(*sys.version_info[:2])
+if version in ('2.6',): # pragma: no cover
+    import unittest2 as unittest
+    from unittest2 import SkipTest
+elif version in ('2.7',): # pragma: no cover
+    import unittest
+    from unittest import SkipTest
+else:
+    print >>sys.stderr, "ERROR:Requires Python-2.6(.6+) or 2.7"
+    sys.exit(1)
 
 import filesysobjects.FileSysObjects
 import pysourceinfo.PySourceInfo
@@ -25,8 +34,14 @@ class CallUnits(unittest.TestCase):
     """Network resources IEEE.1003.1/CIFS/SMB/UNC - respect hostname
     Respect 'hostname', which is actual hostname, and a node name.
     """
-    @classmethod
-    def setUpClass(self):
+
+    # not in 2.6.6
+    # @classmethod
+    # def setUpClass(self):
+    #     self.top = filesysobjects.FileSysObjects.normpathX('hostname/')
+    #     self.start = filesysobjects.FileSysObjects.normpathX('d://hostname/tests//////a/b/hostname//c////////d/tests/b///c')
+
+    def setUp(self):
         self.top = filesysobjects.FileSysObjects.normpathX('hostname/')
         self.start = filesysobjects.FileSysObjects.normpathX('d://hostname/tests//////a/b/hostname//c////////d/tests/b///c')
         

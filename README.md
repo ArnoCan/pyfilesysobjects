@@ -112,7 +112,7 @@ VERSIONS and RELEASES
 
 * RELEASE: >         - Production: Stable and compatible continued development.
 
-**Current Release: 00.01.011 - Alpha:**
+**Current Release: 00.01.012 - Alpha:**
 
 OS-Support - Tested by PyUnit/Eclipse with Success:
 
@@ -120,7 +120,7 @@ OS-Support - Tested by PyUnit/Eclipse with Success:
 
 * Windows: Win10 - others see Cygwin
 
-* Mac-OS: Snow Leopard - others should work
+* Mac-OS: Snow Leopard - others should work - the last changes are not yet tested on Mac-OS
 
 * Cygwin: 2.874/64 bit
 
@@ -131,7 +131,11 @@ OS-Support - ToDo: Going to follow soon.
 
 * UNIX: ToDo: Solaris-11 - should work
 
+Python support: 2.6, and 2.7
+
 Major Changes:
+
+* Introduction of Python-2.6 support for legacy systems
 
 * Minor fixes.
 

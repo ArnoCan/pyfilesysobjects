@@ -1,4 +1,3 @@
-
 """Distribute 'filesysobjects', a generic unit test wrapper for commandline interfaces.
 
    Installs 'filesysobjects', adds/modifies the following helper features to standard
@@ -23,6 +22,9 @@
 
       usecases: Runs PyUnit UseCases by discovery, a lightweight
           set of unit tests.
+
+      --sdk:
+          Requires sphinx, epydoc, and dot-graphics.
 
       --no-install-required: Suppresses installation dependency checks, 
           requires appropriate PYTHONPATH.
@@ -51,7 +53,7 @@ __author__ = 'Arno-Can Uestuensoez'
 __author_email__ = 'acue_sf2@sourceforge.net'
 __license__ = "Artistic-License-2.0 + Forced-Fairplay-Constraints"
 __copyright__ = "Copyright (C) 2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez"
-__version__ = '0.1.11'
+__version__ = '0.1.12'
 __uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
 
 #_NAME = 'pyfilesysobjects' # legacy
@@ -70,8 +72,8 @@ import fnmatch
 import re, shutil, tempfile
 
 version = '{0}.{1}'.format(*sys.version_info[:2])
-if version < '2.7': # pragma: no cover
-    raise Exception("Requires Python-2.7.* or higher")
+if not version in ('2.6','2.7',): # pragma: no cover
+    raise Exception("Requires Python-2.6.* or higher")
 
 #
 # required for a lot for now, thus just do it
@@ -346,12 +348,20 @@ if 'tests' in sys.argv or 'test' in sys.argv:
         print "# putenv:PATH[0]="+str(p0)
     
     print "#"
-    print "# Check 'inspect' paths - call in: tests.30_libs.040_FileSysObjects"
-    exit_code += os.system('python -m unittest discover -s tests.30_libs.040_FileSysObjects -p CallCase.py') # traverse tree
-    print "# Check 'inspect' paths - call in: tests.30_libs"
-    exit_code += os.system('python -m unittest discover -s tests.30_libs -p CallCase.py') # traverse tree
-    print "# Check 'inspect' paths - call in: tests"
-    exit_code  = os.system('python -m unittest discover -s tests -p CallCase.py') # traverse tree
+    if version in ('2.6',): # pragma: no cover
+        print "# Check 'inspect' paths - call in: tests.30_libs.040_FileSysObjects"
+        exit_code += os.system('python -m discover -s tests.30_libs.040_FileSysObjects -p CallCase.py') # traverse tree
+        print "# Check 'inspect' paths - call in: tests.30_libs"
+        exit_code += os.system('python -m discover -s tests.30_libs -p CallCase.py') # traverse tree
+        print "# Check 'inspect' paths - call in: tests"
+        exit_code  = os.system('python -m discover -s tests -p CallCase.py') # traverse tree
+    elif version in ('2.7',): # pragma: no cover
+        print "# Check 'inspect' paths - call in: tests.30_libs.040_FileSysObjects"
+        exit_code += os.system('python -m unittest discover -s tests.30_libs.040_FileSysObjects -p CallCase.py') # traverse tree
+        print "# Check 'inspect' paths - call in: tests.30_libs"
+        exit_code += os.system('python -m unittest discover -s tests.30_libs -p CallCase.py') # traverse tree
+        print "# Check 'inspect' paths - call in: tests"
+        exit_code  = os.system('python -m unittest discover -s tests -p CallCase.py') # traverse tree
     print "#"
     print "Called/Finished PyUnit tests => exit="+str(exit_code)
     print "exit setup.py now: exit="+str(exit_code)
@@ -373,14 +383,24 @@ if 'usecases' in sys.argv or 'UseCases' in sys.argv or 'usecase' in sys.argv:
         print "# putenv:PATH[0]="+str(p0)
     
     print "#"
-    print "# Check 'inspect' paths - call in: UseCases"
-    exit_code = os.system('python -m unittest discover -s UseCases -p CallCase.py') # traverse tree
-    print "# Check 'inspect' paths - call in: UseCases.FileSysObjects"
-    exit_code += os.system('python -m unittest discover -s UseCases.FileSysObjects -p CallCase.py') # traverse tree
-    print "# Check 'inspect' paths - call in: UseCases.FileSysObjects.branches"
-    exit_code += os.system('python -m unittest discover -s UseCases.FileSysObjects.branches -p CallCase.py') # traverse tree
-    print "# Check 'inspect' paths - call in: UseCases.FileSysObjects.functions"
-    exit_code += os.system('python -m unittest discover -s UseCases.FileSysObjects.functions -p CallCase.py') # traverse tree
+    if version in ('2.6',): # pragma: no cover
+        print "# Check 'inspect' paths - call in: UseCases"
+        exit_code = os.system('python -m discover -s UseCases -p CallCase.py') # traverse tree
+        print "# Check 'inspect' paths - call in: UseCases.FileSysObjects"
+        exit_code += os.system('python -m discover -s UseCases.FileSysObjects -p CallCase.py') # traverse tree
+        print "# Check 'inspect' paths - call in: UseCases.FileSysObjects.branches"
+        exit_code += os.system('python -m discover -s UseCases.FileSysObjects.branches -p CallCase.py') # traverse tree
+        print "# Check 'inspect' paths - call in: UseCases.FileSysObjects.functions"
+        exit_code += os.system('python -m discover -s UseCases.FileSysObjects.functions -p CallCase.py') # traverse tree
+    elif version in ('2.7',): # pragma: no cover
+        print "# Check 'inspect' paths - call in: UseCases"
+        exit_code = os.system('python -m unittest discover -s UseCases -p CallCase.py') # traverse tree
+        print "# Check 'inspect' paths - call in: UseCases.FileSysObjects"
+        exit_code += os.system('python -m unittest discover -s UseCases.FileSysObjects -p CallCase.py') # traverse tree
+        print "# Check 'inspect' paths - call in: UseCases.FileSysObjects.branches"
+        exit_code += os.system('python -m unittest discover -s UseCases.FileSysObjects.branches -p CallCase.py') # traverse tree
+        print "# Check 'inspect' paths - call in: UseCases.FileSysObjects.functions"
+        exit_code += os.system('python -m unittest discover -s UseCases.FileSysObjects.functions -p CallCase.py') # traverse tree
     print "#"
     print "Called/Finished PyUnit tests => exit="+str(exit_code)
     print "exit setup.py now: exit="+str(exit_code)
@@ -405,6 +425,11 @@ if '--offline' in sys.argv:
     __offline = True
     __no_install_requires = True
     sys.argv.remove('--offline')
+
+__sdk = False
+if '--sdk' in sys.argv:
+    __sdk = True
+    sys.argv.remove('--sdk')
 
 # Execution failed - Error.
 if exit_code != 0:
@@ -461,6 +486,7 @@ _classifiers = [
     "Operating System :: POSIX",
     "Programming Language :: Python",
     "Programming Language :: Python :: 2",    
+    "Programming Language :: Python :: 2.6",    
     "Programming Language :: Python :: 2.7",    
     "Programming Language :: Unix Shell",
     "Topic :: Software Development :: Libraries :: Python Modules",
@@ -484,13 +510,27 @@ _download_url="https://sourceforge.net/projects/pyfilesysobjects/files/"
 _url='https://sourceforge.net/projects/pyfilesysobjects/'
 
 _install_requires=[
-    'pysourceinfo',
-    'inspect',
-    'shutil',
-    're',
-    'glob',
+    'pysourceinfo >=0.1.12',
 #    'termcolor'
 ]
+if version in ('2.6',): # pragma: no cover
+    _install_requires.extend(
+        [
+            'pbr', 
+            'argparse',
+            'six',
+            'traceback2',
+            'unittest2', # pre-install dependencies seems to be faster
+        ]
+    )
+
+if __sdk: # pragma: no cover
+    _install_requires.extend(
+        [
+            'sphinx >= 1.4',
+            'epydoc >= 3.0',
+        ]
+    )
 
 _test_suite="tests.CallCase"
 

@@ -65,8 +65,17 @@ __uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
 
 __docformat__ = "restructuredtext en"
 
-import unittest
 import os,sys
+version = '{0}.{1}'.format(*sys.version_info[:2])
+if version in ('2.6',): # pragma: no cover
+    import unittest2 as unittest
+    from unittest2 import SkipTest
+elif version in ('2.7',): # pragma: no cover
+    import unittest
+    from unittest import SkipTest
+else:
+    print >>sys.stderr, "ERROR:Requires Python-2.6(.6+) or 2.7"
+    sys.exit(1)
 
 from filesysobjects.FileSysObjects import setUpperTreeSearchPath
 from filesysobjects.FileSysObjects import findRelPathInSearchPath
@@ -83,8 +92,11 @@ class UseCase(unittest.TestCase):
         
         super(UseCase,self).__init__(*args,**kargs)
         
-    @classmethod
-    def setUpClass(self):
+    # not in 2.6.6
+    # @classmethod
+    # def setUpClass(self):
+
+    def setUp(self):
         _s = sys.path[:]
 
         import testdata
