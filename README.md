@@ -74,7 +74,7 @@ Project Data
 
 * VERSION: 00.01
 
-* RELEASE: 00.01.008
+* RELEASE: 00.01.013
 
 * NICKNAME: 'Yggdrasil'
 
@@ -112,13 +112,13 @@ VERSIONS and RELEASES
 
 * RELEASE: >         - Production: Stable and compatible continued development.
 
-**Current Release: 00.01.012 - Alpha:**
+**Current Release: 00.01.013 - Alpha:**
 
 OS-Support - Tested by PyUnit/Eclipse with Success:
 
 * Linux: Fedora - others should work, ToDo: CentOS, Debian, and SuSE 
 
-* Windows: Win10 - others see Cygwin
+* Windows: Win7 - others see Cygwin
 
 * Mac-OS: Snow Leopard - others should work - the last changes are not yet tested on Mac-OS
 
@@ -131,21 +131,15 @@ OS-Support - ToDo: Going to follow soon.
 
 * UNIX: ToDo: Solaris-11 - should work
 
+* Windows: Win10
+
 Python support: 2.6, and 2.7
 
 Major Changes:
 
-* Introduction of Python-2.6 support for legacy systems
-
 * Minor fixes.
 
 * Documentation enhancements.
-
-* Added 'splitPathVar' with full scope of supported URI's, same as 'splitAppPrefix'.
-
-* Parameter 'subsplit'.
-
-* Canonical functions for user directories.
 
 **ToDo**:
 

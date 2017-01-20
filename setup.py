@@ -13,7 +13,7 @@
       build_epydoc: Creates standalone documentation for runtime system by Epydoc, 
          html only.
 
-      project_doc: Install a local copy into the doc directory of the project.
+      install_project_doc: Install a local copy into the doc directory of the project.
 
       instal_doc: Install a local copy of the previously build documents in 
           accordance to PEP-370.
@@ -53,20 +53,28 @@ __author__ = 'Arno-Can Uestuensoez'
 __author_email__ = 'acue_sf2@sourceforge.net'
 __license__ = "Artistic-License-2.0 + Forced-Fairplay-Constraints"
 __copyright__ = "Copyright (C) 2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez"
-__version__ = '0.1.12'
+__version__ = '0.1.13'
 __uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
+
+import os,sys
 
 #_NAME = 'pyfilesysobjects' # legacy
 _NAME = 'filesysobjects'
+
 
 # some debug
 if __debug__:
     __DEVELTEST__ = True
 
+__sdk = False
+"""Set by the option "--sdk". Controls the installation environment."""
+if '--sdk' in sys.argv:
+    _sdk = True
+    sys.argv.remove('--sdk')
+
 #
 #***
 #
-import os,sys
 from setuptools import setup #, find_packages
 import fnmatch
 import re, shutil, tempfile
@@ -76,8 +84,143 @@ if not version in ('2.6','2.7',): # pragma: no cover
     raise Exception("Requires Python-2.6.* or higher")
 
 #
-# required for a lot for now, thus just do it
-sys.path.insert(0,os.path.abspath(os.path.dirname(__file__)))
+# required for various interfaces, thus just do it
+_mypath = os.path.dirname(os.path.abspath(__file__))
+"""Path of this file."""
+sys.path.insert(0,os.path.abspath(_mypath))
+
+
+#--------------------------------------
+#
+# Package parameters for setuptools
+#
+#--------------------------------------
+_name='pyfilesysobjects'
+__pkgname__ = "autodeploy"
+"""package name"""
+
+__vers__ = [0, 0, 1,]
+"""version parts for easy processing"""
+
+__version__ = "%02d.%02d.%03d"%(__vers__[0],__vers__[1],__vers__[2],)
+"""assembled version string"""
+
+__author__ = "acue"
+"""author of the package"""
+
+_packages = ["filesysobjects"]
+"""Python packages to be installed."""
+
+_scripts = []
+"""Scripts to be installed."""
+
+_package_data = {
+    'filesysobjects': ['README.md','ArtisticLicense20.html', 'licenses-amendments.txt',
+            ],
+}
+"""Provided data of the package."""
+
+_platforms = ['Linux','Windows','darwin',]
+"""provided platforms"""
+
+_url='https://sourceforge.net/projects/pyfilesysobjects/'
+"""URL of this package"""
+
+#_download_url="https://github.com/ArnoCan/filesysobjects/"
+_download_url="https://sourceforge.net/projects/pyfilesysobjects/files/"
+
+_install_requires = []
+"""prerequired non-standard packages"""
+
+_keywords  = ' Filesystem Python Syntax Packages Modules Files Linenumbers Filenames Modulenames Packagenames'
+_keywords += ' fileobjects Objects Classes Objecttrees Classtrees inspect'
+"""keywords for search index"""
+
+_description=(
+    "The 'pyfilesysobjects' package provides utilities for usage of the filesystem as a class tree " 
+    "containing files as objects. "
+    "The package also contains 'normpathX' as replacement for 'os.path.normpath'."
+)
+
+# def read(fname):
+#     return open(os.path.join(os.path.dirname(__file__), fname)).read()
+_README = os.path.join(os.path.dirname(__file__), 'README.md')
+_long_description = open(_README).read() + 'nn'
+"""detailed description of this package"""
+
+_classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: Free To Use But Restricted",
+    "License :: OSI Approved :: Artistic License",
+    "Natural Language :: English",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: OS Independent",
+    "Operating System :: POSIX :: BSD :: OpenBSD",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: SunOS/Solaris",
+    "Operating System :: POSIX",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 2",    
+    "Programming Language :: Python :: 2.6",    
+    "Programming Language :: Python :: 2.7",    
+    "Programming Language :: Unix Shell",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+]
+"""the classification of this package"""
+
+_epydoc_api_patchlist = [
+    'path_syntax.html',
+    'usecases.html',
+    'shortcuts.html',
+    'filesysobjects.html',
+    'pyfilesysobjects.html',
+]
+
+"""Patch list of Sphinx documents for the insertion of links to API documentation."""
+
+_profiling_components = _mypath+os.sep+'bin'+os.sep+'*.py '+_mypath+os.sep+__pkgname__+os.sep+'*.py'
+"""Components to be used for the creation of profiling information for Epydoc."""
+
+_doc_subpath='en'+os.path.sep+'html'+os.path.sep+'man7'
+"""Relative path under the documents directory."""
+
+_sharepath = os.path.expanduser(os.path.sep+'share'+os.path.sep+'projdata'+os.path.sep+'twint'+os.path.sep+'devops'+os.path.sep+__pkgname__)
+"""Project specific common network directory on the AdNovum share."""
+
+
+# runtime dependencies - RHEL6.x standard is sufficient
+_install_requires=[
+    'pysourceinfo >=0.1.12',
+#    'termcolor'
+]
+if version in ('2.6',): # pragma: no cover
+    _install_requires.extend(
+        [
+            'pbr', 
+            'argparse',
+            'six',
+            'traceback2',
+            'unittest2', # pre-install dependencies seems to be faster
+        ]
+    )
+
+if __sdk: # pragma: no cover
+    _install_requires.extend(
+        [
+            'sphinx >= 1.4',
+            'epydoc >= 3.0',
+        ]
+    )
+
+_test_suite="tests.CallCase"
+
+
+
+
+
 
 
 #
@@ -156,19 +299,38 @@ def usage():
 
 exit_code = 0
 
+# controls the display of pathnames for created documents
+# list of urls pointing do created documents
+__doc_urls = []
+
 # custom doc creation by sphinx-apidoc
 if 'build_sphinx' in sys.argv or 'build_doc' in sys.argv:
     try:
-        os.makedirs('build'+os.sep+'apidoc'+os.sep+'sphinx')
+        os.makedirs(_mypath+os.sep+'build'+os.sep+'apidoc'+os.sep+'sphinx')
     except:
         pass
 
     print "#---------------------------------------------------------"
-    exit_code = os.system('./callDocSphinx.sh') # create apidoc
+    exit_code = os.system(_mypath+os.sep+'callDocSphinx.sh') # create apidoc
     print "#---------------------------------------------------------"
     print "Called/Finished callDocSphinx.sh => exit="+str(exit_code)
     if 'build_sphinx' in sys.argv:
         sys.argv.remove('build_sphinx')
+    __doc_urls.append(_mypath+os.sep+'build'+os.sep+'apidoc'+os.sep+'sphinx'+os.sep+'_build'+os.sep+'html'+os.sep+'index.html')
+
+# custom doc creation by epydoc
+if 'build_epydoc' in sys.argv:
+    try:
+        os.makedirs('build'+os.sep+'epydoc')
+    except:
+        pass
+    
+    print "#---------------------------------------------------------"
+    exit_code = os.system('epydoc --config docsrc/epydoc-standalone.conf') # create apidoc
+    print "#---------------------------------------------------------"
+    print "Called/Finished epydoc --config docsrc/epydoc-standalone.conf => exit="+str(exit_code)
+    sys.argv.remove('build_epydoc')
+    __doc_urls.append(_mypath+os.sep+'build'+os.sep+'epydoc'+os.sep+'index.html')
 
 # common locations
 src0 = os.path.normpath("build/apidoc/sphinx/_build/html")
@@ -183,11 +345,21 @@ if 'build_doc' in sys.argv:
     if os.path.exists(dst0):
         shutil.rmtree(dst0)
     shutil.copytree(src0, dst0)
-    
+
+    print str('python -m "profile" -o profile.out ' + _profiling_components)
     print "#---------------------------------------------------------"
+    exit_code = os.system('python -m "profile" -o profile.out ' + _profiling_components)
+    print "#---------------------------------------------------------"
+    if exit_code != 0:
+        print >>sys.stderr, "ERROR:"+str(exit_code)
+        sys.exit(exit_code)
     exit_code = os.system('epydoc --config docsrc/epydoc.conf') # create apidoc
     print "#---------------------------------------------------------"
-    print "Called/Finished epydoc --config docsrc/epydoc.conf => exit="+str(exit_code)
+    if exit_code != 0:
+        print >>sys.stderr, "ERROR:"+str(exit_code)
+        sys.exit(exit_code)
+
+    __doc_urls.append(_mypath+os.sep+'build'+os.sep+'apidoc'+os.sep+_NAME+os.sep+'index.html')
 
     def _sed(filename, pattern, repl, flags=0):
         pattern_compiled = re.compile(pattern,flags)
@@ -222,37 +394,14 @@ if 'build_doc' in sys.argv:
     rp  = r'<h4>API</h4><p class="topless"><a href="epydoc/index.html" title="API">Programming Interface</a></p>'
     rp += pt
 
-
-    patchlist = [
-        'path_syntax.html',
-        'usecases.html',
-        'shortcuts.html',
-        'filesysobjects.html',
-        'pyfilesysobjects.html',
-    ]
-    for px in patchlist:
+    for px in _epydoc_api_patchlist:
         fn = dst0+os.sep+px
         _sed(fn, pt, rp, re.MULTILINE)
     
     sys.argv.remove('build_doc')
 
-  
-
-# custom doc creation by epydoc
-if 'build_epydoc' in sys.argv:
-    try:
-        os.makedirs('build'+os.sep+'apidoc'+os.sep+'epydoc')
-    except:
-        pass
-    
-    print "#---------------------------------------------------------"
-    exit_code = os.system('epydoc --config docsrc/epydoc-standalone.conf') # create apidoc
-    print "#---------------------------------------------------------"
-    print "Called/Finished epydoc --config docsrc/epydoc-standalone.conf => exit="+str(exit_code)
-    sys.argv.remove('build_epydoc')
-
 # install local project doc
-if 'project_doc' in sys.argv:
+if 'install_project_doc' in sys.argv:
     print "# project_doc.sh..."
 
     dstroot = os.path.normpath("doc/en/html/man3/")+os.sep
@@ -340,6 +489,22 @@ if 'install_doc' in sys.argv:
     print "exit setup.py now: exit="+str(exit_code)
     sys.argv.remove('install_doc')
 
+#
+# list URIs of created and installed documents for easy use by cut-and-paste
+#
+if __doc_urls:
+    print
+    print "#*** The following documents are created:"
+    for d in __doc_urls:
+        print "  "+str(d)
+
+    print
+    print "#*** Display with:"
+    for d in __doc_urls:
+        print "  firefox file://"+str(d)
+
+    print
+
 # call of complete test suite by 'discover'
 if 'tests' in sys.argv or 'test' in sys.argv:
     if os.path.dirname(__file__)+os.pathsep not in os.environ['PATH']:
@@ -373,7 +538,6 @@ if 'tests' in sys.argv or 'test' in sys.argv:
         sys.argv.remove('tests')
     except:
         pass
-    
 
 # call of complete UseCases by 'discover'
 if 'usecases' in sys.argv or 'UseCases' in sys.argv or 'usecase' in sys.argv:
@@ -426,11 +590,6 @@ if '--offline' in sys.argv:
     __no_install_requires = True
     sys.argv.remove('--offline')
 
-__sdk = False
-if '--sdk' in sys.argv:
-    __sdk = True
-    sys.argv.remove('--sdk')
-
 # Execution failed - Error.
 if exit_code != 0:
     sys.exit(exit_code)
@@ -453,86 +612,6 @@ if len(sys.argv)==1:
 #
 
 
-#
-#*** setup.py configuration
-#
-_name='pyfilesysobjects'
-
-_description=(
-    "The 'pyfilesysobjects' package provides utilities for usage of the filesystem as a class tree " 
-    "containing files as objects. "
-    "The package also contains an extended replacement 'normpathX' for 'os.path.normpath'."
-)
-
-# def read(fname):
-#     return open(os.path.join(os.path.dirname(__file__), fname)).read()
-_README = os.path.join(os.path.dirname(__file__), 'README')
-_long_description = open(_README).read() + 'nn'
-
-_platforms='any'
-
-_classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Developers",
-    "License :: Free To Use But Restricted",
-    "License :: OSI Approved :: Artistic License",
-    "Natural Language :: English",
-    "Operating System :: Microsoft :: Windows",
-    "Operating System :: OS Independent",
-    "Operating System :: POSIX :: BSD :: OpenBSD",
-    "Operating System :: POSIX :: Linux",
-    "Operating System :: MacOS :: MacOS X",
-    "Operating System :: POSIX :: SunOS/Solaris",
-    "Operating System :: POSIX",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 2",    
-    "Programming Language :: Python :: 2.6",    
-    "Programming Language :: Python :: 2.7",    
-    "Programming Language :: Unix Shell",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Utilities",
-]
-
-_keywords  = ' Filesystem Python Syntax Packages Modules Files Linenumbers Filenames Modulenames Packagenames'
-_keywords += ' fileobjects Objects Classes Objecttrees Classtrees inspect'
-
-_packages = ["filesysobjects"]
-_scripts = []
-
-_package_data = {
-    'filesysobjects': ['README','ArtisticLicense20.html', 'licenses-amendments.txt',
-            ],
-}
-
-#_download_url="https://github.com/ArnoCan/filesysobjects/"
-_download_url="https://sourceforge.net/projects/pyfilesysobjects/files/"
-
-_url='https://sourceforge.net/projects/pyfilesysobjects/'
-
-_install_requires=[
-    'pysourceinfo >=0.1.12',
-#    'termcolor'
-]
-if version in ('2.6',): # pragma: no cover
-    _install_requires.extend(
-        [
-            'pbr', 
-            'argparse',
-            'six',
-            'traceback2',
-            'unittest2', # pre-install dependencies seems to be faster
-        ]
-    )
-
-if __sdk: # pragma: no cover
-    _install_requires.extend(
-        [
-            'sphinx >= 1.4',
-            'epydoc >= 3.0',
-        ]
-    )
-
-_test_suite="tests.CallCase"
 
 if __debug__:
     if __DEVELTEST__:

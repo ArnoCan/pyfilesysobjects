@@ -96,7 +96,7 @@ Install - HowTo - FAQ - Help
 
 
 `Shortcuts <shortcuts.html>`_
-============================
+=============================
 
 .. _shortcs:
 

@@ -1,4 +1,4 @@
-"""Use-Cases 'FileSysObjects.findRelPathInUpperTree'
+"""Use-Cases 'FileSysObjects.addPathToSearchPath'
 
 Find a matching relative filepathname in upper directory
 tree. 
@@ -21,7 +21,7 @@ Before::
 
 Call::
 
-   findRelPathInUpperTree( 'C.txt' )
+   addPathToSearchPath
 
 After::
 
