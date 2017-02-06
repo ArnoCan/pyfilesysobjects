@@ -53,7 +53,7 @@ __author__ = 'Arno-Can Uestuensoez'
 __author_email__ = 'acue_sf2@sourceforge.net'
 __license__ = "Artistic-License-2.0 + Forced-Fairplay-Constraints"
 __copyright__ = "Copyright (C) 2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez"
-__version__ = '0.1.13'
+__version__ = '0.1.14'
 __uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
 
 import os,sys
@@ -99,7 +99,7 @@ _name='pyfilesysobjects'
 __pkgname__ = "autodeploy"
 """package name"""
 
-__vers__ = [0, 0, 1,]
+__vers__ = [0, 1, 14,]
 """version parts for easy processing"""
 
 __version__ = "%02d.%02d.%03d"%(__vers__[0],__vers__[1],__vers__[2],)
@@ -216,11 +216,6 @@ if __sdk: # pragma: no cover
     )
 
 _test_suite="tests.CallCase"
-
-
-
-
-
 
 
 #
@@ -641,7 +636,6 @@ if __no_install_requires:
 #
 #*** <<<=== setup.py helper
 #
-
 
 #
 #*** do it now...

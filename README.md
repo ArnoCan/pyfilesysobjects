@@ -74,7 +74,7 @@ Project Data
 
 * VERSION: 00.01
 
-* RELEASE: 00.01.013
+* RELEASE: 00.01.014
 
 * NICKNAME: 'Yggdrasil'
 
@@ -112,13 +112,15 @@ VERSIONS and RELEASES
 
 * RELEASE: >         - Production: Stable and compatible continued development.
 
-**Current Release: 00.01.013 - Alpha:**
+**Current Release: 00.01.014 - Alpha:**
 
 OS-Support - Tested by PyUnit/Eclipse with Success:
 
 * Linux: Fedora - others should work, ToDo: CentOS, Debian, and SuSE 
 
 * Windows: Win7 - others see Cygwin
+ 
+  the last changes are not yet tested on Windows
 
 * Mac-OS: Snow Leopard - others should work - the last changes are not yet tested on Mac-OS
 
