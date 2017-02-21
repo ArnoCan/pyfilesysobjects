@@ -1006,9 +1006,17 @@ def findRelPathInSearchPathIter(spath, plist=None, **kargs):
         plist = sys.path
 
     for pl in plist:
-        r = findRelPathInSearchPath(spath, [pl], **kargs)
-        if r:
-            yield r
+        
+        #TODO:
+        matchidx = 0
+        kargs['matchidx'] = matchidx
+        while True:
+            r = findRelPathInSearchPath(spath, [pl], **kargs)
+            if r:
+                yield r
+                kargs['matchidx'] += 1
+            else:
+                break
     pass
 
 def getHome():
