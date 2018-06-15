@@ -1,17 +1,17 @@
-'filesysobjects.NetFiles' - Module
+'filesysobjects.netfiles' - Module
 **********************************
 
-.. automodule:: filesysobjects.NetFiles
+.. automodule:: filesysobjects.netfiles
 
 Functions
----------
+=========
 
-netNormpathX
-^^^^^^^^^^^^
-	.. autofunction:: netNormpathX
+net_normpathx
+-------------
+	.. autofunction:: net_normpathx
 
-See also
---------
+Resources
+=========
 
 * For syntax design requirements refer to "`Extended Filesystems - Network Features <path_netfiles.html>`_".
 

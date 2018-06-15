@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Distribute 'filesysobjects', a generic unit test wrapper for commandline interfaces.
 
    Installs 'filesysobjects', adds/modifies the following helper features to standard
@@ -10,12 +11,12 @@
       build_sphinx: Creates documentation for runtime system by Sphinx, html only.
          Calls 'callDocSphinx.sh'.
 
-      build_epydoc: Creates standalone documentation for runtime system by Epydoc, 
+      build_epydoc: Creates standalone documentation for runtime system by Epydoc,
          html only.
 
       install_project_doc: Install a local copy into the doc directory of the project.
 
-      instal_doc: Install a local copy of the previously build documents in 
+      instal_doc: Install a local copy of the previously build documents in
           accordance to PEP-370.
 
       test: Runs PyUnit tests by discovery.
@@ -26,7 +27,7 @@
       --sdk:
           Requires sphinx, epydoc, and dot-graphics.
 
-      --no-install-required: Suppresses installation dependency checks, 
+      --no-install-required: Suppresses installation dependency checks,
           requires appropriate PYTHONPATH.
       --offline: Sets online dependencies to offline, or ignores online
           dependencies.
@@ -42,6 +43,9 @@
       ffs.
 
 """
+from __future__ import absolute_import
+from __future__ import print_function
+
 # priority is offline here - needs manual 'bootstrap', thus dropped ez_setup for now
 # import ez_setup
 # ez_setup.use_setuptools()
@@ -52,38 +56,42 @@
 __author__ = 'Arno-Can Uestuensoez'
 __author_email__ = 'acue_sf2@sourceforge.net'
 __license__ = "Artistic-License-2.0 + Forced-Fairplay-Constraints"
-__copyright__ = "Copyright (C) 2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez"
-__version__ = '0.1.15'
-__uuid__='af90cc0c-de54-4a32-becd-06f5ce5a3a75'
+__copyright__ = "Copyright (C) 2015-2017 Arno-Can Uestuensoez" \
+                " @Ingenieurbuero Arno-Can Uestuensoez"
+__uuid__ = "4135ab0f-fbb8-45a2-a6b1-80d96c164b72"
+
+from filesysobjects import V3K, RTE, RTE_WIN32
 
 import os,sys
 
-#_NAME = 'pyfilesysobjects' # legacy
-_NAME = 'filesysobjects'
+from setuptools import setup #, find_packages
+import fnmatch
+import re, shutil, tempfile
 
+
+#_NAME = 'filesysobjects'
+_NAME = 'pyfilesysobjects'
 
 # some debug
+# Intentional HACK: offline only, mainly foreseen for developement
+__verbose = False
+if '--verbose' in sys.argv:
+    __verbose = True
+    sys.argv.remove('--verbose')
+
+__debug = False
+if '--debug' in sys.argv:
+    __debug = True
+    sys.argv.remove('--debug')
+
 if __debug__:
     __DEVELTEST__ = True
-
 __sdk = False
 """Set by the option "--sdk". Controls the installation environment."""
 if '--sdk' in sys.argv:
     _sdk = True
     sys.argv.remove('--sdk')
 
-#
-#***
-#
-from setuptools import setup #, find_packages
-import fnmatch
-import re, shutil, tempfile
-
-version = '{0}.{1}'.format(*sys.version_info[:2])
-if not version in ('2.6','2.7',): # pragma: no cover
-    raise Exception("Requires Python-2.6.* or higher")
-
-#
 # required for various interfaces, thus just do it
 _mypath = os.path.dirname(os.path.abspath(__file__))
 """Path of this file."""
@@ -96,10 +104,12 @@ sys.path.insert(0,os.path.abspath(_mypath))
 #
 #--------------------------------------
 _name='pyfilesysobjects'
-__pkgname__ = "autodeploy"
 """package name"""
 
-__vers__ = [0, 1, 14,]
+__pkgname__ = "filesysobjects"
+"""package name"""
+
+__vers__ = [0, 1, 34,]
 """version parts for easy processing"""
 
 __version__ = "%02d.%02d.%03d"%(__vers__[0],__vers__[1],__vers__[2],)
@@ -108,15 +118,19 @@ __version__ = "%02d.%02d.%03d"%(__vers__[0],__vers__[1],__vers__[2],)
 __author__ = "acue"
 """author of the package"""
 
-_packages = ["filesysobjects"]
+_packages = [
+    "filesysobjects",
+    "filesysobjects/plugins"
+]
 """Python packages to be installed."""
 
 _scripts = []
 """Scripts to be installed."""
 
 _package_data = {
-    'filesysobjects': ['README.md','ArtisticLicense20.html', 'licenses-amendments.txt',
-            ],
+    'filesysobjects': [
+        'README.md','ArtisticLicense20.html', 'licenses-amendments.txt',
+    ],
 }
 """Provided data of the package."""
 
@@ -137,15 +151,11 @@ _keywords += ' fileobjects Objects Classes Objecttrees Classtrees inspect'
 """keywords for search index"""
 
 _description=(
-    "The 'pyfilesysobjects' package provides utilities for usage of the filesystem as a class tree " 
-    "containing files as objects. "
-    "The package also contains 'normpathX' as replacement for 'os.path.normpath'."
+    "Standard conformant utilities for resource paths of file systems and URIs."
 )
 
-# def read(fname):
-#     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 _README = os.path.join(os.path.dirname(__file__), 'README.md')
-_long_description = open(_README).read() + 'nn'
+_long_description = open(_README).read()
 """detailed description of this package"""
 
 _classifiers = [
@@ -162,9 +172,11 @@ _classifiers = [
     "Operating System :: POSIX :: SunOS/Solaris",
     "Operating System :: POSIX",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 2",    
-    "Programming Language :: Python :: 2.6",    
-    "Programming Language :: Python :: 2.7",    
+    "Programming Language :: Python :: 2",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
     "Programming Language :: Unix Shell",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Utilities",
@@ -173,10 +185,13 @@ _classifiers = [
 
 _epydoc_api_patchlist = [
     'path_syntax.html',
-    'usecases.html',
     'shortcuts.html',
-    'filesysobjects.html',
-    'pyfilesysobjects.html',
+    'apppaths.html',
+    'paths.html',
+    'pathtools.html',
+    'configdata.html',
+    'userdata.html',
+    'osdata.html',
 ]
 
 """Patch list of Sphinx documents for the insertion of links to API documentation."""
@@ -191,21 +206,22 @@ _sharepath = os.path.expanduser(os.path.sep+'share'+os.path.sep+'projdata'+os.pa
 """Project specific common network directory on the AdNovum share."""
 
 
-# runtime dependencies - RHEL6.x standard is sufficient
 _install_requires=[
-    'pysourceinfo >=0.1.12',
-#    'termcolor'
+    'pysourceinfo >=0.1.20',
 ]
-if version in ('2.6',): # pragma: no cover
-    _install_requires.extend(
-        [
-            'pbr', 
-            'argparse',
-            'six',
-            'traceback2',
-            'unittest2', # pre-install dependencies seems to be faster
-        ]
-    )
+
+if RTE & RTE_WIN32:
+    # pylint: disable-msg=F0401
+    if V3K:
+#        _install_requires.append('winreg')
+        _install_requires.append('pypiwin32')
+
+    else:
+#        _install_requires.append('_winreg')
+#        _install_requires.append('win32api')
+#        _install_requires.append('win32security')
+        _install_requires.append('pypiwin32')
+
 
 if __sdk: # pragma: no cover
     _install_requires.extend(
@@ -284,7 +300,7 @@ def usage():
     if __name__ == '__main__':
         import pydoc
         #FIXME: literally displayed '__main__'
-        print pydoc.help(__name__)
+        print(pydoc.help(__name__))
     else:
         help(str(os.path.basename(sys.argv[0]).split('.')[0]))
 
@@ -305,10 +321,10 @@ if 'build_sphinx' in sys.argv or 'build_doc' in sys.argv:
     except:
         pass
 
-    print "#---------------------------------------------------------"
+    print("#---------------------------------------------------------")
     exit_code = os.system(_mypath+os.sep+'callDocSphinx.sh') # create apidoc
-    print "#---------------------------------------------------------"
-    print "Called/Finished callDocSphinx.sh => exit="+str(exit_code)
+    print("#---------------------------------------------------------")
+    print("Called/Finished callDocSphinx.sh => exit="+str(exit_code))
     if 'build_sphinx' in sys.argv:
         sys.argv.remove('build_sphinx')
     __doc_urls.append(_mypath+os.sep+'build'+os.sep+'apidoc'+os.sep+'sphinx'+os.sep+'_build'+os.sep+'html'+os.sep+'index.html')
@@ -319,42 +335,27 @@ if 'build_epydoc' in sys.argv:
         os.makedirs('build'+os.sep+'epydoc')
     except:
         pass
-    
-    print "#---------------------------------------------------------"
-    exit_code = os.system('epydoc --config docsrc/epydoc-standalone.conf') # create apidoc
-    print "#---------------------------------------------------------"
-    print "Called/Finished epydoc --config docsrc/epydoc-standalone.conf => exit="+str(exit_code)
+
+    _epycall = 'epydoc --config docsrc/epydoc-standalone.conf'
+    if __verbose:
+        _epycall += ' --verbose '
+    if __debug:
+        _epycall += ' --debug '
+
+    print("Call: " + str(_epycall))
+    print("#---------------------------------------------------------")
+    exit_code = os.system(_epycall) # create apidoc
+    print("#---------------------------------------------------------")
+    print("Finished: " + str(_epycall) + " => exit="+str(exit_code))
     sys.argv.remove('build_epydoc')
     __doc_urls.append(_mypath+os.sep+'build'+os.sep+'epydoc'+os.sep+'index.html')
 
 # common locations
 src0 = os.path.normpath("build/apidoc/sphinx/_build/html")
-dst0 = os.path.normpath("build/apidoc/"+str(_NAME))    
+dst0 = os.path.normpath("build/apidoc/"+str(_NAME))
 
 # custom doc creation by sphinx-apidoc with embeded epydoc
 if 'build_doc' in sys.argv:
-
-    # copy sphinx to mixed doc
-    if not os.path.exists(src0):
-        raise Exception("Missing generated sphinx document source:"+str(src0))
-    if os.path.exists(dst0):
-        shutil.rmtree(dst0)
-    shutil.copytree(src0, dst0)
-
-    print str('python -m "profile" -o profile.out ' + _profiling_components)
-    print "#---------------------------------------------------------"
-    exit_code = os.system('python -m "profile" -o profile.out ' + _profiling_components)
-    print "#---------------------------------------------------------"
-    if exit_code != 0:
-        print >>sys.stderr, "ERROR:"+str(exit_code)
-        sys.exit(exit_code)
-    exit_code = os.system('epydoc --config docsrc/epydoc.conf') # create apidoc
-    print "#---------------------------------------------------------"
-    if exit_code != 0:
-        print >>sys.stderr, "ERROR:"+str(exit_code)
-        sys.exit(exit_code)
-
-    __doc_urls.append(_mypath+os.sep+'build'+os.sep+'apidoc'+os.sep+_NAME+os.sep+'index.html')
 
     def _sed(filename, pattern, repl, flags=0):
         pattern_compiled = re.compile(pattern,flags)
@@ -363,27 +364,77 @@ if 'build_doc' in sys.argv:
             with open(fname) as src_file:
                 for line in src_file:
                     ftmp.write(pattern_compiled.sub(repl, line))
-    
+
         shutil.copystat(fname, ftmp.name)
         shutil.move(ftmp.name, fname)
 
 
-    pt = '<a target="moduleFrame" href="toc-everything.html">Everything</a>'
-    rp  = r'<a href="../index.html" target="_top">Home</a>'
-    rp += r' - '
-    rp += r'<a href="./index.html" target="_top">Top</a>'
-    rp += r' - '
+    # copy sphinx to mixed doc
+    if not os.path.exists(src0):
+        raise Exception("Missing generated sphinx document source:"+str(src0))
+    if os.path.exists(dst0):
+        shutil.rmtree(dst0)
+    shutil.copytree(src0, dst0)
+
+#     print('python -m "profile" -o profile.out ' + _profiling_components)
+#     print("#---------------------------------------------------------")
+#     exit_code = os.system('python -m "profile" -o profile.out ' + _profiling_components)
+#     print("#---------------------------------------------------------")
+#     if exit_code != 0:
+#         sys.stderr.write("ERROR:"+str(exit_code))
+# #        sys.exit(exit_code)
+
+    _epycall = 'epydoc --config docsrc/epydoc.conf'
+    if __verbose:
+        _epycall += ' --verbose '
+    if __debug:
+        _epycall += ' --debug '
+
+    print("#---------------------------------------------------------")
+    print("Call: " + str(_epycall))
+    print("#---------------------------------------------------------")
+    exit_code = os.system(_epycall) # create apidoc
+    print("#---------------------------------------------------------")
+    print("Finished: " + str(_epycall) + " => exit="+str(exit_code))
+    print("#---------------------------------------------------------")
+
+#     if exit_code != 0:
+#         sys.stderr.write("ERROR:"+str(exit_code))
+#         sys.exit(exit_code)
+
+    if exit_code != 0:
+        sys.stderr.write("WARNING:"+str(exit_code))
+        # sys.exit(exit_code)
+
+    __doc_urls.append(_mypath+os.sep+'build'+os.sep+'apidoc'+os.sep+_NAME+os.sep+'index.html')
+
+    if exit_code == 0:
+
+        pt = '<a target="moduleFrame" href="toc-everything.html">Everything</a>'
+        rp  = r'<a href="../index.html" target="_top">Home</a>'
+        rp += r' - '
+        rp += r'<a href="./index.html" target="_top">Top</a>'
+        rp += r' - '
+        rp += pt
+
+        fn = dst0+'/epydoc/toc.html'
+        _sed(fn, pt, rp, re.MULTILINE)  # @UndefinedVariable
+
+        pt = '<h4>Next topic</h4>'
+        rp  = r'<h4>API</h4><p class="topless"><a href="epydoc/index.html" title="API">Programming Interface</a></p>'
+        rp += pt
+
+        fn = dst0+'/index.html'
+        _sed(fn, pt, rp, re.MULTILINE)  # @UndefinedVariable
+
+    pt = r'<li><a class="reference internal" href="#table-of-contents">Table of Contents</a></li>'
+    rp  = r'<li><a class="reference internal" href="shortcuts.html">Shortcuts</a></li>'
+    rp += r'<li><a class="reference internal" href="howto.html">Howto</a></li>'
+    rp += r'<li><a class="reference internal" href="reference_cases.html">Standards</a></li>'
+    rp += r'<li><a class="reference internal" href="install.html">Install</a></li>'
     rp += pt
-
-    fn = dst0+'/epydoc/toc.html'
-    _sed(fn, pt, rp, re.MULTILINE)
-
-    pt = '<h4>Next topic</h4>'
-    rp  = r'<h4>API</h4><p class="topless"><a href="epydoc/index.html" title="API">Programming Interface</a></p>'
-    rp += pt
-
     fn = dst0+'/index.html'
-    _sed(fn, pt, rp, re.MULTILINE)
+    _sed(fn, pt, rp, re.MULTILINE)  # @UndefinedVariable
 
     pt = '<h4>Previous topic</h4>'
     rp  = r'<h4>API</h4><p class="topless"><a href="epydoc/index.html" title="API">Programming Interface</a></p>'
@@ -391,16 +442,16 @@ if 'build_doc' in sys.argv:
 
     for px in _epydoc_api_patchlist:
         fn = dst0+os.sep+px
-        _sed(fn, pt, rp, re.MULTILINE)
-    
+        _sed(fn, pt, rp, re.MULTILINE)  # @UndefinedVariable
+
     sys.argv.remove('build_doc')
 
 # install local project doc
 if 'install_project_doc' in sys.argv:
-    print "# project_doc.sh..."
+    print("# project_doc.sh...")
 
     dstroot = os.path.normpath("doc/en/html/man3/")+os.sep
-    
+
     try:
         os.makedirs(dstroot)
     except:
@@ -424,29 +475,29 @@ if 'install_project_doc' in sys.argv:
             shutil.rmtree(dstroot+str(_NAME)+".epydoc")
         shutil.copytree(src0, dstroot+str(_NAME)+".epydoc")
 
-    print "#"
+    print("#")
     idx = 0
-    for i in sys.argv: 
+    for i in sys.argv:
         if i == 'install_doc': break
         idx += 1
-    
-    print "#"
-    print "Called/Finished PyUnit tests => exit="+str(exit_code)
-    print "exit setup.py now: exit="+str(exit_code)
+
+    print("#")
+    print("Called/Finished PyUnit tests => exit="+str(exit_code))
+    print("exit setup.py now: exit="+str(exit_code))
     sys.argv.remove('project_doc')
 
 # call of complete test suite by 'discover'
 if 'install_doc' in sys.argv:
-    print "#"
+    print("#")
     idx = 0
-    for i in sys.argv: 
+    for i in sys.argv:
         if i == 'install_doc': break
         idx += 1
-    print "# install_doc.sh..."
-    # src    
+    print("# install_doc.sh...")
+    # src
     src = os.path.normpath("build/apidoc/"+str(_NAME))
     _dst = "doc/en/html/man3/"+str(_NAME)
-    
+
     # set platform
     if sys.platform in ('win32'):
         dst = os.path.expandvars("%APPDATA%/Python/doc/")
@@ -455,17 +506,17 @@ if 'install_doc' in sys.argv:
     dst = os.path.normpath(dst+_dst)+os.sep
 
 
-    print "#"
+    print("#")
 
     # copy sphinx
     if os.path.exists(dst):
         shutil.rmtree(dst)
     shutil.copytree(src, dst)
-    print "# "+str(_NAME)
-    print "#   from        : "+str(src)
-    print "#   to          : "+str(dst)
-    print "#   display with: firefox -P preview.simple "+dst+"/index.html"
-    
+    print("# "+str(_NAME))
+    print("#   from        : "+str(src))
+    print("#   to          : "+str(dst))
+    print("#   display with: firefox -P preview.simple "+dst+"/index.html")
+
     # copy epydoc
     src += '.epydoc'
     dst += '.epydoc'
@@ -473,30 +524,30 @@ if 'install_doc' in sys.argv:
         if os.path.exists(dst):
             shutil.rmtree(dst)
         shutil.copytree(src, dst)
-        print "#"
-        print "# "+str(_NAME)+".epydoc"
-        print "#   from        : "+str(src)
-        print "#   to          : "+str(dst)
-        print "#   display with: firefox -P preview.simple "+dst+"/index.html"
+        print("#")
+        print("# "+str(_NAME)+".epydoc")
+        print("#   from        : "+str(src))
+        print("#   to          : "+str(dst))
+        print("#   display with: firefox -P preview.simple "+dst+"/index.html")
 
-    print "#"
-    print "Called/Finished PyUnit tests => exit="+str(exit_code)
-    print "exit setup.py now: exit="+str(exit_code)
+    print("#")
+    print("Called/Finished PyUnit tests => exit="+str(exit_code))
+    print("exit setup.py now: exit="+str(exit_code))
     sys.argv.remove('install_doc')
 
 #
 # list URIs of created and installed documents for easy use by cut-and-paste
 #
 if __doc_urls:
-    print
-    print "#*** The following documents are created:"
+    print()
+    print("#*** The following documents are created:")
     for d in __doc_urls:
-        print "  "+str(d)
+        print("  "+str(d))
 
-    print
-    print "#*** Display with:"
+    print()
+    print("#*** Display with:")
     for d in __doc_urls:
-        print "  firefox file://"+str(d)
+        print("  firefox file://"+str(d))
 
     print
 
@@ -505,26 +556,18 @@ if 'tests' in sys.argv or 'test' in sys.argv:
     if os.path.dirname(__file__)+os.pathsep not in os.environ['PATH']:
         p0 = os.path.dirname(__file__)
         os.putenv('PATH', p0+os.pathsep+os.getenv('PATH',''))
-        print "# putenv:PATH[0]="+str(p0)
-    
-    print "#"
-    if version in ('2.6',): # pragma: no cover
-        print "# Check 'inspect' paths - call in: tests.30_libs.040_FileSysObjects"
-        exit_code += os.system('python -m discover -s tests.30_libs.040_FileSysObjects -p CallCase.py') # traverse tree
-        print "# Check 'inspect' paths - call in: tests.30_libs"
-        exit_code += os.system('python -m discover -s tests.30_libs -p CallCase.py') # traverse tree
-        print "# Check 'inspect' paths - call in: tests"
-        exit_code  = os.system('python -m discover -s tests -p CallCase.py') # traverse tree
-    elif version in ('2.7',): # pragma: no cover
-        print "# Check 'inspect' paths - call in: tests.30_libs.040_FileSysObjects"
-        exit_code += os.system('python -m unittest discover -s tests.30_libs.040_FileSysObjects -p CallCase.py') # traverse tree
-        print "# Check 'inspect' paths - call in: tests.30_libs"
-        exit_code += os.system('python -m unittest discover -s tests.30_libs -p CallCase.py') # traverse tree
-        print "# Check 'inspect' paths - call in: tests"
-        exit_code  = os.system('python -m unittest discover -s tests -p CallCase.py') # traverse tree
-    print "#"
-    print "Called/Finished PyUnit tests => exit="+str(exit_code)
-    print "exit setup.py now: exit="+str(exit_code)
+        print("# putenv:PATH[0]="+str(p0))
+
+    print("#")
+    print("# Check 'inspect' paths - call in: tests.30_libs.040_filesysobjects")
+    exit_code += os.system('python -m unittest discover -s tests.30_libs.040_filesysobjects -p CallCase.py') # traverse tree
+    print("# Check 'inspect' paths - call in: tests.30_libs")
+    exit_code += os.system('python -m unittest discover -s tests.30_libs -p CallCase.py') # traverse tree
+    print("# Check 'inspect' paths - call in: tests")
+    exit_code  = os.system('python -m unittest discover -s tests -p CallCase.py') # traverse tree
+    print("#")
+    print("Called/Finished PyUnit tests => exit="+str(exit_code))
+    print("exit setup.py now: exit="+str(exit_code))
     try:
         sys.argv.remove('test')
     except:
@@ -539,30 +582,20 @@ if 'usecases' in sys.argv or 'UseCases' in sys.argv or 'usecase' in sys.argv:
     if os.path.dirname(__file__)+os.pathsep not in os.environ['PATH']:
         p0 = os.path.dirname(__file__)
         os.putenv('PATH', p0+os.pathsep+os.getenv('PATH',''))
-        print "# putenv:PATH[0]="+str(p0)
-    
-    print "#"
-    if version in ('2.6',): # pragma: no cover
-        print "# Check 'inspect' paths - call in: UseCases"
-        exit_code = os.system('python -m discover -s UseCases -p CallCase.py') # traverse tree
-        print "# Check 'inspect' paths - call in: UseCases.FileSysObjects"
-        exit_code += os.system('python -m discover -s UseCases.FileSysObjects -p CallCase.py') # traverse tree
-        print "# Check 'inspect' paths - call in: UseCases.FileSysObjects.branches"
-        exit_code += os.system('python -m discover -s UseCases.FileSysObjects.branches -p CallCase.py') # traverse tree
-        print "# Check 'inspect' paths - call in: UseCases.FileSysObjects.functions"
-        exit_code += os.system('python -m discover -s UseCases.FileSysObjects.functions -p CallCase.py') # traverse tree
-    elif version in ('2.7',): # pragma: no cover
-        print "# Check 'inspect' paths - call in: UseCases"
-        exit_code = os.system('python -m unittest discover -s UseCases -p CallCase.py') # traverse tree
-        print "# Check 'inspect' paths - call in: UseCases.FileSysObjects"
-        exit_code += os.system('python -m unittest discover -s UseCases.FileSysObjects -p CallCase.py') # traverse tree
-        print "# Check 'inspect' paths - call in: UseCases.FileSysObjects.branches"
-        exit_code += os.system('python -m unittest discover -s UseCases.FileSysObjects.branches -p CallCase.py') # traverse tree
-        print "# Check 'inspect' paths - call in: UseCases.FileSysObjects.functions"
-        exit_code += os.system('python -m unittest discover -s UseCases.FileSysObjects.functions -p CallCase.py') # traverse tree
-    print "#"
-    print "Called/Finished PyUnit tests => exit="+str(exit_code)
-    print "exit setup.py now: exit="+str(exit_code)
+        print("# putenv:PATH[0]="+str(p0))
+
+    print("#")
+    print("# Check 'inspect' paths - call in: UseCases")
+    exit_code = os.system('python -m unittest discover -s UseCases -p CallCase.py') # traverse tree
+    print("# Check 'inspect' paths - call in: UseCases.filesysobjects")
+    exit_code += os.system('python -m unittest discover -s UseCases.filesysobjects -p CallCase.py') # traverse tree
+    print("# Check 'inspect' paths - call in: UseCases.filesysobjects.branches")
+    exit_code += os.system('python -m unittest discover -s UseCases.filesysobjects.branches -p CallCase.py') # traverse tree
+    print("# Check 'inspect' paths - call in: UseCases.filesysobjects.functions")
+    exit_code += os.system('python -m unittest discover -s UseCases.filesysobjects.functions -p CallCase.py') # traverse tree
+    print("#")
+    print("Called/Finished PyUnit tests => exit="+str(exit_code))
+    print("exit setup.py now: exit="+str(exit_code))
     try:
         sys.argv.remove('usecase')
     except:
@@ -610,11 +643,11 @@ if len(sys.argv)==1:
 
 if __debug__:
     if __DEVELTEST__:
-        print "#---------------------------------------------------------"
-        print "packages="+str(_packages)
-        print "#---------------------------------------------------------"
-        print "package_data="+str(_package_data)
-        print "#---------------------------------------------------------"
+        print("#---------------------------------------------------------")
+        print("packages="+str(_packages))
+        print("#---------------------------------------------------------")
+        print("package_data="+str(_package_data))
+        print("#---------------------------------------------------------")
 
 
 #
@@ -623,14 +656,14 @@ if __debug__:
 
 # Intentional HACK: ignore (online) dependencies, mainly foreseen for developement
 if __no_install_requires:
-    print "#"
-    print "# Changed to offline mode, ignore install dependencies completely."
-    print "# Requires appropriate PYTHONPATH."
-    print "# Ignored dependencies are:"
-    print "#"
+    print("#")
+    print("# Changed to offline mode, ignore install dependencies completely.")
+    print("# Requires appropriate PYTHONPATH.")
+    print("# Ignored dependencies are:")
+    print("#")
     for ir in _install_requires:
-        print "#   "+str(ir)
-    print "#"
+        print("#   "+str(ir))
+    print("#")
     _install_requires=[]
 
 #
@@ -640,26 +673,28 @@ if __no_install_requires:
 #
 #*** do it now...
 #
-setup(name=_name,
-      version=__version__,
-      author=__author__,
-      author_email=__author_email__,
-      classifiers=_classifiers,
-      description=_description,
-      download_url=_download_url,
-      install_requires=_install_requires,
-      keywords=_keywords,
-      license=__license__,
-      long_description=_long_description,
-      platforms=_platforms,
-      url=_url,
-      scripts=_scripts,
-      packages=_packages,
-      package_data=_package_data,
+setup(
+    author=__author__,
+    author_email=__author_email__,
+    classifiers=_classifiers,
+    description=_description,
+    download_url=_download_url,
+    install_requires=_install_requires,
+    keywords=_keywords,
+    license=__license__,
+    long_description=_long_description,
+    name=_name,
+    package_data=_package_data,
+    packages=_packages,
+    platforms=_platforms,
+    scripts=_scripts,
+    url=_url,
+    version=__version__,
+    zip_safe=False,
 )
 
 if '--help' in sys.argv:
-    print
-    print "Help on usage extensions by "+str(_NAME)
-    print "   --help-"+str(_NAME)
-    print
+    print()
+    print("Help on usage extensions by "+str(_NAME))
+    print("   --help-"+str(_NAME))
+    print()

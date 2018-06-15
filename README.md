@@ -1,165 +1,125 @@
 filesysobjects
 ==============
 
-The 'filesysobjects' package provides utilities for the application of
-basic object oriented features onto filesystems.
-This includes basic coverage of the 'inspect' package for the simplified
-gathering of information on packages, modules, and files.
+The 'filesysobjects' package provides cross-platform-utilities for path addresses
+of file like resources. This includes the search and navigation features on file
+system structures with the application of regular expressions for pathnames 
+intermixed with globs.
 
-The provided feature modules comprise the following list.
-For code examples refer to 'filesysobjects.UseCases'.
+* filesysobjects - constants
 
-The package 'filesysobjects' is a spin off from the project 'UnifiedSessionsManager-2.0',
-see 'https://sourceforge.net/projects/ctys/'.
+* filesysobjects.apppaths - application resource path processing
 
-The main interface classes are:
+* filesysobjects.paths - file systems path processing
 
-* **FileSysObjects** - Filesystem objects.
+* filesysobjects.pathtools - search, enumeration, and iteration operations
 
-For UseCases refer to subdirectory:
+* filesysobjects.userdata - user directories
 
-* UseCases
- 
-**Downloads**:
+* filesysobjects.osdata - OS directories
 
-* Sourceforge.net: https://sourceforge.net/projects/pyfilesysobjetcs/files/
-  
-* Sourceforge.net: https://sourceforge.net/projects/pyfilesysobjects/files/
+* filesysobjects.configdata - config directories
 
-* Github: https://github.com/ArnoCan/pyfilesysobjects/
+
+Supported platforms are:
+
+* Linux, BSD, Unix, Mac-OS/OS-X, and Windows
+
+* Python2.7, Python3.5+
 
 **Online documentation**:
 
-* https://pypi.python.org/pypi/pyfilesysobjects/
-* https://pythonhosted.org/pyfilesysobjects/
+* https://pyfilesysobjects.sourceforge.io/
 
-setup.py
---------
 
-The installer adds a few options to the standard setuptools options.
+**Runtime-Repository**:
 
-* *build_sphinx*: Creates documentation for runtime system by Sphinx, html only. Calls 'callDocSphinx.sh'.
+* PyPI: https://pypi.org/project/pyfilesysobjects/
 
-* *build_epydoc*: Creates documentation for runtime system by Epydoc, html only. Calls 'callDocEpydoc.sh'.
+  Install: *pip install pyfilesysobjects*, see also 'Install'.
 
-* *instal_doc*: Install a local copy of the previously build documents in accordance to PEP-370.
+**Downloads**:
 
-* *test*: Runs PyUnit tests by discovery.
+* sourceforge.net: https://sourceforge.net/projects/pyfilesysobjects/files/
 
-* *--help-filesysobjects*: Displays this help.
+* bitbucket.org: https://bitbucket.org/acue/pyfilesysobjects
 
-* *--no-install-required*: Suppresses installation dependency checks, requires appropriate PYTHONPATH.
+* github.com: https://github.com/ArnoCan/pyfilesysobjects/
 
-* *--offline*: Sets online dependencies to offline, or ignores online dependencies.
+* pypi.org: https://pypi.org/project/pyfilesysobjects/
 
-* *--exit*: Exit 'setup.py'.
-
-After successful installation the 'selftest' verifies basic checks by:
-
-  *filesysobjects --selftest*
-
-with the exit value '0' when OK.
-
-The option '-v' raises the degree of verbosity for inspection
-
-  *filesysobjects --selftest -v -v -v -v*
- 
 
 Project Data
 ------------
 
 * PROJECT: 'filesysobjects'
 
-* MISSION: Extend the standard PyUnit package for arbitrary ExecUnits.
+* MISSION: Standard conform utilities for paths of file systems and URIs.
 
 * VERSION: 00.01
 
-* RELEASE: 00.01.015
-
-* NICKNAME: 'Yggdrasil'
+* RELEASE: 00.01.034
 
 * STATUS: alpha
 
 * AUTHOR: Arno-Can Uestuensoez
 
-* COPYRIGHT: Copyright (C) 2010,2011,2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez
+* COPYRIGHT: Copyright (C) 2010,2011,2015-2018 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez
 
 * LICENSE: Artistic-License-2.0 + Forced-Fairplay-Constraints
-  Refer to enclose documents:
-  
-  *  ArtisticLicense20.html - for base license: Artistic-License-2.0 
-
-  *  licenses-amendments.txt - for amendments: Forced-Fairplay-Constraints
-
-VERSIONS and RELEASES
----------------------
-
-**Planned Releases:**
-
-* RELEASE: 00.00.00x - Pre-Alpha: Extraction of the features from hard-coded application into a reusable package.
-
-* RELEASE: 00.01.00x - Alpha: Completion of basic features. 
-
-* RELEASE: 00.02.00x - Alpha: Completion of features, stable interface. 
-
-* RELEASE: 00.03.00x - Beta: Accomplish test cases for medium to high complexity.
-
-* RELEASE: 00.04.00x - Production: First production release. Estimated number of UnitTests := 1250.
-
-* RELEASE: 00.05.00x - Production: Various performance enhancements.
-
-* RELEASE: 00.06.00x - Production: Security review.
-
-* RELEASE: >         - Production: Stable and compatible continued development.
-
-**Current Release: 00.01.015 - Alpha:**
-
-OS-Support - Tested by PyUnit/Eclipse with Success:
-
-* Linux: Fedora, RHEL - others should work, ToDo: CentOS, Debian, and SuSE 
-
-* Windows: Win7 - others see Cygwin
- 
-  the last changes are not yet tested on Windows
-
-* Mac-OS: Snow Leopard - others should work - the last changes are not yet tested on Mac-OS
-
-* Cygwin: 2.874/64 bit
 
 
-OS-Support - ToDo: Going to follow soon.
+Python support:
 
-* BSD: ToDo: OpenBSD, FreeBSD - others should work
+*  Python2.7, and Python3.5+
 
-* UNIX: ToDo: Solaris-11 - should work
 
-* Windows: Win10
+OS-Support:
 
-Python support: 2.6, and 2.7
+* Linux: Fedora, CentOS, Debian, and Raspbian 
+
+* BSD - OpenBSD, and FreeBSD
+
+* OS-X: Snow Leopard
+
+* Windows: Win7, Win10
+
+* Cygwin
+
+* UNIX: Solaris
+
+
+
+**Current Release**
+
 
 Major Changes:
 
-* Minor fixes.
+* Changed interface to notation.
 
-**ToDo**:
+* Python2.6 support dropped.
 
-* Full scale UNC
+* Python3.5+ support introduced.
 
-* Fix bugs in SMB share conversion 
+* Added advanced file and path search by *glob* and *re* - *findpattern()*.
 
-* Test for remote and autonomous operations on arbitrary filesystems 
+* Added rfc3986 - level-1 with basic *normapppathx()* and *splitapppathx()*.
+
+* Conformity tests for rfc1738, rfc3986, rfc8089, UNC, MS-SMB/MS-CIFS, IEEE/1003.1, see references section of doc.
+
+ToDo:
+
+* Introduction of dynamic plugins
+
+* Support for name spaces of Windows
 
 Known Issues:
 
-* Some minor failures of units, 1 on MacOS, will be fixed for a.s.a.p. 
+* Quoting/masking in http paths currently does not work, %-codes has to be used. Queries and fragments are OK.
 
-* Mixed types of os.path.sep with multiple groups of each: Escape to target, but does not clean all redundant.
+* Some minor non-compliance for rare esoteric cases.
 
-Current test status:
+* Old style MacOS path names and special handling of ':' by HPF/cli/finder are not supported.
 
-* UnitTests: >1000
-
-* Use-Cases as UnitTests: >120
-
-**Total**: >1100
+* OpenVMS path names are not supported.
 

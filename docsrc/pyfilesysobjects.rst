@@ -1,17 +1,17 @@
 
 'filesysobjects' - package
-###########################
+##########################
 
 .. toctree::
    :maxdepth: 4
 
-.. automodule:: filesysobjects.FileSysObjects
+.. automodule:: filesysobjects.pathtools
 
 **Sources**
 
-* `filesysobjects.FileSysObjects [source] <_modules/filesysobjects/FileSysObjects.html#>`_
+* `filesysobjects.pathtools [source] <_modules/filesysobjects/pathtools.html#>`_
 
-* `filesysobjects.NetFiles [source] <_modules/filesysobjects/NetFiles.html#>`_
+* `filesysobjects.NetFiles [source] <_modules/filesysobjects/netfiles.html#>`_
 
 
 .. include:: filesysobjects.rst

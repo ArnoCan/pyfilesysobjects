@@ -1,16 +1,17 @@
-'filesysobjects' - Addressing files and directories
-***************************************************
+Addresses for File-Like Resources
+*********************************
 
 The package 'filesysobjects' supports the hierarchical 
 navigation on filesystems.
 This is similar to the hierarchy of object oriented class
 hierarchies
-  ::
 
-    The basic idea is to start a search operation for filenames 
-    from a directory position on upward and get the first match.
-    The first match is than the deepest position, which in terms of
-    object orientation represents the most specialized class.
+.. note::
+
+   The basic idea is to start a search operation for filenames 
+   from a directory position on upward and get the first match.
+   The first match is than the deepest position, which in terms of
+   object orientation represents the most specialized class.
 
 A typical application is the drop-in design of regression and 
 unit tests.
@@ -23,6 +24,457 @@ deeper within the filesystem hierarchy.
 Thus these cases simply inherit an already present resource, which in addition
 covers higher positioned files by a higher degree of specialization. 
 
+* `Filesystem Elements as Objects <path_syntax.html#filesystem-elements-as-objects>`_ 
+* `Variants of Pathname Parameters - Literals, RegExpr, and Glob <path_syntax.html#variants-of-pathname-parameters-literals-regexpr-and-glob>`_ 
+* `Syntax Elements <path_syntax.html#syntax-elements>`_ 
+* `Call Parameters of the API <path_syntax.html#call-parameters-of-the-api>`_ 
+* `API in javadoc-style <epydoc/index.html>`_
+
+
+Filesystem Addresses
+====================
+
+The path syntax elements supported by this module 
+represent an abstraction of file system paths.
+The representation is based on a common platform 
+independent path compiler implemented based on
+the *re* package.
+This provides a canonical view on file resource paths.
+
+* URIs based on RFC3986 and RFC8089 for local files are resolved to: ::
+
+      file://///host/share/local/filesystem/path 
+      file:////host/share/local/filesystem/path 
+      file:///local/filesystem/path 
+      file://localhost/local/filesystem/path 
+      file://127.0.0.1/local/filesystem/path 
+      file:/local/filesystem/path 
+      file:d:/local/filesystem/path 
+
+* IEEE Std 1003.1(TM), 2013 Edition; Chapter 4.12: ::
+
+       //hostname/local/filesystem/path
+
+* UNC/SMB/CIFS/NTFS/FAT: ::
+
+      \\\\hostname\\local\\filesystem\\path
+      \\local\\filesystem\\path
+       d:\\a\\b
+
+* Mac-OS:
+
+  Current same as for Linux/Unix.
+
+File Paths in Pyhton3
+=====================
+The Python release 3 supports a new library *pathlib* [pathlib]_,
+which focusses on paths and distinguishes between static(Pure) and dynamic resolution. 
+
+|pathlibinheritance|
+|pathlibinheritance_zoom|
+
+.. |pathlibinheritance_zoom| image:: _static/zoom.png
+   :alt: zoom 
+   :target: _static/pathlib-inheritance.png
+   :width: 16
+
+.. |pathlibinheritance| image:: _static/pathlib-inheritance.png
+   :width: 300
+
+The independently developed *filesysobjects* contains these features and extends
+the view onto arbitrary persistent objects.
+The support comprises Python2.7 and Python3.5+, where due to the large codebase the Python2.7
+release is seen to be in active use for another decade.  
+
+The extended features like 'splitapppathx()' and 'splitpathx()',
+'escapepathx()' and 'unescapepathx()' require a supporting path compiler,
+thus could not be replaced by the new *pathlib*.
+Another aspect is the dynamic registration and un-registration of additional application
+packages, which may include completely different scanners and parsers for paths of virtual filesystems.
+Thus these dispatcher parts are table-driven instead of inheritance based.
+
+The cross-native features which currently use interfaces of the '*os*' package
+are forseen to be migrated and/or alterntively based on the new lib for Python3.5+.
+
+Arbitrary File-Like Resources
+=============================
+The Unix OS / IEEE-1003.1 provide a view of the file system based driver interfaces to arbitrary resources.
+These comprise ordinary files, IO devices, storage devices, and others.
+The Windows OS provides partially a similar view, e.g. by the Name-Spaces.
+
+Therefore the *filesysobjects* package handles each supported resource as an object which
+has an access-path.
+The path could be preresnted by various syntaxes, e.g. as Windows-Path, or as a Posix-Path.
+Where these common syntaxes could even be subdivided, e.g. by the onld MacOS syntax,
+which is still present in OS-X.
+Another common representation is here the file-URL of RFC8089.
+
+The *filesysobjects* defines a canonical object namebinding for each resource and maps these
+to the requested target syntax.
+The conversion is controlled by the parameters *spf*, and *tpf* - source-platform and target-platform.
+This comprises the pure syntax elements with additional context specific semantics for the
+appropriate ambiguity resolution.
+E.g. drive-names, host names, and shares as path parts,
+also queries and fragments, or OIDs.
+
+The internal decomposition is provided to the applicaiton by the *split* functions, which enable
+for simplified loop constructs, e.g. for heterogeneous path-resolution, search and crawler operations.
+
+
+Common Path Addresses
+---------------------
+The syntax elements for the normalization of pathnames are in particular 
+essential for the treatment of the filesystem structure as a class and object
+hierarchy.
+Thus the behaviour has to be defined thoroughly from the beginning, even or
+better in particular in case of the foreseen evolutionary add-on extension.  
+
+The current release provides the following syntax, *successive
+compatible extensions are going to follow soon*.  These the processing
+of the provided syntax is designed in two layers in accordance to
+common examples.
+
+The lower layer provides the syntax elements to construct a pathname
+for local access, whereas the upper layer provides the information for
+the location of remote filesystems.
+
+The following figure draftly weights the degree of exchangability and inter operability of the
+supported name-binding by the resource file path specifications.
+Where the darkness of the grey background symbolizes a tighter overall coupling.
+
+|pathnametypes|
+|pathnametypes_zoom|
+
+.. |pathnametypes_zoom| image:: _static/zoom.png
+   :alt: zoom 
+   :target: _static/pathname_types.png
+   :width: 16
+
+.. |pathnametypes| image:: _static/pathname_types.png
+   :width: 500
+
+
+Thus the functions of the lower layer:
+
+* `escapepathx`_
+* `normpathx`_
+* `splitpathx`_
+* `unescapepathx`_
+
+are extended replacements of the standard system interfaces:
+
+* *ntpath.normpath*, *ntpath.split*, *ntpath.splitdrive*,
+* *os.path.normpath*, *os.path.split*, *os.path.splitdrive*,
+* *posixpath.normpath*, *posixpath.split*, *posixpath.splitdrive*,
+
+Whereas the functions of the upper layer:
+
+* `normapppathx`_
+* `splitapppathx`_
+* `splitapppathx_getlocalpath`_
+
+include support for application pathnames including schemes, and provide
+intermixed search-paths.
+This also contains the accurate feature of the interface *ntpath.splitunc*,
+extended by file-URIs for UNC - RFC8089.
+
+The escape and unescape functions provide for standard pathnames in particular for 
+windows file systems, including the awareness of standard escape sequences.
+The interfaces are:
+
+* `escapepathx`_
+
+  Escape backshlashes and standard escape characters.
+
+* `unescapepathx`_
+
+  Unescape, this simply reverses the *escapepathx*.
+
+* mask
+
+  Any text sequence could be masked - protected - by Python docstring like triple quotes. 
+
+.. _escapepathx: paths.html#escapepathx
+.. _normapppathx: apppaths.html#normapppathx
+.. _normpathx: paths.html#normpathx
+.. _splitapppathx: apppaths.html#splitapppathx
+.. _splitapppathx_getlocalpath: apppaths.html#getappprefix-localpath
+.. _splitpathx: paths.html#splitpathx
+.. _unescapepathx: paths.html#unescapepathx
+
+The following function hierarchy for pathname conversion including
+UNC, SMB, POSIX-Apps, and local filenames is supported.
+The layer for the abstract search and interator interfaces relies herby on the resource paths
+as processed by the lower layers.
+The results are provided in the available representations of the application resource paths
+and/or standar local file system path name layer.
+
+|pathnamefunctions|
+|pathnamefunctions_zoom|
+
+.. |pathnamefunctions_zoom| image:: _static/zoom.png
+   :alt: zoom 
+   :target: _static/pathname_functions.png
+   :width: 16
+
+.. |pathnamefunctions| image:: _static/pathname_functions.png
+   :width: 500
+
+Due to some specific position dependent interpretation of the
+'os.sep' and the 'os.pathsep' the application layer has the app specific knowledge 
+and is foreseen to break the provided resource paths into the chunks understood by the
+lower layer interfaces.
+This also normalizes the 'os.sep' and 'os.pathsep' by conversion and elimination of 
+neutral repetitons as well as special semantics of the reserved dot-names '.' and '..'.
+A single pathname is hereby represented by the following syntax: ::
+
+    filesystemNodeName := (
+       pathname + SEP + filename
+       | pathname [ + SEP ]
+       | [ SEP ] + filename
+       | SEP
+    )
+
+    pathname := [ PREFIXKEY ] + dirname [ + SEP + pathname ]
+    dirname := <valid-name-of-dir-node> 
+    filename := <valid-name-of-file-node>
+    <valid-name-of-dir-node> := <-node-name> [ + SEP$ ]
+    <valid-name-of-file-node> := <valid-node-name>
+    <valid-node-name> := 1*(x)nodechar | 1*(x)<node-name-chars>
+    <node-name=chars> := 1*(a)nodechar + 3QUOTE + 1*(b)anychar + 3QUOTE [ + <node-name=chars> ]  
+
+    PREFIXKEY := (
+         'file:///' + 2SEP + SPECIALNODE + 1SEP + share-name 
+       | 'file://'
+       | 'file:'  # short form, see RFC8089
+       | 'smb://' + SPECIALNODE + 1SEP + share-name
+       | DRV
+       | 2SEP  SPECIALNODE  [varSEP]
+       | nSEP       
+    )
+    DRV := [a-z] + ':'   # On MS-Windows
+    SPECIALNODE := (
+       <networknode-access>
+    )
+    share-name := (
+       1*80pchar  # see [MS-DTYP]_
+    )
+    <networknode-access> := [^SEP]+
+    varSEP := ( '' | 1SEP | 2SEP | nSEP )
+    1SEP := ^SEP + !SEP
+    2SEP := ^SEP + SEP + !SEP       # in accordance to IEEE Std 1003.1 and/or CIFS/SMB
+    nSEP := ^SEP + SEP + SEP + SEP* # more than 2xSEP
+    SEP := <OS-specific-seperator>
+    3QUOTE := ( '"' + '"' + '"' | "'" + "'" + "'")  # 3x'"' or 3x"'"
+    <OS-specific-seperator> := ( '/' | '\' ) # for now only two are known
+
+    SPECIAL_SYNTAX_DIAGRAM_CHARS_AND_REGEXPR := { 
+       '^', '$', '!', '+', '{', '}', '[', ']', ':=', '|', '<', '>', '#' 
+    }
+
+   anychar := "any character"  # any character in quoted sections, e.g. globs and/or regular expressions
+
+The seperator commonly used in this document is '/'. This could be interchaned by
+the seperator '\\', which also defines an escape character, thus is omitted when not
+required.
+
+The following mappings of types to pathnames are supported.
+
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| type             | prefix                                     | host/authority           | share | path          | path-options    |
++==================+============================================+==========================+=======+===============+=================+
+| ldsys            | <drive>:, file://<drive>, file:<drive>     |                          | drive | path          |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| lfsys            | file://, file:,                            |                          |       | path          |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| lfsys(localhost) | file:localhost, file://localhost           | 'localhost', '127.0.0.1' |       | path          |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| raw              |                                            |                          |       | resource-path |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| share            | '\\\\', '//'                               | hostname                 | share | path          |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| smb, cifs        | smb://                                     | hostname                 | share | path          |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| url              | http://, https://, ftp://, ...             | hostname                 |       | path          | query, fragment |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| unc              | file://///, file:////,'\\\\', '//', unc:// | hostname                 | share | path          |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| Posix-App        | '//'                                       | app-prefix/hostname      |       | path          |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+
+The above syntax definition provides just a subset but very common set of possible naming schemes, 
+additional are foreseen to be supported in next versions by custom plugins.
+
+Thus the functions of the lower layer:
+
+* `escapepathx`_
+* `normpathx`_
+* `splitpathx`_
+* `unescapepathx`_
+
+are extended replacements of the standard system interfaces:
+
+* *ntpath.normpath*, *ntpath.split*, *ntpath.splitdrive*,
+* *os.path.normpath*, *os.path.split*, *os.path.splitdrive*,
+* *posixpath.normpath*, *posixpath.split*, *posixpath.splitdrive*,
+
+Whereas the functions of the upper layer:
+
+* `normapppathx`_
+* `splitapppathx`_
+* `splitapppathx_getlocalpath`_
+
+include support for application pathnames including schemes, and provide
+intermixed search-paths.
+This also contains the accurate feature of the interface *ntpath.splitunc*,
+extended by file-URIs for UNC - RFC8089.
+
+The escape and unescape functions provide for standard pathnames in particular for 
+windows file systems, including the awareness of standard escape sequences.
+The interfaces are:
+
+* `escapepathx`_
+
+  Escape backshlashes and standard escape characters.
+
+* `unescapepathx`_
+
+  Unescape, this simply reverses the *escapepathx*.
+
+* mask
+
+  Any text sequence could be masked - protected - by Python docstring like triple quotes. 
+
+.. _escapepathx: paths.html#escapepathx
+.. _normapppathx: apppaths.html#normapppathx
+.. _normpathx: paths.html#normpathx
+.. _splitapppathx: apppaths.html#splitapppathx
+.. _splitapppathx_getlocalpath: apppaths.html#getappprefix-localpath
+.. _splitpathx: paths.html#splitpathx
+.. _unescapepathx: paths.html#unescapepathx
+
+The following function hierarchy for pathname conversion including
+UNC, SMB, POSIX-Apps, and local filenames is supported.
+The layer for the abstract search and interator interfaces relies herby on the resource paths
+as processed by the lower layers.
+The results are provided in the available representations of the application resource paths
+and/or standar local file system path name layer.
+
+|pathnamefunctions2|
+|pathnamefunctions2_zoom|
+
+.. |pathnamefunctions2_zoom| image:: _static/zoom.png
+   :alt: zoom 
+   :target: _static/pathname_functions.png
+   :width: 16
+
+.. |pathnamefunctions2| image:: _static/pathname_functions.png
+   :width: 500
+
+Due to some specific position dependent interpretation of the
+'os.sep' and the 'os.pathsep' the application layer has the app specific knowledge 
+and is foreseen to break the provided resource paths into the chunks understood by the
+lower layer interfaces.
+This also normalizes the 'os.sep' and 'os.pathsep' by conversion and elimination of 
+neutral repetitons as well as special semantics of the reserved dot-names '.' and '..'.
+A single pathname is hereby represented by the following syntax: ::
+
+    filesystemNodeName := (
+       pathname + SEP + filename
+       | pathname [ + SEP ]
+       | [ SEP ] + filename
+       | SEP
+    )
+
+    pathname := [ PREFIXKEY ] + dirname [ + SEP + pathname ]
+    dirname := <valid-name-of-dir-node> 
+    filename := <valid-name-of-file-node>
+    <valid-name-of-dir-node> := <-node-name> [ + SEP$ ]
+    <valid-name-of-file-node> := <valid-node-name>
+    <valid-node-name> := 1*(x)nodechar | 1*(x)<node-name-chars>
+    <node-name=chars> := 1*(a)nodechar + 3QUOTE + 1*(b)anychar + 3QUOTE [ + <node-name=chars> ]  
+
+    PREFIXKEY := (
+         'file:///' + 2SEP + SPECIALNODE + 1SEP + share-name 
+       | 'file://'
+       | 'file:'  # short form, see RFC8089
+       | 'smb://' + SPECIALNODE + 1SEP + share-name
+       | DRV
+       | 2SEP  SPECIALNODE  [varSEP]
+       | nSEP       
+    )
+    DRV := [a-z] + ':'   # On MS-Windows
+    SPECIALNODE := (
+       <networknode-access>
+    )
+    share-name := (
+       1*80pchar  # see [MS-DTYP]_
+    )
+    <networknode-access> := [^SEP]+
+    varSEP := ( '' | 1SEP | 2SEP | nSEP )
+    1SEP := ^SEP + !SEP
+    2SEP := ^SEP + SEP + !SEP       # in accordance to IEEE Std 1003.1 and/or CIFS/SMB
+    nSEP := ^SEP + SEP + SEP + SEP* # more than 2xSEP
+    SEP := <OS-specific-seperator>
+    3QUOTE := ( '"' + '"' + '"' | "'" + "'" + "'")  # 3x'"' or 3x"'"
+    <OS-specific-seperator> := ( '/' | '\' ) # for now only two are known
+
+    SPECIAL_SYNTAX_DIAGRAM_CHARS_AND_REGEXPR := { 
+       '^', '$', '!', '+', '{', '}', '[', ']', ':=', '|', '<', '>', '#' 
+    }
+
+   anychar := "any character"  # any character in quoted sections, e.g. globs and/or regular expressions
+
+The seperator commonly used in this document is '/'. This could be interchaned by
+the seperator '\\', which also defines an escape character, thus is omitted when not
+required.
+
+The following mappings of types to pathnames are supported.
+
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| type             | prefix                                     | host/authority           | share | path          | path-options    |
++==================+============================================+==========================+=======+===============+=================+
+| ldsys            | <drive>:, file://<drive>, file:<drive>     |                          | drive | path          |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| lfsys            | file://, file:,                            |                          |       | path          |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| lfsys(localhost) | file:localhost, file://localhost           | 'localhost', '127.0.0.1' |       | path          |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| raw              |                                            |                          |       | resource-path |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| share            | '\\\\', '//'                               | hostname                 | share | path          |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| smb, cifs        | smb://                                     | hostname                 | share | path          |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| url              | http://, https://, ftp://, ...             | hostname                 |       | path          | query, fragment |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| unc              | file://///, file:////,'\\\\', '//', unc:// | hostname                 | share | path          |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+| Posix-App        | '//'                                       | app-prefix/hostname      |       | path          |                 |
++------------------+--------------------------------------------+--------------------------+-------+---------------+-----------------+
+
+The above syntax definition provides just a subset but very common set of possible naming schemes, 
+additional are foreseen to be supported in next versions by custom plugins.
+
+Canonical Address
+-----------------
+
+For now experimental and non-productive, for review and
+comments `[API] <shortcuts.html#>`_:  ::
+
+    filesysobjects.NetFiles.normpathx
+
+For syntax design requirements refer to "`Extended Filesystems - Network Features <path_netfiles.html>`_".
+
+See also Python issue:
+
+* Issue 26329: os.path.normpath("//") returns //
+  - http://bugs.python.org/issue26329
+
+
+
+
+.. _FILESYSELEMASOBJECTS:
 
 Filesystem Elements as Objects
 ==============================
@@ -34,7 +486,6 @@ variable for executables.
 The package 'filesystemobjects' extends this feature for the upward search within hierarchies
 including the search and extension by subpaths as branches.
 This simulates inheritance within classes and objects.
-
 
 The following two example features already provide for the required 
 basic superposition of inheritance for files in directory hierarchies.
@@ -53,7 +504,8 @@ within an inheritance hierarchy.
 The following figure depicts the structure for some  examples(
 see testdata.examples). 
 
-.. image:: _static/filesysobjectsnav.png 
+.. image:: _static/filesysobjectsnav.png
+   :width: 650
 
 Or as tree output:
   ::
@@ -101,28 +553,28 @@ additional matches in the higher location of the filesystem tree were hidden.
 This could be varied for specific applications as required.
 
 The following search order simulates inheritance and could simply created by one
-API call `setUpperTreeSearchPath`_:
-  ::
+API call `set_uppertree_searchpath`_: ::
 
     0. a/b2/a/b0/c/F   => match, stop
     1. a/b2/a/b0/F
     2. a/b2/a/F
     3. a/F
 
-.. _setUpperTreeSearchPath: filesysobjects.html#setuppertreesearchpath
+.. _set_uppertree_searchpath: pyfilesysobjects.html#filesysobjects.pathtools.set_uppertree_searchpath
 
 This algorithm in particular could be repeated after the first match for the remaining
 upper tree again.
-This is either applied for a single search, or an iterator, where collections has to be processed.
-  ::
+This is either applied for a single search, or an iterator, where collections has to
+be processed. ::
+
+    pyfilesysobjects.html#filesysobjects.pathtools.#set_uppertree_searchpath
 
     0. a/b2/a/b0/c/F
     1. a/b2/a/b0/F    => match, stop
     2. a/b2/a/F
     3. a/F
 
-Next iteration, and so on...
-  ::
+Next iteration, and so on... ::
 
     0. a/b2/a/b0/c/F
     1. a/b2/a/b0/F
@@ -130,13 +582,11 @@ Next iteration, and so on...
     3. a/F
 
 This also works for side branches when the in memory string function is applied onto plist.
-Thus you can simply map e.g. the following branch by one call only:
-  ::
+Thus you can simply map e.g. the following branch by one call only: ::
 
     a/b0/x/y/z/file.txt
 
-into:
-  ::
+into: ::
 
     /a/b2/a/b0/c/F
           | |
@@ -191,15 +641,13 @@ dealing with local paths are managed.
 But it is still required to define the interface for cases where
 other address conventions are supplied.
 
-* URIs based on RFC3986 for local files are resolved to
-    ::
+* URIs based on RFC3986 for local files are resolved to ::
 
       PWD=/call/position/
 
       file:///local/filesystem/path => /local/filesystem/path 
 
-  When this is literally a valid filename, the following could be applied
-    ::
+  When this is literally a valid filename, the following could be applied ::
 
       PWD=/call/position/
 
@@ -207,8 +655,7 @@ other address conventions are supplied.
     
 * Linux and UNIX:
 
-  * IEEE Std 1003.1(TM), 2013 Edition; Chapter 4.12
-      ::
+  * IEEE Std 1003.1(TM), 2013 Edition; Chapter 4.12 ::
 
 	    //hostname/local/filesystem/path
 
@@ -236,8 +683,7 @@ other address conventions are supplied.
  
 * Microsoft(TM) Windows:
 
-  * Network shares
-      ::
+  * Network shares ::
 
 	    \\hostname\local\filesystem\path
 
@@ -255,12 +701,14 @@ other address conventions are supplied.
 
   * Current same as for Linux/Unix.
 
-Any other input format is simply ignored, and may lead to unpredictable behaviour. E.g.
-  ::
+Any other input format is simply ignored, and may lead to unpredictable behaviour. 
+E.g. ::
 
     http://path/name => http:/path/name
  
 Because this could actually be a valid local filename.
+
+.. _SYNTAXELEMENTS:
 
 Syntax Elements
 ===============
@@ -277,52 +725,54 @@ These the processing of the provided syntax is designed in two layers in accorda
 The lower layer provides the syntax elements to construct a pathname for local access, whereas the upper layer
 provides the information for the location of remote filesystems.
 
-.. image:: _static/pathname_types.png 
+.. image:: _static/pathname_types.png
+   :width: 550 
 
 Thus the functions of the lower layer:
 
-* `escapeFilePath`_
-* `unescapeFilePath`_
+* `escapepathx`_
+* `unescapepathx`_
 
 are similar to the system function 'os.path.normpath',
 Whereas the functions of the upper layer:
 
-* `splitAppPrefix`_
-* `getAppPrefixLocalPath`_
+* `splitapppathx`_
+* `splitapppathx_getlocalpath`_
 
 Assembles a tuple of components into a path name for access.
 
 The escape and unescape funtions work basically similar to 'os.path.normpath'.
 The behaviour is:
 
-* `escapeFilePath`_
+* `escapepathx`_
 
   Escape backshlashes only, consider specific control characters recognized by the 're' module.
   Any arbitrary number of seperator characters are normalized appropriately, including shares.
 
-* `unescapeFilePath`_
+* `unescapepathx`_
 
   Unescape, this simply reverses the escape of a single character.
-  Thus in particular the eventual normalization of 'escapeFilePath' for multiple present
+  Thus in particular the eventual normalization of 'escapepathx' for multiple present
   seperators is not reverted. 
 
-.. _escapeFilePath: filesysobjects.html#escapefilepath
-.. _getAppPrefixLocalPath: filesysobjects.html#getappprefixlocalpath
-.. _splitAppPrefix: filesysobjects.html#splitappprefix
-.. _unescapeFilePath: filesysobjects.html#unescapefilepath
+.. _escapepathx: pyfilesysobjects.html#filesysobjects.pathtools.escapepathx
+.. _unescapepathx: pyfilesysobjects.html#filesysobjects.pathtools.unescapepathx
+.. _splitapppathx_getlocalpath: pyfilesysobjects.html#filesysobjects.pathtools.splitapppathx_getlocalpath
+.. _splitapppathx: pyfilesysobjects.html#filesysobjects.apppaths.splitapppathx
 
 The following function hierarchy for pathname conversion including UNC, SMB, POSIX-Apps, and local filenames is supported.
 
 .. image:: _static/pathname_functions.png 
+   :width: 600 
 
 Anyhow, due to some specific poosition dependent interpretation of the
 'os.sep' the lower layer has encoded the app specific knowledge into the
-'escapeFilePath' routine.
+'escapepathx' routine.
 This also normalizes the 'os.sep' by conversion and elimination of 
 neutral repetitons as well as special semantics of '.' and '..'
 
-A single pathname is hereby represented by the syntax, where 'cifs==smb':
-  ::
+A single pathname is hereby represented by the syntax, 
+where 'cifs==smb': ::
 
     filesystemNodeName := (
        pathname + SEP + filename
@@ -373,8 +823,8 @@ additional may be supported in future versions.
 
 For further details refer to:
 
-* **UNC**: Common definition in [MS-DTYP]: Windows Data Types - Chap. 2.2.57 UNC; Microsoft Inc.
-    ::
+* **UNC**: Common definition in [MS-DTYP]_: Windows Data Types - Chap. 2.2.57 UNC; 
+  Microsoft Inc. ::
 
       UNC               = "\\" host-name "\" share-name [ "\" object-name ]
       host-name         = "[" IPv6address ‘]" / IPv4address / reg-name
@@ -390,8 +840,8 @@ For further details refer to:
       schar             = %x01-2E / %x30-39 / %x3B-5B /%x5D-FF
       stream-type       = 1*schar
 
-* **file://**: The file URI Scheme - draft-kerwin-file-scheme-13; IETF
-    ::
+* **file://**: The file URI Scheme - RFC8089 [RFC8089]_, 
+  draft-kerwin-file-scheme-13 [URISCHEME]_ ::
 
       file-URI         = f-scheme ":" f-hier-part [ "?" query ]
 
@@ -414,11 +864,10 @@ For further details refer to:
       drive-letter     = ALPHA [ drive-marker ]
       drive-marker     = ":" / "|"
 
-* **smb://**: [MS-SMB]: Server Message Block (SMB) Protocol; Microsoft Inc.
+* **smb://**: [MS-SMB]_: Server Message Block (SMB) Protocol; Microsoft Inc.
   The current implemented name resolution is a limited version of the file scheme.
   Thus based on "SMB File Sharing URI Scheme - draft-crhertel-smb-url-07".
-  This is outdated, but for now the first attempt for start.
-    ::
+  This is outdated, but for now the first attempt for start. ::
 
       smb_URI        = ( smb_absURI | smb_relURI )
       smb_absURI     = scheme "://" smb_service [ "?" [ nbt_context ] ]
@@ -457,27 +906,25 @@ For further details refer to:
 
 
  
-* **cifs://**:  [MS-CIFS]: Common Internet File System (CIFS) Protocol; Microsoft Inc.
+* **cifs://**:  [MS-CIFS]_: Common Internet File System (CIFS) Protocol; Microsoft Inc.
 
   For now see SMB.
 
 This syntax represents e.g. the following valid filepathanmes with the 
 current position(PWD) as reference point for relative positions.
 For the conversion API refer to
-*splitAppPrefix*
-`[docs] <filesysobjects.html#splitappprefix>`_
-`[source] <_modules/filesysobjects/FileSysObjects.html#splitAppPrefix>`_
+*splitapppathx*
+`[docs] <pyfilesysobjects.html#filesysobjects.apppaths.splitapppathx>`_
+`[source] <_modules/filesysobjects/pathtools.html#splitapppathx>`_
 and 
-*getAppPrefixLocalPath*
-`[docs] <filesysobjects.html#getappprefixlocalpath>`_
-`[source] <_modules/filesysobjects/FileSysObjects.html#getAppPrefixLocalPath>`_
-:
-  ::
+*splitapppathx_getlocalpath*
+`[docs] <pyfilesysobjects.html#filesysobjects.pathtools.splitapppathx_getlocalpath>`_
+`[source] <_modules/filesysobjects/pathtools.html#splitapppathx_getlocalpath>`_
+. ::
 
     /local/path/access
 
-Where the following equivalent transformations result
-  ::
+Where the following equivalent transformations result ::
 
      /local/path/access/dir/ => /local/path/access/dir/ # forces a directory
      /local/path/access/dir  => /local/path/access/dir  # could be a file too
@@ -488,8 +935,7 @@ Where the following equivalent transformations result
      dir/                    => /local/path/access/dir/ # forces a directory
      dir                     => /local/path/access/dir  # could be a file too
 
-Where the following basic paths are equivalent
-  ::
+Where the following basic paths are equivalent ::
 
     /local/path/access/dir/ == /local////////path/access//dir/////
     /local/path/access/dir/ == /local//.///./././path/access//dir//././/
@@ -498,8 +944,7 @@ Where the following basic paths are equivalent
     /local/path/access/dir  != //local////////path/access//dir/////
     /local/path/access/dir  != //local////////path/access//dir
 
-Where the following basic URI paths are still equivalent
-  ::
+Where the following basic URI paths are still equivalent ::
 
     file:///local/path/access/dir/ == /local////////path/access//dir/////
     file:///local/path/access/dir/ == /local//.///./././path/access//dir//././/
@@ -508,8 +953,7 @@ Where the following basic URI paths are still equivalent
     file:///local/path/access/dir  != //local////////path/access//dir/////
     file:///local/path/access/dir  != //local////////path/access//dir
 
-Same for the first basic URI paths on both sides
-  ::
+Same for the first basic URI paths on both sides ::
 
     file:///local/path/access/dir/ == file:///local////////path/access//dir/////
     file:///local/path/access/dir/ == file:///local//.///./././path/access//dir//././/
@@ -517,14 +961,15 @@ Same for the first basic URI paths on both sides
     file:///local/path/access/dir  != file:///local////////path/access//dir/////
 
 But for the last two no longer, because '2SEP' has to be at the beginning of the string,
-which is interpreted here as the beginning of the raw string representation
-  ::
+which is interpreted here as the beginning of the raw string representation ::
 
     file:///local/path/access/dir  == file:////local////////path/access//dir/////
     file:///local/path/access/dir  == file:////local////////path/access//dir
 
     #REMARK: Looking forward for qualified review comments!!!
 
+
+.. _VARIANTSPATHNAMEPARAMS:
 
 Variants of Pathname Parameters - Literals, RegExpr, and Glob
 =============================================================
@@ -556,6 +1001,15 @@ the categories:
   platform dependent.
   These could be applied at the interface of the filesystems, and influence the
   responce of the filesystem interface directly.
+  
+  Globs can span multiple levels of directory paths. ::
+
+    r"a[0-9]*/[!xy]*/???/*"
+
+  Use e.g. the following patterns to restrict on a single node name: ::
+
+    os.sep+r"a*b"+os.sep
+    os.sep+r"a*b"
 
 * Semi-Literal - literal names combined with glob, or regexpr
 
@@ -567,8 +1021,7 @@ the categories:
   The Semi-Literal type arose from the design, that 'glob' and 'regexpr' must not
   be intermixed because of the possible ambiguities. One of the main differences is
   the scope of match. The 'glob' functions are aware of seperators, for regexpr 
-  they represent simply a character. The pattern has some differences too, e.g.
-    ::
+  they represent simply a character. The pattern has some differences too, e.g. ::
 
        regexpr:  F[0-2]*  := (F, F0, F1, F2, )
        glob:     F[0-2]*  := (F.*, F0.*, F1.*, F2.*, )
@@ -586,8 +1039,7 @@ the categories:
   * 'regexpr' and 'glob' could be intermixed, when the 'glob' compiled by 're' does 
     not match. Than the algorithm keeps it simply as an unknown node, and continues 
     with 'glob' expansion. Thus the following strict pattern of path names is 
-    provided, where the order is significant:
-      ::
+    provided, where the order is significant: ::
 
          <mixed-regexpr-glob> := <literal-or-regexpr><literal-or-glob>
  
@@ -608,20 +1060,40 @@ the categories:
       type and though the applicability of the syntax has to be assured by 
       the caller
  
+  * path-pattern := [path-pattern] + (literal|regexpr|glob): 
+      Arbitrary pathname pattern are by default supported by trials to match 
+      the longest valid parts for each type. This is inherently ambiguous when
+      glob and regexpr has to be detected. Thus in cases where arbitrary types
+      are required a grouping type-keyword has to be provided. ::
+
+        path-pattern := [path-pattern] + (
+        	literal   | 'literal(' literal ')' | 'l(' literal ')' 
+        	| regexpr | 'regexpr(' regexpr ')' | 'r(' regexpr ')'
+        	| glob    | 'glob(' glob ')'       | 'g(' glob ')'
+        	)
 
 The overall applicability  for specific execution and call contexts is depicted in
 the following table.
 
-+------------------------------+----------+---------------+---------+---------+
-| Application Processing Scope | Literals | Semi-Literals | RegExpr | glob    |
-+==============================+==========+===============+=========+=========+
-| In-Memory Path Strings       |   yes    |      yes      | yes     |  no (1) |
-+------------------------------+----------+---------------+---------+---------+
-| Filesystem                   |   yes    |      yes      |  no     |  yes    |
-+------------------------------+----------+---------------+---------+---------+
+The automatic resolution in absence of type-keyword starts in general with literals
+and globs from left. Than the regexpr is tried to be resolved. 
+
++------------------------------+----------+---------------+---------+--------+
+| Application Processing Scope | Literals | Semi-Literals | RegExpr | glob   |
++==============================+==========+===============+=========+========+
+| In-Memory Path Strings       | yes      | yes           | yes     | no (1) |
++------------------------------+----------+---------------+---------+--------+
+| Filesystem                   | yes      | yes           | no      | yes    |
++------------------------------+----------+---------------+---------+--------+
+| Filesystem-Extension(3)      | yes      | yes           | yes(2)  | yes    |
++------------------------------+----------+---------------+---------+--------+
 
   (1) is treated as an 'regexpr', when matches this is resolved, else ends 
       re-processing and is applied as a 'glob'
+  (2) is handled by caching the file system component into memory and applying
+      the 'regexpr' onto the in-mem-string
+  (3) in case of ambiguity type-keywords have to be provided on the 
+      syntax parts, see 'path-pattern'
 
 Thus the application  of RegExpr is implemented as an optional parameter 
 performed on in.memory strings only. 
@@ -635,6 +1107,8 @@ re-patterns is:
 
   #. post-filter the collected set by  'literal' and 'RegExpr' type parameters.
 
+
+.. _CALLPARAMSAPI:
 
 Call Parameters of the API
 ==========================
@@ -651,29 +1125,36 @@ The provided function sets comprise the categories:
 For the list of the interfaces refer to `[API] <shortcuts.html#>`_.
 
 Filesystem Positions and Navigation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------------------
 
 **SYNOPSIS** `[API] <shortcuts.html#>`_
 
   * manage search paths - checks filesystem
-    ::
 
-      addPathToSearchPath(spath,plist=None,**kargs)
-      clearPath(plist=None,**kargs)
-      setUpperTreeSearchPath(start=None,top=None,plist=sys.path,**kargs)
+    .. code-block:: python
+       :linenos:
+
+       addpath_to_searchpath(spath,plist=None,**kargs)
+       clearpath(plist=None,**kargs)
+       set_uppertree_searchpath(start=None,top=None,plist=sys.path,**kargs)
 
   * search for files, directories, and branches - checks filesystem
-    ::
 
-      findRelPathInSearchPath(spath,plist=sys.path,**kargs)
-      findRelPathInSearchPathIter(spath,plist=sys.path,**kargs)
-      findRelPathInUpperTree(spath,start=None,top=None,**kargs)
+    .. code-block:: python
+       :linenos:
+
+       findrelpath_in_searchpath(spath,plist=sys.path,**kargs)
+       findrelpath_in_searchpath_iter(spath,plist=sys.path,**kargs)
+       findrelpath_in_uppertree(spath,start=None,top=None,**kargs)
+       findpattern(*wildcards, **kargs)
 
   * match files, directories, and branches into path strings - works on strings only
-    ::
 
-      getTopFromPathString(start,plist=sys.path,**kargs)
-      getTopFromPathStringIter(start,plist=sys.path,**kargs)
+    .. code-block:: python
+       :linenos:
+
+       gettop_from_pathstring(start,plist=sys.path,**kargs)
+       gettop_from_pathstring_iter(start,plist=sys.path,**kargs)
 
 
 **DESCRIPTION**:
@@ -689,64 +1170,89 @@ This supports multiple independent search path sets by the categories of functio
 * manage search paths
 
   * add paths to search lists 
-    `[docs] <filesysobjects.html#addpathtosearchpath>`_
-    `[source] <_modules/filesysobjects/FileSysObjects.html#addPathToSearchPath>`_
-     ::
+    `[docs] <pyfilesysobjects.html#filesysobjects.pathtools.addpath_to_searchpath>`_
+    `[source] <_modules/filesysobjects/pathtools.html#addpath_to_searchpath>`_
 
-       FileSysObjects.addPathToSearchPath(spath,plist=None,**kargs)
+    .. code-block:: python
+       :linenos:
+
+       filesysobjects.addpath_to_searchpath(spath,plist=None,**kargs)
 
   * clear search paths 
-    `[docs] <filesysobjects.html#clearpath>`_
-    `[source] <_modules/filesysobjects/FileSysObjects.html#clearPath>`_
-     ::
+    `[docs] <pyfilesysobjects.html#filesysobjects.pathtools.clearpath>`_
+    `[source] <_modules/filesysobjects/pathtools.html#clearpath>`_
 
-       FileSysObjects.clearPath(plist=None,**kargs)
+    .. code-block:: python
+       :linenos:
+
+       filesysobjects.clearpath(plist=None,**kargs)
 
   * set tsearch lists for path segments 
-    `[docs] <filesysobjects.html#setuppertreesearchpath>`_
-    `[source] <_modules/filesysobjects/FileSysObjects.html#setUpperTreeSearchPath>`_
-     ::
+    `[docs] <pyfilesysobjects.html#filesysobjects.pathtools.set_uppertree_searchpath>`_
+    `[source] <_modules/filesysobjects/pathtools.html#set_uppertree_searchpath>`_
 
-       FileSysObjects.setUpperTreeSearchPath(start=None,top=None,plist=sys.path,**kargs)
+    .. code-block:: python
+       :linenos:
+
+       filesysobjects.set_uppertree_searchpath(start=None,top=None,plist=sys.path,**kargs)
 
 * search for files, directories, and branches
 
   * find relative paths on lists of search paths
-    `[docs] <filesysobjects.html#findrelpathinsearchpath>`_
-    `[source] <_modules/filesysobjects/FileSysObjects.html#findRelPathInSearchPath>`_
-     ::
+    `[docs] <pyfilesysobjects.html#filesysobjects.pathtools.findrelpath_in_searchpath>`_
+    `[source] <_modules/filesysobjects/pathtools.html#findrelpath_in_searchpath>`_
 
-       FileSysObjects.findRelPathInSearchPath(spath,plist=sys.path,**kargs)
+    .. code-block:: python
+       :linenos:
+
+       filesysobjects.findrelpath_in_searchpath(spath,plist=sys.path,**kargs)
 
   * iterator for search
-    `[docs] <filesysobjects.html#findrelpathinsearchpathiter>`_
-    `[source] <_modules/filesysobjects/FileSysObjects.html#findRelPathInSearchPathIter>`_
-     ::
+    `[docs] <pyfilesysobjects.html#filesysobjects.pathtools.findrelpath_in_searchpath_iter>`_
+    `[source] <_modules/filesysobjects/pathtools.html#findrelpath_in_searchpath_iter>`_
 
-       FileSysObjects.findRelPathInSearchPathIter(spath,plist=sys.path,**kargs)
+    .. code-block:: python
+       :linenos:
+
+       filesysobjects.findrelpath_in_searchpath_iter(spath,plist=sys.path,**kargs)
 
   * search filesystem segments 
-    `[docs] <filesysobjects.html#findrelpathinuppertree>`_
-    `[source] <_modules/filesysobjects/FileSysObjects.html#findRelPathInUpperTree>`_
-     ::
+    `[docs] <pyfilesysobjects.html#filesysobjects.pathtools.findrelpath_in_uppertree>`_
+    `[source] <_modules/filesysobjects/pathtools.html#findrelpath_in_uppertree>`_
 
-       FileSysObjects.findRelPathInUpperTree(spath,start=None,top=None,**kargs)
+    .. code-block:: python
+       :linenos:
+
+       filesysobjects.findrelpath_in_uppertree(spath,start=None,top=None,**kargs)
+
+  * search file system trees
+    `[docs] <pyfilesysobjects.html#filesysobjects.pathtools.findpattern>`_
+    `[source] <_modules/filesysobjects/pathtools.html#findpattern>`_
+
+    .. code-block:: python
+       :linenos:
+
+       filesysobjects.findpattern(*wildcards, **kargs)
 
 * match files, directories, and branches into path strings
 
   * match a pathname string into a path from a list of search paths 
-    `[docs] <filesysobjects.html#gettopfrompathstring>`_
-    `[source] <_modules/filesysobjects/FileSysObjects.html#getTopFromPathString>`_
-     ::
+    `[docs] <pyfilesysobjects.html#filesysobjects.apppaths.gettop_from_pathstring>`_
+    `[source] <_modules/filesysobjects/pathtools.html#gettop_from_pathstring>`_
 
-       FileSysObjects.getTopFromPathString(start,plist=sys.path,**kargs)
+    .. code-block:: python
+       :linenos:
+
+       filesysobjects.gettop_from_pathstring(start,plist=sys.path,**kargs)
 
   * iterate on search paths
-    `[docs] <filesysobjects.html#gettopfrompathstringiter>`_
-    `[source] <_modules/filesysobjects/FileSysObjects.html#getTopFromPathStringIter>`_
-     ::
+    `[docs] <pyfilesysobjects.html#filesysobjects.apppaths.gettop_from_pathstring_iter>`_
+    `[source] <_modules/filesysobjects/pathtools.html#gettop_from_pathstring_iter>`_
 
-       FileSysObjects.getTopFromPathStringIter(start,plist=sys.path,**kargs)
+    .. code-block:: python
+       :linenos:
+
+       filesysobjects.gettop_from_pathstring_iter(start,plist=sys.path,**kargs)
 
 
 **OPTIONS**:
@@ -777,35 +1283,13 @@ Various common options are supported, which may not be available for each interf
 
   Various apperently applied parameters.
 
-  * append: 
-
-    Append, this is equal to pos=len(plist).
-
-  * ignore-app-slash: 
-
-    Treats for local file names any number of subsequent '/' 
-    only as one, also leading pattern '//[^/]+'. URI prefixes 
-    are treated correctly. 
-
-    Current supported URIs
-      ::
-
-        file://
-
-    See also "IEEE Std 1003.1(TM), 2013 Edition; Chap. 4.12"
-    for the special treatment of the path syntax
-      ::
-
-        '^//[^/]+'
-
-  * matchcnt=#num:
+  * matchidx=#num:
 
     Increment of matched path component for a path. The counter
     is for a single path, thus reset for each of a path list.
     The valid range is {0..}
 
-    The counter begins from top, so #num(1) will match M(1) in
-      ::
+    The counter begins from top, so #num(1) will match M(1) in ::
                 
         /a/b/M/c/M/d/M/w/e/M/bottom
              0   1   2     3
@@ -813,64 +1297,17 @@ Various common options are supported, which may not be available for each interf
                  |
                  `-default
 
-  * matchcntupward=#num: 
-
-    Increment of matched path component for a path. The counter
-    is for a single path, thus reset for each of a path list.
-    The valid range is {0..}
-
-	The counter begins from bottom, so #num(2) will match M(2) in
-      ::
-                
-        /a/b/M/c/M/d/M/w/e/M/bottom
-             3   2   1     0
-                 *
-
-  * prepend:
-
-    Prepend, this is equal to pos=0.
-
-  * pos=#pos:
-
-    A specific position for insertion within range(0,len(plist)).
-
-  * relative=<base>: 
-
-    Add relative subpath to provided base.
-
-  * raw: 
-
-    Suppress normalization by call of 'os.path.normpath'.
-
-  * relonly: 
-
-    The paths are inserted relative to the top node only. 
-    This is mainly for test purposes. The intermix of 
-    relative and absolute path entries is not verified.
-
   * reverse: 
 
     This reverses the resulting search order from bottom-up
     to top-down.
 
-  * searchplist: 
-
-    Defines a search list different from plist.
-
-  * unique: 
-
-    Insert non-present only, else present entries are not
-    checked, thus the search order is changed in general 
-    for 'prepend', while for 'append' the present still 
-    covers the new entry. 
-
 Canonical Node Address
-^^^^^^^^^^^^^^^^^^^^^^
+----------------------
 
-For now experimental and non-productive, for review and comments `[API] <shortcuts.html#>`_:
-  ::
+For now experimental and non-productive, for review and comments `[API] <shortcuts.html#>`_: ::
 
-    filesysobjects.NetFiles.normpathX
+    filesysobjects.NetFiles.normpathx
 
 For syntax design requirements refer to "`Extended Filesystems - Network Features <path_netfiles.html>`_".
 

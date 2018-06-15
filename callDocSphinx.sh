@@ -1,11 +1,10 @@
 PROJECT='filesysobjects'
-VERSION="0.1.15"
-RELEASE="0.1.15"
-NICKNAME="Yggdrasil"
+VERSION="0.1.34"
+RELEASE="0.1.34"
 AUTHOR='Arno-Can Uestuensoez'
-COPYRIGHT='Copyright (C) 2010,2011,2015-2016 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez'
+COPYRIGHT='Copyright (C) 2010,2011,2015-2018 Arno-Can Uestuensoez @Ingenieurbuero Arno-Can Uestuensoez'
 LICENSE='Artistic-License-2.0 + Forced-Fairplay-Constraints'
-STATUS='pre-alpha'
+STATUS='alpha'
 MISSION='Support advanced navigation on filesystems.'
 
 # the absolute pathname for this source
@@ -22,7 +21,7 @@ fi
 
 echo "MYPATH=$MYPATH"
 echo "INDIR=$INDIR"
- 
+
 # output base directory
 OUTDIR=${OUTDIR:-build/}
 if [ ! -e "${OUTDIR}" ];then
@@ -30,15 +29,16 @@ if [ ! -e "${OUTDIR}" ];then
 fi
 export PYTHONPATH=$PWD:$MYPATH:$PYTHONPATH
 
-# import directory for entries of static reference 
+# import directory for entries of static reference
 STATIC="${OUTDIR}/apidoc/sphinx/_static"
 
 # source entities
 FILEDIRS=""
-#FILEDIRS="${INDIR}filesysobjects"
-FILEDIRS="$FILEDIRS ${INDIR}UseCases"
-FILEDIRS="$FILEDIRS ${INDIR}tests"
-FILEDIRS="$FILEDIRS ${INDIR}testdata"
+FILEDIRS="${INDIR}filesysobjects"
+FILEDIRS="$FILEDIRS ${INDIR}references"
+# FILEDIRS="$FILEDIRS ${INDIR}UseCases"
+#FILEDIRS="$FILEDIRS ${INDIR}tests"
+#FILEDIRS="$FILEDIRS ${INDIR}testdata"
 
 #FILEDIRS="$FILEDIRS ${INDIR}setup.py"
 #FILEDIRS="$FILEDIRS ${INDIR}bin"
@@ -54,6 +54,8 @@ CALL="$CALL -o ${OUTDIR}/apidoc/sphinx"
 CALL="$CALL -f -F "
 CALL="$CALL $@"
 
+EXCLUDE=" filesysobjects/FileSysObjects.py "
+
 #
 #build=patches
 DOCHTMLDIR=${OUTDIR}apidoc/sphinx/_build/
@@ -68,8 +70,8 @@ IFS=';'
 FX=( ${FILEDIRS} )
 IFS=$IFSO
 for fx in ${FX[@]};do
-	echo "CALL=<$CALL '$fx'>"
-	eval $CALL "$fx"
+	echo "CALL=<$CALL '$fx' '${EXCLUDE}'>"
+	eval $CALL "$fx" "${EXCLUDE}"
 done
 
 # rst files
@@ -79,7 +81,7 @@ for d in docsrc/*.rst;do cat $d > ${OUTDIR}/apidoc/sphinx/${d##*/}; done
 # static - literal data
 #
 # images
-for d in docsrc/*.{png,jpg};do cp $d "${STATIC}"; done
+for d in docsrc/*.{png,jpg,gif} docsrc/images/*.{png,jpg,gif};do cp $d "${STATIC}"; done
 
 # html
 for d in docsrc/*.html;do cp $d "${STATIC}"; done
@@ -95,10 +97,10 @@ cp licenses-amendments.txt "${STATIC}"
 
 
 {
-cat <<EOF 
+cat <<EOF
 
 import sys,os
-extensions.append('sphinx.ext.intersphinx.')
+#extensions.append('sphinx.ext.intersphinx.')
 sys.path.insert(0, os.path.abspath('$PWD/..'))
 sys.path.insert(0, os.path.abspath('$PWD'))
 
@@ -114,7 +116,7 @@ html_theme_options = {
 #    "rightsidebar": "true",
 #    "relbarbgcolor": "black",
     "externalrefs": "true",
-    "sidebarwidth": "290",
+    "sidebarwidth": "360",
     "stickysidebar": "true",
 #    "collapsiblesidebar": "true",
 
@@ -143,6 +145,8 @@ html_theme_options = {
 
 # def setup(app):
 #     app.add_stylesheet('css/custom.css')
+def setup(app):
+	app.add_stylesheet('custom.css')
 
 EOF
 } >> ${OUTDIR}/apidoc/sphinx/conf.py
@@ -156,7 +160,7 @@ EOF
 cat docsrc/index.rst                     > ${OUTDIR}/apidoc/sphinx/index.rst
 {
 cat <<EOF
-Project data summary:
+**Project Data**
 
 * PROJECT=${PROJECT}
 
@@ -174,12 +178,8 @@ Project data summary:
 
 * STATUS=${STATUS}
 
-* NICKNAME=${NICKNAME}
-
-  Filesystem based class trees for Python by ${NICKNAME} see \`${NICKNAME}, the mythical tree that connects the nine worlds... <https://en.wikipedia.org/wiki/Yggdrasil>\`_  
-
 EOF
-} >> ${OUTDIR}/apidoc/sphinx/index.rst 
+} > ${OUTDIR}/apidoc/sphinx/project.rst
 
 # #
 # cat docsrc/pyfilesysobjects.rst > ${OUTDIR}/apidoc/sphinx/pyfilesysobjects.rst

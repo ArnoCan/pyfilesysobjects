@@ -1,0 +1,25 @@
+{
+    "global": {
+        "appname": "multiconf",
+        "debug": 0,
+        "verbose": 0
+    },
+    "section0": {
+        "key00": "abc",
+        "key01": "def",
+        "key02": 12.0,
+        "key03": 12.345, 
+        "key04": "012",
+        "key05": "012.345",
+        "key06": "012",
+        "key07": "012.345"
+    },
+    "section1": {
+        "key10": "abc",
+        "key11": "def"
+    },
+    "section2": {
+        "key20": "abc",
+        "key21": "def"
+    }
+}

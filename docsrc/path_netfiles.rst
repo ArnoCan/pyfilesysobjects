@@ -1,12 +1,15 @@
 Extended Filesystems - Network Features
 =======================================
 
-**ATTENTION**: This module is currently experimental, not yet active used in production releases, just included, and may change.
+.. warning::
+
+   This module is currently experimental, not yet active used in production releases, 
+   just included, and may change.
 
 The main intention is to find a common and canonical form of filepathnames, which cover more
 than the literally 'local-only' addressing, but still does not burden the full scale of 
 possible cases of application specific syntaxes and URI schemes.
-Thus the defined function 'normpathX' extends the standard function 'os.path.normpath' with awareness
+Thus the defined function 'normpathx' extends the standard function 'os.path.normpath' with awareness
 of an optional network prefix of the pathname.
 
 The current supported types of applications are network specific addressing of remote filesystems
