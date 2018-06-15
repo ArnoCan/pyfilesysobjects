@@ -1,0 +1,542 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>‘filesysobjects.pprint’ - Module &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="filesysobjects-pprint-module">
+<h1>&#8216;filesysobjects.pprint&#8217; - Module<a class="headerlink" href="#filesysobjects-pprint-module" title="Permalink to this headline">¶</a></h1>
+<p>The <em>filesysobjects.pprint</em> module provides pretty printer for paths.</p>
+<div class="section" id="module-filesysobjects.pprint">
+<span id="module"></span><h2>Module<a class="headerlink" href="#module-filesysobjects.pprint" title="Permalink to this headline">¶</a></h2>
+<p>The filesysobjects.pprint module provides pretty printer for paths.</p>
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pppathvar">
+<h3>PPPathVar<a class="headerlink" href="#pppathvar" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="features">
+<h4>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h4>
+<p>The class <em>PPPathVar</em> creates formatted printable strings for search path variables.
+The provided output formats comprise screen display formats and output strings of
+various data representation syntaxes such as <em>JSON</em>, <em>XML</em>, and <em>YAML</em>.
+The search path is therefore split into it&#8217;s entries and formatted in order
+to display and/or integrate the data into larger data structures.</p>
+<p>The output string of the following input demonstrates the available
+output variants:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">posix</span><span class="p">:</span> <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/path/entry/0:/path/entry/1&quot;</span>
+<span class="n">win32</span><span class="p">:</span> <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">path/entry</span><span class="se">\\</span><span class="s2">0;</span><span class="se">\\</span><span class="s2">path</span><span class="se">\\</span><span class="s2">entry</span><span class="se">\\</span><span class="s2">1&quot;</span>
+</pre></div>
+</div>
+<ul>
+<li><p class="first"><strong>format=console</strong></p>
+<p>The conversion results by default in the output of &#8216;format=console&#8217;:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">|</span>   <span class="n">MYPATH</span> <span class="o">=</span> <span class="p">[</span>
+<span class="o">|</span>       <span class="s2">&quot;/path/entry/0&quot;</span><span class="p">,</span>
+<span class="o">|</span>       <span class="s2">&quot;/path/entry/1&quot;</span><span class="p">,</span>
+<span class="o">|</span>   <span class="p">]</span>
+<span class="o">|</span>
+<span class="o">^</span> <span class="n">left</span> <span class="n">paper</span> <span class="n">border</span>
+</pre></div>
+</div>
+<p>The settings of the output parameters were:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">|...</span><span class="n">MYPATH</span> <span class="o">=</span> <span class="p">[</span>
+<span class="o">|...</span><span class="p">::::</span><span class="s2">&quot;/path/entry/0&quot;</span><span class="p">,</span>
+<span class="o">|...</span><span class="p">::::</span><span class="s2">&quot;/path/entry/1&quot;</span><span class="p">,</span>
+<span class="o">|...</span><span class="p">]</span>
+<span class="o">|</span>
+<span class="o">^</span> <span class="n">left</span> <span class="n">paper</span> <span class="n">border</span>
+</pre></div>
+</div>
+<p>with the parameters:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="nb">format</span><span class="o">&gt;</span><span class="p">:</span>         <span class="n">the</span> <span class="n">output</span> <span class="nb">format</span><span class="p">,</span> <span class="n">here</span> <span class="s1">&#39;format=&quot;console&quot;&#39;</span>
+<span class="s1">&#39;MYPATH&#39;</span><span class="p">:</span>         <span class="n">the</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">here</span> <span class="s1">&#39;prefix=MYPATH&#39;</span>
+<span class="s1">&#39;=&#39;</span><span class="p">:</span>              <span class="n">the</span> <span class="n">assignchar</span><span class="p">,</span> <span class="n">here</span> <span class="s1">&#39;assignchar=&quot;=&quot;&#39;</span>
+<span class="s2">&quot;/path/entry/0&quot;</span><span class="p">:</span>  <span class="n">first</span> <span class="n">path</span> <span class="n">entry</span>
+<span class="s2">&quot;/path/entry/1&quot;</span><span class="p">:</span>  <span class="n">second</span> <span class="n">path</span> <span class="n">entry</span>
+<span class="s1">&#39;.&#39;</span> <span class="o">*</span> <span class="n">n</span><span class="p">:</span>          <span class="s1">&#39;n&#39;</span> <span class="n">offset</span><span class="p">,</span> <span class="n">here</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span> <span class="o">-</span> <span class="s1">&#39;offset=3&#39;</span>
+<span class="s1">&#39;.&#39;</span><span class="p">:</span>              <span class="n">offsetchar</span><span class="p">,</span> <span class="n">here</span> <span class="s1">&#39;offsetchar=&quot;.&quot;&#39;</span>
+<span class="s1">&#39;:&#39;</span> <span class="o">*</span> <span class="n">m</span><span class="p">:</span>          <span class="s1">&#39;m&#39;</span> <span class="n">indent</span><span class="p">,</span> <span class="n">here</span> <span class="n">m</span><span class="o">=</span><span class="mi">4</span> <span class="o">-</span> <span class="s1">&#39;indent=4&#39;</span>
+<span class="s1">&#39;:&#39;</span><span class="p">:</span>              <span class="n">indentchar</span><span class="p">,</span> <span class="n">here</span> <span class="s1">&#39;indentchar=&quot;:&quot;&#39;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>format=ini</strong></p>
+<p>The same input results for the output &#8216;format=INI&#8217; <a class="reference internal" href="references.html#multiconf" id="id9">[multiconf]</a> in:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">|</span>   <span class="n">MYPATH</span> <span class="o">=</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">entry</span><span class="o">/</span><span class="mi">0</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">entry</span><span class="o">/</span><span class="mi">1</span>
+<span class="o">|</span>
+<span class="o">^</span> <span class="n">left</span> <span class="n">paper</span> <span class="n">border</span>
+
+<span class="n">offsetchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+<span class="n">indentchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+<span class="n">pathsep</span>    <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+</pre></div>
+</div>
+<p>Does not require specific support of the parser.</p>
+</li>
+<li><p class="first"><strong>format=inix0</strong></p>
+<p>The same input results for the output &#8216;format=INIX&#8217; <a class="reference internal" href="references.html#multiconf" id="id10">[multiconf]</a> in:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">|</span>   <span class="n">MYPATH</span> <span class="o">=</span>
+<span class="o">|</span>       <span class="p">:</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">entry</span><span class="o">/</span><span class="mi">0</span>
+<span class="o">|</span>       <span class="p">:</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">entry</span><span class="o">/</span><span class="mi">1</span>
+<span class="o">|</span>
+<span class="o">^</span> <span class="n">left</span> <span class="n">paper</span> <span class="n">border</span>
+
+<span class="n">offsetchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+<span class="n">indentchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+</pre></div>
+</div>
+<p>Requires the support of the <em>INI</em> file parser, e.g. see <a class="reference internal" href="references.html#multiconf" id="id11">[multiconf]</a>.</p>
+</li>
+<li><p class="first"><strong>format=inix1</strong></p>
+<p>The same input results for the special output &#8216;format=INIX1&#8217; <a class="reference internal" href="references.html#multiconf" id="id12">[multiconf]</a> in:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">|</span>   <span class="n">MYPATH</span> <span class="o">=</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">entry</span><span class="o">/</span><span class="mi">0</span>
+<span class="o">|</span>   <span class="n">MYPATH</span> <span class="o">=</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">entry</span><span class="o">/</span><span class="mi">1</span>
+<span class="o">|</span>
+<span class="o">^</span> <span class="n">left</span> <span class="n">paper</span> <span class="n">border</span>
+
+<span class="n">offsetchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+<span class="n">indentchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+</pre></div>
+</div>
+<p>Requires the support of the <em>INI</em> file parser, e.g. see <a class="reference internal" href="references.html#multiconf" id="id13">[multiconf]</a>.</p>
+</li>
+<li><p class="first"><strong>format=inix2</strong></p>
+<p>The same input results for the special output &#8216;format=INIX2&#8217; <a class="reference internal" href="references.html#multiconf" id="id14">[multiconf]</a> in:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">|</span>   <span class="n">MYPATH0</span> <span class="o">=</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">entry</span><span class="o">/</span><span class="mi">0</span>
+<span class="o">|</span>   <span class="n">MYPATH1</span> <span class="o">=</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">entry</span><span class="o">/</span><span class="mi">1</span>
+<span class="o">|</span>
+<span class="o">^</span> <span class="n">left</span> <span class="n">paper</span> <span class="n">border</span>
+
+<span class="n">offsetchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+<span class="n">indentchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+</pre></div>
+</div>
+<p>Does not require specific support of the parser.</p>
+</li>
+<li><p class="first"><strong>format=json</strong></p>
+<p>The same input for output &#8216;format=JSON&#8217;:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">|</span>   <span class="s2">&quot;MYPATH&quot;</span><span class="p">:</span> <span class="p">[</span>
+<span class="o">|</span>       <span class="s2">&quot;/path/entry/0&quot;</span><span class="p">,</span>
+<span class="o">|</span>       <span class="s2">&quot;/path/entry/1&quot;</span>
+<span class="o">|</span>   <span class="p">]</span>
+<span class="o">|</span>
+<span class="o">^</span> <span class="n">left</span> <span class="n">paper</span> <span class="n">border</span>
+
+<span class="n">offsetchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+<span class="n">indentchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>format=python</strong></p>
+<p>The same input for output &#8216;format=python&#8217;.
+This format is a synonym for &#8216;format=json&#8217;.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">|</span>   <span class="s2">&quot;MYPATH&quot;</span><span class="p">:</span> <span class="p">[</span>
+<span class="o">|</span>       <span class="s2">&quot;/path/entry/0&quot;</span><span class="p">,</span>
+<span class="o">|</span>       <span class="s2">&quot;/path/entry/1&quot;</span>
+<span class="o">|</span>   <span class="p">]</span>
+<span class="o">|</span>
+<span class="o">^</span> <span class="n">left</span> <span class="n">paper</span> <span class="n">border</span>
+
+<span class="n">offsetchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+<span class="n">indentchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>format=xml</strong></p>
+<p>The same input for output &#8216;format=XML&#8217;:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">|</span>   <span class="o">&lt;</span><span class="n">MYPATH</span><span class="o">&gt;</span>
+<span class="o">|</span>       <span class="o">&lt;</span><span class="n">entry</span> <span class="n">idx</span><span class="o">=</span><span class="mi">0</span><span class="o">&gt;/</span><span class="n">path</span><span class="o">/</span><span class="n">entry</span><span class="o">/</span><span class="mi">0</span><span class="o">&lt;/</span><span class="n">entry</span><span class="o">&gt;</span>
+<span class="o">|</span>       <span class="o">&lt;</span><span class="n">entry</span> <span class="n">idx</span><span class="o">=</span><span class="mi">1</span><span class="o">&gt;/</span><span class="n">path</span><span class="o">/</span><span class="n">entry</span><span class="o">/</span><span class="mi">1</span><span class="o">&lt;/</span><span class="n">entry</span><span class="o">&gt;</span>
+<span class="o">|</span>   <span class="o">&lt;/</span><span class="n">MYPATH</span><span class="o">&gt;</span>
+<span class="o">|</span>
+<span class="o">^</span> <span class="n">left</span> <span class="n">paper</span> <span class="n">border</span>
+
+<span class="n">offsetchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+<span class="n">indentchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>format=yaml</strong></p>
+<p>The same input for output &#8216;format=YAML&#8217;:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">|</span>   <span class="n">MYPATH</span><span class="p">:</span>
+<span class="o">|</span>       <span class="o">-</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">entry</span><span class="o">/</span><span class="mi">0</span>
+<span class="o">|</span>       <span class="o">-</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">entry</span><span class="o">/</span><span class="mi">1</span>
+<span class="o">|</span>
+<span class="o">^</span> <span class="n">left</span> <span class="n">paper</span> <span class="n">border</span>
+
+<span class="n">offsetchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+<span class="n">indentchar</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39; &#39;</span>  <span class="c1"># space</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="class">
+<h4>Class<a class="headerlink" href="#class" title="Permalink to this headline">¶</a></h4>
+<dl class="class">
+<dt id="filesysobjects.pprint.PPPathVar">
+<em class="property">class </em><code class="descclassname">filesysobjects.pprint.</code><code class="descname">PPPathVar</code><span class="sig-paren">(</span><em>path</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pprint.html#PPPathVar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pprint.PPPathVar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pretty printer for <em>PATH</em> variables.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="methods">
+<h4>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="init">
+<h5>__init__<a class="headerlink" href="#init" title="Permalink to this headline">¶</a></h5>
+<dl class="method">
+<dt id="filesysobjects.pprint.PPPathVar.__init__">
+<code class="descclassname">PPPathVar.</code><code class="descname">__init__</code><span class="sig-paren">(</span><em>path</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pprint.html#PPPathVar.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pprint.PPPathVar.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pretty print search path variables.
+Splits and returns the formatted printable string for 
+search path variables of type <em>PATH</em>.</p>
+<p>The input:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">posix</span><span class="p">:</span> <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/path/entry/0:/path/entry/1&quot;</span>
+<span class="n">win32</span><span class="p">:</span> <span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;\path/entry</span><span class="se">\0</span><span class="s2">;\path\entry</span><span class="se">\1</span><span class="s2">&quot;</span> 
+</pre></div>
+</div>
+<p>results in the output of &#8216;format=console&#8217;:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">...</span><span class="n">MYPATH</span> <span class="o">=</span> <span class="p">[</span>
+<span class="o">...</span><span class="p">::::</span><span class="s2">&quot;/path/entry/0&quot;</span><span class="p">,</span>
+<span class="o">...</span><span class="p">::::</span><span class="s2">&quot;/path/entry/1&quot;</span><span class="p">,</span>
+<span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>for the output parameters:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span> <span class="o">&lt;</span><span class="nb">format</span><span class="o">&gt;</span><span class="p">:</span>        <span class="n">the</span> <span class="n">output</span> <span class="nb">format</span><span class="p">,</span> <span class="n">here</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;console&#39;</span>
+<span class="s1">&#39;MYPATH&#39;</span><span class="p">:</span>         <span class="n">the</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">here</span> <span class="s1">&#39;MYPATH&#39;</span>
+<span class="s1">&#39;=&#39;</span><span class="p">:</span>              <span class="n">the</span> <span class="n">assignchar</span><span class="p">,</span> <span class="n">here</span> <span class="s1">&#39;=&#39;</span>
+<span class="s2">&quot;/path/entry/0&quot;</span><span class="p">:</span>  <span class="n">first</span> <span class="n">path</span> <span class="n">entry</span>
+<span class="s2">&quot;/path/entry/1&quot;</span><span class="p">:</span>  <span class="n">second</span> <span class="n">path</span> <span class="n">entry</span>
+<span class="s1">&#39;.&#39;</span> <span class="o">*</span> <span class="n">n</span><span class="p">:</span>          <span class="s1">&#39;n&#39;</span> <span class="n">offset</span><span class="p">,</span> <span class="n">here</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span>
+<span class="s1">&#39;.&#39;</span><span class="p">:</span>              <span class="n">offsetchar</span><span class="p">,</span> <span class="n">here</span> <span class="s1">&#39;.&#39;</span>
+<span class="s1">&#39;:&#39;</span> <span class="o">*</span> <span class="n">m</span><span class="p">:</span>          <span class="s1">&#39;m&#39;</span> <span class="n">indent</span><span class="p">,</span> <span class="n">here</span> <span class="n">m</span><span class="o">=</span><span class="mi">4</span>
+<span class="s1">&#39;:&#39;</span><span class="p">:</span>              <span class="n">indentchar</span><span class="p">,</span> <span class="n">here</span> <span class="s1">&#39;:&#39;</span>
+</pre></div>
+</div>
+<p>For further details and examples refer to the manual.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>path</strong>:</dt>
+<dd><p class="first">The search path to be pretty printed.</p>
+<dl class="docutils">
+<dt>path := (</dt>
+<dd><blockquote class="first">
+<div>&lt;search-path-string&gt;</div></blockquote>
+<div class="last line-block">
+<div class="line">&lt;list-of-search-paths&gt;</div>
+<div class="line">&lt;tuple-of-search-paths&gt;</div>
+</div>
+</dd>
+</dl>
+<p>)</p>
+<p class="last">search-path-string := &#8220;string of PATH syntax, see &#8216;tpf&#8217; and &#8216;spf&#8217;&#8221;
+list-of-search-paths := [&lt;path-entry-0&gt;, &lt;path-entry-1&gt;, ...]
+tuple-of-search-paths := (&lt;path-entry-0&gt;, &lt;path-entry-1&gt;, ...)</p>
+</dd>
+<dt>kargs:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>assignchar</strong>:</dt>
+<dd>The character representing the assignment.</dd>
+<dt><strong>format</strong>:</dt>
+<dd><p class="first">The output format.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">format</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+      <span class="n">console</span>    <span class="c1"># formatted for console display</span>
+    <span class="o">|</span> <span class="n">ini</span>        <span class="c1"># simple path print with normalized path</span>
+    <span class="o">|</span> <span class="n">inix0</span>      <span class="c1"># multiline colon separated list</span>
+    <span class="o">|</span> <span class="n">inix1</span>      <span class="c1"># multiple key repetition</span>
+    <span class="o">|</span> <span class="n">json</span>       <span class="c1"># JSON syntax module</span>
+    <span class="o">|</span> <span class="n">properties</span> <span class="c1"># </span>
+    <span class="o">|</span> <span class="n">python</span>     <span class="c1"># same as json</span>
+    <span class="o">|</span> <span class="n">xml</span>        <span class="c1"># XML syntax module</span>
+    <span class="o">|</span> <span class="n">yaml</span>       <span class="c1"># YAML syntax module</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">See manual for details.</p>
+</dd>
+<dt><strong>indent</strong>:</dt>
+<dd><p class="first">Indention of each path item.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">indent</span> <span class="p">:</span><span class="o">=</span> <span class="o">&lt;</span><span class="c1">#int&gt;</span>
+</pre></div>
+</div>
+<p class="last">default := 4</p>
+</dd>
+<dt><strong>indentchar</strong>:</dt>
+<dd><p class="first">The character used for padding of the indention.
+The use of &#8216;indentchar[0]&#8217; only is forced.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">offsetchar</span> <span class="p">:</span><span class="o">=</span> <span class="o">&lt;</span><span class="n">printable</span><span class="o">-</span><span class="n">character</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p class="last">default := &#8216; &#8216;  # space</p>
+</dd>
+<dt><strong>indentclip</strong>:</dt>
+<dd><p class="first">Indention clipped overflows for of each individual
+path item.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">indent</span> <span class="p">:</span><span class="o">=</span> <span class="o">&lt;</span><span class="c1">#int&gt;</span>
+</pre></div>
+</div>
+<p class="last">default := 2</p>
+</dd>
+<dt><strong>indentclipchar</strong>:</dt>
+<dd><p class="first">The character user for extra padding of clipped 
+items. The use of &#8216;indentchar[0]&#8217; only is forced.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">offsetchar</span> <span class="p">:</span><span class="o">=</span> <span class="o">&lt;</span><span class="n">printable</span><span class="o">-</span><span class="n">character</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p class="last">default := &#8216; &#8216;  # space</p>
+</dd>
+<dt><strong>keepentry</strong>:</dt>
+<dd><p class="first">Preserves path entries from overflow 
+handling.</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">keepentry</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+     <span class="kc">True</span>    <span class="c1"># ignore overflow for single path entries</span>
+   <span class="o">|</span> <span class="kc">False</span>   <span class="c1"># applies overflow processing within single</span>
+             <span class="c1"># path entries</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt><strong>maxwidth</strong>:</dt>
+<dd><p class="first">The maximal line width.</p>
+<p class="last">default := 80</p>
+</dd>
+<dt><strong>linesep</strong>:</dt>
+<dd><p class="first">The output line separator.</p>
+<p class="last">default := os.linesep</p>
+</dd>
+<dt><strong>linesepfinal</strong>:</dt>
+<dd><p class="first">Controls the print of a line separator at the end
+of the string.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">linesepfinal</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+     <span class="kc">True</span>   <span class="c1"># prints a line separator as last character</span>
+   <span class="o">|</span> <span class="kc">False</span>  <span class="c1"># suppress the final line separator</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">default := True</p>
+</dd>
+<dt><strong>offset</strong>:</dt>
+<dd><p class="first">The left side offset margin for all output strings.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">offset</span> <span class="p">:</span><span class="o">=</span> <span class="o">&lt;</span><span class="c1">#int&gt;</span>
+</pre></div>
+</div>
+<p class="last">default := 0</p>
+</dd>
+<dt><strong>offsetchar</strong>:</dt>
+<dd><p class="first">The character used for padding of a general offset.
+The use of &#8216;offsetchar[0]&#8217; only is forced.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">offsetchar</span> <span class="p">:</span><span class="o">=</span> <span class="o">&lt;</span><span class="n">printable</span><span class="o">-</span><span class="n">character</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p class="last">default := &#8216; &#8216;  # space</p>
+</dd>
+<dt><strong>overflow</strong>:</dt>
+<dd><p class="first">The behavior, when line is longer than 
+<em>maxwidth</em>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">overflow</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+      <span class="s1">&#39;ignore&#39;</span>     <span class="c1"># ignores overflow</span>
+
+    <span class="o">|</span> <span class="s1">&#39;cut&#39;</span>        <span class="c1"># drops the overflow</span>
+
+    <span class="o">|</span> <span class="s1">&#39;clip&#39;</span>       <span class="c1"># continues with the overflow  </span>
+                   <span class="c1"># in next line, starts new for</span>
+                   <span class="c1"># next item</span>
+
+    <span class="o">|</span> <span class="s1">&#39;clipmerge&#39;</span>  <span class="c1"># continues with the overflow </span>
+                   <span class="c1"># in next line, concatenates</span>
+                   <span class="c1"># next item </span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">default := &#8216;ignore&#8217;</p>
+</dd>
+<dt><strong>pathsepin</strong>:</dt>
+<dd><p class="first">The input path separator.</p>
+<p class="last">default := os.pathsep</p>
+</dd>
+<dt><strong>pathsepout</strong>:</dt>
+<dd><p class="first">The output path separator.</p>
+<p class="last">default := os.pathsep</p>
+</dd>
+<dt><strong>prefix</strong>:</dt>
+<dd><p class="first">The prefix to be printed first.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">prefix</span> <span class="p">:</span><span class="o">=</span> <span class="s2">&quot;string without line breaks&quot;</span>
+</pre></div>
+</div>
+<p>The output is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">prefix</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">[</span>
+   <span class="s2">&quot;&lt;path-entry-0&gt;&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;&lt;path-entry-1&gt;&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p class="last">default := &#8216;PATH&#8217;</p>
+</dd>
+<dt><strong>spf</strong>:</dt>
+<dd>Source platform.</dd>
+<dt><strong>tpf</strong>:</dt>
+<dd>Target platform.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>Object/None</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="str">
+<h5>__str__<a class="headerlink" href="#str" title="Permalink to this headline">¶</a></h5>
+<dl class="method">
+<dt id="filesysobjects.pprint.PPPathVar.__str__">
+<code class="descclassname">PPPathVar.</code><code class="descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pprint.html#PPPathVar.__str__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pprint.PPPathVar.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pretty prints as defined by the creation parameters.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="repr">
+<h5>__repr__<a class="headerlink" href="#repr" title="Permalink to this headline">¶</a></h5>
+<dl class="method">
+<dt id="filesysobjects.pprint.PPPathVar.__repr__">
+<code class="descclassname">PPPathVar.</code><code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pprint.html#PPPathVar.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pprint.PPPathVar.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pathtoolserror">
+<h3>PathToolsError<a class="headerlink" href="#pathtoolserror" title="Permalink to this headline">¶</a></h3>
+<dl class="exception">
+<dt id="filesysobjects.PrettyPrintError">
+<em class="property">exception </em><code class="descclassname">filesysobjects.</code><code class="descname">PrettyPrintError</code><a class="reference internal" href="_modules/filesysobjects.html#PrettyPrintError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.PrettyPrintError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic exception for module <em>pprint</em>.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">&#8216;filesysobjects.pprint&#8217; - Module</a><ul>
+<li><a class="reference internal" href="#module-filesysobjects.pprint">Module</a></li>
+<li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#pppathvar">PPPathVar</a><ul>
+<li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#class">Class</a></li>
+<li><a class="reference internal" href="#methods">Methods</a><ul>
+<li><a class="reference internal" href="#init">__init__</a></li>
+<li><a class="reference internal" href="#str">__str__</a></li>
+<li><a class="reference internal" href="#repr">__repr__</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#exceptions">Exceptions</a><ul>
+<li><a class="reference internal" href="#pathtoolserror">PathToolsError</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pprint.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

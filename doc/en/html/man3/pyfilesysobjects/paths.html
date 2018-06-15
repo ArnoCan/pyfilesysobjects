@@ -1,0 +1,1361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>‘filesysobjects.paths’ - Module &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="next" title="‘filesysobjects.pathtools’ - Module" href="pathtools.html" />
+    <link rel="prev" title="‘filesysobjects.apppaths’ - Module" href="apppaths.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pathtools.html" title="‘filesysobjects.pathtools’ - Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="apppaths.html" title="‘filesysobjects.apppaths’ - Module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="filesysobjects-paths-module">
+<h1>&#8216;filesysobjects.paths&#8217; - Module<a class="headerlink" href="#filesysobjects-paths-module" title="Permalink to this headline">¶</a></h1>
+<p>The <em>filesysobjects.paths</em> module provides advanced operations on paths and search paths.</p>
+<div class="section" id="implementation-details">
+<h2>Implementation Details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="glob-parameters">
+<h3>Glob Parameters<a class="headerlink" href="#glob-parameters" title="Permalink to this headline">¶</a></h3>
+<p>The &#8216;<em>glob</em>&#8216; wildcard definitions are a subset of regular expressions
+which additionally deviate slightly by their semantics.
+In the case of a dot for example this could be in addition ambiguous.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># file path name: /a/b/xname</span>
+<span class="n">path0</span> <span class="o">=</span> <span class="s1">&#39;/a/b/x.*&#39;</span>
+
+<span class="c1"># regexpr: matches</span>
+<span class="c1"># glob:    does not match</span>
+</pre></div>
+</td></tr></table></div>
+<p>Therefore the resolution of contained path-elements as &#8216;<em>glob&#8217;</em> expressions
+are resolved dynamically by applying the glob module onto the file system nodes.</p>
+</div>
+<div class="section" id="regular-expressions">
+<h3>Regular Expressions<a class="headerlink" href="#regular-expressions" title="Permalink to this headline">¶</a></h3>
+<p>The regular expressions support the full scope of the standard Pyhton &#8216;<em>re</em>&#8216; module.
+The expressions are used as post-filter onto a set of fetched file system node path names.</p>
+<p>The regexpr are by default compiled/loaded statically during load time of the module.
+The regular expressions for the path analysis contain the &#8216;<em>os.path.sep</em>&#8216; of the current platform
+which could be altered as parameter by some interfaces.
+In this case the function interfaces compile the adapted regexpr into a local stack-variable,
+where the compiled match object is cached by the module &#8216;<em>re</em>&#8216;, but potentially will be compiled
+for each call again.
+The object interface may nont have to handle with this within the lifetime of the instances.</p>
+</div>
+<div class="section" id="common-call-parameters">
+<h3>Common Call Parameters<a class="headerlink" href="#common-call-parameters" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="appre">
+<h4>appre<a class="headerlink" href="#appre" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="keepsep">
+<h4>keepsep<a class="headerlink" href="#keepsep" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="pathsep">
+<h4>pathsep<a class="headerlink" href="#pathsep" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="strip">
+<h4>strip<a class="headerlink" href="#strip" title="Permalink to this headline">¶</a></h4>
+<p>Strips null-entries.</p>
+<p>default := True</p>
+</div>
+<div class="section" id="stripquote">
+<h4>stripquote<a class="headerlink" href="#stripquote" title="Permalink to this headline">¶</a></h4>
+<p>Strips special Python style <em>filesysobject</em> triple-quotes.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="k">with</span><span class="o">/</span><span class="s2">&quot;&quot;&quot;double-quoted&quot;&quot;&quot;</span><span class="o">/</span><span class="n">dirs</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="k">with</span><span class="o">/</span><span class="n">double</span><span class="o">-</span><span class="n">quoted</span><span class="o">/</span><span class="n">dirs</span>
+<span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="k">with</span><span class="o">/</span><span class="s1">&#39;&#39;&#39;single-quoted&#39;&#39;&#39;</span><span class="o">/</span><span class="n">dirs</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="k">with</span><span class="o">/</span><span class="n">single</span><span class="o">-</span><span class="n">quoted</span><span class="o">/</span><span class="n">dirs</span>
+</pre></div>
+</div>
+<p>Current version does not support nested triple-quotes, neither homogeneous,
+nor heterogeneous.</p>
+</div>
+<div class="section" id="spf">
+<h4>spf<a class="headerlink" href="#spf" title="Permalink to this headline">¶</a></h4>
+<p>Source platform, defines the input syntax domain.
+For the syntax refer to API in the manual at <a class="reference internal" href="filesysobjects_api.html#opts-spf"><span class="std std-ref">spf</span></a>.
+For additional details refer to
+<a class="reference internal" href="filesysobjects_api.html#tpf-and-spf"><span class="std std-ref">tpf and spf</span></a>,
+<a class="reference external" href="filesysobjects_init.html#getspf">filesysobjects.getspf()</a>,
+<a class="reference external" href="filesysobjects_init.html#gettpf">filesysobjects.gettpf()</a>,
+<a class="reference external" href="paths.html#def-normpathx">paths.normpathx()</a>,
+<a class="reference external" href="paths.html#splitpathx">paths.splitpathx()</a>,
+and
+<a class="reference internal" href="apppaths.html#def-normapppathx"><span class="std std-ref">apppaths.normapppathx()</span></a>,</p>
+<p>default := <em>RTE</em></p>
+</div>
+<div class="section" id="tpf">
+<h4>tpf<a class="headerlink" href="#tpf" title="Permalink to this headline">¶</a></h4>
+<p>Target platform.
+For the syntax refer to API in the manual at <a class="reference internal" href="filesysobjects_api.html#opts-tpf"><span class="std std-ref">tpf</span></a>.
+For additional details refer to
+<a class="reference internal" href="filesysobjects_api.html#tpf-and-spf"><span class="std std-ref">tpf and spf</span></a>,
+<a class="reference external" href="filesysobjects_init.html#getspf">filesysobjects.getspf()</a>,
+<a class="reference external" href="filesysobjects_init.html#gettpf">filesysobjects.gettpf()</a>,
+<a class="reference external" href="paths.html#def-normpathx">paths.normpathx()</a>,
+<a class="reference external" href="paths.html#splitpathx">paths.splitpathx()</a>,
+and
+<a class="reference internal" href="apppaths.html#def-normapppathx"><span class="std std-ref">apppaths.normapppathx()</span></a>,</p>
+<p>default := <em>spf</em> ( == <em>RTE</em>)</p>
+</div>
+</div>
+<div class="section" id="supported-conversions">
+<h3>Supported Conversions<a class="headerlink" href="#supported-conversions" title="Permalink to this headline">¶</a></h3>
+<p>The <em>filesysobjects</em> provides functions for the normalization and the split of resource paths.
+This includes the cross-conversion of the major filesysytem platforms Posix and Windows.
+In addition various conversions are supported.
+These comprise the equivalent conversion between
+semantically compatible representations, and the conversion between syntactical compatible
+respresentations without assured semantic equivalency.
+The latter requires for the semantical equivalency additional conventions, e.g. for the
+conversion of &#8216;z:mypath&#8217; from windows to Posix.</p>
+<p>The split of all supported platforms for custom applications is supported.</p>
+<div class="section" id="normpathx">
+<h4>normpathx<a class="headerlink" href="#normpathx" title="Permalink to this headline">¶</a></h4>
+<p>The <em>normpathx</em> supports the normalization of resource paths for the native platform, and
+the cross-conversion for a limited set of other platforms when the call parameters <em>spf</em>
+and <em>tpf</em> are used.</p>
+<p>The following basic cross-conversions are supported.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="8%" />
+<col width="6%" />
+<col width="9%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="12%" />
+<col width="6%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&nbsp;</th>
+<th class="head">posix</th>
+<th class="head">win</th>
+<th class="head">cygwin</th>
+<th class="head">file (0)</th>
+<th class="head">file (2)</th>
+<th class="head">file (3)</th>
+<th class="head">file (4)</th>
+<th class="head">file (5)</th>
+<th class="head">unc</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>posix</td>
+<td>c</td>
+<td>f</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>win</td>
+<td>f</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>cygwin</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>file (0)</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>file (2)</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>c</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>file (3)</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>file (4)</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+</tr>
+<tr class="row-odd"><td>file (5)</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+</tr>
+<tr class="row-even"><td>unc</td>
+<td>&nbsp;</td>
+<td>f</td>
+<td>f</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>c</td>
+<td>c</td>
+<td>c</td>
+</tr>
+</tbody>
+</table>
+<p><strong>c</strong>: Could be converted into equivalent representation.</p>
+<p><strong>f</strong>: Format conversion without assured equivalency. The accuracy depends on additional conventions.</p>
+<p><strong>(0)</strong>: file uri - short form:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s1">&#39;file:/my/path&#39;</span>   <span class="o">==</span> <span class="s1">&#39;/my/path&#39;</span>
+<span class="s1">&#39;file:c:/my/path&#39;</span> <span class="o">==</span> <span class="s1">&#39;c:/my/path&#39;</span> <span class="o">==</span> <span class="s1">&#39;c:\my\path&#39;</span>
+</pre></div>
+</div>
+<p><strong>(2)</strong>: file uri - remote file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s1">&#39;file\://myhost/my/path&#39;</span> <span class="o">==</span> <span class="s1">&#39;//myhost/my/path&#39;</span>
+</pre></div>
+</div>
+<p><strong>(3)</strong>: file uri - traditional:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s1">&#39;file:///my/path&#39;</span><span class="o">==</span> <span class="s1">&#39;/my/path&#39;</span>
+</pre></div>
+</div>
+<p><strong>(4)</strong>: file uri - UNC:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s1">&#39;file:////myhost/myshare/my/path&#39;</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">myhost\myshare\my\path&#39;</span>
+</pre></div>
+</div>
+<p><strong>(5)</strong>: file uri - UNC:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s1">&#39;file://///myhost/myshare/my/path&#39;</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">myhost\myshare\my\path&#39;</span>
+</pre></div>
+</div>
+<p>For details of the sub-conversion, e.g. file-URI with 4 or 5 slashes
+refer to the API.</p>
+</div>
+</div>
+</div>
+<div class="section" id="module-filesysobjects.paths">
+<span id="module"></span><h2>Module<a class="headerlink" href="#module-filesysobjects.paths" title="Permalink to this headline">¶</a></h2>
+<p>The &#8216;filesysobjects.paths&#8217; module provides operations on static file
+resource paths.</p>
+</div>
+<div class="section" id="constants">
+<h2>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The displayed numeric values for the enums are for debugging support only
+and may change apperantly, use the symbolic names only.</p>
+</div>
+<div class="section" id="simple-path-scanner-parser">
+<h3>Simple Path Scanner - Parser<a class="headerlink" href="#simple-path-scanner-parser" title="Permalink to this headline">¶</a></h3>
+<p>The scanner and parser for file path name rules in accordance to
+Posix/IEEE-1003.1 and NTFS/FAT path name specifications.
+Adds some minor causal constraints on esoteric cases for ambiguity resolution.</p>
+<p>The base for the path compilers of <em>filesysobjects.paths.normpathx</em>,
+<em>filesysobjects.paths.splitpathx</em>, <em>filesysobjects.paths.escapepathx</em>,
+and the <em>filesysobjects.paths.unescapepathx</em>.</p>
+<ul>
+<li><p class="first"><strong>PATHSCANNER</strong></p>
+<p>Generic tokenizer for file path names, supports Posix/IEEE-1003.1
+and NTFS/FAT path names.</p>
+</li>
+<li><p class="first"><strong>Control Constants - Tokens</strong>:</p>
+<ul class="simple">
+<li><em>SC_BSPAIR(1000)</em> - &#8216;\&#8217; pair</li>
+<li><em>SC_CIFS(1010)</em> - cifs:</li>
+<li><em>SC_CRMASK(1020)</em> - masked &#8216;\n&#8217;</li>
+<li><em>SC_DOIT(1030)</em> - out of range</li>
+<li><em>SC_DQUOTED(1040)</em> - &#8220;</li>
+<li><em>SC_DRIVE(1050)</em> - DOS DRIVE LETTER - OR A DIRECTORY ON POSIX !!!</li>
+<li><em>SC_DRIVENPSEP(1060)</em> - dos drive letter following n * posix_sep</li>
+<li><em>SC_DRIVENWSEP(1070)</em> - dos drive letter following n * win_sep</li>
+<li><em>SC_DUMMY(1080)</em> - for tests</li>
+<li><em>SC_EACHOF(1090)</em> - assure for each</li>
+<li><em>SC_ESCCHAR(1100)</em> - &#8216;\[abf...]&#8217;</li>
+<li><em>SC_FABS(1110)</em> - <a class="reference external" href="file:///path">file:///path</a> - absolute path - rfc8089 rfc1738</li>
+<li><em>SC_FILE(1120)</em> - file:</li>
+<li><em>SC_FMIN(1130)</em> - <a class="reference external" href="file:/path">file:/path</a> - min rfc8089 - Appendix B</li>
+<li><em>SC_FNONLOCAL(1140)</em> - <a class="reference external" href="file://host/path">file://host/path</a>  non-local - rfc8089 - Appendix B / maps to Posix-App</li>
+<li><em>SC_FSHORT(1150)</em> - file:&lt;dos-drive&gt;:path - short-form - rfc8089</li>
+<li><em>SC_FUNC(1160)</em> - <a class="reference external" href="file://///">file://///</a> | <a class="reference external" href="file:////">file:////</a> - share/netapp - rfc8089 - Appendix E.3.2</li>
+<li><em>SC_HTTP(1170)</em> - http:</li>
+<li><em>SC_KEEP(1180)</em> - keep literally</li>
+<li><em>SC_MASKALL(1190)</em> - keep literally</li>
+<li><em>SC_NULLDIR(1200)</em> - &#8216;/./&#8217;</li>
+<li><em>SC_PAPP(1210)</em> - Posix-Net-App  * 2 * &#8216;/&#8217; + posix-rules + &#8220;causal constraints&#8221;</li>
+<li><em>SC_PDOM(1220)</em> - &#8216;//&#8217; share/posix-app - 2 * &#8216;/&#8217; + domain-rules</li>
+<li><em>SC_PSEPP(1230)</em> - &#8216;:&#8217;</li>
+<li><em>SC_PSEPW(1240)</em> - &#8216;;&#8217;</li>
+<li><em>SC_REPLACE(1250)</em> - replace an equal set of chars e.g. &#8216;/&#8217; or &#8216;\&#8217;</li>
+<li><em>SC_SEPP(1260)</em> - n * Posix path.sep</li>
+<li><em>SC_SEPW(1270)</em> - 1 * win path.sep</li>
+<li><em>SC_SLASH(1280)</em> - &#8216;/&#8217;</li>
+<li><em>SC_SLASHPREB(1290)</em> - &#8216;\&#8217; + &#8216;/&#8217;</li>
+<li><em>SC_SMB(1300)</em> - smb:</li>
+<li><em>SC_SQUOTED(1310)</em> - &#8216;</li>
+<li><em>SC_TOEVEN(1320)</em> - assure count is even</li>
+<li><em>SC_U16(1330)</em> - unicode-16</li>
+<li><em>SC_U16R(1340)</em> - unicode-16 raw</li>
+<li><em>SC_U32(1350)</em> - unicode-32</li>
+<li><em>SC_U32R(1360)</em> - unicode-32 raw</li>
+<li><em>SC_UNC(1370)</em> - unc:</li>
+<li><em>SC_UPDIR(1380)</em> - &#8216;/../&#8217;</li>
+<li><em>SC_WDOM(1390)</em> - Win-Domain - 2 * &#8216;\&#8217; + domain-rules</li>
+</ul>
+</li>
+<li><p class="first"><strong>Context Maps</strong>:</p>
+<ul>
+<li><p class="first"><em>ASCII_SC_CTRL</em></p>
+<p>Map matche groups to appropriate control tokens.</p>
+</li>
+</ul>
+</li>
+<li><p class="first"><strong>Scanner - Parser Registry</strong></p>
+<p>Set of current registered scanners - parsers.
+To be used for <em>re</em> functions.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">sub_path_calls</span> <span class="o">=</span> <span class="p">{</span>  <span class="c1">#: vector for escaping and normalization</span>
+   <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="n">sub_win</span><span class="p">,</span>
+   <span class="s1">&#39;k&#39;</span><span class="p">:</span> <span class="n">sub_keep</span><span class="p">,</span>
+   <span class="s1">&#39;keep&#39;</span><span class="p">:</span> <span class="n">sub_keep</span><span class="p">,</span>
+   <span class="s1">&#39;posix&#39;</span><span class="p">:</span> <span class="n">sub_posix</span><span class="p">,</span>
+   <span class="s1">&#39;s&#39;</span><span class="p">:</span> <span class="n">sub_posix</span><span class="p">,</span>
+   <span class="s1">&#39;uri&#39;</span><span class="p">:</span> <span class="n">sub_posix</span><span class="p">,</span>
+   <span class="s1">&#39;win&#39;</span><span class="p">:</span> <span class="n">sub_win</span><span class="p">,</span>
+   <span class="s1">&#39;win32&#39;</span><span class="p">:</span> <span class="n">sub_win</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+</ul>
+</div>
+<div class="section" id="miscellaneous">
+<h3>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><em>_CPSPLIT</em> - static compiled: split pathnames with literal + glob + regexpr.</li>
+<li><em>_ENV_SPLIT</em> - Split-out environment variables for substitution.</li>
+<li><em>_ENV_SPLITg</em> - Entry points into sub strings environment variables and literals.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="escapepathx">
+<h3>escapepathx<a class="headerlink" href="#escapepathx" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.paths.escapepathx">
+<code class="descclassname">filesysobjects.paths.</code><code class="descname">escapepathx</code><span class="sig-paren">(</span><em>spath</em>, <em>tpf=None</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/paths.html#escapepathx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.paths.escapepathx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Escape special characters within path names,
+supports cross-platform processing, knows the
+special escape characters of Python and <em>re</em>.
+The characters could be masked by quoting, and/or
+enclosing in character classes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="41%" />
+<col width="30%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">input</th>
+<th class="head">-&gt; esc</th>
+<th class="head">-&gt; unesc</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>\abc&#8221;\n&#8221;</td>
+<td>\\abc&#8221;\n&#8221;</td>
+<td>\abc&#8221;\n&#8221;</td>
+</tr>
+<tr class="row-odd"><td>\&#8221;abc\n&#8221;</td>
+<td>\\&#8221;abc\n&#8221;</td>
+<td>\&#8221;abc\n&#8221;</td>
+</tr>
+<tr class="row-even"><td>\abc\n</td>
+<td>\\abc\\n</td>
+<td>\abc\n</td>
+</tr>
+<tr class="row-odd"><td>\xy&#8221; &#8220;z</td>
+<td>\\xy&#8221; &#8220;z</td>
+<td>\xy&#8221; &#8220;z</td>
+</tr>
+<tr class="row-even"><td>\&#8221;xy z&#8221;</td>
+<td>\\&#8221;xy z&#8221;</td>
+<td>\&#8221;xy z&#8221;</td>
+</tr>
+<tr class="row-odd"><td>\xy z</td>
+<td>\\xy\ z</td>
+<td>\xy z</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first docutils">
+<dt><strong>spath</strong>:</dt>
+<dd><p class="first">The path to be escaped.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spath</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+     <span class="o">&lt;</span><span class="n">path</span><span class="o">-</span><span class="n">string</span><span class="o">&gt;</span>
+   <span class="o">|</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">-</span><span class="n">array</span><span class="o">&gt;</span>
+<span class="p">)</span>
+
+<span class="n">path</span><span class="o">-</span><span class="n">string</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="nb">str</span> <span class="o">|</span> <span class="n">unicode</span><span class="p">)</span>
+<span class="n">path</span><span class="o">-</span><span class="n">array</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="nb">list</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="last">
+<li><p class="first"><em>path-string</em></p>
+<p>The string representation of a complete path, which may contain literal,
+<em>glob</em>, and <em>re</em> expressions. The supported character representation
+is <em>str</em> or <em>unicode</em> for Pyton2.7 and Python3.5+.</p>
+</li>
+<li><p class="first"><em>path-array</em></p>
+<p>The component representation of a path, which consists of it&#8217;s items,
+either as a <em>list</em> or as a <em>tuple</em>. Each item may contain literal,
+<em>glob</em>, and <em>re</em> expressions.</p>
+</li>
+</ul>
+</dd>
+<dt><strong>tpf</strong>:</dt>
+<dd>Target path separator, currently not used.</dd>
+</dl>
+<p>kargs:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><strong>charback</strong>:</dt>
+<dd><p class="first">Escapes all backslashes within character classes.
+Could be combined with <em>force</em> and <em>freeback</em>.</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span>\[\] =&gt; \[\\]
+</pre></div>
+</div>
+</dd>
+<dt><strong>force</strong>:</dt>
+<dd><p class="first">Controls the escaped scope. Excludes quoted strings and
+character classes. Could be combined with <em>charback</em>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">force</span> <span class="o">=</span> <span class="p">(</span>
+     <span class="kc">True</span>    <span class="c1"># escape characters and any free backslash</span>
+   <span class="o">|</span> <span class="kc">False</span>   <span class="c1"># defined escape characters only</span>
+<span class="p">)</span>
+
+<span class="n">force</span> <span class="o">==</span> <span class="kc">True</span>
+
+   \<span class="n">a</span>\<span class="n">X</span>\<span class="n">n</span> <span class="o">=&gt;</span> \\<span class="n">a</span>\\<span class="n">X</span>\\<span class="n">n</span>
+
+<span class="n">force</span> <span class="o">==</span> <span class="kc">False</span>
+
+   \<span class="n">a</span>\<span class="n">X</span>\<span class="n">n</span> <span class="o">=&gt;</span> \\<span class="n">a</span>\<span class="n">X</span>\\<span class="n">n</span>
+</pre></div>
+</div>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>freeback</strong>:</dt>
+<dd><p class="first">Escapes backslashes outside character classes.
+Could be combined with <em>charback</em>.</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span>\[\] =&gt; \b\[\]
+</pre></div>
+</div>
+</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>Returns:</dt>
+<dd><p class="first">The escaped path with added &#8216;<em>\</em>&#8216; in accordance to the rules and chosen
+options. The return type of the representation is the same as the input
+representation.</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="nb">str</span>      <span class="o">=&gt;</span>  <span class="nb">str</span>
+<span class="n">unicode</span>  <span class="o">=&gt;</span>  <span class="n">unicode</span>
+<span class="nb">list</span>     <span class="o">=&gt;</span>  <span class="nb">list</span>
+<span class="nb">tuple</span>    <span class="o">=&gt;</span>  <span class="nb">tuple</span>
+</pre></div>
+</div>
+</dd>
+<dt>Raises:</dt>
+<dd><p class="first">PathError</p>
+<p>FileSysObjectsError</p>
+<p>TypeError</p>
+<p class="last">pass-through</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="def-normpathx">
+<span id="id5"></span><h3>normpathx<a class="headerlink" href="#def-normpathx" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.paths.normpathx">
+<code class="descclassname">filesysobjects.paths.</code><code class="descname">normpathx</code><span class="sig-paren">(</span><em>spath</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/paths.html#normpathx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.paths.normpathx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize paths, similar to &#8216;os.path.normpath()&#8217; - with
+optional extensions paths with basic application schemes
+and search paths, dos-drives, and the split of paths into
+directories. The various representations could be converted
+on-the-fly.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">smb</span><span class="p">,</span> <span class="n">cifs</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">http</span><span class="o">/</span><span class="n">https</span><span class="p">,</span> <span class="n">UNC</span><span class="p">,</span> <span class="n">POSIX</span><span class="o">-</span><span class="n">network</span> <span class="n">apps</span>
+</pre></div>
+</div>
+<p>For advanced processing of application schemes refer to
+<em>normapppathx()</em> and &#8216;splitapppathx()&#8217;. The path could
+include regular expressions <em>re</em> and <em>glob</em>, literals
+and masked parts.</p>
+<ul>
+<li><p class="first">regular expressions</p>
+<p>The supported regular expressions are native Python regular
+expressions as supported by &#8216;re&#8217; with support of expressions
+spanning multiple directories.</p>
+</li>
+<li><p class="first">globs</p>
+<p>Standard module <em>glob</em>.</p>
+</li>
+<li><p class="first">literals:</p>
+<p>Any literal path.</p>
+</li>
+</ul>
+<p>Regular expressions and globs could be masked as quoted strings,
+which are kept unchanged.</p>
+<p>The <em>normpathx</em> provides the features as simple interface for the
+normalization across multiple platforms. The companion interface
+provide various features, e.g. the <em>escapepathx</em> and <em>unescapepathx</em>
+of path names including <em>re</em> and <em>glob</em>.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first docutils">
+<dt><strong>spath</strong>:</dt>
+<dd>A single path entry - no valid &#8216;os.pathsep&#8217;. In case of
+required search path including semantic &#8216;os.pathsep&#8217;
+use &#8216;splitapppathx()&#8217;.</dd>
+</dl>
+<p>kargs:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><strong>apppre</strong>:</dt>
+<dd><p class="first">Application prefix.</p>
+<p class="last">default:=False</p>
+</dd>
+<dt><strong>keepsep</strong>:</dt>
+<dd>Keeps significant seperators, in particular
+the trailing path separator &#8216;sep&#8217;, and the
+trailing search path &#8216;pathseparator&#8217;.</dd>
+<dt><strong>strip</strong>:</dt>
+<dd><p class="first">Strips redundancies from path names,</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;a/.//./b/c/../&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;a/b&quot;</span>
+</pre></div>
+</div>
+<p>see related &#8216;keepsep&#8217;</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;a/.//./b/c/../&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;a/b/&quot;</span>
+</pre></div>
+</div>
+<p class="last">default:=True</p>
+</dd>
+<dt><strong>stripquote</strong>:</dt>
+<dd><p class="first">Removes paired triple-quotes of protected/masked
+string sections.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;/a/&#39;&#39;&#39;head:&#39;&#39;&#39;/c&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;/a/head:/c&quot;</span>
+</pre></div>
+</div>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>spf</strong>:</dt>
+<dd><p class="first">Source platform, defines the input syntax domain.
+For the syntax refer to API in the manual at <a class="reference internal" href="filesysobjects_api.html#opts-spf"><span class="std std-ref">spf</span></a>.</p>
+<p class="last">For additi0onal details refer to
+<a class="reference internal" href="filesysobjects_api.html#tpf-and-spf"><span class="std std-ref">tpf and spf</span></a>,
+<a class="reference external" href="paths.html#getspf">paths.getspf()</a>,
+<a class="reference internal" href="apppaths.html#def-normapppathx"><span class="std std-ref">normapppathx()</span></a>,
+<a class="reference external" href="paths.html#normpathx">normpathx()</a>.</p>
+</dd>
+<dt><strong>tpf</strong>:</dt>
+<dd><p class="first">Target platform, defines the output syntax domain.
+For the syntax refer to the API in the manual at <a class="reference internal" href="filesysobjects_api.html#opts-tpf"><span class="std std-ref">tpf</span></a>.</p>
+<p class="last">For additi0onal details refer to
+<a class="reference internal" href="filesysobjects_api.html#tpf-and-spf"><span class="std std-ref">tpf and spf</span></a>,
+<a class="reference external" href="paths.html#gettpf">paths.gettpf()</a>,
+<a class="reference internal" href="apppaths.html#def-normapppathx"><span class="std std-ref">normapppathx()</span></a>,
+<a class="reference external" href="paths.html#normpathx">normpathx()</a>.</p>
+</dd>
+<dt><strong>pathsep</strong>:</dt>
+<dd><p class="first">Changes path separator for the source platform.</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">pathsep</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+      <span class="p">(:</span> <span class="o">|</span> <span class="p">;)</span>         <span class="c1"># replaces by &#39;:&#39; or &#39;;&#39;</span>
+    <span class="o">|</span> <span class="o">&lt;</span><span class="n">keyword</span><span class="o">&gt;</span>
+    <span class="o">|</span> <span class="o">&lt;</span><span class="c1">#enum&gt;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>Returns:</dt>
+<dd>Normalized path.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">PathError</p>
+<p class="last">pass-through</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="splitpathx">
+<span id="def-splitpathx"></span><h3>splitpathx<a class="headerlink" href="#splitpathx" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.paths.splitpathx">
+<code class="descclassname">filesysobjects.paths.</code><code class="descname">splitpathx</code><span class="sig-paren">(</span><em>spath</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/paths.html#splitpathx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.paths.splitpathx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split pathnames into a list/tuple of items for each directory.
+For example</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="p">[</span><span class="mi">15</span><span class="p">]:</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">splitpathx</span><span class="p">(</span><span class="s2">&quot;/a/b/c&quot;</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">15</span><span class="p">]:</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">splitpathx</span><span class="p">(</span><span class="s2">&quot;x:/a/b/c&quot;</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">16</span><span class="p">]:</span> <span class="p">(</span><span class="s1">&#39;x:&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)</span>
+
+<span class="n">In</span> <span class="p">[</span><span class="mi">17</span><span class="p">]:</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">splitpathx</span><span class="p">(</span><span class="s2">&quot;x:</span><span class="se">\a\b</span><span class="s2">\c&quot;</span><span class="p">)</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">17</span><span class="p">]:</span> <span class="p">(</span><span class="s1">&#39;x:&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For <em>URI*s and search paths refer to *splitapppathx</em>.</p>
+<p>Supports directory name types as &#8216;literal&#8217;, &#8216;glob&#8217;, and &#8216;re/regexpr&#8217;.
+Supports the same syntax elements as <em>normpathx</em>, while it is prepared
+to simple application of the built-in <em>join()</em> with <em>os.sep</em>.</p>
+<p>Is not aware of application tags except Network-Shares,
+Posix-Applications, and file-URI.</p>
+<dl class="docutils">
+<dt><strong>REMARK</strong>:</dt>
+<dd>The intention is to replace the &#8216;str.split()&#8217; method
+for the split of the path parts, thus this is different to the
+method &#8216;os.path.split()&#8217;.</dd>
+</dl>
+<p>Args:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>spath</strong>:</dt>
+<dd>Path to split.</dd>
+</dl>
+<p>kw:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>apppre</strong>:</dt>
+<dd><p class="first">Application prefix, when &#8216;True&#8217; the scheme is included,
+else dropped.</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">apppre</span><span class="o">=</span><span class="p">(</span><span class="kc">True</span><span class="o">|</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt><strong>keepsep</strong>:</dt>
+<dd><p class="first">Modifies the behavior of &#8216;strip&#8217; parameter.
+If &#8216;False&#8217;, the trailing separator is dropped.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">splitpathx</span><span class="p">(</span><span class="s1">&#39;/a/b&#39;</span><span class="p">,</span> <span class="n">keepsep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>   <span class="o">=&gt;</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">splitpathx</span><span class="p">(</span><span class="s1">&#39;/a/b/&#39;</span><span class="p">,</span> <span class="n">keepsep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="o">=&gt;</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>for &#8216;True&#8217; trailing separators are kept as directory
+marker:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">splitpathx</span><span class="p">(</span><span class="s1">&#39;/a/b&#39;</span><span class="p">,</span> <span class="n">keepsep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>    <span class="o">=&gt;</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">splitpathx</span><span class="p">(</span><span class="s1">&#39;/a/b/&#39;</span><span class="p">,</span> <span class="n">keepsep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   <span class="o">=&gt;</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt><strong>pathsep</strong>:</dt>
+<dd><p class="first">Optional search path separator.</p>
+<blockquote>
+<div><p>posix: &#8216;:&#8217;</p>
+<p>win32: &#8216;;&#8217;</p>
+</div></blockquote>
+<p class="last">default := os.pathsep</p>
+</dd>
+<dt><strong>sep</strong>:</dt>
+<dd><p class="first">Optional path separator.</p>
+<blockquote>
+<div><p>posix: &#8216;/&#8217;</p>
+<p>win32: &#8216;&#8217;</p>
+</div></blockquote>
+<p class="last">default := os.path.sep</p>
+</dd>
+<dt><strong>strip</strong>:</dt>
+<dd><p class="first">Removes null-entries.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>stripquote</strong>:</dt>
+<dd><p class="first">Removes paired triple-quotes of protected/masked
+string sections.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;/a/&#39;&#39;&#39;head:&#39;&#39;&#39;/c&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;/a/head:/c&quot;</span>
+</pre></div>
+</div>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>spf</strong>:</dt>
+<dd><p class="first">Source platform, defines the input syntax domain.
+For the syntax refer to the API in the manual at <a class="reference internal" href="filesysobjects_api.html#opts-spf"><span class="std std-ref">spf</span></a>.</p>
+<p class="last">For additi0onal details refer to
+<a class="reference internal" href="filesysobjects_api.html#tpf-and-spf"><span class="std std-ref">tpf and spf</span></a>,
+<a class="reference external" href="paths.html#getspf">paths.getspf()</a>,
+<a class="reference internal" href="apppaths.html#def-normapppathx"><span class="std std-ref">normapppathx()</span></a>,
+<a class="reference external" href="paths.html#normpathx">normpathx()</a>.</p>
+</dd>
+<dt><strong>tpf</strong>:</dt>
+<dd><p class="first">Target platform. Even though the splitted form of a resource path
+is basically canonical, some details of the specifications for
+slightly variations requires the granular fine-tuning. Thus defines
+in case of ambiguity the <em>scheme</em> for <em>apppre=True</em>. Accepts the
+following values only.</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">tpf</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+     <span class="n">RTE_FILEURI0</span> <span class="o">|</span> <span class="s1">&#39;fileuri0&#39;</span>  <span class="c1"># RFC8089 - minimal</span>
+   <span class="o">|</span> <span class="n">RTE_FILEURI4</span> <span class="o">|</span> <span class="s1">&#39;fileuri4&#39;</span>  <span class="c1"># RFC8089 - 4-slash UNC/POSIX-app</span>
+   <span class="o">|</span> <span class="n">RTE_FILEURI5</span> <span class="o">|</span> <span class="s1">&#39;fileuri5&#39;</span>  <span class="c1"># RFC8089 - 5-slash UNC/POSIX-app</span>
+   <span class="o">|</span> <span class="n">RTE_FILEURI</span>  <span class="o">|</span> <span class="s1">&#39;fileuri&#39;</span>   <span class="c1"># RFC8089 - canonical</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd><p class="first">A list containing the path split into it&#8217;s components. The list
+is prepared to be concatenated by <em>join()</em>.</p>
+<p class="last">The interface is aware of the <em>os.path.sep</em> character, but a
+present regular expression may span multiple path components,
+which have to be handled dynamically when applying the path
+pattern e.g. by <em>findpattern</em>.</p>
+</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="splitpathx-posix">
+<h3>splitpathx_posix<a class="headerlink" href="#splitpathx-posix" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.paths.splitpathx_posix">
+<code class="descclassname">filesysobjects.paths.</code><code class="descname">splitpathx_posix</code><span class="sig-paren">(</span><em>p</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/paths.html#splitpathx_posix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.paths.splitpathx_posix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split pathnames containing &#8216;literal&#8217;, &#8216;glob&#8217;, and &#8216;re/regexpr&#8217;.
+Serves the source platform POSIX and alike.
+For the call interface see <em>splitpathx()</em></p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>p</strong>:</dt>
+<dd>The path name to split.</dd>
+<dt>kargs:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>apppre</strong>:</dt>
+<dd><p class="first">Application prefix.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>keepsep</strong>:</dt>
+<dd><p class="first">Keeps seprator, in particular the trailing.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>strip</strong>:</dt>
+<dd><p class="first">Strip separators, in particular the trailing.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>stripquote</strong>:</dt>
+<dd><p class="first">Strips <em>filesysobjects</em> triple-quotes.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>tpf</strong>:</dt>
+<dd><p class="first">Target platform. Defines some fine-tuning,
+e.g. for the file-URI, see <em>splitpathx</em>.</p>
+<p class="last">default := current OS.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>The splitted path, else <em>[]</em>.</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="splitpathx-win">
+<h3>splitpathx_win<a class="headerlink" href="#splitpathx-win" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.paths.splitpathx_win">
+<code class="descclassname">filesysobjects.paths.</code><code class="descname">splitpathx_win</code><span class="sig-paren">(</span><em>p</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/paths.html#splitpathx_win"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.paths.splitpathx_win" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split windows pathnames containing &#8216;literal&#8217;, &#8216;glob&#8217;, and &#8216;re/regexpr&#8217;.
+Serves the source platform windows and alike.
+For the call interface see <em>splitpathx()</em></p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>p</strong>:</dt>
+<dd>The path name to split.</dd>
+<dt>kargs:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>apppre</strong>:</dt>
+<dd><p class="first">Application prefix.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>keepsep</strong>:</dt>
+<dd><p class="first">Keeps seprator, in particular the trailing.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>strip</strong>:</dt>
+<dd><p class="first">Strip separators, in particular the trailing.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>stripquote</strong>:</dt>
+<dd><p class="first">Strips <em>filesysobjects</em> triple-quotes.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>tpf</strong>:</dt>
+<dd><p class="first">Target platform. Defines some fine-tuning,
+e.g. for the file-URI, see <em>splitpathx</em>.</p>
+<p class="last">default := current OS.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>The splitted path, else <em>[]</em>.</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="sub-esc">
+<h3>sub_esc<a class="headerlink" href="#sub-esc" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.paths.sub_esc">
+<code class="descclassname">filesysobjects.paths.</code><code class="descname">sub_esc</code><span class="sig-paren">(</span><em>it</em>, <em>spf=8256</em>, <em>strip=False</em>, <em>pathsep=''</em>, <em>state=[]</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/paths.html#sub_esc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.paths.sub_esc" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be used by re.sub() - escapes backslashes and non-printable
+characters.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first docutils">
+<dt><strong>it</strong>:</dt>
+<dd>iterator from <em>re.sub</em>.</dd>
+<dt><strong>spf</strong>:</dt>
+<dd><p class="first">Source platform, defines the input syntax domain.
+For the syntax refer to API in the manual at <a class="reference internal" href="filesysobjects_api.html#opts-spf"><span class="std std-ref">spf</span></a>.</p>
+<p class="last">For additi0onal details refer to
+<a class="reference internal" href="filesysobjects_api.html#tpf-and-spf"><span class="std std-ref">tpf and spf</span></a>,
+<a class="reference external" href="paths.html#getspf">paths.getspf()</a>,
+<a class="reference internal" href="apppaths.html#def-normapppathx"><span class="std std-ref">normapppathx()</span></a>,
+<a class="reference external" href="paths.html#normpathx">normpathx()</a>.</p>
+</dd>
+</dl>
+<p><strong>strip</strong>:</p>
+<p><strong>pathsep</strong>:</p>
+<p><strong>state</strong>:</p>
+<dl class="last docutils">
+<dt>kw:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>charback</strong>:</dt>
+<dd>Escapes all backslashes within character classes.
+Could be combined with <em>force</em> and <em>freeback</em>.</dd>
+<dt><strong>force</strong>:</dt>
+<dd><p class="first">Escapes all back-slashes, else the special
+characters only. Unix processing of DOS paths
+requires all separators to be escaped.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>freeback</strong>:</dt>
+<dd>Escapes backslashes outside character classes.
+Could be combined with <em>charback</em>.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Returns:</p>
+<blockquote>
+<div><p>Converted format win.
+E.g.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">Windows</span>\<span class="n">system32</span>\<span class="n">cmd</span><span class="o">.</span><span class="n">exe</span><span class="p">;</span><span class="n">C</span><span class="p">:</span>\<span class="n">Windows</span>\<span class="n">system32</span>\<span class="n">notepad</span><span class="o">.</span><span class="n">exe</span>
+</pre></div>
+</div>
+</div></blockquote>
+<dl class="docutils">
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="sub-keep">
+<h3>sub_keep<a class="headerlink" href="#sub-keep" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.paths.sub_keep">
+<code class="descclassname">filesysobjects.paths.</code><code class="descname">sub_keep</code><span class="sig-paren">(</span><em>it</em>, <em>spf=8256</em>, <em>strip=True</em>, <em>pathsep=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/paths.html#sub_keep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.paths.sub_keep" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be used by re.sub() - keeps mixed.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="sub-posix">
+<h3>sub_posix<a class="headerlink" href="#sub-posix" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.paths.sub_posix">
+<code class="descclassname">filesysobjects.paths.</code><code class="descname">sub_posix</code><span class="sig-paren">(</span><em>it</em>, <em>spf=8256</em>, <em>strip=True</em>, <em>pathsep=':'</em>, <em>state=None</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/paths.html#sub_posix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.paths.sub_posix" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be used by re.sub() - converts to posix.</p>
+<p>Replaces &#8216;[/]&#8217; with &#8216;/&#8217;, and &#8216;[;:]&#8217; with &#8216;:&#8217;.</p>
+<p>Posix does not have drives, just ignores the
+drive-property, assumes these are ordinary characters.
+When drives are required as syntax tokens refer to &#8216;Cygwin&#8217;.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>it</strong>:</dt>
+<dd>Iterator from <em>re.sub</em>.</dd>
+<dt><strong>spf</strong>:</dt>
+<dd><p class="first">Source platform, defines the input syntax domain.
+For the syntax refer to API in the manual at <a class="reference internal" href="filesysobjects_api.html#opts-spf"><span class="std std-ref">spf</span></a>.</p>
+<p class="last">For additi0onal details refer to
+<a class="reference internal" href="filesysobjects_api.html#tpf-and-spf"><span class="std std-ref">tpf and spf</span></a>,
+<a class="reference external" href="paths.html#getspf">paths.getspf()</a>,
+<a class="reference internal" href="apppaths.html#def-normapppathx"><span class="std std-ref">normapppathx()</span></a>,
+<a class="reference external" href="paths.html#normpathx">normpathx()</a>.</p>
+</dd>
+<dt><strong>strip</strong>:</dt>
+<dd>Strip redundancies.</dd>
+<dt><strong>pathsep</strong>:</dt>
+<dd><p class="first">Input separator &#8216;pathsep&#8217; to be be
+replaced.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pathsep</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39;:&#39;</span> <span class="s1">&#39;;&#39;</span> <span class="s1">&#39;&#39;</span>
+</pre></div>
+</div>
+<p class="last">One or more are allowed, is used as a set
+containment of replacement checks. Empty
+string disables the replacement.</p>
+</dd>
+<dt><strong>state</strong>:</dt>
+<dd>Compile states.</dd>
+<dt>kw:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>apppre</strong>:</dt>
+<dd>Application prefix.</dd>
+<dt><strong>keepsep</strong>:</dt>
+<dd>Keeps seprator, in particular the trailing.</dd>
+<dt><strong>stripquote</strong>:</dt>
+<dd>Strips <em>filesysobjects</em> triple-quotes.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd><p class="first">Converted format posix.
+E.g.:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">c</span><span class="p">:</span><span class="o">/</span><span class="n">Windows</span><span class="o">/</span><span class="n">system32</span><span class="o">/</span><span class="n">cmd</span><span class="o">.</span><span class="n">exe</span><span class="p">:</span><span class="n">c</span><span class="p">:</span><span class="o">/</span><span class="n">Windows</span><span class="o">/</span><span class="n">system32</span><span class="o">/</span><span class="n">notepad</span><span class="o">.</span><span class="n">exe</span>
+</pre></div>
+</div>
+</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="sub-unesc">
+<h3>sub_unesc<a class="headerlink" href="#sub-unesc" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.paths.sub_unesc">
+<code class="descclassname">filesysobjects.paths.</code><code class="descname">sub_unesc</code><span class="sig-paren">(</span><em>it</em>, <em>_t=None</em>, <em>spf=None</em>, <em>state=[]</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/paths.html#sub_unesc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.paths.sub_unesc" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be used by re.sub() - unescapes backslashes and
+non-printable characters.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first docutils">
+<dt><strong>it</strong>:</dt>
+<dd>iterator from <em>re.sub</em>.</dd>
+</dl>
+<p><strong>_t</strong>:</p>
+<dl class="docutils">
+<dt><strong>spf</strong>:</dt>
+<dd><p class="first">Source platform, defines the input syntax domain.
+For the syntax refer to API in the manual at <a class="reference internal" href="filesysobjects_api.html#opts-spf"><span class="std std-ref">spf</span></a>.</p>
+<p class="last">For additi0onal details refer to
+<a class="reference internal" href="filesysobjects_api.html#tpf-and-spf"><span class="std std-ref">tpf and spf</span></a>,
+<a class="reference external" href="paths.html#getspf">paths.getspf()</a>,
+<a class="reference internal" href="apppaths.html#def-normapppathx"><span class="std std-ref">normapppathx()</span></a>,
+<a class="reference external" href="paths.html#normpathx">normpathx()</a>.</p>
+</dd>
+</dl>
+<p><strong>state*</strong>:</p>
+<dl class="last docutils">
+<dt>kw:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>all</strong> or <strong>force</strong>:</dt>
+<dd><p class="first">Unescapes all back/slashes, else the special
+characters only. Unix processing of DOS paths
+requires all separators to be escaped and
+therefore eventually to be unescaped too.</p>
+<p class="last">default := False</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Returns:</p>
+<blockquote>
+<div><p>Converted format win.
+E.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">Windows</span>\<span class="n">system32</span>\<span class="n">cmd</span><span class="o">.</span><span class="n">exe</span><span class="p">;</span><span class="n">C</span><span class="p">:</span>\<span class="n">Windows</span>\<span class="n">system32</span>\<span class="n">notepad</span><span class="o">.</span><span class="n">exe</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Raises:</p>
+<blockquote>
+<div>pass-through</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="sub-win">
+<h3>sub_win<a class="headerlink" href="#sub-win" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.paths.sub_win">
+<code class="descclassname">filesysobjects.paths.</code><code class="descname">sub_win</code><span class="sig-paren">(</span><em>it</em>, <em>spf=8256</em>, <em>strip=True</em>, <em>pathsep=';'</em>, <em>state=None</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/paths.html#sub_win"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.paths.sub_win" title="Permalink to this definition">¶</a></dt>
+<dd><p>To be used by re.sub() - converts to windows.</p>
+<p>Replaces &#8216;[/\]&#8217; with &#8216;\&#8217;, and &#8216;[;:]&#8217; with &#8216;;&#8217;.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>it</strong>:</dt>
+<dd>iterator from <em>re.sub</em>.</dd>
+<dt><strong>spf</strong>:</dt>
+<dd><p class="first">Source platform, defines the input syntax domain.
+For the syntax refer to API in the manual at <a class="reference internal" href="filesysobjects_api.html#opts-spf"><span class="std std-ref">spf</span></a>.</p>
+<p class="last">For additi0onal details refer to
+<a class="reference internal" href="filesysobjects_api.html#tpf-and-spf"><span class="std std-ref">tpf and spf</span></a>,
+<a class="reference external" href="paths.html#getspf">paths.getspf()</a>,
+<a class="reference internal" href="apppaths.html#def-normapppathx"><span class="std std-ref">normapppathx()</span></a>,
+<a class="reference external" href="paths.html#normpathx">normpathx()</a>.</p>
+</dd>
+<dt><strong>strip</strong>:</dt>
+<dd>Strip redundancies.</dd>
+<dt><strong>pathsep</strong>:</dt>
+<dd><p class="first">Input separator &#8216;pathsep&#8217; to be be
+replaced.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pathsep</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39;:&#39;</span> <span class="s1">&#39;;&#39;</span> <span class="s1">&#39;&#39;</span>
+</pre></div>
+</div>
+<p class="last">One or more are allowed, is used as a set
+containment of replacement checks. Empty
+string disables the replacement.</p>
+</dd>
+<dt><strong>state</strong>:</dt>
+<dd>Compile states.</dd>
+<dt>kw:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>apppre</strong>:</dt>
+<dd>Application prefix.</dd>
+<dt><strong>keepsep</strong>:</dt>
+<dd>Keeps seprator, in particular the trailing.</dd>
+<dt><strong>stripquote</strong>:</dt>
+<dd>Strips <em>filesysobjects</em> triple-quotes.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd><p class="first">Converted format win.
+E.g.:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">Windows</span>\<span class="n">system32</span>\<span class="n">cmd</span><span class="o">.</span><span class="n">exe</span><span class="p">;</span><span class="n">C</span><span class="p">:</span>\<span class="n">Windows</span>\<span class="n">system32</span>\<span class="n">notepad</span><span class="o">.</span><span class="n">exe</span>
+</pre></div>
+</div>
+</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="unescapepathx">
+<h3>unescapepathx<a class="headerlink" href="#unescapepathx" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.paths.unescapepathx">
+<code class="descclassname">filesysobjects.paths.</code><code class="descname">unescapepathx</code><span class="sig-paren">(</span><em>spath</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/paths.html#unescapepathx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.paths.unescapepathx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unescape path - which has been escaped before. The path representation
+could either be as a string/unicode or split components as a <em>list</em>
+or <em>tuple</em>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Processes strings accurately which were processed by <em>escapepathx()</em>
+before, else the result could be erroneous. In particular for
+windows paths due to the ambiguity of the &#8216;\&#8217;!</p>
+</div>
+<p>The same masking rules apply as for the <em>normpathx()</em> and
+<em>escapepathx()</em> calls. Escape sequences could be protected by quoting,
+which keeps the content literally. See <em>pathtools.stripquotes</em>.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>spath</strong>:</dt>
+<dd><p class="first">The path to be unescaped.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spath</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+     <span class="o">&lt;</span><span class="n">path</span><span class="o">-</span><span class="n">string</span><span class="o">&gt;</span>
+   <span class="o">|</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">-</span><span class="n">array</span><span class="o">&gt;</span>
+<span class="p">)</span>
+
+<span class="n">path</span><span class="o">-</span><span class="n">string</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="nb">str</span> <span class="o">|</span> <span class="n">unicode</span><span class="p">)</span>
+<span class="n">path</span><span class="o">-</span><span class="n">array</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="nb">list</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="last">
+<li><p class="first"><em>path-string</em></p>
+<p>The string representation of a complete path, which may contain literal,
+<em>glob</em>, and <em>re</em> expressions. The supported character representation
+is <em>str</em> or <em>unicode</em> for Pyton2.7 and Python3.5+.</p>
+</li>
+<li><p class="first"><em>path-array</em></p>
+<p>The component representation of a path, which consists of it&#8217;s items,
+either as a <em>list</em> or as a <em>tuple</em>. Each item may contain literal,
+<em>glob</em>, and <em>re</em> expressions.</p>
+</li>
+</ul>
+</dd>
+<dt>kargs:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>tpf</strong>:</dt>
+<dd>Target platform, currently not used.</dd>
+<dt><strong>netpath</strong>:</dt>
+<dd><p class="first">When <em>True</em> considers double prefix separators as share and/or
+network application, else assumes these are the result of escaping
+with force.</p>
+<p class="last">default := False</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd><p class="first">The unescaped path with removed &#8216;&#8217; in accordance to the rules and chosen
+options. The return type of the representation is the same as the input
+representation.</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="nb">str</span>      <span class="o">=&gt;</span>  <span class="nb">str</span>
+<span class="n">unicode</span>  <span class="o">=&gt;</span>  <span class="n">unicode</span>
+<span class="nb">list</span>     <span class="o">=&gt;</span>  <span class="nb">list</span>
+<span class="nb">tuple</span>    <span class="o">=&gt;</span>  <span class="nb">tuple</span>
+</pre></div>
+</div>
+</dd>
+<dt>Raises:</dt>
+<dd><p class="first">PathError</p>
+<p>FileSysObjectsError</p>
+<p>TypeError</p>
+<p class="last">pass-through</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pathexception">
+<h3>PathException<a class="headerlink" href="#pathexception" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="pathtargetaccessexception">
+<h3>PathTargetAccessException<a class="headerlink" href="#pathtargetaccessexception" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">&#8216;filesysobjects.paths&#8217; - Module</a><ul>
+<li><a class="reference internal" href="#implementation-details">Implementation Details</a><ul>
+<li><a class="reference internal" href="#glob-parameters">Glob Parameters</a></li>
+<li><a class="reference internal" href="#regular-expressions">Regular Expressions</a></li>
+<li><a class="reference internal" href="#common-call-parameters">Common Call Parameters</a><ul>
+<li><a class="reference internal" href="#appre">appre</a></li>
+<li><a class="reference internal" href="#keepsep">keepsep</a></li>
+<li><a class="reference internal" href="#pathsep">pathsep</a></li>
+<li><a class="reference internal" href="#strip">strip</a></li>
+<li><a class="reference internal" href="#stripquote">stripquote</a></li>
+<li><a class="reference internal" href="#spf">spf</a></li>
+<li><a class="reference internal" href="#tpf">tpf</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#supported-conversions">Supported Conversions</a><ul>
+<li><a class="reference internal" href="#normpathx">normpathx</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-filesysobjects.paths">Module</a></li>
+<li><a class="reference internal" href="#constants">Constants</a><ul>
+<li><a class="reference internal" href="#simple-path-scanner-parser">Simple Path Scanner - Parser</a></li>
+<li><a class="reference internal" href="#miscellaneous">Miscellaneous</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">Functions</a><ul>
+<li><a class="reference internal" href="#escapepathx">escapepathx</a></li>
+<li><a class="reference internal" href="#def-normpathx">normpathx</a></li>
+<li><a class="reference internal" href="#splitpathx">splitpathx</a></li>
+<li><a class="reference internal" href="#splitpathx-posix">splitpathx_posix</a></li>
+<li><a class="reference internal" href="#splitpathx-win">splitpathx_win</a></li>
+<li><a class="reference internal" href="#sub-esc">sub_esc</a></li>
+<li><a class="reference internal" href="#sub-keep">sub_keep</a></li>
+<li><a class="reference internal" href="#sub-posix">sub_posix</a></li>
+<li><a class="reference internal" href="#sub-unesc">sub_unesc</a></li>
+<li><a class="reference internal" href="#sub-win">sub_win</a></li>
+<li><a class="reference internal" href="#unescapepathx">unescapepathx</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#exceptions">Exceptions</a><ul>
+<li><a class="reference internal" href="#pathexception">PathException</a></li>
+<li><a class="reference internal" href="#pathtargetaccessexception">PathTargetAccessException</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>API</h4><p class="topless"><a href="epydoc/index.html" title="API">Programming Interface</a></p><h4>Previous topic</h4>
+  <p class="topless"><a href="apppaths.html"
+                        title="previous chapter">&#8216;filesysobjects.apppaths&#8217; - Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="pathtools.html"
+                        title="next chapter">&#8216;filesysobjects.pathtools&#8217; - Module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/paths.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pathtools.html" title="‘filesysobjects.pathtools’ - Module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="apppaths.html" title="‘filesysobjects.apppaths’ - Module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

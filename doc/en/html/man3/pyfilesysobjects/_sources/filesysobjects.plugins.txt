@@ -1,0 +1,30 @@
+filesysobjects.plugins package
+==============================
+
+Submodules
+----------
+
+filesysobjects.plugins.http module
+----------------------------------
+
+.. automodule:: filesysobjects.plugins.http
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+filesysobjects.plugins.smb module
+---------------------------------
+
+.. automodule:: filesysobjects.plugins.smb
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: filesysobjects.plugins
+    :members:
+    :undoc-members:
+    :show-inheritance:

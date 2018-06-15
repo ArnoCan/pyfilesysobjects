@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Config Data &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="config-data">
+<h1>Config Data<a class="headerlink" href="#config-data" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="configuration-persistency">
+<h2>Configuration Persistency<a class="headerlink" href="#configuration-persistency" title="Permalink to this headline">¶</a></h2>
+<p>The configuration of applications and services frequently require some specific
+configured information.
+These are either stored in a repository, or within
+simple configuration files.
+The configuration files are common on all current platforms.</p>
+<p>The location and the file syntax varies by platform and application.
+In particular the location of the configuration file is different
+on platforms and for several applications.
+Which requires some context specific routines for the location.</p>
+<p>See <a class="reference external" href="configdata.html">filesysobjects.configdata</a>.</p>
+</div>
+<div class="section" id="locating-configuration-files">
+<h2>Locating Configuration Files<a class="headerlink" href="#locating-configuration-files" title="Permalink to this headline">¶</a></h2>
+<p>A major feature is the automatic location
+of configuration files.
+Each platform supports specific locations which are more or less
+different. The applications add frequently further differences in
+dependency of the runtime platforms.</p>
+<p>The <em>filesysobjects.configdata</em> [filesysobjects] module provides an abstraction layer,
+which encapsulates platform specific standard directory locations by a set
+of abstract interfaces, but still supports the addition of arbitrary custom locations.</p>
+<p>So the automatic location could be processed by a single call only, which
+also handels the priority in case of redundant files.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ini_file</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">configdata</span><span class="o">.</span><span class="n">ConfigPath</span><span class="p">()</span><span class="o">.</span><span class="n">get_config_filepath</span><span class="p">(</span><span class="s1">&#39;myini.ini&#39;</span><span class="p">)</span>
+<span class="n">conf_file</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">configdata</span><span class="o">.</span><span class="n">ConfigPath</span><span class="p">()</span><span class="o">.</span><span class="n">get_config_filepath</span><span class="p">(</span><span class="s1">&#39;myconf.conf&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>For typical applications refer to the <a class="reference external" href="howto_configdata.html">HowTo</a>,
+and the packages <a class="reference internal" href="references.html#epyunit" id="id2">[epyunit]</a> and <a class="reference internal" href="references.html#syscalls" id="id3">[syscalls]</a>.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>PyFileSysObjects - [filesysobjects]</li>
+<li>PySourceInfo - [sourceinfo]</li>
+<li>Python2 ConfigParser - [ConfigParser]</li>
+<li>Python3 configparser - [configparser]</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Config Data</a><ul>
+<li><a class="reference internal" href="#configuration-persistency">Configuration Persistency</a></li>
+<li><a class="reference internal" href="#locating-configuration-files">Locating Configuration Files</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/config_data.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

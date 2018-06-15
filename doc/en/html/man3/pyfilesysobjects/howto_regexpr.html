@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Howto Regular Expressions &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="up" title="Howto" href="howto.html" />
+    <link rel="next" title="Howto URI" href="howto_uri.html" />
+    <link rel="prev" title="UseCase-Shortcuts - Selected Common UsesCases" href="usecases.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="howto_uri.html" title="Howto URI"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="usecases.html" title="UseCase-Shortcuts - Selected Common UsesCases"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="howto.html" accesskey="U">Howto</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="howto-regular-expressions">
+<h1>Howto Regular Expressions<a class="headerlink" href="#howto-regular-expressions" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Howto Regular Expressions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-notation">Basic Notation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="basic-notation">
+<h2>Basic Notation<a class="headerlink" href="#basic-notation" title="Permalink to this headline">¶</a></h2>
+<p>The <em>filesysobjects</em> supports regular expressions of bython by the standard package <em>re</em>.
+These are applied on file path names, including path separators, thus could span
+multiple directory levels.
+The file path name syntax depends deeply on the platform and the used filesystem.
+This includes the reserved characters for the syntax and additional characters.
+While e.g. the Windows based filesystems such as <em>NTFS</em> and <em>FATxx</em> reserve a number of characters,
+the <em>Posix</em> based filesystems permit almost any character, just reserve the path separator and the
+null-character.</p>
+<div class="section" id="special-dot-notation">
+<h3>Special Dot Notation<a class="headerlink" href="#special-dot-notation" title="Permalink to this headline">¶</a></h3>
+<p>Almost all filesystems support the special dot-notation for the current directory &#8216;.&#8217;
+and the parent directory &#8216;..&#8217;.
+This characters are treated though by special semantics for all filesystem name related functions.
+The regular expressions use the dot &#8216;.&#8217; in as a special wildcard character.
+Thus the notation of a path with contained regular expressions requires some special handling.
+The simples solution is to define a character class, which masks the character as non-dot character. ::
+The notation</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">path</span><span class="o">/./</span><span class="n">b</span>
+</pre></div>
+</div>
+<p>is by default ambiguous because of the application <em>os.normpath</em> and/or <em>filesysobjects.paths.normpathx</em>,
+<em>filesysobjects.apppaths.normpathx</em>, which normalises the character sequence &#8216;<em>/./</em>&#8216; to &#8216;<em>/</em>&#8216;,
+&#8216;<em>\.\</em>&#8216; to &#8216;<em>\</em>&#8216; respectively.
+The possible resulting interpratations are:</p>
+<ul>
+<li><p class="first">the current working directory, resulting in</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">b</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">a regular special wildcard character representing a single character</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">path</span><span class="o">/./</span><span class="n">b</span>   <span class="k">with</span> <span class="s1">&#39;.&#39;</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="p">[</span><span class="n">a</span><span class="o">-</span><span class="n">zA</span><span class="o">-</span><span class="n">Z0</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>The following Python regular expression notations resolve the ambiguity by breaking
+the current directory pattern</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">path</span><span class="o">/.</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span><span class="o">/</span><span class="n">b</span>
+<span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="p">[</span><span class="n">a</span><span class="o">-</span><span class="n">zA</span><span class="o">-</span><span class="n">Z0</span><span class="o">-</span><span class="mi">9</span><span class="p">]</span><span class="o">/</span><span class="n">b</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Howto Regular Expressions</a><ul>
+<li><a class="reference internal" href="#basic-notation">Basic Notation</a><ul>
+<li><a class="reference internal" href="#special-dot-notation">Special Dot Notation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="usecases.html"
+                        title="previous chapter">UseCase-Shortcuts - Selected Common UsesCases</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="howto_uri.html"
+                        title="next chapter">Howto URI</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/howto_regexpr.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="howto_uri.html" title="Howto URI"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="usecases.html" title="UseCase-Shortcuts - Selected Common UsesCases"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="howto.html" >Howto</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

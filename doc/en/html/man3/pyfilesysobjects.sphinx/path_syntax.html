@@ -1,0 +1,1485 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Addresses for File-Like Resources &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="next" title="Normative References" href="reference_cases.html" />
+    <link rel="prev" title="Filename Encoding and Decoding" href="python_encode_decode.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference_cases.html" title="Normative References"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="python_encode_decode.html" title="Filename Encoding and Decoding"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="addresses-for-file-like-resources">
+<h1>Addresses for File-Like Resources<a class="headerlink" href="#addresses-for-file-like-resources" title="Permalink to this headline">¶</a></h1>
+<p>The package &#8216;filesysobjects&#8217; supports the hierarchical
+navigation on filesystems.
+This is similar to the hierarchy of object oriented class
+hierarchies</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The basic idea is to start a search operation for filenames
+from a directory position on upward and get the first match.
+The first match is than the deepest position, which in terms of
+object orientation represents the most specialized class.</p>
+</div>
+<p>A typical application is the drop-in design of regression and
+unit tests.
+In those cases a frequent requirement is the provisioning of test dummies.
+This could be simply designed as an executable file for providing
+test values, or simulating the environment for a specific test.
+When performing multiple tests on the same resource, the upward-search operation
+provides for automatic detection from multiple cases which are positioned
+deeper within the filesystem hierarchy.
+Thus these cases simply inherit an already present resource, which in addition
+covers higher positioned files by a higher degree of specialization.</p>
+<ul class="simple">
+<li><a class="reference external" href="path_syntax.html#filesystem-elements-as-objects">Filesystem Elements as Objects</a></li>
+<li><a class="reference external" href="path_syntax.html#variants-of-pathname-parameters-literals-regexpr-and-glob">Variants of Pathname Parameters - Literals, RegExpr, and Glob</a></li>
+<li><a class="reference external" href="path_syntax.html#syntax-elements">Syntax Elements</a></li>
+<li><a class="reference external" href="path_syntax.html#call-parameters-of-the-api">Call Parameters of the API</a></li>
+<li><a class="reference external" href="epydoc/index.html">API in javadoc-style</a></li>
+</ul>
+<div class="section" id="filesystem-addresses">
+<h2>Filesystem Addresses<a class="headerlink" href="#filesystem-addresses" title="Permalink to this headline">¶</a></h2>
+<p>The path syntax elements supported by this module
+represent an abstraction of file system paths.
+The representation is based on a common platform
+independent path compiler implemented based on
+the <em>re</em> package.
+This provides a canonical view on file resource paths.</p>
+<ul>
+<li><p class="first">URIs based on RFC3986 and RFC8089 for local files are resolved to:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="p">:</span><span class="o">/////</span><span class="n">host</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span>
+<span class="n">file</span><span class="p">:</span><span class="o">////</span><span class="n">host</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span>
+<span class="n">file</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span>
+<span class="n">file</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span>
+<span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span>
+<span class="n">file</span><span class="p">:</span><span class="n">d</span><span class="p">:</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">IEEE Std 1003.1(TM), 2013 Edition; Chapter 4.12:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">//</span><span class="n">hostname</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">UNC/SMB/CIFS/NTFS/FAT:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>\\\\<span class="n">hostname</span>\\<span class="n">local</span>\\<span class="n">filesystem</span>\\<span class="n">path</span>
+\\<span class="n">local</span>\\<span class="n">filesystem</span>\\<span class="n">path</span>
+ <span class="n">d</span><span class="p">:</span>\\<span class="n">a</span>\\<span class="n">b</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Mac-OS:</p>
+<p>Current same as for Linux/Unix.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="file-paths-in-pyhton3">
+<h2>File Paths in Pyhton3<a class="headerlink" href="#file-paths-in-pyhton3" title="Permalink to this headline">¶</a></h2>
+<p>The Python release 3 supports a new library <em>pathlib</em> <a class="reference internal" href="references.html#pathlib" id="id1">[pathlib]</a>,
+which focusses on paths and distinguishes between static(Pure) and dynamic resolution.</p>
+<p><a class="reference internal" href="_images/pathlib-inheritance.png"><img alt="pathlibinheritance" src="_images/pathlib-inheritance.png" style="width: 300px;" /></a>
+<a class="reference external" href="_static/pathlib-inheritance.png"><img alt="zoom" src="_images/zoom.png" style="width: 16px;" /></a></p>
+<p>The independently developed <em>filesysobjects</em> contains these features and extends
+the view onto arbitrary persistent objects.
+The support comprises Python2.7 and Python3.5+, where due to the large codebase the Python2.7
+release is seen to be in active use for another decade.</p>
+<p>The extended features like &#8216;splitapppathx()&#8217; and &#8216;splitpathx()&#8217;,
+&#8216;escapepathx()&#8217; and &#8216;unescapepathx()&#8217; require a supporting path compiler,
+thus could not be replaced by the new <em>pathlib</em>.
+Another aspect is the dynamic registration and un-registration of additional application
+packages, which may include completely different scanners and parsers for paths of virtual filesystems.
+Thus these dispatcher parts are table-driven instead of inheritance based.</p>
+<p>The cross-native features which currently use interfaces of the &#8216;<em>os</em>&#8216; package
+are forseen to be migrated and/or alterntively based on the new lib for Python3.5+.</p>
+</div>
+<div class="section" id="arbitrary-file-like-resources">
+<h2>Arbitrary File-Like Resources<a class="headerlink" href="#arbitrary-file-like-resources" title="Permalink to this headline">¶</a></h2>
+<p>The Unix OS / IEEE-1003.1 provide a view of the file system based driver interfaces to arbitrary resources.
+These comprise ordinary files, IO devices, storage devices, and others.
+The Windows OS provides partially a similar view, e.g. by the Name-Spaces.</p>
+<p>Therefore the <em>filesysobjects</em> package handles each supported resource as an object which
+has an access-path.
+The path could be preresnted by various syntaxes, e.g. as Windows-Path, or as a Posix-Path.
+Where these common syntaxes could even be subdivided, e.g. by the onld MacOS syntax,
+which is still present in OS-X.
+Another common representation is here the file-URL of RFC8089.</p>
+<p>The <em>filesysobjects</em> defines a canonical object namebinding for each resource and maps these
+to the requested target syntax.
+The conversion is controlled by the parameters <em>spf</em>, and <em>tpf</em> - source-platform and target-platform.
+This comprises the pure syntax elements with additional context specific semantics for the
+appropriate ambiguity resolution.
+E.g. drive-names, host names, and shares as path parts,
+also queries and fragments, or OIDs.</p>
+<p>The internal decomposition is provided to the applicaiton by the <em>split</em> functions, which enable
+for simplified loop constructs, e.g. for heterogeneous path-resolution, search and crawler operations.</p>
+<div class="section" id="common-path-addresses">
+<h3>Common Path Addresses<a class="headerlink" href="#common-path-addresses" title="Permalink to this headline">¶</a></h3>
+<p>The syntax elements for the normalization of pathnames are in particular
+essential for the treatment of the filesystem structure as a class and object
+hierarchy.
+Thus the behaviour has to be defined thoroughly from the beginning, even or
+better in particular in case of the foreseen evolutionary add-on extension.</p>
+<p>The current release provides the following syntax, <em>successive
+compatible extensions are going to follow soon</em>.  These the processing
+of the provided syntax is designed in two layers in accordance to
+common examples.</p>
+<p>The lower layer provides the syntax elements to construct a pathname
+for local access, whereas the upper layer provides the information for
+the location of remote filesystems.</p>
+<p>The following figure draftly weights the degree of exchangability and inter operability of the
+supported name-binding by the resource file path specifications.
+Where the darkness of the grey background symbolizes a tighter overall coupling.</p>
+<p><a class="reference internal" href="_images/pathname_types.png"><img alt="pathnametypes" src="_images/pathname_types.png" style="width: 500px;" /></a>
+<a class="reference external" href="_static/pathname_types.png"><img alt="zoom" src="_images/zoom.png" style="width: 16px;" /></a></p>
+<p>Thus the functions of the lower layer:</p>
+<ul class="simple">
+<li><a href="#id49"><span class="problematic" id="id50">`escapepathx`_</span></a></li>
+<li><a class="reference external" href="paths.html#normpathx">normpathx</a></li>
+<li><a class="reference external" href="paths.html#splitpathx">splitpathx</a></li>
+<li><a href="#id51"><span class="problematic" id="id52">`unescapepathx`_</span></a></li>
+</ul>
+<p>are extended replacements of the standard system interfaces:</p>
+<ul class="simple">
+<li><em>ntpath.normpath</em>, <em>ntpath.split</em>, <em>ntpath.splitdrive</em>,</li>
+<li><em>os.path.normpath</em>, <em>os.path.split</em>, <em>os.path.splitdrive</em>,</li>
+<li><em>posixpath.normpath</em>, <em>posixpath.split</em>, <em>posixpath.splitdrive</em>,</li>
+</ul>
+<p>Whereas the functions of the upper layer:</p>
+<ul class="simple">
+<li><a class="reference external" href="apppaths.html#normapppathx">normapppathx</a></li>
+<li><a href="#id53"><span class="problematic" id="id54">`splitapppathx`_</span></a></li>
+<li><a href="#id55"><span class="problematic" id="id56">`splitapppathx_getlocalpath`_</span></a></li>
+</ul>
+<p>include support for application pathnames including schemes, and provide
+intermixed search-paths.
+This also contains the accurate feature of the interface <em>ntpath.splitunc</em>,
+extended by file-URIs for UNC - RFC8089.</p>
+<p>The escape and unescape functions provide for standard pathnames in particular for
+windows file systems, including the awareness of standard escape sequences.
+The interfaces are:</p>
+<ul>
+<li><p class="first"><a href="#id57"><span class="problematic" id="id58">`escapepathx`_</span></a></p>
+<p>Escape backshlashes and standard escape characters.</p>
+</li>
+<li><p class="first"><a href="#id59"><span class="problematic" id="id60">`unescapepathx`_</span></a></p>
+<p>Unescape, this simply reverses the <em>escapepathx</em>.</p>
+</li>
+<li><p class="first">mask</p>
+<p>Any text sequence could be masked - protected - by Python docstring like triple quotes.</p>
+</li>
+</ul>
+<p>The following function hierarchy for pathname conversion including
+UNC, SMB, POSIX-Apps, and local filenames is supported.
+The layer for the abstract search and interator interfaces relies herby on the resource paths
+as processed by the lower layers.
+The results are provided in the available representations of the application resource paths
+and/or standar local file system path name layer.</p>
+<p><a class="reference internal" href="_images/pathname_functions.png"><img alt="pathnamefunctions" src="_images/pathname_functions.png" style="width: 500px;" /></a>
+<a class="reference external" href="_static/pathname_functions.png"><img alt="zoom" src="_images/zoom.png" style="width: 16px;" /></a></p>
+<p>Due to some specific position dependent interpretation of the
+&#8216;os.sep&#8217; and the &#8216;os.pathsep&#8217; the application layer has the app specific knowledge
+and is foreseen to break the provided resource paths into the chunks understood by the
+lower layer interfaces.
+This also normalizes the &#8216;os.sep&#8217; and &#8216;os.pathsep&#8217; by conversion and elimination of
+neutral repetitons as well as special semantics of the reserved dot-names &#8216;.&#8217; and &#8216;..&#8217;.
+A single pathname is hereby represented by the following syntax:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span> filesystemNodeName := (
+    pathname + SEP + filename
+    | pathname [ + SEP ]
+    | [ SEP ] + filename
+    | SEP
+ )
+
+ pathname := [ PREFIXKEY ] + dirname [ + SEP + pathname ]
+ dirname := &lt;valid-name-of-dir-node&gt;
+ filename := &lt;valid-name-of-file-node&gt;
+ &lt;valid-name-of-dir-node&gt; := &lt;-node-name&gt; [ + SEP$ ]
+ &lt;valid-name-of-file-node&gt; := &lt;valid-node-name&gt;
+ &lt;valid-node-name&gt; := 1*(x)nodechar | 1*(x)&lt;node-name-chars&gt;
+ &lt;node-name=chars&gt; := 1*(a)nodechar + 3QUOTE + 1*(b)anychar + 3QUOTE [ + &lt;node-name=chars&gt; ]
+
+ PREFIXKEY := (
+      &#39;file:///&#39; + 2SEP + SPECIALNODE + 1SEP + share-name
+    | &#39;file://&#39;
+    | &#39;file:&#39;  # short form, see RFC8089
+    | &#39;smb://&#39; + SPECIALNODE + 1SEP + share-name
+    | DRV
+    | 2SEP  SPECIALNODE  [varSEP]
+    | nSEP
+ )
+ DRV := [a-z] + &#39;:&#39;   # On MS-Windows
+ SPECIALNODE := (
+    &lt;networknode-access&gt;
+ )
+ share-name := (
+    1*80pchar  # see [MS-DTYP]_
+ )
+ &lt;networknode-access&gt; := [^SEP]+
+ varSEP := ( &#39;&#39; | 1SEP | 2SEP | nSEP )
+ 1SEP := ^SEP + !SEP
+ 2SEP := ^SEP + SEP + !SEP       # in accordance to IEEE Std 1003.1 and/or CIFS/SMB
+ nSEP := ^SEP + SEP + SEP + SEP* # more than 2xSEP
+ SEP := &lt;OS-specific-seperator&gt;
+ 3QUOTE := ( &#39;&quot;&#39; + &#39;&quot;&#39; + &#39;&quot;&#39; | &quot;&#39;&quot; + &quot;&#39;&quot; + &quot;&#39;&quot;)  # 3x&#39;&quot;&#39; or 3x&quot;&#39;&quot;
+ &lt;OS-specific-seperator&gt; := ( &#39;/&#39; | &#39;\&#39; ) # for now only two are known
+
+ SPECIAL_SYNTAX_DIAGRAM_CHARS_AND_REGEXPR := {
+    &#39;^&#39;, &#39;$&#39;, &#39;!&#39;, &#39;+&#39;, &#39;{&#39;, &#39;}&#39;, &#39;[&#39;, &#39;]&#39;, &#39;:=&#39;, &#39;|&#39;, &#39;&lt;&#39;, &#39;&gt;&#39;, &#39;#&#39;
+ }
+
+anychar := &quot;any character&quot;  # any character in quoted sections, e.g. globs and/or regular expressions
+</pre></div>
+</div>
+<p>The seperator commonly used in this document is &#8216;/&#8217;. This could be interchaned by
+the seperator &#8216;\&#8217;, which also defines an escape character, thus is omitted when not
+required.</p>
+<p>The following mappings of types to pathnames are supported.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="35%" />
+<col width="20%" />
+<col width="6%" />
+<col width="12%" />
+<col width="13%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">type</th>
+<th class="head">prefix</th>
+<th class="head">host/authority</th>
+<th class="head">share</th>
+<th class="head">path</th>
+<th class="head">path-options</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>ldsys</td>
+<td>&lt;drive&gt;:, <a class="reference external" href="file:/">file:/</a>/&lt;drive&gt;, file:&lt;drive&gt;</td>
+<td>&nbsp;</td>
+<td>drive</td>
+<td>path</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>lfsys</td>
+<td><a class="reference external" href="file://">file://</a>, file:,</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>path</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>lfsys(localhost)</td>
+<td><a class="reference external" href="file:localhost">file:localhost</a>, <a class="reference external" href="file://localhost">file://localhost</a></td>
+<td>&#8216;localhost&#8217;, &#8216;127.0.0.1&#8217;</td>
+<td>&nbsp;</td>
+<td>path</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>raw</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>resource-path</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>share</td>
+<td>&#8216;\\&#8217;, &#8216;//&#8217;</td>
+<td>hostname</td>
+<td>share</td>
+<td>path</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>smb, cifs</td>
+<td><a class="reference external" href="smb://">smb://</a></td>
+<td>hostname</td>
+<td>share</td>
+<td>path</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>url</td>
+<td><a class="reference external" href="http://">http://</a>, <a class="reference external" href="https://">https://</a>, <a class="reference external" href="ftp://">ftp://</a>, ...</td>
+<td>hostname</td>
+<td>&nbsp;</td>
+<td>path</td>
+<td>query, fragment</td>
+</tr>
+<tr class="row-odd"><td>unc</td>
+<td><a class="reference external" href="file://///">file://///</a>, <a class="reference external" href="file:////">file:////</a>,&#8217;\\&#8217;, &#8216;//&#8217;, unc://</td>
+<td>hostname</td>
+<td>share</td>
+<td>path</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>Posix-App</td>
+<td>&#8216;//&#8217;</td>
+<td>app-prefix/hostname</td>
+<td>&nbsp;</td>
+<td>path</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>The above syntax definition provides just a subset but very common set of possible naming schemes,
+additional are foreseen to be supported in next versions by custom plugins.</p>
+<p>Thus the functions of the lower layer:</p>
+<ul class="simple">
+<li><a href="#id61"><span class="problematic" id="id62">`escapepathx`_</span></a></li>
+<li><a class="reference external" href="paths.html#normpathx">normpathx</a></li>
+<li><a class="reference external" href="paths.html#splitpathx">splitpathx</a></li>
+<li><a href="#id63"><span class="problematic" id="id64">`unescapepathx`_</span></a></li>
+</ul>
+<p>are extended replacements of the standard system interfaces:</p>
+<ul class="simple">
+<li><em>ntpath.normpath</em>, <em>ntpath.split</em>, <em>ntpath.splitdrive</em>,</li>
+<li><em>os.path.normpath</em>, <em>os.path.split</em>, <em>os.path.splitdrive</em>,</li>
+<li><em>posixpath.normpath</em>, <em>posixpath.split</em>, <em>posixpath.splitdrive</em>,</li>
+</ul>
+<p>Whereas the functions of the upper layer:</p>
+<ul class="simple">
+<li><a class="reference external" href="apppaths.html#normapppathx">normapppathx</a></li>
+<li><a href="#id65"><span class="problematic" id="id66">`splitapppathx`_</span></a></li>
+<li><a href="#id67"><span class="problematic" id="id68">`splitapppathx_getlocalpath`_</span></a></li>
+</ul>
+<p>include support for application pathnames including schemes, and provide
+intermixed search-paths.
+This also contains the accurate feature of the interface <em>ntpath.splitunc</em>,
+extended by file-URIs for UNC - RFC8089.</p>
+<p>The escape and unescape functions provide for standard pathnames in particular for
+windows file systems, including the awareness of standard escape sequences.
+The interfaces are:</p>
+<ul>
+<li><p class="first"><a href="#id69"><span class="problematic" id="id70">`escapepathx`_</span></a></p>
+<p>Escape backshlashes and standard escape characters.</p>
+</li>
+<li><p class="first"><a href="#id71"><span class="problematic" id="id72">`unescapepathx`_</span></a></p>
+<p>Unescape, this simply reverses the <em>escapepathx</em>.</p>
+</li>
+<li><p class="first">mask</p>
+<p>Any text sequence could be masked - protected - by Python docstring like triple quotes.</p>
+</li>
+</ul>
+<p>The following function hierarchy for pathname conversion including
+UNC, SMB, POSIX-Apps, and local filenames is supported.
+The layer for the abstract search and interator interfaces relies herby on the resource paths
+as processed by the lower layers.
+The results are provided in the available representations of the application resource paths
+and/or standar local file system path name layer.</p>
+<p><a class="reference internal" href="_images/pathname_functions.png"><img alt="pathnamefunctions2" src="_images/pathname_functions.png" style="width: 500px;" /></a>
+<a class="reference external" href="_static/pathname_functions.png"><img alt="zoom" src="_images/zoom.png" style="width: 16px;" /></a></p>
+<p>Due to some specific position dependent interpretation of the
+&#8216;os.sep&#8217; and the &#8216;os.pathsep&#8217; the application layer has the app specific knowledge
+and is foreseen to break the provided resource paths into the chunks understood by the
+lower layer interfaces.
+This also normalizes the &#8216;os.sep&#8217; and &#8216;os.pathsep&#8217; by conversion and elimination of
+neutral repetitons as well as special semantics of the reserved dot-names &#8216;.&#8217; and &#8216;..&#8217;.
+A single pathname is hereby represented by the following syntax:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span> filesystemNodeName := (
+    pathname + SEP + filename
+    | pathname [ + SEP ]
+    | [ SEP ] + filename
+    | SEP
+ )
+
+ pathname := [ PREFIXKEY ] + dirname [ + SEP + pathname ]
+ dirname := &lt;valid-name-of-dir-node&gt;
+ filename := &lt;valid-name-of-file-node&gt;
+ &lt;valid-name-of-dir-node&gt; := &lt;-node-name&gt; [ + SEP$ ]
+ &lt;valid-name-of-file-node&gt; := &lt;valid-node-name&gt;
+ &lt;valid-node-name&gt; := 1*(x)nodechar | 1*(x)&lt;node-name-chars&gt;
+ &lt;node-name=chars&gt; := 1*(a)nodechar + 3QUOTE + 1*(b)anychar + 3QUOTE [ + &lt;node-name=chars&gt; ]
+
+ PREFIXKEY := (
+      &#39;file:///&#39; + 2SEP + SPECIALNODE + 1SEP + share-name
+    | &#39;file://&#39;
+    | &#39;file:&#39;  # short form, see RFC8089
+    | &#39;smb://&#39; + SPECIALNODE + 1SEP + share-name
+    | DRV
+    | 2SEP  SPECIALNODE  [varSEP]
+    | nSEP
+ )
+ DRV := [a-z] + &#39;:&#39;   # On MS-Windows
+ SPECIALNODE := (
+    &lt;networknode-access&gt;
+ )
+ share-name := (
+    1*80pchar  # see [MS-DTYP]_
+ )
+ &lt;networknode-access&gt; := [^SEP]+
+ varSEP := ( &#39;&#39; | 1SEP | 2SEP | nSEP )
+ 1SEP := ^SEP + !SEP
+ 2SEP := ^SEP + SEP + !SEP       # in accordance to IEEE Std 1003.1 and/or CIFS/SMB
+ nSEP := ^SEP + SEP + SEP + SEP* # more than 2xSEP
+ SEP := &lt;OS-specific-seperator&gt;
+ 3QUOTE := ( &#39;&quot;&#39; + &#39;&quot;&#39; + &#39;&quot;&#39; | &quot;&#39;&quot; + &quot;&#39;&quot; + &quot;&#39;&quot;)  # 3x&#39;&quot;&#39; or 3x&quot;&#39;&quot;
+ &lt;OS-specific-seperator&gt; := ( &#39;/&#39; | &#39;\&#39; ) # for now only two are known
+
+ SPECIAL_SYNTAX_DIAGRAM_CHARS_AND_REGEXPR := {
+    &#39;^&#39;, &#39;$&#39;, &#39;!&#39;, &#39;+&#39;, &#39;{&#39;, &#39;}&#39;, &#39;[&#39;, &#39;]&#39;, &#39;:=&#39;, &#39;|&#39;, &#39;&lt;&#39;, &#39;&gt;&#39;, &#39;#&#39;
+ }
+
+anychar := &quot;any character&quot;  # any character in quoted sections, e.g. globs and/or regular expressions
+</pre></div>
+</div>
+<p>The seperator commonly used in this document is &#8216;/&#8217;. This could be interchaned by
+the seperator &#8216;\&#8217;, which also defines an escape character, thus is omitted when not
+required.</p>
+<p>The following mappings of types to pathnames are supported.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="35%" />
+<col width="20%" />
+<col width="6%" />
+<col width="12%" />
+<col width="13%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">type</th>
+<th class="head">prefix</th>
+<th class="head">host/authority</th>
+<th class="head">share</th>
+<th class="head">path</th>
+<th class="head">path-options</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>ldsys</td>
+<td>&lt;drive&gt;:, <a class="reference external" href="file:/">file:/</a>/&lt;drive&gt;, file:&lt;drive&gt;</td>
+<td>&nbsp;</td>
+<td>drive</td>
+<td>path</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>lfsys</td>
+<td><a class="reference external" href="file://">file://</a>, file:,</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>path</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>lfsys(localhost)</td>
+<td><a class="reference external" href="file:localhost">file:localhost</a>, <a class="reference external" href="file://localhost">file://localhost</a></td>
+<td>&#8216;localhost&#8217;, &#8216;127.0.0.1&#8217;</td>
+<td>&nbsp;</td>
+<td>path</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>raw</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>resource-path</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>share</td>
+<td>&#8216;\\&#8217;, &#8216;//&#8217;</td>
+<td>hostname</td>
+<td>share</td>
+<td>path</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>smb, cifs</td>
+<td><a class="reference external" href="smb://">smb://</a></td>
+<td>hostname</td>
+<td>share</td>
+<td>path</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>url</td>
+<td><a class="reference external" href="http://">http://</a>, <a class="reference external" href="https://">https://</a>, <a class="reference external" href="ftp://">ftp://</a>, ...</td>
+<td>hostname</td>
+<td>&nbsp;</td>
+<td>path</td>
+<td>query, fragment</td>
+</tr>
+<tr class="row-odd"><td>unc</td>
+<td><a class="reference external" href="file://///">file://///</a>, <a class="reference external" href="file:////">file:////</a>,&#8217;\\&#8217;, &#8216;//&#8217;, unc://</td>
+<td>hostname</td>
+<td>share</td>
+<td>path</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>Posix-App</td>
+<td>&#8216;//&#8217;</td>
+<td>app-prefix/hostname</td>
+<td>&nbsp;</td>
+<td>path</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>The above syntax definition provides just a subset but very common set of possible naming schemes,
+additional are foreseen to be supported in next versions by custom plugins.</p>
+</div>
+<div class="section" id="canonical-address">
+<h3>Canonical Address<a class="headerlink" href="#canonical-address" title="Permalink to this headline">¶</a></h3>
+<p>For now experimental and non-productive, for review and
+comments <a class="reference external" href="shortcuts.html#">[API]</a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">filesysobjects</span><span class="o">.</span><span class="n">NetFiles</span><span class="o">.</span><span class="n">normpathx</span>
+</pre></div>
+</div>
+<p>For syntax design requirements refer to &#8220;<a class="reference external" href="path_netfiles.html">Extended Filesystems - Network Features</a>&#8221;.</p>
+<p>See also Python issue:</p>
+<ul class="simple">
+<li>Issue 26329: os.path.normpath(&#8220;//&#8221;) returns //
+- <a class="reference external" href="http://bugs.python.org/issue26329">http://bugs.python.org/issue26329</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="filesyselemasobjects">
+<span id="id9"></span><h2>Filesystem Elements as Objects<a class="headerlink" href="#filesyselemasobjects" title="Permalink to this headline">¶</a></h2>
+<p>The common filesystems inherently support basic features for the application of hierarchical
+name binding structures.
+This is commonly utilized by applications via various search path algorithms e.g. the PATH
+variable for executables.
+The package &#8216;filesystemobjects&#8217; extends this feature for the upward search within hierarchies
+including the search and extension by subpaths as branches.
+This simulates inheritance within classes and objects.</p>
+<p>The following two example features already provide for the required
+basic superposition of inheritance for files in directory hierarchies.</p>
+<ul class="simple">
+<li>The search for files and/or relative paths from a given
+directory on upwards.</li>
+<li>The extension of search paths with any sub-directory portion
+from a given directory on upwards.</li>
+</ul>
+<p>This provides e.g. the superposition of equal named files within different
+levels of the directory tree.
+Thus a search operation upward from a start position will match the same
+name multiple times, similar to a method or member variable of a class
+within an inheritance hierarchy.</p>
+<p>The following figure depicts the structure for some  examples(
+see testdata.examples).</p>
+<a class="reference internal image-reference" href="_images/filesysobjectsnav.png"><img alt="_images/filesysobjectsnav.png" src="_images/filesysobjectsnav.png" style="width: 650px;" /></a>
+<dl class="docutils">
+<dt>Or as tree output:</dt>
+<dd><div class="first last highlight-default"><div class="highlight"><pre><span></span>a
+|-- b0
+|   |-- a
+|   |   `-- b0
+|   |       |-- c
+|   |       |   `-- F
+|   |       |-- F
+|   |       `-- F1
+|   |-- c
+|   |   |-- a
+|   |   |   `-- b0
+|   |   |       |-- c
+|   |   |       |   `-- F
+|   |   |       |-- F
+|   |   |       `-- F1
+|   |   `-- F
+|   `-- F
+|-- b1
+|   |-- c
+|   |   |-- F
+|   |   `-- F1
+|   `-- F
+|-- b2
+|   `-- a
+|       |-- b0
+|       |   |-- c
+|       |   |   `-- F
+|       |   |-- F
+|       |   `-- F1
+|       `-- F
+|-- F
+`-- F1
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>The basic idea is similar to any OO pattern for the implementation of holomorpy by
+upward search for identical named elements. Where by default the first
+match terminates the search.
+Thus the first match defines the concrete feature, whereas the possible following
+additional matches in the higher location of the filesystem tree were hidden.
+This could be varied for specific applications as required.</p>
+<p>The following search order simulates inheritance and could simply created by one
+API call <a class="reference external" href="pyfilesysobjects.html#filesysobjects.pathtools.set_uppertree_searchpath">set_uppertree_searchpath</a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">0.</span> <span class="n">a</span><span class="o">/</span><span class="n">b2</span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b0</span><span class="o">/</span><span class="n">c</span><span class="o">/</span><span class="n">F</span>   <span class="o">=&gt;</span> <span class="n">match</span><span class="p">,</span> <span class="n">stop</span>
+<span class="mf">1.</span> <span class="n">a</span><span class="o">/</span><span class="n">b2</span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b0</span><span class="o">/</span><span class="n">F</span>
+<span class="mf">2.</span> <span class="n">a</span><span class="o">/</span><span class="n">b2</span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">F</span>
+<span class="mf">3.</span> <span class="n">a</span><span class="o">/</span><span class="n">F</span>
+</pre></div>
+</div>
+<p>This algorithm in particular could be repeated after the first match for the remaining
+upper tree again.
+This is either applied for a single search, or an iterator, where collections has to
+be processed.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pyfilesysobjects</span><span class="o">.</span><span class="n">html</span><span class="c1">#filesysobjects.pathtools.#set_uppertree_searchpath</span>
+
+<span class="mf">0.</span> <span class="n">a</span><span class="o">/</span><span class="n">b2</span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b0</span><span class="o">/</span><span class="n">c</span><span class="o">/</span><span class="n">F</span>
+<span class="mf">1.</span> <span class="n">a</span><span class="o">/</span><span class="n">b2</span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b0</span><span class="o">/</span><span class="n">F</span>    <span class="o">=&gt;</span> <span class="n">match</span><span class="p">,</span> <span class="n">stop</span>
+<span class="mf">2.</span> <span class="n">a</span><span class="o">/</span><span class="n">b2</span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">F</span>
+<span class="mf">3.</span> <span class="n">a</span><span class="o">/</span><span class="n">F</span>
+</pre></div>
+</div>
+<p>Next iteration, and so on...</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mf">0.</span> <span class="n">a</span><span class="o">/</span><span class="n">b2</span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b0</span><span class="o">/</span><span class="n">c</span><span class="o">/</span><span class="n">F</span>
+<span class="mf">1.</span> <span class="n">a</span><span class="o">/</span><span class="n">b2</span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b0</span><span class="o">/</span><span class="n">F</span>
+<span class="mf">2.</span> <span class="n">a</span><span class="o">/</span><span class="n">b2</span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">F</span>       <span class="o">=&gt;</span> <span class="n">match</span><span class="p">,</span> <span class="n">stop</span>
+<span class="mf">3.</span> <span class="n">a</span><span class="o">/</span><span class="n">F</span>
+</pre></div>
+</div>
+<p>This also works for side branches when the in memory string function is applied onto plist.
+Thus you can simply map e.g. the following branch by one call only:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">a</span><span class="o">/</span><span class="n">b0</span><span class="o">/</span><span class="n">x</span><span class="o">/</span><span class="n">y</span><span class="o">/</span><span class="n">z</span><span class="o">/</span><span class="n">file</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>into:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>/a/b2/a/b0/c/F
+      | |
+      V V
+      =/=/
+          `-x/y/z/file.txt
+</pre></div>
+</div>
+<p>The application of a low-level algorithm on files and directories in particular
+provides for simplified drop-in designs, with generic determination of
+application features.
+It is in particular possible to design quite powerful applications by just a few
+interface conventions.
+The provided library provides various parameters for the algorithm including
+reversed order, pattern match, and match-index based search.</p>
+<p>A more complex application of this is Python itself, whereas a ligthweight
+application for bash scripts is presented by the project</p>
+<blockquote>
+<div><p>bash-core-lib - <a class="reference external" href="https://sourceforge.net/p/bashcorelib/">https://sourceforge.net/p/bashcorelib/</a></p>
+<p>bash-core     - <a class="reference external" href="https://sourceforge.net/projects/bash-core/">https://sourceforge.net/projects/bash-core/</a></p>
+</div></blockquote>
+<p>which basically introduces OO elements and reusability by
+repositories into bash scripting based on ShellScriptlets
+and dotted object-tree-like notation.</p>
+</div>
+<div class="section" id="filesystems-native-and-standard-features">
+<h2>Filesystems - Native and Standard Features<a class="headerlink" href="#filesystems-native-and-standard-features" title="Permalink to this headline">¶</a></h2>
+<p>The path syntax elements supported by this module
+represent an abstraction, but finally rely
+on the supported platforms. Therefore internally the
+function &#8216;os.path.normpath&#8217; is widely applied for the
+transformation of the native syntax elements into the
+internal canonical representation for processing.
+In addition in internal cases of textual syntax processing
+escaping may be occasianlly required.</p>
+<p>In cases where special semantic treatment of the path elements is
+required, these could be activated or disabled by
+parameters of the call interface.</p>
+<p>The following list depicts shortly the relevant standards
+and common APIs for the naming and namebinding of filesystem
+nodes, including some network aspects for specific filesystems
+like NFS, and SMB/CIFS.</p>
+<p>The focus is the local filesystem, therefore elements
+dealing with local paths are managed.
+But it is still required to define the interface for cases where
+other address conventions are supplied.</p>
+<ul>
+<li><p class="first">URIs based on RFC3986 for local files are resolved to</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">PWD</span><span class="o">=/</span><span class="n">call</span><span class="o">/</span><span class="n">position</span><span class="o">/</span>
+
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span>
+</pre></div>
+</div>
+<p>When this is literally a valid filename, the following could be applied</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">PWD</span><span class="o">=/</span><span class="n">call</span><span class="o">/</span><span class="n">position</span><span class="o">/</span>
+
+<span class="o">./</span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">call</span><span class="o">/</span><span class="n">position</span><span class="o">/</span><span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Linux and UNIX:</p>
+<ul>
+<li><p class="first">IEEE Std 1003.1(TM), 2013 Edition; Chapter 4.12</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">//</span><span class="n">hostname</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span>
+</pre></div>
+</div>
+<p>The current version treats this literally, as a pathname, thus normally
+fails. The caller has to provide appropriate local filenames to local only
+interfaces.</p>
+<p><strong>REMARK</strong>: When introducing remote filesystem support, this will be adapted.</p>
+<p>The behaviour could be changed by call parameter.</p>
+<ul>
+<li><dl class="first docutils">
+<dt>Ignore</dt>
+<dd><div class="first last highlight-default"><div class="highlight"><pre><span></span><span class="o">//</span><span class="n">hostname</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">hostname</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ul>
+</li>
+<li><p class="first">SMBFS:</p>
+<p>The anononymous case of SMB/CIFS without required authentication is handled
+by the case depicted before.</p>
+<p>The additional cases where additional hostname parameters are reuquired are
+following in a later step.</p>
+</li>
+</ul>
+</li>
+<li><p class="first">Microsoft(TM) Windows:</p>
+<ul>
+<li><p class="first">Network shares</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>\\<span class="n">hostname</span>\<span class="n">local</span>\<span class="n">filesystem</span>\<span class="n">path</span>
+</pre></div>
+</div>
+<p>Similar behaviour as depicted before for the compliance to the
+IEEE-1003.1 standard.</p>
+<p>The behaviour could be changed by call parameter.</p>
+<ul>
+<li><dl class="first docutils">
+<dt>Ignore</dt>
+<dd><div class="first last highlight-default"><div class="highlight"><pre><span></span>\\<span class="n">hostname</span>\<span class="n">local</span>\<span class="n">filesystem</span>\<span class="n">path</span> <span class="o">=&gt;</span> \<span class="n">hostname</span>\<span class="n">local</span>\<span class="n">filesystem</span>\<span class="n">path</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p class="first">Mac-OS:</p>
+<ul class="simple">
+<li>Current same as for Linux/Unix.</li>
+</ul>
+</li>
+</ul>
+<p>Any other input format is simply ignored, and may lead to unpredictable behaviour.
+E.g.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">path</span><span class="o">/</span><span class="n">name</span> <span class="o">=&gt;</span> <span class="n">http</span><span class="p">:</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span>
+</pre></div>
+</div>
+<p>Because this could actually be a valid local filename.</p>
+</div>
+<div class="section" id="syntaxelements">
+<span id="id10"></span><h2>Syntax Elements<a class="headerlink" href="#syntaxelements" title="Permalink to this headline">¶</a></h2>
+<p>The syntax elements for the normalization of pathnames are in particular
+essential for the treatment of the filesystem structure as a class and object
+hierarchy.
+Thus the behaviour has to be defined thoroughly from the beginning, even or
+better in particular in case of the foreseen evolutionary add-on extension.</p>
+<p>The current release provides the following syntax, <em>successive compatible extensions are going to follow soon</em>.
+These the processing of the provided syntax is designed in two layers in accordance to common examples.</p>
+<p>The lower layer provides the syntax elements to construct a pathname for local access, whereas the upper layer
+provides the information for the location of remote filesystems.</p>
+<a class="reference internal image-reference" href="_images/pathname_types.png"><img alt="_images/pathname_types.png" src="_images/pathname_types.png" style="width: 550px;" /></a>
+<p>Thus the functions of the lower layer:</p>
+<ul class="simple">
+<li><a href="#id73"><span class="problematic" id="id74">`escapepathx`_</span></a></li>
+<li><a href="#id75"><span class="problematic" id="id76">`unescapepathx`_</span></a></li>
+</ul>
+<p>are similar to the system function &#8216;os.path.normpath&#8217;,
+Whereas the functions of the upper layer:</p>
+<ul class="simple">
+<li><a href="#id77"><span class="problematic" id="id78">`splitapppathx`_</span></a></li>
+<li><a href="#id79"><span class="problematic" id="id80">`splitapppathx_getlocalpath`_</span></a></li>
+</ul>
+<p>Assembles a tuple of components into a path name for access.</p>
+<p>The escape and unescape funtions work basically similar to &#8216;os.path.normpath&#8217;.
+The behaviour is:</p>
+<ul>
+<li><p class="first"><a href="#id81"><span class="problematic" id="id82">`escapepathx`_</span></a></p>
+<p>Escape backshlashes only, consider specific control characters recognized by the &#8216;re&#8217; module.
+Any arbitrary number of seperator characters are normalized appropriately, including shares.</p>
+</li>
+<li><p class="first"><a href="#id83"><span class="problematic" id="id84">`unescapepathx`_</span></a></p>
+<p>Unescape, this simply reverses the escape of a single character.
+Thus in particular the eventual normalization of &#8216;escapepathx&#8217; for multiple present
+seperators is not reverted.</p>
+</li>
+</ul>
+<p>The following function hierarchy for pathname conversion including UNC, SMB, POSIX-Apps, and local filenames is supported.</p>
+<a class="reference internal image-reference" href="_images/pathname_functions.png"><img alt="_images/pathname_functions.png" src="_images/pathname_functions.png" style="width: 600px;" /></a>
+<p>Anyhow, due to some specific poosition dependent interpretation of the
+&#8216;os.sep&#8217; the lower layer has encoded the app specific knowledge into the
+&#8216;escapepathx&#8217; routine.
+This also normalizes the &#8216;os.sep&#8217; by conversion and elimination of
+neutral repetitons as well as special semantics of &#8216;.&#8217; and &#8216;..&#8217;</p>
+<p>A single pathname is hereby represented by the syntax,
+where &#8216;cifs==smb&#8217;:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>filesystemNodeName := (
+   pathname + SEP + filename
+   | pathname [ + SEP ]
+   | [ SEP ] + filename
+   | SEP
+)
+
+pathname := [ PREFIXKEY ] + dirname [ + SEP + pathname ]
+dirname := &lt;valid-name-of-dir-node&gt;
+filename := &lt;valid-name-of-file-node&gt;
+
+&lt;valid-name-of-dir-node&gt; := &lt;valid-name-of-dir-node&gt; [ + SEP$ ]
+
+PREFIXKEY := (
+     &#39;file:///&#39; + 2SEP + SPECIALNODE + varSEP + share-name
+   | &#39;file://&#39;
+   | &#39;smb://&#39; + SPECIALNODE + varSEP + share-name
+   | DRV
+   | 2SEP  SPECIALNODE  [varSEP]
+   | nSEP
+)
+DRV := [a-z] + &#39;:&#39;   # On MS-Windows
+SPECIALNODE := (
+   &lt;networknode-access&gt;
+)
+share-name := (
+   1*80pchar  # see [MS-DTYP]
+)
+&lt;networknode-access&gt; := [^SEP]+
+varSEP := ( &#39;&#39; | 1SEP | 2SEP | nSEP )
+1SEP = ^SEP + !SEP
+2SEP = ^SEP + SEP + !SEP       # in accordance to IEEE Std 1003.1 and/or CIFS/SMB
+nSEP = ^SEP + SEP + SEP + SEP* # more than 2xSEP
+SEP := &lt;OS-specific-seperator&gt;
+&lt;OS-specific-seperator&gt; := ( &#39;/&#39; | &#39;\&#39; ) # for now only two are known
+
+SPECIAL_SYNTAX_DIAGRAM_CHARS_AND_REGEXPR := {
+   &#39;^&#39;, &#39;$&#39;, &#39;!&#39;, &#39;+&#39;, &#39;{&#39;, &#39;}&#39;, &#39;[&#39;, &#39;]&#39;, &#39;:=&#39;, &#39;|&#39;, &#39;&lt;&#39;, &#39;&gt;&#39;, &#39;#&#39;
+}
+</pre></div>
+</div>
+<p>The seperator commonly used in this document is &#8216;/&#8217;. This could be interchaned by
+the seperator &#8216;\&#8217;, which also defines an escape character, thus is omitted when not
+required.</p>
+<p>The above syntax definition provides just a subset but very common set of possible naming schemes,
+additional may be supported in future versions.</p>
+<p>For further details refer to:</p>
+<ul>
+<li><p class="first"><strong>UNC</strong>: Common definition in <a class="reference internal" href="references.html#ms-dtyp" id="id15">[MS-DTYP]</a>: Windows Data Types - Chap. 2.2.57 UNC;
+Microsoft Inc.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>UNC               = &quot;\\&quot; host-name &quot;\&quot; share-name [ &quot;\&quot; object-name ]
+host-name         = &quot;[&quot; IPv6address ‘]&quot; / IPv4address / reg-name
+   ; IPv6address, IPv4address, and reg-name as specified in [RFC3986]
+share-name        = 1*80pchar
+pchar             = %x20-21 / %x23-29 / %x2D-2E / %x30-39 / %x40-5A / %x5E-7B / %x7D-FF
+object-name       = *path-name [ &quot;\&quot; file-name ]
+path-name         = 1*255pchar
+file-name         = 1*255fchar [ &quot;:&quot; stream-name [ &quot;:&quot; stream-type ] ]
+fchar             = %x20-21 / %x23-29 / %x2B-2E / %x30-39 / %x3B / %x3D / %x40-5B / %x5D-7B
+/                         %x7D-FF
+stream-name       = *schar
+schar             = %x01-2E / %x30-39 / %x3B-5B /%x5D-FF
+stream-type       = 1*schar
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>file://</strong>: The file URI Scheme - RFC8089 <a class="reference internal" href="references.html#rfc8089" id="id16">[RFC8089]</a>,
+draft-kerwin-file-scheme-13 <a class="reference internal" href="references.html#urischeme" id="id17">[URISCHEME]</a></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="o">-</span><span class="n">URI</span>         <span class="o">=</span> <span class="n">f</span><span class="o">-</span><span class="n">scheme</span> <span class="s2">&quot;:&quot;</span> <span class="n">f</span><span class="o">-</span><span class="n">hier</span><span class="o">-</span><span class="n">part</span> <span class="p">[</span> <span class="s2">&quot;?&quot;</span> <span class="n">query</span> <span class="p">]</span>
+
+<span class="n">f</span><span class="o">-</span><span class="n">scheme</span>         <span class="o">=</span> <span class="s2">&quot;file&quot;</span>
+
+<span class="n">f</span><span class="o">-</span><span class="n">hier</span><span class="o">-</span><span class="n">part</span>      <span class="o">=</span> <span class="s2">&quot;//&quot;</span> <span class="n">auth</span><span class="o">-</span><span class="n">path</span>
+                 <span class="o">/</span> <span class="n">local</span><span class="o">-</span><span class="n">path</span>
+
+<span class="n">auth</span><span class="o">-</span><span class="n">path</span>        <span class="o">=</span> <span class="p">[</span> <span class="n">f</span><span class="o">-</span><span class="n">auth</span> <span class="p">]</span> <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+                 <span class="o">/</span> <span class="n">unc</span><span class="o">-</span><span class="n">path</span>
+                 <span class="o">/</span> <span class="n">windows</span><span class="o">-</span><span class="n">path</span>
+
+<span class="n">f</span><span class="o">-</span><span class="n">auth</span>           <span class="o">=</span> <span class="p">[</span> <span class="n">userinfo</span> <span class="s2">&quot;@&quot;</span> <span class="p">]</span> <span class="n">host</span>
+
+<span class="n">local</span><span class="o">-</span><span class="n">path</span>       <span class="o">=</span> <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+                 <span class="o">/</span> <span class="n">windows</span><span class="o">-</span><span class="n">path</span>
+<span class="n">unc</span><span class="o">-</span><span class="n">path</span>         <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="mi">3</span><span class="s2">&quot;/&quot;</span> <span class="n">authority</span> <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+
+<span class="n">windows</span><span class="o">-</span><span class="n">path</span>     <span class="o">=</span> <span class="n">drive</span><span class="o">-</span><span class="n">letter</span> <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+<span class="n">drive</span><span class="o">-</span><span class="n">letter</span>     <span class="o">=</span> <span class="n">ALPHA</span> <span class="p">[</span> <span class="n">drive</span><span class="o">-</span><span class="n">marker</span> <span class="p">]</span>
+<span class="n">drive</span><span class="o">-</span><span class="n">marker</span>     <span class="o">=</span> <span class="s2">&quot;:&quot;</span> <span class="o">/</span> <span class="s2">&quot;|&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>smb://</strong>: <a class="reference internal" href="references.html#ms-smb" id="id18">[MS-SMB]</a>: Server Message Block (SMB) Protocol; Microsoft Inc.
+The current implemented name resolution is a limited version of the file scheme.
+Thus based on &#8220;SMB File Sharing URI Scheme - draft-crhertel-smb-url-07&#8221;.
+This is outdated, but for now the first attempt for start.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">smb_URI</span>        <span class="o">=</span> <span class="p">(</span> <span class="n">smb_absURI</span> <span class="o">|</span> <span class="n">smb_relURI</span> <span class="p">)</span>
+<span class="n">smb_absURI</span>     <span class="o">=</span> <span class="n">scheme</span> <span class="s2">&quot;://&quot;</span> <span class="n">smb_service</span> <span class="p">[</span> <span class="s2">&quot;?&quot;</span> <span class="p">[</span> <span class="n">nbt_context</span> <span class="p">]</span> <span class="p">]</span>
+<span class="n">smb_relURI</span>     <span class="o">=</span> <span class="n">abs_path</span> <span class="o">|</span> <span class="n">rel_path</span>
+
+<span class="n">scheme</span>         <span class="o">=</span> <span class="s2">&quot;smb&quot;</span> <span class="o">|</span> <span class="s2">&quot;cifs&quot;</span>
+<span class="n">smb_service</span>    <span class="o">=</span> <span class="p">(</span> <span class="n">smb_browse</span> <span class="o">|</span> <span class="n">smb_net_path</span> <span class="p">)</span>
+
+<span class="n">smb_browse</span>     <span class="o">=</span> <span class="p">[</span> <span class="n">smb_userinfo</span> <span class="s2">&quot;@&quot;</span> <span class="p">]</span> <span class="p">[</span> <span class="n">smb_srv_name</span> <span class="p">]</span>
+                   <span class="p">[</span> <span class="s2">&quot;:&quot;</span> <span class="n">port</span> <span class="p">]</span> <span class="p">[</span> <span class="s2">&quot;/&quot;</span> <span class="p">]</span>
+<span class="n">smb_net_path</span>   <span class="o">=</span> <span class="n">smb_server</span> <span class="p">[</span> <span class="n">abs_path</span> <span class="p">]</span>
+
+<span class="n">smb_server</span>     <span class="o">=</span> <span class="p">[</span> <span class="n">smb_userinfo</span> <span class="s2">&quot;@&quot;</span> <span class="p">]</span> <span class="n">smb_srv_name</span> <span class="p">[</span> <span class="s2">&quot;:&quot;</span> <span class="n">port</span> <span class="p">]</span>
+
+<span class="n">smb_srv_name</span>   <span class="o">=</span> <span class="n">nbt_name</span> <span class="o">|</span> <span class="n">host</span>
+<span class="n">nbt_name</span>       <span class="o">=</span> <span class="n">netbiosname</span> <span class="p">[</span> <span class="s2">&quot;.&quot;</span> <span class="n">scope_id</span> <span class="p">]</span>
+<span class="n">netbiosname</span>    <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="p">(</span> <span class="n">netbiosnamec</span> <span class="p">)</span> <span class="o">*</span><span class="p">(</span> <span class="n">netbiosnamec</span> <span class="o">|</span> <span class="s2">&quot;*&quot;</span> <span class="p">)</span>
+<span class="n">netbiosnamec</span>   <span class="o">=</span> <span class="p">(</span> <span class="n">alphanum</span> <span class="o">|</span> <span class="n">escaped</span>  <span class="o">|</span> <span class="s2">&quot;:&quot;</span> <span class="o">|</span> <span class="s2">&quot;=&quot;</span> <span class="o">|</span> <span class="s2">&quot;+&quot;</span> <span class="o">|</span> <span class="s2">&quot;$&quot;</span> <span class="o">|</span>
+                   <span class="s2">&quot;,&quot;</span> <span class="o">|</span> <span class="s2">&quot;-&quot;</span> <span class="o">|</span> <span class="s2">&quot;_&quot;</span> <span class="o">|</span> <span class="s2">&quot;!&quot;</span> <span class="o">|</span> <span class="s2">&quot;~&quot;</span> <span class="o">|</span> <span class="s2">&quot;&#39;&quot;</span> <span class="o">|</span> <span class="s2">&quot;(&quot;</span> <span class="o">|</span> <span class="s2">&quot;)&quot;</span> <span class="p">)</span>
+<span class="n">scope_id</span>       <span class="o">=</span> <span class="n">domainlabel</span> <span class="o">*</span><span class="p">(</span> <span class="s2">&quot;.&quot;</span> <span class="n">domainlabel</span> <span class="p">)</span>
+
+<span class="n">smb_userinfo</span>   <span class="o">=</span> <span class="p">[</span> <span class="n">auth_domain</span> <span class="s2">&quot;;&quot;</span> <span class="p">]</span> <span class="n">userinfo_nosem</span>
+<span class="n">auth_domain</span>    <span class="o">=</span> <span class="n">smb_srv_name</span>
+<span class="n">userinfo_nosem</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span> <span class="n">unreserved</span> <span class="o">|</span> <span class="n">escaped</span> <span class="o">|</span>
+                   <span class="s2">&quot;:&quot;</span> <span class="o">|</span> <span class="s2">&quot;&amp;&quot;</span> <span class="o">|</span> <span class="s2">&quot;=&quot;</span> <span class="o">|</span> <span class="s2">&quot;+&quot;</span> <span class="o">|</span> <span class="s2">&quot;$&quot;</span> <span class="o">|</span> <span class="s2">&quot;,&quot;</span> <span class="p">)</span>
+
+<span class="n">nbt_context</span>   <span class="o">=</span> <span class="n">nbt_param</span> <span class="o">*</span><span class="p">(</span><span class="s2">&quot;;&quot;</span> <span class="n">nbt_param</span> <span class="p">)</span>
+
+<span class="n">nbt_param</span>     <span class="o">=</span> <span class="p">(</span> <span class="s2">&quot;BROADCAST=&quot;</span> <span class="n">IPv4address</span> <span class="p">[</span> <span class="s2">&quot;:&quot;</span> <span class="n">port</span> <span class="p">]</span>
+                <span class="o">|</span> <span class="s2">&quot;CALLED=&quot;</span> <span class="n">netbiosname</span>
+                <span class="o">|</span> <span class="s2">&quot;CALLING=&quot;</span> <span class="n">netbiosname</span>
+                <span class="o">|</span> <span class="p">(</span> <span class="s2">&quot;NBNS=&quot;</span> <span class="o">|</span> <span class="s2">&quot;WINS=&quot;</span> <span class="p">)</span> <span class="n">host</span> <span class="p">[</span> <span class="s2">&quot;:&quot;</span> <span class="n">port</span> <span class="p">]</span>
+                <span class="o">|</span> <span class="s2">&quot;NODETYPE=&quot;</span> <span class="p">(</span><span class="s2">&quot;B&quot;</span> <span class="o">|</span> <span class="s2">&quot;P&quot;</span> <span class="o">|</span> <span class="s2">&quot;M&quot;</span> <span class="o">|</span> <span class="s2">&quot;H&quot;</span><span class="p">)</span>
+                <span class="o">|</span> <span class="p">(</span> <span class="s2">&quot;SCOPEID=&quot;</span> <span class="o">|</span> <span class="s2">&quot;SCOPE=&quot;</span> <span class="p">)</span> <span class="n">scope_id</span>
+                <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>cifs://</strong>:  <a class="reference internal" href="references.html#ms-cifs" id="id19">[MS-CIFS]</a>: Common Internet File System (CIFS) Protocol; Microsoft Inc.</p>
+<p>For now see SMB.</p>
+</li>
+</ul>
+<p>This syntax represents e.g. the following valid filepathanmes with the
+current position(PWD) as reference point for relative positions.
+For the conversion API refer to
+<em>splitapppathx</em>
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.apppaths.splitapppathx">[docs]</a>
+<a class="reference external" href="_modules/filesysobjects/pathtools.html#splitapppathx">[source]</a>
+and
+<em>splitapppathx_getlocalpath</em>
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.pathtools.splitapppathx_getlocalpath">[docs]</a>
+<a class="reference external" href="_modules/filesysobjects/pathtools.html#splitapppathx_getlocalpath">[source]</a>
+.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span>
+</pre></div>
+</div>
+<p>Where the following equivalent transformations result</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="c1"># forces a directory</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="c1"># could be a file too</span>
+<span class="o">./</span><span class="nb">dir</span><span class="o">/</span>                  <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="c1"># forces a directory</span>
+<span class="o">./</span><span class="nb">dir</span>                   <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="c1"># could be a file too</span>
+<span class="o">../</span><span class="nb">dir</span><span class="o">/</span>                 <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span>        <span class="c1"># forces a directory</span>
+<span class="o">../</span><span class="nb">dir</span>                  <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="nb">dir</span>         <span class="c1"># could be a file too</span>
+<span class="nb">dir</span><span class="o">/</span>                    <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="c1"># forces a directory</span>
+<span class="nb">dir</span>                     <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="c1"># could be a file too</span>
+</pre></div>
+</div>
+<p>Where the following basic paths are equivalent</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="o">/</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="o">/</span><span class="n">local</span><span class="o">//.///./././</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">//././/</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="o">/</span><span class="n">local</span><span class="o">//../</span><span class="n">path</span><span class="o">/////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/../../</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">!=</span> <span class="o">/</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">!=</span> <span class="o">//</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">!=</span> <span class="o">//</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span>
+</pre></div>
+</div>
+<p>Where the following basic URI paths are still equivalent</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="o">/</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="o">/</span><span class="n">local</span><span class="o">//.///./././</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">//././/</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="o">/</span><span class="n">local</span><span class="o">//../</span><span class="n">path</span><span class="o">/////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/../../</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">!=</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">!=</span> <span class="o">//</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">!=</span> <span class="o">//</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span>
+</pre></div>
+</div>
+<p>Same for the first basic URI paths on both sides</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">//.///./././</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">//././/</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">//../</span><span class="n">path</span><span class="o">/////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/../../</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">!=</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+</pre></div>
+</div>
+<p>But for the last two no longer, because &#8216;2SEP&#8217; has to be at the beginning of the string,
+which is interpreted here as the beginning of the raw string representation</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">==</span> <span class="n">file</span><span class="p">:</span><span class="o">////</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">==</span> <span class="n">file</span><span class="p">:</span><span class="o">////</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span>
+
+<span class="c1">#REMARK: Looking forward for qualified review comments!!!</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="variantspathnameparams">
+<span id="id22"></span><h2>Variants of Pathname Parameters - Literals, RegExpr, and Glob<a class="headerlink" href="#variantspathnameparams" title="Permalink to this headline">¶</a></h2>
+<p>The common variants of pathnames as parameters are provided by one of
+the categories:</p>
+<ul>
+<li><p class="first">Literal - literal names</p>
+<p>The applicability varies on the scope.
+Whereas literals could be applied in any scope, these are the least flexible
+search pattern.
+These just provide native matches either on single nodes, or single goups
+in case of directories represented as containers.</p>
+</li>
+<li><p class="first">Regular Expression - specific match pattern, which are implementation dependent</p>
+<p>The regular expressions in general are part of applications, either special
+autonomous conversion filters, or embedded into a greater application,
+and/or programming environment.</p>
+<p>These are strongly implementation dependent, even though a broad commen set
+is generally provided. These in particular lack the native support of
+filesystems, thus could be only used as input and/or output filters.</p>
+</li>
+<li><p class="first">Glob - platform dependent native filesystem match</p>
+<p>The &#8216;glob&#8217; expressions are a very basic type of regular expressions, which are
+platform dependent.
+These could be applied at the interface of the filesystems, and influence the
+responce of the filesystem interface directly.</p>
+<p>Globs can span multiple levels of directory paths.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">r&quot;a[0-9]*/[!xy]*/???/*&quot;</span>
+</pre></div>
+</div>
+<p>Use e.g. the following patterns to restrict on a single node name:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s2">r&quot;a*b&quot;</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span>
+<span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s2">r&quot;a*b&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Semi-Literal - literal names combined with glob, or regexpr</p>
+<p>The pathnames are internally processed depending on the category of the interface.
+Interfaces operating in memeory on strings only apply regular expressions, The
+implementation of interfaces accessing fthe filesystem, e.g. for existence tests
+and name resolution, use literal matches and glob.</p>
+<p>The Semi-Literal type arose from the design, that &#8216;glob&#8217; and &#8216;regexpr&#8217; must not
+be intermixed because of the possible ambiguities. One of the main differences is
+the scope of match. The &#8216;glob&#8217; functions are aware of seperators, for regexpr
+they represent simply a character. The pattern has some differences too, e.g.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">regexpr</span><span class="p">:</span>  <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span>  <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">F0</span><span class="p">,</span> <span class="n">F1</span><span class="p">,</span> <span class="n">F2</span><span class="p">,</span> <span class="p">)</span>
+<span class="n">glob</span><span class="p">:</span>     <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span>  <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="n">F</span><span class="o">.*</span><span class="p">,</span> <span class="n">F0</span><span class="o">.*</span><span class="p">,</span> <span class="n">F1</span><span class="o">.*</span><span class="p">,</span> <span class="n">F2</span><span class="o">.*</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>So this basicly also prohibits functions like &#8216;fnmatch.translate()&#8217; on intermixed
+expressions. Anyhow, the user could prepare a string as regexpr before
+calling the interface. But be aware, for filesystem evaluation the glob-style is
+applied only.</p>
+<p>Literals and one only of the pattern types could be intermixed arbitrarily.</p>
+<p>The implementation and the possible intermix are provided due to the implemented
+algorithm when the following is true:</p>
+<ul>
+<li><p class="first">&#8216;regexpr&#8217; and &#8216;glob&#8217; could be intermixed, when the &#8216;glob&#8217; compiled by &#8216;re&#8217; does
+not match. Than the algorithm keeps it simply as an unknown node, and continues
+with &#8216;glob&#8217; expansion. Thus the following strict pattern of path names is
+provided, where the order is significant:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">mixed</span><span class="o">-</span><span class="n">regexpr</span><span class="o">-</span><span class="n">glob</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">=</span> <span class="o">&lt;</span><span class="n">literal</span><span class="o">-</span><span class="ow">or</span><span class="o">-</span><span class="n">regexpr</span><span class="o">&gt;&lt;</span><span class="n">literal</span><span class="o">-</span><span class="ow">or</span><span class="o">-</span><span class="n">glob</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>The rule of thumb is given by the following combinations:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>literal + glob:</dt>
+<dd><p class="first last">a literal path part matching the search path, a glob
+to be applied to the filesystem.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>regexpr + literal:</dt>
+<dd><p class="first last">a regexpr to be applied onto the in-memory path, followed
+by a literal applicable in any case.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>literal + regexpr + literal + glob + literal:</dt>
+<dd><p class="first last">this order is provided by the
+algorithm but the input pattern is not verified to be of a consistent
+type and though the applicability of the syntax has to be assured by
+the caller</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>path-pattern := [path-pattern] + (literal|regexpr|glob):</dt>
+<dd><p class="first">Arbitrary pathname pattern are by default supported by trials to match
+the longest valid parts for each type. This is inherently ambiguous when
+glob and regexpr has to be detected. Thus in cases where arbitrary types
+are required a grouping type-keyword has to be provided.</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">path</span><span class="o">-</span><span class="n">pattern</span> <span class="p">:</span><span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="o">-</span><span class="n">pattern</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span>
+        <span class="n">literal</span>   <span class="o">|</span> <span class="s1">&#39;literal(&#39;</span> <span class="n">literal</span> <span class="s1">&#39;)&#39;</span> <span class="o">|</span> <span class="s1">&#39;l(&#39;</span> <span class="n">literal</span> <span class="s1">&#39;)&#39;</span>
+        <span class="o">|</span> <span class="n">regexpr</span> <span class="o">|</span> <span class="s1">&#39;regexpr(&#39;</span> <span class="n">regexpr</span> <span class="s1">&#39;)&#39;</span> <span class="o">|</span> <span class="s1">&#39;r(&#39;</span> <span class="n">regexpr</span> <span class="s1">&#39;)&#39;</span>
+        <span class="o">|</span> <span class="n">glob</span>    <span class="o">|</span> <span class="s1">&#39;glob(&#39;</span> <span class="n">glob</span> <span class="s1">&#39;)&#39;</span>       <span class="o">|</span> <span class="s1">&#39;g(&#39;</span> <span class="n">glob</span> <span class="s1">&#39;)&#39;</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<p>The overall applicability  for specific execution and call contexts is depicted in
+the following table.</p>
+<p>The automatic resolution in absence of type-keyword starts in general with literals
+and globs from left. Than the regexpr is tried to be resolved.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="42%" />
+<col width="14%" />
+<col width="21%" />
+<col width="13%" />
+<col width="11%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Application Processing Scope</th>
+<th class="head">Literals</th>
+<th class="head">Semi-Literals</th>
+<th class="head">RegExpr</th>
+<th class="head">glob</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>In-Memory Path Strings</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+<td>no (1)</td>
+</tr>
+<tr class="row-odd"><td>Filesystem</td>
+<td>yes</td>
+<td>yes</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr class="row-even"><td>Filesystem-Extension(3)</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes(2)</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><ol class="arabic simple">
+<li>is treated as an &#8216;regexpr&#8217;, when matches this is resolved, else ends
+re-processing and is applied as a &#8216;glob&#8217;</li>
+<li>is handled by caching the file system component into memory and applying
+the &#8216;regexpr&#8217; onto the in-mem-string</li>
+<li>in case of ambiguity type-keywords have to be provided on the
+syntax parts, see &#8216;path-pattern&#8217;</li>
+</ol>
+</div></blockquote>
+<p>Thus the application  of RegExpr is implemented as an optional parameter
+performed on in.memory strings only.
+Therefore a multi-level approach is reuqired  <a class="reference external" href="shortcuts.html#">[API]</a>
+<a class="reference external" href="usecases.html#">[UseCases]</a> when these has to be applied onto the results of
+a filesystem search.
+The workflow in case of required searches for unknown filesystem nodes by
+re-patterns is:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>filter and collect filesystem entries by &#8216;literal&#8217; and &#8216;glob&#8217; parameters</li>
+<li>post-filter the collected set by  &#8216;literal&#8217; and &#8216;RegExpr&#8217; type parameters.</li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="callparamsapi">
+<span id="id24"></span><h2>Call Parameters of the API<a class="headerlink" href="#callparamsapi" title="Permalink to this headline">¶</a></h2>
+<p>The call interface provides for groups of functions and classes with a set of
+common parameters and additional context specific modifications.</p>
+<p>The provided function sets comprise the categories:</p>
+<ul class="simple">
+<li>Filesystem Positions and Navigation</li>
+<li>Canonical Node Address - Current: <em>Experimental / Non-Productive</em></li>
+</ul>
+<p>For the list of the interfaces refer to <a class="reference external" href="shortcuts.html#">[API]</a>.</p>
+<div class="section" id="filesystem-positions-and-navigation">
+<h3>Filesystem Positions and Navigation<a class="headerlink" href="#filesystem-positions-and-navigation" title="Permalink to this headline">¶</a></h3>
+<p><strong>SYNOPSIS</strong> <a class="reference external" href="shortcuts.html#">[API]</a></p>
+<blockquote>
+<div><ul>
+<li><p class="first">manage search paths - checks filesystem</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">addpath_to_searchpath</span><span class="p">(</span><span class="n">spath</span><span class="p">,</span><span class="n">plist</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+<span class="n">clearpath</span><span class="p">(</span><span class="n">plist</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+<span class="n">set_uppertree_searchpath</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">plist</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+<li><p class="first">search for files, directories, and branches - checks filesystem</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">findrelpath_in_searchpath</span><span class="p">(</span><span class="n">spath</span><span class="p">,</span><span class="n">plist</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+<span class="n">findrelpath_in_searchpath_iter</span><span class="p">(</span><span class="n">spath</span><span class="p">,</span><span class="n">plist</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+<span class="n">findrelpath_in_uppertree</span><span class="p">(</span><span class="n">spath</span><span class="p">,</span><span class="n">start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+<span class="n">findpattern</span><span class="p">(</span><span class="o">*</span><span class="n">wildcards</span><span class="p">,</span> <span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+<li><p class="first">match files, directories, and branches into path strings - works on strings only</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">gettop_from_pathstring</span><span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="n">plist</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+<span class="n">gettop_from_pathstring_iter</span><span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="n">plist</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+</ul>
+</div></blockquote>
+<p><strong>DESCRIPTION</strong>:</p>
+<p>The filesystem navigation functions provide for the preparation of search
+paths and the location of files and directories based on the created lists.
+The default list is &#8216;sys.path&#8217;.</p>
+<p>The package provides for the file system search path operations the management
+and application of filesystem search operations.
+This supports multiple independent search path sets by the categories of functions:</p>
+<ul>
+<li><p class="first">manage search paths</p>
+<ul>
+<li><p class="first">add paths to search lists
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.pathtools.addpath_to_searchpath">[docs]</a>
+<a class="reference external" href="_modules/filesysobjects/pathtools.html#addpath_to_searchpath">[source]</a></p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">filesysobjects</span><span class="o">.</span><span class="n">addpath_to_searchpath</span><span class="p">(</span><span class="n">spath</span><span class="p">,</span><span class="n">plist</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+<li><p class="first">clear search paths
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.pathtools.clearpath">[docs]</a>
+<a class="reference external" href="_modules/filesysobjects/pathtools.html#clearpath">[source]</a></p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">filesysobjects</span><span class="o">.</span><span class="n">clearpath</span><span class="p">(</span><span class="n">plist</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+<li><p class="first">set tsearch lists for path segments
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.pathtools.set_uppertree_searchpath">[docs]</a>
+<a class="reference external" href="_modules/filesysobjects/pathtools.html#set_uppertree_searchpath">[source]</a></p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">filesysobjects</span><span class="o">.</span><span class="n">set_uppertree_searchpath</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">plist</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+</ul>
+</li>
+<li><p class="first">search for files, directories, and branches</p>
+<ul>
+<li><p class="first">find relative paths on lists of search paths
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.pathtools.findrelpath_in_searchpath">[docs]</a>
+<a class="reference external" href="_modules/filesysobjects/pathtools.html#findrelpath_in_searchpath">[source]</a></p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">filesysobjects</span><span class="o">.</span><span class="n">findrelpath_in_searchpath</span><span class="p">(</span><span class="n">spath</span><span class="p">,</span><span class="n">plist</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+<li><p class="first">iterator for search
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.pathtools.findrelpath_in_searchpath_iter">[docs]</a>
+<a class="reference external" href="_modules/filesysobjects/pathtools.html#findrelpath_in_searchpath_iter">[source]</a></p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">filesysobjects</span><span class="o">.</span><span class="n">findrelpath_in_searchpath_iter</span><span class="p">(</span><span class="n">spath</span><span class="p">,</span><span class="n">plist</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+<li><p class="first">search filesystem segments
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.pathtools.findrelpath_in_uppertree">[docs]</a>
+<a class="reference external" href="_modules/filesysobjects/pathtools.html#findrelpath_in_uppertree">[source]</a></p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">filesysobjects</span><span class="o">.</span><span class="n">findrelpath_in_uppertree</span><span class="p">(</span><span class="n">spath</span><span class="p">,</span><span class="n">start</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="n">top</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+<li><p class="first">search file system trees
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.pathtools.findpattern">[docs]</a>
+<a class="reference external" href="_modules/filesysobjects/pathtools.html#findpattern">[source]</a></p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">filesysobjects</span><span class="o">.</span><span class="n">findpattern</span><span class="p">(</span><span class="o">*</span><span class="n">wildcards</span><span class="p">,</span> <span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+</ul>
+</li>
+<li><p class="first">match files, directories, and branches into path strings</p>
+<ul>
+<li><p class="first">match a pathname string into a path from a list of search paths
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.apppaths.gettop_from_pathstring">[docs]</a>
+<a class="reference external" href="_modules/filesysobjects/pathtools.html#gettop_from_pathstring">[source]</a></p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">filesysobjects</span><span class="o">.</span><span class="n">gettop_from_pathstring</span><span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="n">plist</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+<li><p class="first">iterate on search paths
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.apppaths.gettop_from_pathstring_iter">[docs]</a>
+<a class="reference external" href="_modules/filesysobjects/pathtools.html#gettop_from_pathstring_iter">[source]</a></p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">filesysobjects</span><span class="o">.</span><span class="n">gettop_from_pathstring_iter</span><span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="n">plist</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>OPTIONS</strong>:</p>
+<p>Various common options are supported, which may not be available for each interface.</p>
+<ul>
+<li><p class="first">spath</p>
+<p>Search path, either to be added to the search list,
+or to be find in a earch list.</p>
+</li>
+<li><p class="first">start</p>
+<p>Start position for search and collect operations.
+This is within the file hierarchy the &#8216;deeper&#8217; position
+under &#8216;top&#8217;.</p>
+</li>
+<li><p class="first">top</p>
+<p>The top position where the search and collect operations
+are terminated.</p>
+</li>
+<li><p class="first">plist</p>
+<p>A path list for search operations, default is &#8216;sys.path&#8217;.</p>
+</li>
+<li><p class="first"><a href="#id45"><span class="problematic" id="id46">**</span></a>kargs</p>
+<p>Various apperently applied parameters.</p>
+<ul>
+<li><p class="first">matchidx=#num:</p>
+<p>Increment of matched path component for a path. The counter
+is for a single path, thus reset for each of a path list.
+The valid range is {0..}</p>
+<p>The counter begins from top, so #num(1) will match M(1) in</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>/a/b/M/c/M/d/M/w/e/M/bottom
+     0   1   2     3
+         |   *
+         |
+         `-default
+</pre></div>
+</div>
+</li>
+<li><p class="first">reverse:</p>
+<p>This reverses the resulting search order from bottom-up
+to top-down.</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="canonical-node-address">
+<h3>Canonical Node Address<a class="headerlink" href="#canonical-node-address" title="Permalink to this headline">¶</a></h3>
+<p>For now experimental and non-productive, for review and comments <a class="reference external" href="shortcuts.html#">[API]</a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">filesysobjects</span><span class="o">.</span><span class="n">NetFiles</span><span class="o">.</span><span class="n">normpathx</span>
+</pre></div>
+</div>
+<p>For syntax design requirements refer to &#8220;<a class="reference external" href="path_netfiles.html">Extended Filesystems - Network Features</a>&#8221;.</p>
+<p>See also Python issue:</p>
+<ul class="simple">
+<li>Issue 26329: os.path.normpath(&#8220;//&#8221;) returns //
+- <a class="reference external" href="http://bugs.python.org/issue26329">http://bugs.python.org/issue26329</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Addresses for File-Like Resources</a><ul>
+<li><a class="reference internal" href="#filesystem-addresses">Filesystem Addresses</a></li>
+<li><a class="reference internal" href="#file-paths-in-pyhton3">File Paths in Pyhton3</a></li>
+<li><a class="reference internal" href="#arbitrary-file-like-resources">Arbitrary File-Like Resources</a><ul>
+<li><a class="reference internal" href="#common-path-addresses">Common Path Addresses</a></li>
+<li><a class="reference internal" href="#canonical-address">Canonical Address</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#filesyselemasobjects">Filesystem Elements as Objects</a></li>
+<li><a class="reference internal" href="#filesystems-native-and-standard-features">Filesystems - Native and Standard Features</a></li>
+<li><a class="reference internal" href="#syntaxelements">Syntax Elements</a></li>
+<li><a class="reference internal" href="#variantspathnameparams">Variants of Pathname Parameters - Literals, RegExpr, and Glob</a></li>
+<li><a class="reference internal" href="#callparamsapi">Call Parameters of the API</a><ul>
+<li><a class="reference internal" href="#filesystem-positions-and-navigation">Filesystem Positions and Navigation</a></li>
+<li><a class="reference internal" href="#canonical-node-address">Canonical Node Address</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="python_encode_decode.html"
+                        title="previous chapter">Filename Encoding and Decoding</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="reference_cases.html"
+                        title="next chapter">Normative References</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/path_syntax.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="reference_cases.html" title="Normative References"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="python_encode_decode.html" title="Filename Encoding and Decoding"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

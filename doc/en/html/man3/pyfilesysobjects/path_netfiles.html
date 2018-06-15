@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Extended Filesystems - Network Features &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="extended-filesystems-network-features">
+<h1>Extended Filesystems - Network Features<a class="headerlink" href="#extended-filesystems-network-features" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This module is currently experimental, not yet active used in production releases,
+just included, and may change.</p>
+</div>
+<p>The main intention is to find a common and canonical form of filepathnames, which cover more
+than the literally &#8216;local-only&#8217; addressing, but still does not burden the full scale of
+possible cases of application specific syntaxes and URI schemes.
+Thus the defined function &#8216;normpathx&#8217; extends the standard function &#8216;os.path.normpath&#8217; with awareness
+of an optional network prefix of the pathname.</p>
+<p>The current supported types of applications are network specific addressing of remote filesystems
+with location information only.
+This comprises common information provided for the most filesystems as well as for the
+most common URIs.
+The current scope comprises:</p>
+<ul class="simple">
+<li>Filesystems based on naming conventions from IEEE-1003.1</li>
+<li>Filesystems based on SMB/CIFS naming conventions</li>
+<li>Native filesystems for Linux, Unix, BSD</li>
+<li>Native filesystems for Apple MacOS</li>
+<li>Native filesystems for Microsoft Windows</li>
+<li>URIs for the schemes http, https, ftp, file, smb, cifs,
+where the subset for the location attributes is supported</li>
+</ul>
+<p>The created result comprises the generic location information,
+but avoids specific attributes like access credentials.</p>
+<ul class="simple">
+<li>scheme - an access protocol onto the resource</li>
+<li>host[:port] - the port for the access onto the resource
+which may include the access-port of a specific
+storage/filesystem gateway</li>
+<li>pathname - the local resource locator on the access location</li>
+</ul>
+<p>The function splits the provided URIs and known application specific definitions into a tuple
+consisting of it&#8217;s parts.</p>
+<p>The standard path address is kept and passed through to &#8216;os.path.normpath&#8217; - for now on the local system
+later versions will include appropriate parameters for the target filesystem including the path-prefix
+of the remote working directory.</p>
+<ul>
+<li><p class="first">Linux and UNIX:</p>
+<ul>
+<li><p class="first">IEEE Std 1003.1(TM), 2013 Edition; Chapter 4.12:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_</span>            <span class="o">//</span><span class="n">host</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span>
+               \<span class="n">__</span><span class="o">/</span>\<span class="n">________</span><span class="o">/</span>
+                <span class="o">|</span>          <span class="o">|</span>
+            <span class="n">authority</span>    <span class="n">path</span>
+            <span class="n">____</span><span class="o">|</span><span class="n">____</span>    <span class="n">__</span><span class="o">|</span><span class="n">__</span>
+           <span class="o">/</span>         \  <span class="o">/</span>     \
+<span class="p">(</span> <span class="s1">&#39;share&#39;</span><span class="p">,</span> <span class="n">host</span><span class="p">[:</span><span class="n">port</span><span class="p">],</span> <span class="n">pathname</span><span class="p">,</span> <span class="p">)</span>
+
+
+<span class="o">//</span><span class="n">hostname</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span> <span class="o">=&gt;</span> <span class="p">(</span> <span class="s1">&#39;share&#39;</span><span class="p">,</span> <span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="s1">&#39;/local/filesystem/path&#39;</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>Valid applications are here SMBFS/CIFS, and RFS.</p>
+</li>
+<li><p class="first">SMB/CIFS the same as for previous IEEE Std 1003.1, with additional support for
+backslashes &#8216;\&#8217;</p>
+</li>
+<li><p class="first">Standard local filesystem:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_</span>            <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span>
+             \<span class="n">________</span><span class="o">/</span>
+                 <span class="o">|</span>
+                <span class="n">path</span>
+               <span class="n">__</span><span class="o">|</span><span class="n">__</span>
+              <span class="o">/</span>     \
+<span class="p">(</span> <span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="p">)</span>
+
+
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span> <span class="o">=&gt;</span> <span class="p">(</span> <span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;/local/filesystem/path&#39;</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="first">Microsoft(TM) Windows:</p>
+<ul>
+<li><p class="first">SMB/CIFS shares, with additional support for slashes &#8216;/&#8217;:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_</span>            \\<span class="n">host</span>\<span class="n">path</span>\<span class="n">name</span>
+               \<span class="n">__</span><span class="o">/</span>\<span class="n">________</span><span class="o">/</span>
+                <span class="o">|</span>          <span class="o">|</span>
+            <span class="n">authority</span>    <span class="n">path</span>
+            <span class="n">____</span><span class="o">|</span><span class="n">____</span>    <span class="n">__</span><span class="o">|</span><span class="n">__</span>
+           <span class="o">/</span>         \  <span class="o">/</span>     \
+<span class="p">(</span> <span class="s1">&#39;share&#39;</span><span class="p">,</span> <span class="n">host</span><span class="p">[:</span><span class="n">port</span><span class="p">],</span> <span class="n">pathname</span><span class="p">,</span> <span class="p">)</span>
+
+\\<span class="n">hostname</span>\<span class="n">local</span>\<span class="n">filesystem</span>\<span class="n">path</span> <span class="o">=&gt;</span> <span class="p">(</span> <span class="s1">&#39;share&#39;</span><span class="p">,</span> <span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="s1">&#39;\local</span><span class="se">\f</span><span class="s1">ilesystem\path&#39;</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Standard local filesystem, with additional support for slashes &#8216;/&#8217;:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_</span>           <span class="p">[</span><span class="o">&lt;</span><span class="n">drive</span><span class="o">&gt;</span><span class="p">:]</span>\<span class="n">path</span>\<span class="n">name</span>
+            \<span class="n">__________________</span><span class="o">/</span>
+                     <span class="o">|</span>
+                   <span class="n">path</span>
+                   <span class="n">__</span><span class="o">|</span><span class="n">__</span>
+                  <span class="o">/</span>     \
+<span class="p">(</span> <span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="p">)</span>
+
+
+<span class="p">[</span><span class="o">&lt;</span><span class="n">drive</span><span class="o">&gt;</span><span class="p">:]</span>\<span class="n">local</span>\<span class="n">filesystem</span>\<span class="n">path</span> <span class="o">=&gt;</span> <span class="p">(</span> <span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;[&lt;drive&gt;:]/local/filesystem/path&#39;</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p class="first">Mac-OS:</p>
+<ul class="simple">
+<li>Current same as for Linux/Unix.</li>
+</ul>
+</li>
+<li><p class="first">Cygwin:</p>
+<ul class="simple">
+<li>Set of Linux/Unix</li>
+<li>Set of Microsoft Windows</li>
+<li>Cygwin specifci extensions - ffs.</li>
+</ul>
+</li>
+<li><p class="first">The special case of a URI for local files is resolved to:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">path</span><span class="o">/</span><span class="n">name</span>
+  \<span class="n">__</span><span class="o">/</span>   \<span class="n">________</span><span class="o">/</span>
+    <span class="o">|</span>       <span class="o">|</span>
+  <span class="n">scheme</span>    <span class="n">path</span>
+    <span class="o">|</span>        \<span class="n">___</span>
+    <span class="o">|</span>            \
+    <span class="o">|</span>          <span class="n">__</span><span class="o">|</span><span class="n">__</span>
+   <span class="o">/</span> \        <span class="o">/</span>     \
+<span class="p">(</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="p">)</span>
+
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">filesystem</span><span class="o">/</span><span class="n">path</span> <span class="o">=&gt;</span> <span class="p">(</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;/local/filesystem/path&#39;</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The URI definition as defined in the RFC3986 is used as base:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>The following are two example URIs and their component parts:
+
+   foo://example.com:8042/over/there?name=ferret#nose
+   \_/  \______________/\_________/ \_________/ \__/
+    |           |            |            |       |
+ scheme     authority       path        query  fragment
+    |   _____________________|__
+   / \ /                        \
+   urn:example:animal:ferret:nose
+</pre></div>
+</div>
+<p>The URIs based on RFC3986 are supported by the following subset. Additional attributes
+are ignored and stripped off within the result.
+This design decision is focused on the position information of resources stored on
+filesystems only.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">scheme</span><span class="p">:</span><span class="o">//</span><span class="n">host</span><span class="p">[:</span><span class="n">port</span><span class="p">]</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span>
+\<span class="n">____</span><span class="o">/</span>   \<span class="n">_________</span><span class="o">/</span>\<span class="n">________</span><span class="o">/</span>
+   <span class="o">|</span>          <span class="o">|</span>          <span class="o">|</span>
+<span class="n">scheme</span>    <span class="n">authority</span>    <span class="n">path</span>
+   <span class="o">|</span>      <span class="n">____</span><span class="o">|</span><span class="n">____</span>    <span class="n">__</span><span class="o">|</span><span class="n">__</span>
+  <span class="o">/</span> \    <span class="o">/</span>         \  <span class="o">/</span>     \
+<span class="p">(</span> <span class="n">urn</span><span class="p">,</span>   <span class="n">host</span><span class="p">[:</span><span class="n">port</span><span class="p">],</span> <span class="n">pathname</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>Examples are:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">hostname</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span> <span class="o">=&gt;</span> <span class="p">(</span> <span class="s1">&#39;http&#39;</span><span class="p">,</span> <span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/name&#39;</span><span class="p">,</span> <span class="p">)</span>
+<span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">hostname</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span> <span class="o">=&gt;</span> <span class="p">(</span> <span class="s1">&#39;https&#39;</span><span class="p">,</span> <span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/name&#39;</span><span class="p">,</span> <span class="p">)</span>
+<span class="n">ftp</span><span class="p">:</span><span class="o">//</span><span class="n">hostname</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span> <span class="o">=&gt;</span> <span class="p">(</span> <span class="s1">&#39;ftp&#39;</span><span class="p">,</span> <span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/name&#39;</span><span class="p">,</span> <span class="p">)</span>
+<span class="n">smb</span><span class="p">:</span><span class="o">//</span><span class="n">hostname</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span> <span class="o">=&gt;</span> <span class="p">(</span> <span class="s1">&#39;smb&#39;</span><span class="p">,</span> <span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/name&#39;</span><span class="p">,</span> <span class="p">)</span>
+<span class="n">cifs</span><span class="p">:</span><span class="o">//</span><span class="n">hostname</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span> <span class="o">=&gt;</span> <span class="p">(</span> <span class="s1">&#39;cifs&#39;</span><span class="p">,</span> <span class="s1">&#39;hostname&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/name&#39;</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>Specific attributes like credentials are subject to coming releases.</p>
+</li>
+</ul>
+<p><strong>See Also</strong>:</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>IEEE Std 1003.1(TM), 2013 Edition; Chapter 4.12 &#64; <a class="reference external" href="http://www.opengroup.org">http://www.opengroup.org</a>:</dt>
+<dd><a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html">http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap04.html</a></dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Microsoft SMB Protocol and CIFS Protocol Overview  &#64; <a class="reference external" href="https://technet.microsoft.com">https://technet.microsoft.com</a>:</dt>
+<dd><a class="reference external" href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa365233%28v=vs.85%29.aspx">https://msdn.microsoft.com/en-us/library/windows/desktop/aa365233%28v=vs.85%29.aspx</a></dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Common Internet File System &#64; <a class="reference external" href="https://technet.microsoft.com">https://technet.microsoft.com</a>:</dt>
+<dd><a class="reference external" href="https://technet.microsoft.com/en-us/library/cc939973.aspx">https://technet.microsoft.com/en-us/library/cc939973.aspx</a></dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>IETF - RFCs &#64; <a class="reference external" href="http://tools.ietf.org/html">http://tools.ietf.org/html</a>:</dt>
+<dd><a class="reference external" href="http://tools.ietf.org/html/rfc1808">RFC1808</a>,
+<a class="reference external" href="http://tools.ietf.org/html/rfc1738">RFC1738</a>,
+<a class="reference external" href="http://tools.ietf.org/html/rfc2396">RFC2396</a>,
+<a class="reference external" href="http://tools.ietf.org/html/rfc2648">RFC2648</a>,
+<a class="reference external" href="http://tools.ietf.org/html/rfc3986">RFC3986</a>,
+<a class="reference external" href="http://tools.ietf.org/html/rfc4122">RFC4122</a>,
+<a class="reference external" href="http://tools.ietf.org/html/rfc6520">RFC6570</a>,
+<a class="reference external" href="http://tools.ietf.org/html/rfc7320">RFC7320</a></dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>From Wikipedia, the free encyclopedia - Path (computing):</dt>
+<dd><a class="reference external" href="https://en.wikipedia.org/wiki/Path_%28computing%29">https://en.wikipedia.org/wiki/Path_%28computing%29</a></dd>
+</dl>
+</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/path_netfiles.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

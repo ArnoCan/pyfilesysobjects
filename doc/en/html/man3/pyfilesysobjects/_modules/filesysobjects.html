@@ -1,0 +1,919 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>filesysobjects &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for filesysobjects</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;The package &#39;filesysobjects&#39; provides utilities for the handling of</span>
+<span class="sd">file system like resource paths as class trees containing files as objects.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="k">import</span> <span class="n">version_info</span><span class="p">,</span> <span class="n">platform</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Arno-Can Uestuensoez&#39;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;Artistic-License-2.0 + Forced-Fairplay-Constraints&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2010-2016 Arno-Can Uestuensoez&quot;</span> \
+                <span class="s2">&quot; @Ingenieurbuero Arno-Can Uestuensoez&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1.20&#39;</span>
+<span class="n">__uuid__</span> <span class="o">=</span> <span class="s2">&quot;4135ab0f-fbb8-45a2-a6b1-80d96c164b72&quot;</span>
+
+<span class="n">__docformat__</span> <span class="o">=</span> <span class="s2">&quot;restructuredtext en&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">FileSysObjectsError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="c1"># pylint: disable-msg=W0105</span>
+
+<span class="c1">#</span>
+<span class="c1"># adjust to current Python version</span>
+<span class="c1">#</span>
+<span class="n">V3K</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1">#: Python3.5+</span>
+<span class="k">if</span> <span class="n">version_info</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="p">(</span>
+        <span class="mi">3</span><span class="p">,</span>
+        <span class="mi">4</span><span class="p">,</span> <span class="p">):</span>
+    <span class="n">V3K</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">ISSTR</span> <span class="o">=</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span>  <span class="c1">#: string and unicode</span>
+    <span class="n">unicode</span> <span class="o">=</span> <span class="nb">str</span>  <span class="c1"># @ReservedAssignment</span>
+    <span class="sd">&quot;&quot;&quot;Superpose for generic Python3 compatibility.&quot;&quot;&quot;</span>
+
+<span class="k">elif</span> <span class="n">version_info</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="p">(</span>
+        <span class="mi">2</span><span class="p">,</span>
+        <span class="mi">6</span><span class="p">,</span> <span class="p">)</span> <span class="ow">and</span> <span class="n">version_info</span><span class="p">[:</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="n">ISSTR</span> <span class="o">=</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">)</span>  <span class="c1">#: string and unicode</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="n">FileSysObjectsError</span><span class="p">(</span><span class="s2">&quot;Requires Python 2.7+, or 3.5+:&quot;</span> <span class="o">+</span>
+                                  <span class="nb">str</span><span class="p">(</span><span class="n">version_info</span><span class="p">[:</span><span class="mi">2</span><span class="p">]))</span>
+
+
+<div class="viewcode-block" id="AppPathError"><a class="viewcode-back" href="../apppaths.html#filesysobjects.apppaths.AppPathError">[docs]</a><span class="k">class</span> <span class="nc">AppPathError</span><span class="p">(</span><span class="n">FileSysObjectsError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Path error.&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<span class="k">class</span> <span class="nc">PathError</span><span class="p">(</span><span class="n">FileSysObjectsError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Path error.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="PathToolsError"><a class="viewcode-back" href="../pathtools.html#filesysobjects.apppaths.PathToolsError">[docs]</a><span class="k">class</span> <span class="nc">PathToolsError</span><span class="p">(</span><span class="n">FileSysObjectsError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generic exception for module *pathtools*.&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="PrettyPrintError"><a class="viewcode-back" href="../pprint.html#filesysobjects.apppaths.PrettyPrintError">[docs]</a><span class="k">class</span> <span class="nc">PrettyPrintError</span><span class="p">(</span><span class="n">FileSysObjectsError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generic exception for module *pprint*.&quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1"># current platform as bit-array</span>
+<span class="c1">#</span>
+
+<span class="c1"># categories - bit-blocks</span>
+<span class="n">RTE_GENERIC</span> <span class="o">=</span> <span class="mi">512</span>  <span class="c1">#: Undefined platform for special cases</span>
+<span class="n">RTE_UNC</span> <span class="o">=</span> <span class="mi">1024</span>  <span class="c1">#: UNC [MS-DTYP]_</span>
+<span class="n">RTE_CYGWIN</span> <span class="o">=</span> <span class="mi">2048</span>  <span class="c1">#: Cygwin [CYGWIN]_</span>
+<span class="n">RTE_WIN32</span> <span class="o">=</span> <span class="mi">4096</span>  <span class="c1">#: all Windows systems [MS-DTYP]_</span>
+<span class="n">RTE_POSIX</span> <span class="o">=</span> <span class="mi">8192</span>  <span class="c1">#: Posix systems using *fcntl* [POSIX]_.</span>
+<span class="n">RTE_URI</span> <span class="o">=</span> <span class="mi">16384</span>  <span class="c1">#: URI - [RFC3986]_</span>
+
+<span class="c1"># family: generic</span>
+<span class="n">RTE_LFSYS</span> <span class="o">=</span> <span class="n">RTE_GENERIC</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1">#: local - generic - maps for file-URI to FILEURI</span>
+<span class="n">RTE_LDSYS</span> <span class="o">=</span> <span class="n">RTE_GENERIC</span> <span class="o">+</span> <span class="mi">2</span>  <span class="c1">#: local - generic - maps for file-URI to FILEURI</span>
+<span class="n">RTE_RFSYS</span> <span class="o">=</span> <span class="n">RTE_GENERIC</span> <span class="o">+</span> <span class="mi">3</span>  <span class="c1">#: local - generic - maps for file-URI to FILEURI - absolute-rule</span>
+<span class="n">RTE_SHARE</span> <span class="o">=</span> <span class="n">RTE_GENERIC</span> <span class="o">+</span> <span class="mi">4</span>  <span class="c1">#: local - generic - maps for file-URI to FILEURI5</span>
+
+<span class="n">RTE_LOCAL</span> <span class="o">=</span> <span class="n">RTE_GENERIC</span> <span class="o">+</span> <span class="mi">5</span>  <span class="c1">#: dyanmic local platform</span>
+<span class="n">RTE_CNP</span> <span class="o">=</span> <span class="n">RTE_POSIX</span> <span class="o">+</span> <span class="mi">1</span> <span class="c1">#: cross native Posix systems using *fcntl* [POSIX]_.</span>
+<span class="n">RTE_CNW</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">1</span> <span class="c1">#: cross native all Windows systems [MS-DTYP]_, slightly different from RTE_WIN32</span>
+
+<span class="c1"># family: posix</span>
+<span class="n">RTE_DARWIN</span> <span class="o">=</span> <span class="n">RTE_POSIX</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1">#: Darwin/OS-X, as Posix system [POSIX]_, no macpath-legacy.</span>
+<span class="n">RTE_OSX</span> <span class="o">=</span> <span class="n">RTE_POSIX</span> <span class="o">+</span> <span class="mi">2</span>  <span class="c1">#: Darwin/OS-X, as Posix system [POSIX]_, no macpath-legacy.</span>
+<span class="n">RTE_SOLARIS</span> <span class="o">=</span> <span class="n">RTE_POSIX</span> <span class="o">+</span> <span class="mi">16</span>  <span class="c1">#: UNIX/Solaris, as Posix system [POSIX]_.</span>
+<span class="n">RTE_BSD</span> <span class="o">=</span> <span class="n">RTE_POSIX</span> <span class="o">+</span> <span class="mi">32</span>  <span class="c1">#: BSD, - OpenBSD, FreeBSD, NetBSD - as Posix system [POSIX]_.</span>
+<span class="n">RTE_LINUX</span> <span class="o">=</span> <span class="n">RTE_POSIX</span> <span class="o">+</span> <span class="mi">64</span>  <span class="c1">#: Linux with specific add-ons - OS, DIST, GNU - as Posix system [POSIX]_.</span>
+
+<span class="c1"># members&quot; Linux</span>
+<span class="n">RTE_CENTOS</span>  <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1">#: CentOS</span>
+<span class="n">RTE_CENTOS4</span> <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">2</span>  <span class="c1">#: CentOS-4</span>
+<span class="n">RTE_CENTOS5</span> <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">3</span>  <span class="c1">#: CentOS-5</span>
+<span class="n">RTE_CENTOS6</span> <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">4</span>  <span class="c1">#: CentOS-6</span>
+<span class="n">RTE_CENTOS7</span> <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">5</span>  <span class="c1">#: CentOS-7</span>
+
+<span class="n">RTE_FEDORA</span> <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">32</span>  <span class="c1">#: Fedora</span>
+<span class="n">RTE_FEDORA19</span> <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">33</span>  <span class="c1">#: Fedora-19</span>
+<span class="n">RTE_FEDORA27</span> <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">34</span>  <span class="c1">#: Fedora-27</span>
+
+<span class="n">RTE_DEBIAN</span> <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">64</span>  <span class="c1">#: Debian</span>
+<span class="n">RTE_DEBIAN6</span> <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">65</span>  <span class="c1">#: Debian - squeeze</span>
+<span class="n">RTE_DEBIAN7</span> <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">66</span>  <span class="c1">#: Debian - wheezy</span>
+<span class="n">RTE_DEBIAN8</span> <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">67</span>  <span class="c1">#: Debian - jessy</span>
+<span class="n">RTE_DEBIAN9</span> <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">68</span>  <span class="c1">#: Debian - stretch</span>
+
+<span class="n">RTE_SUSE</span> <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">96</span>  <span class="c1">#: OpenSUSE</span>
+
+<span class="n">RTE_UBUNTU</span> <span class="o">=</span> <span class="n">RTE_LINUX</span> <span class="o">+</span> <span class="mi">128</span>  <span class="c1">#: OpenSUSE</span>
+
+<span class="c1"># family: bsd</span>
+<span class="n">RTE_DRAGONFLYBSD</span> <span class="o">=</span> <span class="n">RTE_BSD</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">RTE_NETBSD</span> <span class="o">=</span> <span class="n">RTE_BSD</span> <span class="o">+</span> <span class="mi">64</span>
+<span class="n">RTE_OPENBSD</span> <span class="o">=</span> <span class="n">RTE_BSD</span> <span class="o">+</span> <span class="mi">256</span>
+<span class="n">RTE_FREEBSD</span> <span class="o">=</span> <span class="n">RTE_BSD</span> <span class="o">+</span> <span class="mi">512</span>
+
+
+<span class="c1"># family: uri</span>
+<span class="n">RTE_FILEURI</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1">#: file-URI [RFC8089]_</span>
+<span class="n">RTE_FILEURI0</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">2</span>  <span class="c1">#: file-URI in minimal representation, see [RFC8089]_ Appendix A+B+D+E</span>
+<span class="n">RTE_FILEURI4</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">3</span>  <span class="c1">#: file-URI for UNC in strict 4shlash representation, see [RFC8089]_ Appendix A+B+D+E</span>
+<span class="n">RTE_FILEURI5</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">4</span>  <span class="c1">#: file-URI for UNC in common 5slash representation, see [RFC8089]_ Appendix A+B+D+E</span>
+
+<span class="n">RTE_SMB</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">8</span>  <span class="c1">#: SMB [SMBCIFS]_</span>
+<span class="n">RTE_NFS</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">9</span>  <span class="c1">#: see [RFC2224]_</span>
+<span class="n">RTE_RSYNC</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">10</span>  <span class="c1">#: see [RFC5781]_</span>
+
+<span class="n">RTE_HTTP</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">16</span>  <span class="c1">#: see [RFC3986]_</span>
+<span class="n">RTE_HTTPS</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">17</span>  <span class="c1">#: see [RFC3986]_</span>
+<span class="n">RTE_FTP</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">18</span>  <span class="c1">#: see [RFC1738]_</span>
+<span class="n">RTE_TFTP</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">19</span>  <span class="c1">#: see [RFC3617]_</span>
+
+<span class="n">RTE_GIT</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">32</span>  <span class="c1">#: see [RFC]_</span>
+
+<span class="n">RTE_LDAP</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">64</span>  <span class="c1">#: see [RFC2255]_</span>
+<span class="n">RTE_SNMP</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">65</span>  <span class="c1">#: see [RFC4088]_</span>
+
+<span class="n">RTE_SSH</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">128</span>  <span class="c1">#: see [RFCSSHURI]_</span>
+<span class="n">RTE_VNC</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">129</span>  <span class="c1">#: see [RFC7869]_</span>
+
+<span class="n">RTE_PKCS11</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">256</span>  <span class="c1">#: see [RFC7512]_</span>
+<span class="n">RTE_XMPP</span> <span class="o">=</span> <span class="n">RTE_URI</span> <span class="o">+</span> <span class="mi">257</span>  <span class="c1">#: see [RFC5122]_</span>
+
+
+<span class="c1"># family: win32</span>
+<span class="c1"># currently no sub-categories, some are contained in </span>
+<span class="c1"># the &#39;family: generic&#39;: drives, shares</span>
+<span class="c1">#</span>
+<span class="n">RTE_DOS</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1">#: MS-DOS - frozen</span>
+<span class="n">RTE_WINNT4</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">8</span>  <span class="c1">#: Windows-NT4 - frozen</span>
+<span class="n">RTE_WINNT4WS</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">9</span>  <span class="c1">#: Windows-NT4-Workstation - frozen</span>
+<span class="n">RTE_WINNT4S</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">10</span>  <span class="c1">#: Windows-NT4-Server - frozen</span>
+<span class="n">RTE_WIN2000</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">16</span>  <span class="c1">#: Windows-2000 - frozen</span>
+<span class="n">RTE_WINS2000WS</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">17</span>  <span class="c1">#: Windows-2000-Workstation - frozen</span>
+<span class="n">RTE_WINS2000S</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">18</span>  <span class="c1">#: Windows-2000-Server - frozen</span>
+<span class="n">RTE_WINS2008</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">19</span>  <span class="c1">#: Windows-2008-Server - frozen</span>
+
+<span class="n">RTE_POWERSHELL1</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">32</span>  <span class="c1">#: PowerShell-1-Windows</span>
+<span class="n">RTE_POWERSHELL2</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">33</span>  <span class="c1">#: PowerShell-2-Windows</span>
+<span class="n">RTE_POWERSHELL2LINUX</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">64</span>  <span class="c1">#: PowerShell-2-Linux</span>
+
+<span class="n">RTE_WIN7</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">128</span>  <span class="c1">#: Windows7</span>
+<span class="n">RTE_WIN10</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">136</span>  <span class="c1">#: Windows10</span>
+<span class="n">RTE_WINS2012</span> <span class="o">=</span> <span class="n">RTE_WIN32</span> <span class="o">+</span> <span class="mi">144</span>  <span class="c1">#: Windows-2012-Server</span>
+
+
+<span class="k">if</span> <span class="n">platform</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;linux&#39;</span><span class="p">,</span> <span class="s1">&#39;linux2&#39;</span><span class="p">):</span>
+    <span class="n">RTE</span> <span class="o">=</span> <span class="n">RTE_LINUX</span>
+
+<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;bsd&#39;</span><span class="p">:</span>
+    <span class="n">RTE</span> <span class="o">=</span> <span class="n">RTE_BSD</span>
+
+<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;darwin&#39;</span><span class="p">:</span>
+    <span class="n">RTE</span> <span class="o">=</span> <span class="n">RTE_DARWIN</span>
+
+<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;cygwin&#39;</span><span class="p">:</span>
+    <span class="n">RTE</span> <span class="o">=</span> <span class="n">RTE_POSIX</span> <span class="o">|</span> <span class="n">RTE_WIN32</span> <span class="o">|</span> <span class="n">RTE_CYGWIN</span>
+
+<span class="k">elif</span> <span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>
+    <span class="n">RTE</span> <span class="o">=</span> <span class="n">RTE_WIN32</span>
+
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="n">FileSysObjectsError</span><span class="p">(</span><span class="s2">&quot;Platform not supported:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">platform</span><span class="p">))</span>
+
+<span class="c1">#RTE_LOCAL = RTE  #: local</span>
+
+<span class="n">rte2num</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;bsd&#39;</span><span class="p">:</span> <span class="n">RTE_BSD</span><span class="p">,</span>
+    <span class="s1">&#39;centos&#39;</span><span class="p">:</span> <span class="n">RTE_CENTOS</span><span class="p">,</span>
+    <span class="s1">&#39;centos4&#39;</span><span class="p">:</span> <span class="n">RTE_CENTOS4</span><span class="p">,</span>
+    <span class="s1">&#39;centos5&#39;</span><span class="p">:</span> <span class="n">RTE_CENTOS5</span><span class="p">,</span>
+    <span class="s1">&#39;centos6&#39;</span><span class="p">:</span> <span class="n">RTE_CENTOS6</span><span class="p">,</span>
+    <span class="s1">&#39;centos7&#39;</span><span class="p">:</span> <span class="n">RTE_CENTOS7</span><span class="p">,</span>
+    <span class="s1">&#39;cnp&#39;</span><span class="p">:</span> <span class="n">RTE_CNP</span><span class="p">,</span>
+    <span class="s1">&#39;cnw&#39;</span><span class="p">:</span> <span class="n">RTE_CNW</span><span class="p">,</span>
+    <span class="s1">&#39;cygwin&#39;</span><span class="p">:</span> <span class="n">RTE_CYGWIN</span><span class="p">,</span>
+    <span class="s1">&#39;debian&#39;</span><span class="p">:</span> <span class="n">RTE_DEBIAN</span><span class="p">,</span>
+    <span class="s1">&#39;debian6&#39;</span><span class="p">:</span> <span class="n">RTE_DEBIAN6</span><span class="p">,</span>
+    <span class="s1">&#39;debian7&#39;</span><span class="p">:</span> <span class="n">RTE_DEBIAN7</span><span class="p">,</span>
+    <span class="s1">&#39;debian8&#39;</span><span class="p">:</span> <span class="n">RTE_DEBIAN8</span><span class="p">,</span>
+    <span class="s1">&#39;debian9&#39;</span><span class="p">:</span> <span class="n">RTE_DEBIAN9</span><span class="p">,</span>
+    <span class="s1">&#39;dos&#39;</span><span class="p">:</span> <span class="n">RTE_DOS</span><span class="p">,</span>
+    <span class="s1">&#39;dragonfly&#39;</span><span class="p">:</span> <span class="n">RTE_DRAGONFLYBSD</span><span class="p">,</span>
+    <span class="s1">&#39;fedora&#39;</span><span class="p">:</span> <span class="n">RTE_FEDORA</span><span class="p">,</span>
+    <span class="s1">&#39;fedora19&#39;</span><span class="p">:</span> <span class="n">RTE_FEDORA19</span><span class="p">,</span>
+    <span class="s1">&#39;fedora27&#39;</span><span class="p">:</span> <span class="n">RTE_FEDORA27</span><span class="p">,</span>
+    <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="n">RTE_FILEURI</span><span class="p">,</span>
+    <span class="s1">&#39;fileuri&#39;</span><span class="p">:</span> <span class="n">RTE_FILEURI</span><span class="p">,</span>
+    <span class="s1">&#39;fileuri0&#39;</span><span class="p">:</span> <span class="n">RTE_FILEURI0</span><span class="p">,</span>
+    <span class="s1">&#39;fileuri4&#39;</span><span class="p">:</span> <span class="n">RTE_FILEURI4</span><span class="p">,</span>
+    <span class="s1">&#39;fileuri5&#39;</span><span class="p">:</span> <span class="n">RTE_FILEURI5</span><span class="p">,</span>
+    <span class="s1">&#39;freebsd&#39;</span><span class="p">:</span> <span class="n">RTE_FREEBSD</span><span class="p">,</span>
+    <span class="s1">&#39;ftp&#39;</span><span class="p">:</span> <span class="n">RTE_FTP</span><span class="p">,</span>
+    <span class="s1">&#39;git&#39;</span><span class="p">:</span> <span class="n">RTE_GIT</span><span class="p">,</span>
+    <span class="s1">&#39;http&#39;</span><span class="p">:</span> <span class="n">RTE_HTTP</span><span class="p">,</span>
+    <span class="s1">&#39;https&#39;</span><span class="p">:</span> <span class="n">RTE_HTTPS</span><span class="p">,</span>
+    <span class="s1">&#39;ldap&#39;</span><span class="p">:</span> <span class="n">RTE_LDAP</span><span class="p">,</span>
+    <span class="s1">&#39;ldsys&#39;</span><span class="p">:</span> <span class="n">RTE_LDSYS</span><span class="p">,</span>
+    <span class="s1">&#39;lfsys&#39;</span><span class="p">:</span> <span class="n">RTE_LFSYS</span><span class="p">,</span>
+    <span class="s1">&#39;linux&#39;</span><span class="p">:</span> <span class="n">RTE_LINUX</span><span class="p">,</span>
+    <span class="s1">&#39;local&#39;</span><span class="p">:</span> <span class="n">RTE_LOCAL</span><span class="p">,</span>
+    <span class="s1">&#39;netbsd&#39;</span><span class="p">:</span> <span class="n">RTE_NETBSD</span><span class="p">,</span>
+    <span class="s1">&#39;nfs&#39;</span><span class="p">:</span> <span class="n">RTE_NFS</span><span class="p">,</span>
+    <span class="s1">&#39;openbsd&#39;</span><span class="p">:</span> <span class="n">RTE_OPENBSD</span><span class="p">,</span>
+    <span class="s1">&#39;pkcs11&#39;</span><span class="p">:</span> <span class="n">RTE_PKCS11</span><span class="p">,</span>
+    <span class="s1">&#39;posix&#39;</span><span class="p">:</span> <span class="n">RTE_POSIX</span><span class="p">,</span>
+    <span class="s1">&#39;powershell1&#39;</span><span class="p">:</span> <span class="n">RTE_POWERSHELL1</span><span class="p">,</span>
+    <span class="s1">&#39;powershell2&#39;</span><span class="p">:</span> <span class="n">RTE_POWERSHELL2</span><span class="p">,</span>
+    <span class="s1">&#39;powershell2linux&#39;</span><span class="p">:</span> <span class="n">RTE_POWERSHELL2LINUX</span><span class="p">,</span>
+    <span class="s1">&#39;rfsys&#39;</span><span class="p">:</span> <span class="n">RTE_RFSYS</span><span class="p">,</span>
+    <span class="s1">&#39;rsync&#39;</span><span class="p">:</span> <span class="n">RTE_RSYNC</span><span class="p">,</span>
+    <span class="s1">&#39;share&#39;</span><span class="p">:</span> <span class="n">RTE_SHARE</span><span class="p">,</span>
+    <span class="s1">&#39;smb&#39;</span><span class="p">:</span> <span class="n">RTE_SMB</span><span class="p">,</span>
+    <span class="s1">&#39;snmp&#39;</span><span class="p">:</span> <span class="n">RTE_SNMP</span><span class="p">,</span>
+    <span class="s1">&#39;solaris&#39;</span><span class="p">:</span> <span class="n">RTE_SOLARIS</span><span class="p">,</span>
+    <span class="s1">&#39;ssh&#39;</span><span class="p">:</span> <span class="n">RTE_SSH</span><span class="p">,</span>
+    <span class="s1">&#39;suse&#39;</span><span class="p">:</span> <span class="n">RTE_SUSE</span><span class="p">,</span>
+    <span class="s1">&#39;tftp&#39;</span><span class="p">:</span> <span class="n">RTE_TFTP</span><span class="p">,</span>
+    <span class="s1">&#39;ubuntu&#39;</span><span class="p">:</span> <span class="n">RTE_UBUNTU</span><span class="p">,</span>
+    <span class="s1">&#39;unc&#39;</span><span class="p">:</span> <span class="n">RTE_UNC</span><span class="p">,</span>
+    <span class="s1">&#39;uri&#39;</span><span class="p">:</span> <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="s1">&#39;vnc&#39;</span><span class="p">:</span> <span class="n">RTE_VNC</span><span class="p">,</span>
+    <span class="s1">&#39;win&#39;</span><span class="p">:</span> <span class="n">RTE_WIN32</span><span class="p">,</span>
+    <span class="s1">&#39;win10&#39;</span><span class="p">:</span> <span class="n">RTE_WIN10</span><span class="p">,</span>
+    <span class="s1">&#39;win2000&#39;</span><span class="p">:</span> <span class="n">RTE_WIN2000</span><span class="p">,</span>
+    <span class="s1">&#39;win32&#39;</span><span class="p">:</span> <span class="n">RTE_WIN32</span><span class="p">,</span>
+    <span class="s1">&#39;win7&#39;</span><span class="p">:</span> <span class="n">RTE_WIN7</span><span class="p">,</span>
+    <span class="s1">&#39;winnt2000s&#39;</span><span class="p">:</span> <span class="n">RTE_WINS2000S</span><span class="p">,</span>
+    <span class="s1">&#39;winnt2000ws&#39;</span><span class="p">:</span> <span class="n">RTE_WINS2000WS</span><span class="p">,</span>
+    <span class="s1">&#39;winnt2008&#39;</span><span class="p">:</span> <span class="n">RTE_WINS2008</span><span class="p">,</span>
+    <span class="s1">&#39;winnt2012&#39;</span><span class="p">:</span> <span class="n">RTE_WINS2012</span><span class="p">,</span>
+    <span class="s1">&#39;winnt4&#39;</span><span class="p">:</span> <span class="n">RTE_WINNT4</span><span class="p">,</span>
+    <span class="s1">&#39;winnt4s&#39;</span><span class="p">:</span> <span class="n">RTE_WINNT4S</span><span class="p">,</span>
+    <span class="s1">&#39;winnt4ws&#39;</span><span class="p">:</span> <span class="n">RTE_WINNT4WS</span><span class="p">,</span>
+    <span class="s1">&#39;xmpp&#39;</span><span class="p">:</span> <span class="n">RTE_XMPP</span><span class="p">,</span>
+    <span class="n">RTE_BSD</span><span class="p">:</span> <span class="n">RTE_BSD</span><span class="p">,</span>
+    <span class="n">RTE_CENTOS4</span><span class="p">:</span> <span class="n">RTE_CENTOS4</span><span class="p">,</span>
+    <span class="n">RTE_CENTOS5</span><span class="p">:</span> <span class="n">RTE_CENTOS5</span><span class="p">,</span>
+    <span class="n">RTE_CENTOS6</span><span class="p">:</span> <span class="n">RTE_CENTOS6</span><span class="p">,</span>
+    <span class="n">RTE_CENTOS7</span><span class="p">:</span> <span class="n">RTE_CENTOS7</span><span class="p">,</span>
+    <span class="n">RTE_CENTOS</span><span class="p">:</span> <span class="n">RTE_CENTOS</span><span class="p">,</span>
+    <span class="n">RTE_CNP</span><span class="p">:</span> <span class="n">RTE_POSIX</span><span class="p">,</span>
+    <span class="n">RTE_CNW</span><span class="p">:</span> <span class="n">RTE_WIN32</span><span class="p">,</span>
+    <span class="n">RTE_CYGWIN</span><span class="p">:</span> <span class="n">RTE_CYGWIN</span><span class="p">,</span>
+    <span class="n">RTE_DARWIN</span><span class="p">:</span> <span class="n">RTE_DARWIN</span><span class="p">,</span>
+    <span class="n">RTE_DEBIAN6</span><span class="p">:</span> <span class="n">RTE_DEBIAN6</span><span class="p">,</span>
+    <span class="n">RTE_DEBIAN7</span><span class="p">:</span> <span class="n">RTE_DEBIAN7</span><span class="p">,</span>
+    <span class="n">RTE_DEBIAN8</span><span class="p">:</span> <span class="n">RTE_DEBIAN8</span><span class="p">,</span>
+    <span class="n">RTE_DEBIAN9</span><span class="p">:</span> <span class="n">RTE_DEBIAN9</span><span class="p">,</span>
+    <span class="n">RTE_DEBIAN</span><span class="p">:</span> <span class="n">RTE_DEBIAN</span><span class="p">,</span>
+    <span class="n">RTE_DOS</span><span class="p">:</span> <span class="n">RTE_DOS</span><span class="p">,</span>
+    <span class="n">RTE_DRAGONFLYBSD</span><span class="p">:</span> <span class="n">RTE_DRAGONFLYBSD</span><span class="p">,</span>
+    <span class="n">RTE_FEDORA19</span><span class="p">:</span> <span class="n">RTE_FEDORA19</span><span class="p">,</span>
+    <span class="n">RTE_FEDORA27</span><span class="p">:</span> <span class="n">RTE_FEDORA27</span><span class="p">,</span>
+    <span class="n">RTE_FEDORA</span><span class="p">:</span> <span class="n">RTE_FEDORA</span><span class="p">,</span>
+    <span class="n">RTE_FILEURI0</span><span class="p">:</span> <span class="n">RTE_FILEURI0</span><span class="p">,</span>
+    <span class="n">RTE_FILEURI4</span><span class="p">:</span> <span class="n">RTE_FILEURI4</span><span class="p">,</span>
+    <span class="n">RTE_FILEURI5</span><span class="p">:</span> <span class="n">RTE_FILEURI5</span><span class="p">,</span>
+    <span class="n">RTE_FILEURI</span><span class="p">:</span> <span class="n">RTE_FILEURI</span><span class="p">,</span>
+    <span class="n">RTE_FREEBSD</span><span class="p">:</span> <span class="n">RTE_FREEBSD</span><span class="p">,</span>
+    <span class="n">RTE_FTP</span><span class="p">:</span> <span class="n">RTE_FTP</span><span class="p">,</span>
+    <span class="n">RTE_GENERIC</span><span class="p">:</span> <span class="n">RTE_GENERIC</span><span class="p">,</span>
+    <span class="n">RTE_GENERIC</span><span class="p">:</span> <span class="n">RTE_GENERIC</span><span class="p">,</span>
+    <span class="n">RTE_GIT</span><span class="p">:</span> <span class="n">RTE_GIT</span><span class="p">,</span>
+    <span class="n">RTE_HTTP</span><span class="p">:</span> <span class="n">RTE_HTTP</span><span class="p">,</span>
+    <span class="n">RTE_HTTPS</span><span class="p">:</span> <span class="n">RTE_HTTPS</span><span class="p">,</span>
+    <span class="n">RTE_LDAP</span><span class="p">:</span> <span class="n">RTE_LDAP</span><span class="p">,</span>
+    <span class="n">RTE_LDSYS</span><span class="p">:</span> <span class="n">RTE_LDSYS</span><span class="p">,</span>
+    <span class="n">RTE_LFSYS</span><span class="p">:</span> <span class="n">RTE_LFSYS</span><span class="p">,</span>
+    <span class="n">RTE_LINUX</span><span class="p">:</span> <span class="n">RTE_LINUX</span><span class="p">,</span>
+    <span class="n">RTE_LOCAL</span><span class="p">:</span> <span class="n">RTE_LOCAL</span><span class="p">,</span>
+    <span class="n">RTE_NETBSD</span><span class="p">:</span> <span class="n">RTE_NETBSD</span><span class="p">,</span>
+    <span class="n">RTE_NFS</span><span class="p">:</span> <span class="n">RTE_NFS</span><span class="p">,</span>
+    <span class="n">RTE_OPENBSD</span><span class="p">:</span> <span class="n">RTE_OPENBSD</span><span class="p">,</span>
+    <span class="n">RTE_OSX</span><span class="p">:</span> <span class="n">RTE_OSX</span><span class="p">,</span>
+    <span class="n">RTE_PKCS11</span><span class="p">:</span> <span class="n">RTE_PKCS11</span><span class="p">,</span>
+    <span class="n">RTE_POSIX</span><span class="p">:</span> <span class="n">RTE_POSIX</span><span class="p">,</span>
+    <span class="n">RTE_POWERSHELL1</span><span class="p">:</span> <span class="n">RTE_POWERSHELL1</span><span class="p">,</span>
+    <span class="n">RTE_POWERSHELL2</span><span class="p">:</span> <span class="n">RTE_POWERSHELL2</span><span class="p">,</span>
+    <span class="n">RTE_POWERSHELL2LINUX</span><span class="p">:</span> <span class="n">RTE_POWERSHELL2LINUX</span><span class="p">,</span>
+    <span class="n">RTE_RFSYS</span><span class="p">:</span> <span class="n">RTE_RFSYS</span><span class="p">,</span>
+    <span class="n">RTE_RSYNC</span><span class="p">:</span> <span class="n">RTE_RSYNC</span><span class="p">,</span>
+    <span class="n">RTE_SHARE</span><span class="p">:</span> <span class="n">RTE_SHARE</span><span class="p">,</span>
+    <span class="n">RTE_SMB</span><span class="p">:</span> <span class="n">RTE_SMB</span><span class="p">,</span>
+    <span class="n">RTE_SNMP</span><span class="p">:</span> <span class="n">RTE_SNMP</span><span class="p">,</span>
+    <span class="n">RTE_SOLARIS</span><span class="p">:</span> <span class="n">RTE_SOLARIS</span><span class="p">,</span>
+    <span class="n">RTE_SSH</span><span class="p">:</span> <span class="n">RTE_SSH</span><span class="p">,</span>
+    <span class="n">RTE_SUSE</span><span class="p">:</span> <span class="n">RTE_SUSE</span><span class="p">,</span>
+    <span class="n">RTE_TFTP</span><span class="p">:</span> <span class="n">RTE_TFTP</span><span class="p">,</span>
+    <span class="n">RTE_UBUNTU</span><span class="p">:</span> <span class="n">RTE_UBUNTU</span><span class="p">,</span>
+    <span class="n">RTE_UNC</span><span class="p">:</span> <span class="n">RTE_UNC</span><span class="p">,</span>
+    <span class="n">RTE_URI</span><span class="p">:</span> <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="n">RTE_VNC</span><span class="p">:</span> <span class="n">RTE_VNC</span><span class="p">,</span>
+    <span class="n">RTE_WIN10</span><span class="p">:</span> <span class="n">RTE_WIN10</span><span class="p">,</span>
+    <span class="n">RTE_WIN2000</span><span class="p">:</span> <span class="n">RTE_WIN2000</span><span class="p">,</span>
+    <span class="n">RTE_WIN32</span><span class="p">:</span> <span class="n">RTE_WIN32</span><span class="p">,</span>
+    <span class="n">RTE_WIN32</span><span class="p">:</span> <span class="n">RTE_WIN32</span><span class="p">,</span>
+    <span class="n">RTE_WIN7</span><span class="p">:</span> <span class="n">RTE_WIN7</span><span class="p">,</span>
+    <span class="n">RTE_WINNT4</span><span class="p">:</span> <span class="n">RTE_WINNT4</span><span class="p">,</span>
+    <span class="n">RTE_WINNT4S</span><span class="p">:</span> <span class="n">RTE_WINNT4S</span><span class="p">,</span>
+    <span class="n">RTE_WINNT4WS</span><span class="p">:</span> <span class="n">RTE_WINNT4WS</span><span class="p">,</span>
+    <span class="n">RTE_WINS2000S</span><span class="p">:</span> <span class="n">RTE_WINS2000S</span><span class="p">,</span>
+    <span class="n">RTE_WINS2000WS</span><span class="p">:</span> <span class="n">RTE_WINS2000WS</span><span class="p">,</span>
+    <span class="n">RTE_WINS2008</span><span class="p">:</span> <span class="n">RTE_WINS2008</span><span class="p">,</span>
+    <span class="n">RTE_WINS2012</span><span class="p">:</span> <span class="n">RTE_WINS2012</span><span class="p">,</span>
+    <span class="n">RTE_XMPP</span><span class="p">:</span> <span class="n">RTE_XMPP</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">num2rte</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">RTE_BSD</span><span class="p">:</span> <span class="s1">&#39;bsd&#39;</span><span class="p">,</span>
+    <span class="n">RTE_CENTOS</span><span class="p">:</span> <span class="s1">&#39;centos&#39;</span><span class="p">,</span>
+    <span class="n">RTE_CENTOS4</span><span class="p">:</span> <span class="s1">&#39;centos4&#39;</span><span class="p">,</span>
+    <span class="n">RTE_CENTOS5</span><span class="p">:</span> <span class="s1">&#39;centos5&#39;</span><span class="p">,</span>
+    <span class="n">RTE_CENTOS6</span><span class="p">:</span> <span class="s1">&#39;centos6&#39;</span><span class="p">,</span>
+    <span class="n">RTE_CENTOS7</span><span class="p">:</span> <span class="s1">&#39;centos7&#39;</span><span class="p">,</span>
+    <span class="n">RTE_CNP</span><span class="p">:</span> <span class="s1">&#39;cnp&#39;</span><span class="p">,</span>
+    <span class="n">RTE_CNW</span><span class="p">:</span> <span class="s1">&#39;cnw&#39;</span><span class="p">,</span>
+    <span class="n">RTE_CYGWIN</span><span class="p">:</span> <span class="s1">&#39;cygwin&#39;</span><span class="p">,</span>
+    <span class="n">RTE_DEBIAN</span><span class="p">:</span> <span class="s1">&#39;debian&#39;</span><span class="p">,</span>
+    <span class="n">RTE_DEBIAN6</span><span class="p">:</span> <span class="s1">&#39;debian6&#39;</span><span class="p">,</span>
+    <span class="n">RTE_DEBIAN7</span><span class="p">:</span> <span class="s1">&#39;debian7&#39;</span><span class="p">,</span>
+    <span class="n">RTE_DEBIAN8</span><span class="p">:</span> <span class="s1">&#39;debian8&#39;</span><span class="p">,</span>
+    <span class="n">RTE_DEBIAN9</span><span class="p">:</span> <span class="s1">&#39;debian9&#39;</span><span class="p">,</span>
+    <span class="n">RTE_DOS</span><span class="p">:</span> <span class="s1">&#39;dos&#39;</span><span class="p">,</span>
+    <span class="n">RTE_DRAGONFLYBSD</span><span class="p">:</span> <span class="s1">&#39;dragonfly&#39;</span><span class="p">,</span>
+    <span class="n">RTE_FEDORA</span><span class="p">:</span> <span class="s1">&#39;fedora&#39;</span><span class="p">,</span>
+    <span class="n">RTE_FEDORA19</span><span class="p">:</span> <span class="s1">&#39;fedora19&#39;</span><span class="p">,</span>
+    <span class="n">RTE_FEDORA27</span><span class="p">:</span> <span class="s1">&#39;fedora27&#39;</span><span class="p">,</span>
+    <span class="n">RTE_FILEURI</span><span class="p">:</span> <span class="s1">&#39;file&#39;</span><span class="p">,</span>
+    <span class="n">RTE_FILEURI</span><span class="p">:</span> <span class="s1">&#39;fileuri&#39;</span><span class="p">,</span>
+    <span class="n">RTE_FILEURI0</span><span class="p">:</span> <span class="s1">&#39;fileuri0&#39;</span><span class="p">,</span>
+    <span class="n">RTE_FILEURI4</span><span class="p">:</span> <span class="s1">&#39;fileuri4&#39;</span><span class="p">,</span>
+    <span class="n">RTE_FILEURI5</span><span class="p">:</span> <span class="s1">&#39;fileuri5&#39;</span><span class="p">,</span>
+    <span class="n">RTE_FREEBSD</span><span class="p">:</span> <span class="s1">&#39;freebsd&#39;</span><span class="p">,</span>
+    <span class="n">RTE_FTP</span><span class="p">:</span> <span class="s1">&#39;ftp&#39;</span><span class="p">,</span>
+    <span class="n">RTE_GIT</span><span class="p">:</span> <span class="s1">&#39;git&#39;</span><span class="p">,</span>
+    <span class="n">RTE_HTTP</span><span class="p">:</span> <span class="s1">&#39;http&#39;</span><span class="p">,</span>
+    <span class="n">RTE_HTTPS</span><span class="p">:</span> <span class="s1">&#39;https&#39;</span><span class="p">,</span>
+    <span class="n">RTE_LDAP</span><span class="p">:</span> <span class="s1">&#39;ldap&#39;</span><span class="p">,</span>
+    <span class="n">RTE_LDSYS</span><span class="p">:</span> <span class="s1">&#39;ldsys&#39;</span><span class="p">,</span>
+    <span class="n">RTE_LFSYS</span><span class="p">:</span> <span class="s1">&#39;lfsys&#39;</span><span class="p">,</span>
+    <span class="n">RTE_LINUX</span><span class="p">:</span> <span class="s1">&#39;linux&#39;</span><span class="p">,</span>
+    <span class="n">RTE_LOCAL</span><span class="p">:</span> <span class="s1">&#39;local&#39;</span><span class="p">,</span>
+    <span class="n">RTE_NETBSD</span><span class="p">:</span> <span class="s1">&#39;netbsd&#39;</span><span class="p">,</span>
+    <span class="n">RTE_NFS</span><span class="p">:</span> <span class="s1">&#39;nfs&#39;</span><span class="p">,</span>
+    <span class="n">RTE_OPENBSD</span><span class="p">:</span> <span class="s1">&#39;openbsd&#39;</span><span class="p">,</span>
+    <span class="n">RTE_PKCS11</span><span class="p">:</span> <span class="s1">&#39;pkcs11&#39;</span><span class="p">,</span>
+    <span class="n">RTE_POSIX</span><span class="p">:</span> <span class="s1">&#39;posix&#39;</span><span class="p">,</span>
+    <span class="n">RTE_POWERSHELL1</span><span class="p">:</span> <span class="s1">&#39;powershell1&#39;</span><span class="p">,</span>
+    <span class="n">RTE_POWERSHELL2</span><span class="p">:</span> <span class="s1">&#39;powershell2&#39;</span><span class="p">,</span>
+    <span class="n">RTE_POWERSHELL2LINUX</span><span class="p">:</span> <span class="s1">&#39;powershell2linux&#39;</span><span class="p">,</span>
+    <span class="n">RTE_RFSYS</span><span class="p">:</span> <span class="s1">&#39;rfsys&#39;</span><span class="p">,</span>
+    <span class="n">RTE_RSYNC</span><span class="p">:</span> <span class="s1">&#39;rsync&#39;</span><span class="p">,</span>
+    <span class="n">RTE_SHARE</span><span class="p">:</span> <span class="s1">&#39;share&#39;</span><span class="p">,</span>
+    <span class="n">RTE_SMB</span><span class="p">:</span> <span class="s1">&#39;smb&#39;</span><span class="p">,</span>
+    <span class="n">RTE_SNMP</span><span class="p">:</span> <span class="s1">&#39;snmp&#39;</span><span class="p">,</span>
+    <span class="n">RTE_SOLARIS</span><span class="p">:</span> <span class="s1">&#39;solaris&#39;</span><span class="p">,</span>
+    <span class="n">RTE_SSH</span><span class="p">:</span> <span class="s1">&#39;ssh&#39;</span><span class="p">,</span>
+    <span class="n">RTE_SUSE</span><span class="p">:</span> <span class="s1">&#39;suse&#39;</span><span class="p">,</span>
+    <span class="n">RTE_TFTP</span><span class="p">:</span> <span class="s1">&#39;tftp&#39;</span><span class="p">,</span>
+    <span class="n">RTE_UBUNTU</span><span class="p">:</span> <span class="s1">&#39;ubuntu&#39;</span><span class="p">,</span>
+    <span class="n">RTE_UNC</span><span class="p">:</span> <span class="s1">&#39;unc&#39;</span><span class="p">,</span>
+    <span class="n">RTE_URI</span><span class="p">:</span> <span class="s1">&#39;uri&#39;</span><span class="p">,</span>
+    <span class="n">RTE_VNC</span><span class="p">:</span> <span class="s1">&#39;vnc&#39;</span><span class="p">,</span>
+    <span class="n">RTE_WIN32</span><span class="p">:</span> <span class="s1">&#39;win&#39;</span><span class="p">,</span>
+    <span class="n">RTE_WIN10</span><span class="p">:</span> <span class="s1">&#39;win10&#39;</span><span class="p">,</span>
+    <span class="n">RTE_WIN2000</span><span class="p">:</span> <span class="s1">&#39;win2000&#39;</span><span class="p">,</span>
+    <span class="n">RTE_WIN32</span><span class="p">:</span> <span class="s1">&#39;win32&#39;</span><span class="p">,</span>
+    <span class="n">RTE_WIN7</span><span class="p">:</span> <span class="s1">&#39;win7&#39;</span><span class="p">,</span>
+    <span class="n">RTE_WINS2000S</span><span class="p">:</span> <span class="s1">&#39;winnt2000s&#39;</span><span class="p">,</span>
+    <span class="n">RTE_WINS2000WS</span><span class="p">:</span> <span class="s1">&#39;winnt2000ws&#39;</span><span class="p">,</span>
+    <span class="n">RTE_WINS2008</span><span class="p">:</span> <span class="s1">&#39;winnt2008&#39;</span><span class="p">,</span>
+    <span class="n">RTE_WINS2012</span><span class="p">:</span> <span class="s1">&#39;winnt2012&#39;</span><span class="p">,</span>
+    <span class="n">RTE_WINNT4</span><span class="p">:</span> <span class="s1">&#39;winnt4&#39;</span><span class="p">,</span>
+    <span class="n">RTE_WINNT4S</span><span class="p">:</span> <span class="s1">&#39;winnt4s&#39;</span><span class="p">,</span>
+    <span class="n">RTE_WINNT4WS</span><span class="p">:</span> <span class="s1">&#39;winnt4ws&#39;</span><span class="p">,</span>
+    <span class="n">RTE_XMPP</span><span class="p">:</span> <span class="s1">&#39;xmpp&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="c1">#</span>
+<span class="c1"># File system node type enums as bit values.</span>
+<span class="c1">#</span>
+<span class="n">T_FILE</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="sd">&quot;&quot;&quot;Files.&quot;&quot;&quot;</span>
+
+<span class="n">T_DIR</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="sd">&quot;&quot;&quot;Directories.&quot;&quot;&quot;</span>
+
+<span class="n">T_NODES</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="sd">&quot;&quot;&quot;Files and empty directories. Is superposed by T_FILES and T_DIR.&quot;&quot;&quot;</span>
+
+<span class="n">T_SYML</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="sd">&quot;&quot;&quot;Symbolic links.&quot;&quot;&quot;</span>
+
+<span class="n">T_HARDL</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="sd">&quot;&quot;&quot;Hard links.&quot;&quot;&quot;</span>
+
+<span class="n">T_DEV</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="sd">&quot;&quot;&quot;Devices nodes.&quot;&quot;&quot;</span>
+
+<span class="n">T_MNT</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="sd">&quot;&quot;&quot;Mount points.&quot;&quot;&quot;</span>
+
+<span class="n">T_EXP</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="sd">&quot;&quot;&quot;Exported filesystems.&quot;&quot;&quot;</span>
+
+<span class="n">T_LOCAL</span> <span class="o">=</span> <span class="mi">512</span>
+<span class="sd">&quot;&quot;&quot;Local file system entries only.&quot;&quot;&quot;</span>
+
+<span class="n">T_ALL</span> <span class="o">=</span> <span class="n">T_FILE</span> <span class="o">|</span> <span class="n">T_DIR</span> <span class="o">|</span> <span class="n">T_NODES</span> <span class="o">|</span> <span class="n">T_SYML</span>
+<span class="sd">&quot;&quot;&quot;All files and empty directories.&quot;&quot;&quot;</span>
+
+<span class="c1">#</span>
+<span class="c1"># Search directions control parameters for *findpattern()*.</span>
+<span class="c1">#</span>
+<span class="n">L_TDOWN_WALK</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="sd">&quot;&quot;&quot;See os.walk(topdown=True)&quot;&quot;&quot;</span>
+
+<span class="n">L_UP_WALK</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="sd">&quot;&quot;&quot;See os.walk(topdown=False)&quot;&quot;&quot;</span>
+
+<span class="n">L_UP_EXT</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="sd">&quot;&quot;&quot;Caches M_UP_WALK, and provides same behavior as M_TDOWN_WALK.&quot;&quot;&quot;</span>
+
+<span class="n">L_MEM_CACHE_ONE</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="sd">&quot;&quot;&quot;Caches one node-level only.&quot;&quot;&quot;</span>
+
+<span class="c1">#</span>
+<span class="c1"># Bit values for the search proceeding behaviour of *findpattern()*.</span>
+<span class="c1">#</span>
+<span class="n">M_IGNORE</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="sd">&quot;&quot;&quot;Filters and parameters are ignored.&quot;&quot;&quot;</span>
+
+<span class="n">M_FILTERS</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="sd">&quot;&quot;&quot;Applies to all filters&quot;&quot;&quot;</span>
+
+<span class="n">M_PARAMS</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="sd">&quot;&quot;&quot;Applies to all parameters&quot;&quot;&quot;</span>
+
+<span class="n">M_FILTPAR</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="sd">&quot;&quot;&quot;Applies all filters and parameters - M_FILTERS | M_PARAMS&quot;&quot;&quot;</span>
+
+<span class="n">M_ACCURATE</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="sd">&quot;&quot;&quot;ffs.&quot;&quot;&quot;</span>
+
+<span class="n">M_FIRST</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="sd">&quot;&quot;&quot;Breaks after first match.&quot;&quot;&quot;</span>
+
+<span class="n">M_LAST</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="sd">&quot;&quot;&quot;Matches all, but returns the last only.&quot;&quot;&quot;</span>
+
+<span class="n">M_ALL</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="sd">&quot;&quot;&quot;Returns all matched results.&quot;&quot;&quot;</span>
+
+<span class="n">M_NEST</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="sd">&quot;&quot;&quot;Clears nested directory path matches.&quot;&quot;&quot;</span>
+
+<span class="n">M_NOCANON</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="sd">&quot;&quot;&quot;Do not convert input paths to canonical absolute.&quot;&quot;&quot;</span>
+
+<span class="n">M_REL</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="sd">&quot;&quot;&quot;Keep relative names.&quot;&quot;&quot;</span>
+
+<span class="c1">#</span>
+<span class="c1"># Output formats for results:</span>
+<span class="c1">#</span>
+<span class="n">OF_LIST_RAW</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="sd">&quot;&quot;&quot;Raw as *DirEntry*.&quot;&quot;&quot;</span>
+
+<span class="n">OF_LIST_STR</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="sd">&quot;&quot;&quot;List of strings.&quot;&quot;&quot;</span>
+
+<span class="n">OF_LIST_OID</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="sd">&quot;&quot;&quot;List of dotted object identifier notation.&quot;&quot;&quot;</span>
+
+<span class="n">OF_JSON_STR</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="sd">&quot;&quot;&quot;JSON list of strings.&quot;&quot;&quot;</span>
+
+<span class="n">OF_JSON_TREE</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="sd">&quot;&quot;&quot;JSON structured tree format.&quot;&quot;&quot;</span>
+
+<span class="n">OF_XML_STR</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="sd">&quot;&quot;&quot;XML list of strings.&quot;&quot;&quot;</span>
+
+<span class="n">OF_XML_TREE</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="sd">&quot;&quot;&quot;XML structured tree format.&quot;&quot;&quot;</span>
+
+
+<span class="c1">#</span>
+<span class="c1"># type of quotes</span>
+<span class="c1">#</span>
+<span class="n">Q_SINGLE_TRIPLE</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: triple quotes: &#39;&#39;&#39;quoted&#39;&#39;&#39;</span>
+<span class="n">Q_DOUBLE_TRIPLE</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1">#: double quotes: &quot;&quot;&quot;quoted&quot;&quot;&quot;</span>
+<span class="n">Q_ALL_TRIPLE</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1">#: both types: &#39;&#39;&#39;quoted&#39;&#39;&#39; &quot;&quot;&quot;quoted&quot;&quot;&quot;</span>
+
+
+<span class="c1">#</span>
+<span class="c1"># Control of glob and re application onto wildcards</span>
+<span class="c1"># could lead to dramatic performance enhancement.</span>
+<span class="c1">#</span>
+<span class="n">W_LITERAL</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1">#: literally a literal, e.g. no support for quotes</span>
+<span class="n">W_LITERAL_QUOTED</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: literal with support for quotes only</span>
+<span class="n">W_GLOB</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1">#: support for *glob*</span>
+<span class="n">W_RE</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1">#: support for *re*</span>
+<span class="n">W_FULL</span> <span class="o">=</span> <span class="n">W_LITERAL_QUOTED</span><span class="o">|</span><span class="n">W_GLOB</span><span class="o">|</span><span class="n">W_RE</span>  <span class="c1">#: support for *re* and *glob*</span>
+<span class="c1"># pylint: enable-msg=W0105</span>
+
+
+<span class="c1">#               sep      pathsep      pf        rte-bits</span>
+<span class="n">rte_cnp</span> <span class="o">=</span>      <span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>     <span class="s1">&#39;:&#39;</span><span class="p">,</span>         <span class="s1">&#39;cnp&#39;</span><span class="p">,</span>    <span class="n">RTE_CNP</span><span class="p">)</span>  <span class="c1">#: cnp record</span>
+<span class="n">rte_cnw</span> <span class="o">=</span>      <span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span>    <span class="s1">&#39;;&#39;</span><span class="p">,</span>         <span class="s1">&#39;cnw&#39;</span><span class="p">,</span>    <span class="n">RTE_CNW</span><span class="p">)</span>  <span class="c1">#: cnw record</span>
+<span class="n">rte_cygwin</span> <span class="o">=</span>   <span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>     <span class="s1">&#39;:&#39;</span><span class="p">,</span>         <span class="s1">&#39;cygwin&#39;</span><span class="p">,</span> <span class="n">RTE_CYGWIN</span> <span class="o">|</span> <span class="n">RTE_POSIX</span><span class="p">)</span>  <span class="c1">#: Cygwin record</span>
+<span class="n">rte_fileuri</span> <span class="o">=</span>  <span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>     <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">,</span>  <span class="s1">&#39;file&#39;</span><span class="p">,</span>   <span class="n">RTE_FILEURI</span><span class="p">)</span>  <span class="c1">#: URI record</span>
+<span class="n">rte_fileuri0</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>     <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">,</span>  <span class="s1">&#39;file&#39;</span><span class="p">,</span>   <span class="n">RTE_FILEURI0</span><span class="p">)</span>  <span class="c1">#: URI record</span>
+<span class="n">rte_fileuri4</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>     <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">,</span>  <span class="s1">&#39;file&#39;</span><span class="p">,</span>   <span class="n">RTE_FILEURI4</span><span class="p">)</span>  <span class="c1">#: URI record</span>
+<span class="n">rte_fileuri5</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>     <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">,</span>  <span class="s1">&#39;file&#39;</span><span class="p">,</span>   <span class="n">RTE_FILEURI5</span><span class="p">)</span>  <span class="c1">#: URI record</span>
+<span class="n">rte_posix</span> <span class="o">=</span>    <span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>     <span class="s1">&#39;:&#39;</span><span class="p">,</span>         <span class="s1">&#39;posix&#39;</span><span class="p">,</span>  <span class="n">RTE_POSIX</span><span class="p">)</span>  <span class="c1">#: POSIX record</span>
+<span class="n">rte_smb</span> <span class="o">=</span>      <span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>     <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">,</span>  <span class="s1">&#39;smb&#39;</span><span class="p">,</span>    <span class="n">RTE_SMB</span><span class="p">)</span>  <span class="c1">#: UNC record</span>
+<span class="n">rte_unc</span> <span class="o">=</span>      <span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span>    <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">,</span>  <span class="s1">&#39;unc&#39;</span><span class="p">,</span>    <span class="n">RTE_UNC</span><span class="p">)</span>  <span class="c1">#: UNC record</span>
+<span class="n">rte_uri</span> <span class="o">=</span>      <span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>     <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">,</span>  <span class="s1">&#39;uri&#39;</span><span class="p">,</span>    <span class="n">RTE_URI</span><span class="p">)</span>  <span class="c1">#: URI record</span>
+<span class="n">rte_http</span> <span class="o">=</span>     <span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>     <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">,</span>  <span class="s1">&#39;http&#39;</span><span class="p">,</span>   <span class="n">RTE_HTTP</span><span class="p">)</span>  <span class="c1">#: URI record</span>
+<span class="n">rte_https</span> <span class="o">=</span>    <span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>     <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">,</span>  <span class="s1">&#39;https&#39;</span><span class="p">,</span>  <span class="n">RTE_HTTPS</span><span class="p">)</span>  <span class="c1">#: URI record</span>
+<span class="n">rte_win32</span> <span class="o">=</span>    <span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span>    <span class="s1">&#39;;&#39;</span><span class="p">,</span>         <span class="s1">&#39;win&#39;</span><span class="p">,</span>    <span class="n">RTE_WIN32</span><span class="p">)</span>  <span class="c1">#: WIN32 record</span>
+
+
+<span class="n">rte_rfsys</span> <span class="o">=</span>    <span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span>     <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">,</span>  <span class="s1">&#39;rfsys&#39;</span><span class="p">,</span>  <span class="n">RTE_RFSYS</span><span class="p">)</span>  <span class="c1">#: remote filesystem record, either share or netapp</span>
+<span class="n">rte_share</span> <span class="o">=</span>    <span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span>    <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">,</span>  <span class="s1">&#39;share&#39;</span><span class="p">,</span>  <span class="n">RTE_SHARE</span><span class="p">)</span>  <span class="c1">#: remote filesystem record, either share or netapp</span>
+
+<span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_WIN32</span><span class="p">:</span>
+    <span class="n">rte_local</span> <span class="o">=</span>    <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span>  <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">,</span>  <span class="s1">&#39;win&#39;</span><span class="p">,</span>  <span class="n">RTE_LOCAL</span><span class="p">)</span>  <span class="c1">#: local record</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">rte_local</span> <span class="o">=</span>    <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span>  <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">,</span>  <span class="s1">&#39;posix&#39;</span><span class="p">,</span>  <span class="n">RTE_LOCAL</span><span class="p">)</span>  <span class="c1">#: local record</span>
+
+<span class="c1">#: map of target bit-mask to correspoding result record</span>
+<span class="c1">#: map of target strings to correspoding result record</span>
+<span class="n">rte_map</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;:&#39;</span><span class="p">:</span> <span class="n">rte_posix</span><span class="p">,</span>
+    <span class="s1">&#39;;&#39;</span><span class="p">:</span> <span class="n">rte_win32</span><span class="p">,</span>
+    <span class="s1">&#39;bsd&#39;</span><span class="p">:</span> <span class="n">rte_posix</span><span class="p">,</span>
+    <span class="s1">&#39;cnp&#39;</span><span class="p">:</span> <span class="n">rte_cnp</span><span class="p">,</span>
+    <span class="s1">&#39;cnw&#39;</span><span class="p">:</span> <span class="n">rte_cnw</span><span class="p">,</span>
+    <span class="s1">&#39;cygwin&#39;</span><span class="p">:</span> <span class="n">rte_cygwin</span><span class="p">,</span>
+    <span class="s1">&#39;darwin&#39;</span><span class="p">:</span> <span class="n">rte_posix</span><span class="p">,</span>
+    <span class="s1">&#39;file&#39;</span><span class="p">:</span> <span class="n">rte_fileuri</span><span class="p">,</span>
+    <span class="s1">&#39;fileuri&#39;</span><span class="p">:</span> <span class="n">rte_fileuri</span><span class="p">,</span>
+    <span class="s1">&#39;fileuri0&#39;</span><span class="p">:</span> <span class="n">rte_fileuri0</span><span class="p">,</span>
+    <span class="s1">&#39;fileuri4&#39;</span><span class="p">:</span> <span class="n">rte_fileuri4</span><span class="p">,</span>
+    <span class="s1">&#39;fileuri5&#39;</span><span class="p">:</span> <span class="n">rte_fileuri5</span><span class="p">,</span>
+    <span class="s1">&#39;ftp&#39;</span><span class="p">:</span> <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="s1">&#39;git&#39;</span><span class="p">:</span>  <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="s1">&#39;http&#39;</span><span class="p">:</span> <span class="n">rte_http</span><span class="p">,</span>
+    <span class="s1">&#39;https&#39;</span><span class="p">:</span> <span class="n">rte_https</span><span class="p">,</span>
+    <span class="s1">&#39;ldap&#39;</span><span class="p">:</span>  <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="s1">&#39;ldsys&#39;</span><span class="p">:</span> <span class="n">rte_local</span><span class="p">,</span>
+    <span class="s1">&#39;lfsys&#39;</span><span class="p">:</span> <span class="n">rte_local</span><span class="p">,</span>
+    <span class="s1">&#39;linux&#39;</span><span class="p">:</span> <span class="n">rte_posix</span><span class="p">,</span>
+    <span class="s1">&#39;local&#39;</span><span class="p">:</span> <span class="n">rte_local</span><span class="p">,</span>
+    <span class="s1">&#39;nfs&#39;</span><span class="p">:</span>  <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="s1">&#39;pkcs11&#39;</span><span class="p">:</span>  <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="s1">&#39;posix&#39;</span><span class="p">:</span> <span class="n">rte_posix</span><span class="p">,</span>
+    <span class="s1">&#39;rsync&#39;</span><span class="p">:</span>  <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="s1">&#39;share&#39;</span><span class="p">:</span> <span class="n">rte_share</span><span class="p">,</span>
+    <span class="s1">&#39;smb&#39;</span><span class="p">:</span> <span class="n">rte_smb</span><span class="p">,</span>
+    <span class="s1">&#39;snmp&#39;</span><span class="p">:</span>  <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="s1">&#39;solaris&#39;</span><span class="p">:</span> <span class="n">rte_posix</span><span class="p">,</span>
+    <span class="s1">&#39;ssh&#39;</span><span class="p">:</span>  <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="s1">&#39;tftp&#39;</span><span class="p">:</span>  <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="s1">&#39;unc&#39;</span><span class="p">:</span> <span class="n">rte_unc</span><span class="p">,</span>
+    <span class="s1">&#39;uri&#39;</span><span class="p">:</span> <span class="n">rte_uri</span><span class="p">,</span>
+    <span class="s1">&#39;vnc&#39;</span><span class="p">:</span>  <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="s1">&#39;win&#39;</span><span class="p">:</span> <span class="n">rte_win32</span><span class="p">,</span>
+    <span class="s1">&#39;win32&#39;</span><span class="p">:</span> <span class="n">rte_win32</span><span class="p">,</span>
+    <span class="s1">&#39;xmpp&#39;</span><span class="p">:</span>  <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="n">RTE_BSD</span><span class="p">:</span> <span class="n">rte_posix</span><span class="p">,</span>
+    <span class="n">RTE_CNP</span><span class="p">:</span> <span class="n">rte_cnp</span><span class="p">,</span>
+    <span class="n">RTE_CNW</span><span class="p">:</span> <span class="n">rte_cnw</span><span class="p">,</span>
+    <span class="n">RTE_CYGWIN</span><span class="p">:</span> <span class="n">rte_cygwin</span><span class="p">,</span>
+    <span class="n">RTE_DARWIN</span><span class="p">:</span> <span class="n">rte_posix</span><span class="p">,</span>
+    <span class="n">RTE_FILEURI0</span><span class="p">:</span> <span class="n">rte_fileuri0</span><span class="p">,</span>
+    <span class="n">RTE_FILEURI4</span><span class="p">:</span> <span class="n">rte_fileuri4</span><span class="p">,</span>
+    <span class="n">RTE_FILEURI5</span><span class="p">:</span> <span class="n">rte_fileuri5</span><span class="p">,</span>
+    <span class="n">RTE_FILEURI</span><span class="p">:</span> <span class="n">rte_fileuri</span><span class="p">,</span>
+    <span class="n">RTE_FTP</span><span class="p">:</span> <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="n">RTE_GIT</span><span class="p">:</span> <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="n">RTE_HTTP</span><span class="p">:</span> <span class="n">rte_http</span><span class="p">,</span>
+    <span class="n">RTE_HTTPS</span><span class="p">:</span> <span class="n">rte_https</span><span class="p">,</span>
+    <span class="n">RTE_LDAP</span><span class="p">:</span> <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="n">RTE_LDSYS</span><span class="p">:</span> <span class="n">rte_local</span><span class="p">,</span>
+    <span class="n">RTE_LFSYS</span><span class="p">:</span> <span class="n">rte_local</span><span class="p">,</span>
+    <span class="n">RTE_LINUX</span><span class="p">:</span> <span class="n">rte_posix</span><span class="p">,</span>
+    <span class="n">RTE_LOCAL</span><span class="p">:</span> <span class="n">rte_local</span><span class="p">,</span>
+    <span class="n">RTE_NFS</span><span class="p">:</span> <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="n">RTE_PKCS11</span><span class="p">:</span> <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="n">RTE_POSIX</span><span class="p">:</span> <span class="n">rte_posix</span><span class="p">,</span>
+    <span class="n">RTE_RFSYS</span><span class="p">:</span> <span class="n">rte_rfsys</span><span class="p">,</span>
+    <span class="n">RTE_RSYNC</span><span class="p">:</span> <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="n">RTE_SHARE</span><span class="p">:</span> <span class="n">rte_share</span><span class="p">,</span>
+    <span class="n">RTE_SMB</span><span class="p">:</span> <span class="n">rte_smb</span><span class="p">,</span>
+    <span class="n">RTE_SNMP</span><span class="p">:</span> <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="n">RTE_SOLARIS</span><span class="p">:</span> <span class="n">rte_posix</span><span class="p">,</span>
+    <span class="n">RTE_SSH</span><span class="p">:</span> <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="n">RTE_TFTP</span><span class="p">:</span> <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="n">RTE_UNC</span><span class="p">:</span> <span class="n">rte_unc</span><span class="p">,</span>
+    <span class="n">RTE_URI</span><span class="p">:</span> <span class="n">rte_uri</span><span class="p">,</span>
+    <span class="n">RTE_VNC</span><span class="p">:</span> <span class="n">RTE_URI</span><span class="p">,</span>
+    <span class="n">RTE_WIN32</span><span class="p">:</span> <span class="n">rte_win32</span><span class="p">,</span>
+    <span class="n">RTE_XMPP</span><span class="p">:</span> <span class="n">RTE_URI</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">getspf</span><span class="p">(</span><span class="n">pf</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Evaluates the resulting parameters for the source platform.</span>
+
+<span class="sd">    See also `tpf and spf &lt;filesysobjects_design.html#tpf-and-spf&gt;`_.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        **spf**:</span>
+<span class="sd">            Source platform, defines the input syntax domain.</span>
+<span class="sd">            For the syntax refer to API in the manual at :ref:`spf &lt;OPTS_SPF&gt;`.</span>
+
+<span class="sd">            For additi0onal details refer to</span>
+<span class="sd">            :ref:`tpf and spf &lt;TPF_AND_SPF&gt;`,</span>
+<span class="sd">            `paths.getspf() &lt;paths.html#getspf&gt;`_,</span>
+<span class="sd">            :ref:`normapppathx() &lt;def_normapppathx&gt;`,</span>
+<span class="sd">            `normpathx() &lt;paths.html#normpathx&gt;`_.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The path syntax parameters for the target platform: ::</span>
+
+<span class="sd">            return (sep, pathsep, spf, rte)</span>
+
+<span class="sd">            sep := [/\\\\]</span>
+<span class="sd">            pathsep := [:;]</span>
+<span class="sd">            spf := string-representation</span>
+<span class="sd">            string-representation := predefined | custom</span>
+<span class="sd">            predefined := ( &lt;rte_map.keys()&gt; )</span>
+<span class="sd">            rte := bitmask</span>
+<span class="sd">            bitmask := ( &lt;RTE_*&gt; )</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        pass-through</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">gettpf</span><span class="p">(</span><span class="n">pf</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">gettpf</span><span class="p">(</span><span class="n">pf</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Evaluates the resulting parameters for the target platform.</span>
+
+<span class="sd">    See also `tpf and spf &lt;filesysobjects_design.html#tpf-and-spf&gt;`_.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        **pf**:</span>
+<span class="sd">            Target platform for the file pathname. Supports multiple</span>
+<span class="sd">            entries, where the first has precedence.</span>
+
+<span class="sd">            For details refer to &#39;normpathx] &lt;#normpathx&gt;`_.</span>
+
+<span class="sd">        kw:</span>
+<span class="sd">            apppre:</span>
+<span class="sd">                Application prefix. ::</span>
+
+<span class="sd">                    apppre = (True|False)</span>
+
+<span class="sd">                default := False</span>
+
+<span class="sd">            pathsep:</span>
+<span class="sd">                Prepends to the path separator set by the *spf*, thus has</span>
+<span class="sd">                precedence over the standard separator of the source platform.</span>
+<span class="sd">                The resulting first character decides the type of the</span>
+<span class="sd">                scanner *APPPATHSCANNER*. ::</span>
+
+<span class="sd">                    pathsep := (&#39;;&#39; | &#39;:&#39;)</span>
+
+<span class="sd">                default = &#39;&#39;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The path syntax parameters for the target platform: ::</span>
+
+<span class="sd">            return (sep, pathsep, tpf, rte, apppre)</span>
+
+<span class="sd">            sep := [/\\\\]</span>
+<span class="sd">            pathsep := [:;]</span>
+<span class="sd">            tpf := string-representation</span>
+<span class="sd">            rte := bitmask</span>
+<span class="sd">            apppre := (True | False)</span>
+
+<span class="sd">            string-representation := predefined | custom</span>
+<span class="sd">            predefined := ( &lt;rte_map.keys()&gt; )</span>
+<span class="sd">            bitmask := ( &lt;RTE_*&gt; )</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        pass-through</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">apppre</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;apppre&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">pathsep</span> <span class="o">=</span> <span class="n">kw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pathsep&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="n">outpf</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">pf</span><span class="p">:</span>
+        <span class="n">pf</span> <span class="o">=</span> <span class="n">RTE</span>  <span class="c1"># RTE_LOCAL  # == RTE</span>
+    <span class="n">_t</span> <span class="o">=</span> <span class="n">pf</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">pf</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">_t</span> <span class="o">=</span> <span class="n">pf</span>
+        <span class="k">if</span> <span class="n">pf</span> <span class="ow">in</span> <span class="n">rte_map</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">_t</span> <span class="o">=</span> <span class="n">pf</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">pf</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">rte_map</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">_t</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">apppre</span><span class="p">:</span>
+            <span class="c1"># app prefix, special for remote files systems</span>
+            <span class="k">if</span> <span class="n">_t</span> <span class="o">==</span> <span class="s1">&#39;share&#39;</span><span class="p">:</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rte_map</span><span class="p">[</span><span class="n">RTE_FILEURI5</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">_t</span> <span class="o">==</span> <span class="s1">&#39;rfsys&#39;</span><span class="p">:</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rte_map</span><span class="p">[</span><span class="n">RTE_FILEURI</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">apppre</span> <span class="ow">and</span> <span class="n">_t</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;lfsys&#39;</span><span class="p">,</span> <span class="s1">&#39;ldsys&#39;</span><span class="p">):</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rte_map</span><span class="p">[</span><span class="n">RTE_FILEURI</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rte_map</span><span class="p">[</span><span class="n">_t</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">_r</span> <span class="o">=</span> <span class="n">rte2num</span><span class="p">[</span><span class="n">_t</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">_r</span> <span class="o">==</span> <span class="n">RTE_CNW</span><span class="p">:</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rte_map</span><span class="p">[</span><span class="n">RTE_CNW</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">_r</span> <span class="o">==</span> <span class="n">RTE_CNP</span><span class="p">:</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rte_map</span><span class="p">[</span><span class="n">RTE_CNP</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">_r</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">RTE_WIN32</span> <span class="o">|</span> <span class="n">RTE_UNC</span><span class="p">):</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rte_map</span><span class="p">[</span><span class="n">RTE_WIN32</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">_r</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">RTE_POSIX</span> <span class="o">|</span> <span class="n">RTE_CYGWIN</span><span class="p">):</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rte_map</span><span class="p">[</span><span class="n">RTE_POSIX</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">_r</span> <span class="o">==</span> <span class="n">RTE_LOCAL</span> <span class="ow">or</span> <span class="n">_r</span> <span class="o">==</span> <span class="n">RTE_GENERIC</span><span class="p">:</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rte_map</span><span class="p">[</span><span class="n">RTE_LOCAL</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">rte_map</span><span class="p">[</span><span class="n">_r</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">pf</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
+            <span class="n">ret</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">|=</span> <span class="n">pf</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">apppre</span><span class="p">)</span>
+
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">FileSysObjectsError</span><span class="p">(</span><span class="s2">&quot;Category not supported: tpf=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pf</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">apppre</span> <span class="ow">and</span> <span class="n">ret</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">RTE_WIN32</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
+
+    <span class="k">elif</span> <span class="n">ret</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">RTE_LOCAL</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">_t</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;lfsys&#39;</span><span class="p">,</span> <span class="n">RTE_LFSYS</span><span class="p">,):</span>
+            <span class="n">ret</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">RTE_LFSYS</span>
+        <span class="k">elif</span> <span class="n">_t</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;ldsys&#39;</span><span class="p">,</span> <span class="n">RTE_LDSYS</span><span class="p">,):</span>
+            <span class="n">ret</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">RTE_LDSYS</span>
+        <span class="k">elif</span> <span class="n">_t</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;share&#39;</span><span class="p">,</span> <span class="n">RTE_SHARE</span><span class="p">,):</span>
+            <span class="n">ret</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">RTE_SHARE</span>
+        <span class="k">elif</span> <span class="n">_t</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;rfsys&#39;</span><span class="p">,</span> <span class="n">RTE_RFSYS</span><span class="p">,):</span>
+            <span class="n">ret</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">RTE_RFSYS</span>
+
+    <span class="k">elif</span> <span class="n">ret</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">RTE_URI</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_WIN32</span><span class="p">:</span>
+            <span class="n">psep</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">psep</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span>
+
+    <span class="k">elif</span> <span class="n">ret</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">RTE_UNC</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_WIN32</span><span class="p">:</span>
+            <span class="n">psep</span> <span class="o">=</span> <span class="s1">&#39;;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">psep</span> <span class="o">=</span> <span class="s1">&#39;:&#39;</span>
+        <span class="k">if</span> <span class="n">apppre</span><span class="p">:</span>
+            <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
+
+    <span class="k">elif</span> <span class="n">_t</span> <span class="o">==</span> <span class="s1">&#39;;&#39;</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">|=</span> <span class="n">RTE_GENERIC</span>
+
+    <span class="k">elif</span> <span class="n">_t</span> <span class="o">==</span> <span class="s1">&#39;:&#39;</span><span class="p">:</span>
+        <span class="n">ret</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">|=</span> <span class="n">RTE_GENERIC</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ret</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">FileSysObjectsError</span><span class="p">(</span><span class="s2">&quot;target platform not supported: tpf=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pf</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;apppaths&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;configdata&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;osdata&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;paths&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;pathtools&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;userdata&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="n">_debug</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">_quiet</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">_verbose</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">_tracebacklimit</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

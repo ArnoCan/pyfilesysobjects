@@ -1,0 +1,1179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The SW-Design of filesysobjects &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="next" title="The filesysobjects API" href="filesysobjects_api.html" />
+    <link rel="prev" title="Howto URI" href="howto_uri.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="filesysobjects_api.html" title="The filesysobjects API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="howto_uri.html" title="Howto URI"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="the-sw-design-of-filesysobjects">
+<h1>The SW-Design of <em>filesysobjects</em><a class="headerlink" href="#the-sw-design-of-filesysobjects" title="Permalink to this headline">¶</a></h1>
+<p>The &#8216;filesysobjects&#8217; package provides address calculations for the simplified navigation in
+local and remote filesystem hierarchies.
+This comprises functions for the application of object oriented patterns
+onto files, directories, and branches by various notations including multiple protocols.
+In general - the application of object oriented concepts combined with advanced search patterns
+onto cloud and web based distributed resources.</p>
+<p>The support of multiple platforms in particular spans Posix based filesystems and Windows based filesystems,
+which use different characters as separators for path names and search path variables.
+Additionaly - even worst - the path name separator ‘\’ is also the escape character on both platforms.
+This restricts in some cases the applicability of the provided common variables ‘os.pathsep‘
+and ‘os.path.sep‘(no typo :<a href="#id1"><span class="problematic" id="id2">*</span></a>) ), and even leads to cases of ambiguity.</p>
+<p>Extensions exist in addition to the simple local file address, which provide for application
+prefixes - for example for shares, network mounts, and URI/URL. A common issue arises here in
+particular when shared filesystems are accessed by clients and servers via various access paths.
+This is due to the common fact, that the filesystem is transparently used by various clients
+operating on different OS. Again, modern applications work transparently for local and distributed
+applications, provide the transparent processing of file names - resource identifiers - provided
+by various formats and semantics. For local applications as well as distributed applications - in
+general for cloud applications including their management and infrastructure interfaces.</p>
+<p>The filesysobjects API adds this features to the standard libraries by introducing an abstract
+address layer.</p>
+<p><a class="reference internal" href="_images/filesysobject-components.png"><img alt="filesysobjectcomponents" src="_images/filesysobject-components.png" style="width: 600px;" /></a>
+<a class="reference external" href="_static/filesysobject-components.png"><img alt="zoom" src="_images/zoom.png" style="width: 16px;" /></a></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Although network file systems are treated as local by the most OSs once they are mounted/shared,
+these still encounter some limits due to their nature.
+The probably most prominent limits are the restriction of the number of access groups on mounted
+NFS(3), and the handling of so called symbolic links, which even led to the default of the prohibition
+of sharing mounted NFS filesystems by VirtualBox as &#8216;<em>vboxfs</em>&#8216; / &#8216;<em>shared folders</em>&#8216;
+(REMARK: which does not imply the agreement of the author/acue).</p>
+<p class="last">Despite the potentially relevant lacks of NFS based mounts, the SMB/CIFS access via Samba <a class="reference internal" href="references.html#samba" id="id3">[SAMBA]</a>
+based mounts of &#8216;<em>shared folders</em>&#8216; works flawless and is supported by VirtualBox <a class="reference internal" href="references.html#virtualbox" id="id4">[VIRTUALBOX]</a> .
+This is on the other hand a security aspect of the SMB server, and requires of course additional
+processing resources.</p>
+</div>
+<p>The addressing support also introduces the common canonical representation for
+the supported platforms.
+The overall major advances introduced by the <em>filesysinfo</em> are:</p>
+<ul>
+<li><p class="first"><strong>Gears for Filesystem Objects - Files, Directories, and Branches</strong></p>
+<p>The package provides a set of basic functions for implementing file system items
+conceptually as classes and objects. Just a few interfaces are required in order to represent
+some basic OO features on filesystems. This in particular comprises superposition
+and encapsulation, polymorphism, class and object hierachies.</p>
+<ul class="simple">
+<li>Filesystem elements as classes and objects with multiple search and iteration sets
+[<a class="reference internal" href="path_syntax.html#filesyselemasobjects"><span class="std std-ref">details</span></a>]</li>
+<li>Standards compliant path support for the local and remote native access onto multiple platforms
+[<a class="reference internal" href="path_syntax.html#syntaxelements"><span class="std std-ref">details</span></a>]
+[<a class="reference external" href="path_syntax_examples.html">examples</a>]</li>
+<li>Programming Interface
+<a class="reference external" href="shortcuts.html#filesysobjects-pathtools">[API]</a>,
+<a class="reference external" href="usecases.html">[UseCases]</a>.
+.</li>
+</ul>
+</li>
+<li><p class="first"><strong>Manage multiple search lists and support &#8216;re&#8217; and &#8216;glob&#8217; for path search</strong></p>
+<p>Provides the creation and usage of multiple search paths including the
+full scale pattern matching on search paths by &#8216;<em>re</em>&#8216; and &#8216;<em>glob</em>&#8216;
+[<a class="reference internal" href="path_syntax.html#syntaxelements"><span class="std std-ref">details</span></a>]</p>
+</li>
+<li><p class="first"><strong>Iterators and Context Manager</strong></p>
+<p>Provides in combination with <em>re</em> and <em>glob</em> the iteration over resource trees
+[<a class="reference internal" href="path_syntax.html#syntaxelements"><span class="std std-ref">details</span></a>]</p>
+</li>
+<li><p class="first"><strong>Yet another attempt for file address processing on network storage - just the beginning...</strong></p>
+<p>Evaluation for an extension modul of the interface &#8216;<em>os.path.normpath</em>&#8216;.
+Thus the function is named for now &#8216;<em>filesysobjects.netfiles.normpathx</em>&#8216;.</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt><a class="reference external" href="path_netfiles.html">Extended Filesystems - Network Features</a></dt>
+<dd>.</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<p>The current release of the package <em>filesysobjects</em> contains the following components.</p>
+<p><a class="reference internal" href="_images/layers-modules.png"><img alt="layersmodules" src="_images/layers-modules.png" style="width: 550px;" /></a>
+<a class="reference external" href="_static/layers-modules.png"><img alt="zoom" src="_images/zoom.png" style="width: 16px;" /></a></p>
+<ul class="simple">
+<li>&#8216;<em>apppaths</em>&#8216; - resolution and processing of application resource paths, with optional <em>globs</em> and <em>re</em></li>
+<li>&#8216;<em>configdata</em>&#8216; - file system locations of configuration files</li>
+<li>&#8216;<em>netfiles</em>&#8216; - still experimental</li>
+<li>&#8216;<em>osdata</em>&#8216; - file system locations of system directories</li>
+<li>&#8216;<em>paths</em>&#8216; - resolution and processing of file system paths, with optional <em>globs</em> and <em>re</em></li>
+<li>&#8216;<em>pathtools</em>&#8216; - dynamic sets of file system paths by search and filtering with <em>globs</em> and <em>re</em></li>
+<li>&#8216;<em>userdata</em>&#8216; - file system locations of user data</li>
+</ul>
+<p>Last but not least the common interface finally saves development efforts as well
+as enhances the overall performance by a centralized and neat library. In particular enhances
+the quality by well tested interfaces covering the various special cases with more
+than 4500 test cases included into filesysobjects - at the time of writing.</p>
+<p>For further information on concepts, workflows, and the API see
+<a class="reference internal" href="shortcuts.html#shortcs"><span class="std std-ref">&#8216;Shortcuts&#8217;</span></a></p>
+<p>For related projects adding transparent access by file-like objects and IOStreams
+with additional support for pipes, sockets, and serial ports refer
+to <a class="reference internal" href="references.html#asnoio" id="id5">[asnoio]</a> and <a class="reference internal" href="references.html#iobricks" id="id6">[iobricks]</a>.</p>
+<a class="reference internal image-reference" href="_images/pathname_types.png"><img alt="_images/pathname_types.png" src="_images/pathname_types.png" style="width: 500px;" /></a>
+<p>The following function hierarchy for pathnames is supported.</p>
+<a class="reference internal image-reference" href="_images/pathname_functions.png"><img alt="_images/pathname_functions.png" src="_images/pathname_functions.png" style="width: 500px;" /></a>
+<div class="section" id="resource-paths">
+<h2>Resource Paths<a class="headerlink" href="#resource-paths" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="paths-and-application-paths">
+<h3>Paths and Application Paths<a class="headerlink" href="#paths-and-application-paths" title="Permalink to this headline">¶</a></h3>
+<p>The current version implements a two layered architecture of resource paths.
+The lower layer focusses on the context paths, while the upper layer adds application
+specific schemes for higher layer functions.
+The assigned interfaces are kept similar with specific extensions.</p>
+<p>The main focus of the current release is on literally file like resources [PATH] and
+associated common standards like <a class="reference internal" href="references.html#pathvar" id="id8">[PATHVAR]</a>. The overall concept is designed
+to support almost arbitrary application paths based on URIs, which is going to be
+extended within the next releases.</p>
+<p><a class="reference internal" href="_images/syntax-domains.png"><img alt="syntaxdomains" src="_images/syntax-domains.png" style="width: 750px;" /></a>
+<a class="reference external" href="_static/syntax-domains.png"><img alt="zoom" src="_images/zoom.png" style="width: 16px;" /></a></p>
+</div>
+<div class="section" id="paths">
+<h3>Paths<a class="headerlink" href="#paths" title="Permalink to this headline">¶</a></h3>
+<p>The components of the <em>paths</em> module represents a resource location within
+a specific context.
+The most common resources are files and directories stored in file systems,
+while otheres like Databases, Directory Systems or MIBs store information
+in various storage systems.
+Posix based Unix and Linux systems maintain an abstraction layer, which
+transforms the hardware platform representation into the file system by specific nodes.
+These filesystem paths actually represent devices and communicate through
+special drivers with the hardware by addressing and accessing file entries.</p>
+<p>The target of the <em>filesysobjects</em> is to provide a common namebinding scheme
+applicable to various resource trees.</p>
+<p>The following figure depicts the main interfaces for resource paths.</p>
+<p><a class="reference internal" href="_images/path_functions.png"><img alt="pathscomponents" src="_images/path_functions.png" style="width: 650px;" /></a>
+<a class="reference external" href="_static/path_functions.png"><img alt="zoom" src="_images/zoom.png" style="width: 16px;" /></a></p>
+<p>The types of interface comprise</p>
+<ul class="simple">
+<li><em>normpathx</em> - converts a path into it&#8217;s canonical representation</li>
+<li><em>splitpathx</em> - splits a path into it&#8217;s segments</li>
+<li><em>escapepathx</em> - escapes special characters within a path</li>
+<li><em>unescapepathx</em> - unescapes special characters within a path</li>
+</ul>
+<p>The internal design is based regular expressions provided by Python.
+These are provided as a scanner and combined by callbacks into a parser
+for multiple platforms.
+The tokenizer rules are hereby schared by the provided functions.</p>
+<p>The lower path layer provides hereby for multiple types of notations for the
+context specific paths.
+This also includes special schemes like &#8216;<a class="reference external" href="file://">file://</a>&#8216; which is just another
+syntactical representation of a local or remote file.
+The representation also include virtually local file resources, as these
+are locally accessible by local path schemes.</p>
+<p>The current supported types by the path layer are:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="24%" />
+<col width="20%" />
+<col width="14%" />
+<col width="18%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">type</th>
+<th class="head">prefix</th>
+<th class="head">host</th>
+<th class="head">share</th>
+<th class="head">path</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>lfsys</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>abspath</td>
+</tr>
+<tr class="row-odd"><td>lfsys</td>
+<td><a class="reference external" href="file://">file://</a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>abspath</td>
+</tr>
+<tr class="row-even"><td>ldsys</td>
+<td><a class="reference external" href="file://">file://</a></td>
+<td>&nbsp;</td>
+<td>drive</td>
+<td>abspath</td>
+</tr>
+<tr class="row-odd"><td>raw</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>abspath</td>
+</tr>
+<tr class="row-even"><td>share</td>
+<td>//, \\</td>
+<td>hostname</td>
+<td>share</td>
+<td>path</td>
+</tr>
+<tr class="row-odd"><td>share</td>
+<td><a class="reference external" href="file://///">file://///</a></td>
+<td>hostname</td>
+<td>share</td>
+<td>path</td>
+</tr>
+<tr class="row-even"><td>posix-app</td>
+<td>//</td>
+<td>hostname</td>
+<td>&nbsp;</td>
+<td>abspath</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="application-paths">
+<h3>Application Paths<a class="headerlink" href="#application-paths" title="Permalink to this headline">¶</a></h3>
+<p>The application layer is designed similarly to the lower context path layer,
+as it uses path functions, and adds application level extensions.</p>
+<p><a class="reference internal" href="_images/apppath_functions.png"><img alt="apppathscomponents" src="_images/apppath_functions.png" style="width: 650px;" /></a>
+<a class="reference external" href="_static/apppath_functions.png"><img alt="zoom" src="_images/zoom.png" style="width: 16px;" /></a></p>
+<p>The current supported types by the application path layer are:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="24%" />
+<col width="20%" />
+<col width="14%" />
+<col width="18%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">type</th>
+<th class="head">prefix</th>
+<th class="head">host</th>
+<th class="head">share</th>
+<th class="head">path</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>http</td>
+<td>http/https</td>
+<td>hostname</td>
+<td>&nbsp;</td>
+<td>path</td>
+</tr>
+<tr class="row-odd"><td>lfsys</td>
+<td><a class="reference external" href="file://">file://</a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>abspath</td>
+</tr>
+<tr class="row-even"><td>ldsys</td>
+<td><a class="reference external" href="file://">file://</a></td>
+<td>&nbsp;</td>
+<td>drive</td>
+<td>abspath</td>
+</tr>
+<tr class="row-odd"><td>share</td>
+<td>//, \\</td>
+<td>hostname</td>
+<td>share</td>
+<td>abspath</td>
+</tr>
+<tr class="row-even"><td>share</td>
+<td><a class="reference external" href="file://///">file://///</a></td>
+<td>hostname</td>
+<td>share</td>
+<td>path</td>
+</tr>
+<tr class="row-odd"><td>smb</td>
+<td>smb</td>
+<td>hostname</td>
+<td>share</td>
+<td>path</td>
+</tr>
+<tr class="row-even"><td>posix-app</td>
+<td>//</td>
+<td>hostname</td>
+<td>&nbsp;</td>
+<td>abspath</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="path-tools">
+<h3>Path Tools<a class="headerlink" href="#path-tools" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="find-vs-expand">
+<h2>Find vs. Expand<a class="headerlink" href="#find-vs-expand" title="Permalink to this headline">¶</a></h2>
+<p>The main design target of the <em>filesysobjects</em> includes the efficient path resolution
+by arbitrary match pattern, which is very close to the search of resource trees with applied
+match filters of arbitrary pattern.
+While the search algorithms are regularly based on tree walk patterns, the expand algorithms
+rely on the step wise expansion of a given pattern.</p>
+<p>The <em>filesysobjects</em> package supports for the find pattern as well as for the expand pattern
+by two basic types of operations:</p>
+<ul class="simple">
+<li><em>findpattern</em></li>
+<li><em>expandpath</em></li>
+</ul>
+<p>Internally both interfaces make use of each other.
+The <em>expandpath</em> interface starts with a list of provided paths and tries to match these onto potentially
+existing paths within the filesystem.
+The <em>findpattern</em> interface starts a search operation and filters out matches of provided expressions match pattern.
+The final result replied by both interfaces in case of redundant input parameter sets is equal, even though
+their intentional applications are different.</p>
+<p>The <em>expandpath</em> interface is foreseen to resolve present path lists, which has by definition
+a more restricted input set, while the <em>findpattern</em> interface tries to scan a whole filesystem
+for specific file path pattern at arbitrary locations.
+The difference of these two approaches is the performance, while this deeply depends on the selected
+filter parameters.</p>
+<p>The <em>filesysobjects</em> internally make use of each other in order to limit the required code,
+and trying to apply the pest-fit algorithm at each stage of the search operations.
+The interface call proceeds hierarchical on the processed resource tree, either a physical
+filesystem or any virtual resource storage. Therefore the provided wildcard filters are analysed
+and pre-sorted and partially pre-executed in order to continously reduce the part of the
+remaining resource tree pending to be scanned. The actual processing is hereby a cross-over
+recursive filesystem scan of the two interfaces.</p>
+<p>While the <em>findpattern</em> interface is obviously designed for resource tree searches of wildcard patterns,
+the <em>expandpath</em> seems to be more restricted.
+This is not true, due to the supported application of regular expressions which are permitted to
+span multiple directory levels. Though the regular expression</p>
+</div>
+<div class="section" id="name-resolution-and-ambiguity">
+<h2>Name Resolution and Ambiguity<a class="headerlink" href="#name-resolution-and-ambiguity" title="Permalink to this headline">¶</a></h2>
+<p>The main design target of the <em>filesysobjects</em> includes the efficient path resolution
+by arbitrary match pattern, which is very close to the search of resource trees with applied
+match filters of arbitrary pattern.
+Both rely deeply on the parameter sets for their performance.</p>
+<p>Another aspect is the partial ambiguity of globs and regexpr, which
+in addition is superposed by the different valid character sets of the
+various OSs. This is even worst in case of mounted shares between different
+OSs. Thus the final resolution of globs and regexpr require actual file system
+access in order to reolve the ambiguity.
+For wildcard expansion this results in final iterationn on the filesystem,
+which could result in large sets of matched nodes. Thus
+it could cost for large sets of nodes a significant amount of performance.</p>
+<p>The provided bitmask constants control the applied algorithms.</p>
+<ul class="simple">
+<li><strong>W_LITERAL(0)</strong> - considers the provided expressions as <em>literal</em> match-patterns</li>
+<li><strong>W_GLOB(1)</strong> - considers the provided expressions as <a href="#id9"><span class="problematic" id="id10">*</span></a>glob*s</li>
+<li><strong>W_RE(2)</strong> - considers the provided expressions as <a href="#id11"><span class="problematic" id="id12">*</span></a>re*s</li>
+<li><strong>W_MIX(4)</strong> - expects an intermixed pattern with <a href="#id13"><span class="problematic" id="id14">*</span></a>glob*s and <a href="#id15"><span class="problematic" id="id16">*</span></a>re*s</li>
+<li><strong>W_MULTIDIR(8)</strong> - spans the regular expression across multiple directories</li>
+<li><strong>W_RE_FULL(16)</strong> - disables performance optimization, enables re-groups</li>
+</ul>
+<p>The following expression demonstrates the issue of name resolution in case of
+ambiguity.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">filepathname</span> <span class="o">=</span> <span class="s1">&#39;/path/to/.*[d].*&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The expression is a valid <em>glob</em> and a valid <em>re</em>
+on all platforms - in addition a <em>literal</em> on seemingly all platforms too.</p>
+<ul>
+<li><p class="first">static name resolution</p>
+<p>For a generic path expansion function it is not possible to decide static offline,
+what actually matches.</p>
+</li>
+<li><p class="first">dynamic name resolution</p>
+<p>In case of dynamic name binding resolution it is still not possible to determine accurately,
+which type(s) were intended by the caller.</p>
+</li>
+</ul>
+<p>The following expressions are handled specifically.</p>
+<p>The wildcard expression &#8216;.*&#8217; has for <em>glob</em> and <em>re</em> a different semantics.
+While the <em>glob</em> semantics represent a literal dot followed by arbitrary characters
+within a path segment, the regular expression represents an arbirary string.
+The application of <em>re</em> as a post filter onto file system paths therefore produce
+differnet results.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="n">c</span>
+
+   <span class="n">re</span><span class="p">:</span>   <span class="o">/.*</span><span class="n">b</span>  <span class="o">=&gt;</span> <span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b</span>
+   <span class="n">glob</span><span class="p">:</span> <span class="o">/.*</span><span class="n">b</span>  <span class="o">=&gt;</span> <span class="p">(</span><span class="n">empty</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>The following regular expression matches as a post-filter on a path string
+dependent from the greedy mode differently itself.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span>p = /.abc/path/to/c/x/c
+
+   re:   /.*c  =&gt; /.abc/path/to/c/x/c
+   re:   /.*?c =&gt; /.abc/path/to/c
+   glob: /.*c  =&gt; /.abc
+</pre></div>
+</td></tr></table></div>
+<p>Thus the resource path resolution is controlled by the previously listed bitmask constants.
+The major difference is hereby the ability to match on path strings, which includes expressions
+spanning multiple subdirectories.
+Even though this requires some runtime resources, the overall budget is better than using a
+piped commandline tool-chain, which in sum requires more resources.
+The integrated partial match filter enables the continous match of provided filter expressions, thus
+avoids the build of large caches.</p>
+<p>The following defaults are provided:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="31%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&nbsp;</th>
+<th class="head">expandpath</th>
+<th class="head">findpattern</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><em>W_LITERAL</em></td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td><em>W_GLOB</em></td>
+<td>x</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><em>W_RE</em></td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td><em>W_MIX</em></td>
+<td>x</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><em>W_MULTIDIR</em></td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td><em>W_RE_FULL</em></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>The defaults differ because of the different name resolution algorithms.
+While the <em>expandpath</em> interface follows provided paths and resolves
+the segments in a top-down method, the <em>findpattern</em> performs scan
+of the filesystem and applies match expression patterns onto the
+results of the scan.</p>
+<p>The following combinations apply:</p>
+<ol class="arabic">
+<li><p class="first">wildcards = <em>W_LITERAL</em></p>
+<p>Expands user and variables, matches literally.</p>
+</li>
+<li><p class="first">wildcards = <em>W_GLOB</em></p>
+<p>Expands user and variables, matches by <em>glob</em>,
+which includes literal matches.</p>
+</li>
+<li><p class="first">wildcards = <em>W_RE</em></p>
+<p>Expands user and variables, list by <em>glob</em> with &#8216;*&#8217;
+and matches the intermediate results by <em>re</em>,
+which includes literal matches.</p>
+</li>
+<li><p class="first">wildcards = <em>W_RE | W_GLOB | W_MULTIDIR</em></p>
+<p>Expands user and variables, list by <em>glob</em> and matches
+by <em>re</em>, which includes literal matches.</p>
+</li>
+<li><p class="first">wildcards = <em>W_RE | W_MULTIDIR</em></p>
+</li>
+<li><p class="first">wildcards = <em>W_RE_FULL</em></p>
+</li>
+</ol>
+</div>
+<div class="section" id="search-performance-optimization">
+<span id="searchperformanceopt"></span><h2>Search Performance Optimization<a class="headerlink" href="#search-performance-optimization" title="Permalink to this headline">¶</a></h2>
+<p>The pathexpansion as well as the findpattern operations require to scan the filesystem
+in case of requested wildcard operations for regular expressions.
+The cost is here the performance degree, in case of casual use of regular expressions
+on large file sets even a significant degredation.
+This is for short caused by the internal split of tree-walk and the amount of node names
+to be cached for match by <em>re</em> expressions.
+Therefore by default the flags <strong>W_MULTIDIR(8)</strong> and <strong>W_RE_FULL(16)</strong> are deactivated.
+The regular expression in this case work quite similar to <em>glob</em> while providing
+the extended match syntax of <em>re</em> .</p>
+<p>The regular expressions as provided by <em>re</em> provide for a quite capable and extended
+syntax rule set, which includes some pitfalls, when the internal perfmance optimization
+is applied. This comprises basically the application of regular expressions spanning
+multiple directories only.
+Therefor the <em>re</em> syntax is quite moderately constrained in order to still apply
+regular expressions spanning multiple directories, but with performance optimization
+for potentially larger filesets.</p>
+<p>The following syntax elements are broken by the current optimization, thus are not supported.</p>
+<ul class="simple">
+<li>groups</li>
+<li>Character classes intermixed with path separators for the specified platform &#8216;/&#8217;, &#8216;\&#8217;.
+while the non-targeted works.</li>
+</ul>
+<p>The following limitations apply for the use of the <em>re</em> syntax when
+search optimization is active.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="10%" />
+<col width="10%" />
+<col width="23%" />
+<col width="23%" />
+<col width="10%" />
+<col width="9%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">syntax</th>
+<th class="head">glob
+valid</th>
+<th class="head">re
+valid</th>
+<th class="head">filesysobjects
+opt</th>
+<th class="head">filesysobjects
+no-opt</th>
+<th class="head">posix</th>
+<th class="head">nt</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[/]</td>
+<td>&#8211;</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>&#8211;</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td>[\]</td>
+<td>&#8211;</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-even"><td>[!/]</td>
+<td>&#8211;</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>[^/]</td>
+<td>&#8211;</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr class="row-even"><td>[^ab/cd]</td>
+<td>&#8211;</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>[ab/cd]</td>
+<td>&#8211;</td>
+<td>x</td>
+<td>&#8211;</td>
+<td>x</td>
+<td>&#8211;/x</td>
+<td>&#8211;/x</td>
+</tr>
+<tr class="row-even"><td>.*</td>
+<td>x0</td>
+<td>x1</td>
+<td>y0</td>
+<td>y1</td>
+<td>z0</td>
+<td>z1</td>
+</tr>
+<tr class="row-odd"><td>a <code>|</code> b</td>
+<td>&#8211;</td>
+<td>x</td>
+<td>&#8211;</td>
+<td>x</td>
+<td>z2</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-even"><td><ol class="first last loweralpha simple">
+<li></li>
+</ol>
+</td>
+<td>&#8211;</td>
+<td>x</td>
+<td>&#8211;</td>
+<td>x</td>
+<td>&#8211;</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>:</td>
+<td>x</td>
+<td>x</td>
+<td>x2</td>
+<td>x2</td>
+<td>x</td>
+<td>&#8211;</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>x0: Valid with literal &#8216;.&#8217;</li>
+<li>x1: Valid as arbitrary char</li>
+<li>x2: treated as ordinary char</li>
+<li>y0: supports for path segments</li>
+<li>y1: supports for spanning multiple path segments</li>
+<li>z0: either as wildcard, or as literal</li>
+<li>z1: as wildcard</li>
+<li>z2: either as wildcard, or as literal</li>
+</ul>
+</div>
+<div class="section" id="encoding-and-deconding">
+<h2>Encoding and Deconding<a class="headerlink" href="#encoding-and-deconding" title="Permalink to this headline">¶</a></h2>
+<p>The filename encoding and decoding is on one hand designed based on
+special characters representing a token for the file name scanners and parsers,
+on the other hand it is targeting a flexible representation in human readable formats.
+Therefore in modern environments this makes use of multiple character sets and internaionalization.
+This in particular makes excessive use of the character and string encoding and decoding.</p>
+<p>The Python representation of strings has changed for Python3, which also effects the used
+regular expressions.
+For details including writing common code refer to <a class="reference external" href="python_encode_decode.html#">Filename Encoding and Decoding</a>.</p>
+</div>
+<div class="section" id="match-syntax-of-filesysobjects">
+<h2>Match Syntax of <em>filesysobjects</em><a class="headerlink" href="#match-syntax-of-filesysobjects" title="Permalink to this headline">¶</a></h2>
+<p>The <em>filesysobjects</em> supports almost the complete range of the standard Python <em>re</em> expressions within
+path segments.</p>
+<div class="section" id="mixed-expressions">
+<h3>Mixed expressions<a class="headerlink" href="#mixed-expressions" title="Permalink to this headline">¶</a></h3>
+<p>Due to several redundnacies and potential severe performance impacts, mixed expressions within path
+segments are not supported. The intermix with literals is allways supported.</p>
+</div>
+<div class="section" id="glob">
+<h3>glob<a class="headerlink" href="#glob" title="Permalink to this headline">¶</a></h3>
+<p>The complete scope of <em>globs</em> is supported.</p>
+</div>
+<div class="section" id="re">
+<h3>re<a class="headerlink" href="#re" title="Permalink to this headline">¶</a></h3>
+<p>The regular expressions of Python are quite powerful, though these enable various
+&#8216;dangerous&#8217; constructs, which could influence the perfomance devastatingly.
+For example the expression</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">&#39;/.*&#39;</span>  <span class="c1"># this is a regular expression NOT a glob</span>
+</pre></div>
+</td></tr></table></div>
+<p>matches the whole file system, and would cause of a scan of all node names into the memory.
+Thus the pathname expansion by <em>expandpath</em> supports the regular expressions for path segments
+only.</p>
+<div class="section" id="any-char">
+<h4>Any Char<a class="headerlink" href="#any-char" title="Permalink to this headline">¶</a></h4>
+<p>Matches any character of a path segment, supported.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="n">tdata</span> <span class="o">+</span> <span class="s1">&#39;/b/(.*?)/([cd][.]s.*|[cd][.]p.*)&#39;</span>
+                  <span class="o">*****</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="groups">
+<h4>Groups<a class="headerlink" href="#groups" title="Permalink to this headline">¶</a></h4>
+<p>Groups within a a path segment are supported.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="n">tdata</span> <span class="o">+</span> <span class="s1">&#39;/b/(.*?)/([cd][.]s.*|[cd][.]p.*)&#39;</span>
+                  <span class="o">*</span>   <span class="o">*</span> <span class="o">*</span>                     <span class="o">*</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="logical-or">
+<h4>Logical OR<a class="headerlink" href="#logical-or" title="Permalink to this headline">¶</a></h4>
+<p>Logical OR combination of groups and/or expressions within a path segment are provided.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="n">tdata</span> <span class="o">+</span> <span class="s1">&#39;/b/(.*?)/([cd][.]s.*|[cd][.]p.*)&#39;</span>
+                                   <span class="o">*</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="character-classe">
+<h4>Character Classe<a class="headerlink" href="#character-classe" title="Permalink to this headline">¶</a></h4>
+<p>Character classes within path segments are supported.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="n">tdata</span> <span class="o">+</span> <span class="s1">&#39;/b/(.*?)/([cd][.]s.*|[cd][.]p.*)&#39;</span>
+                             <span class="o">***</span>    <span class="o">*******</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+</div>
+<div class="section" id="common-options">
+<h2>Common Options<a class="headerlink" href="#common-options" title="Permalink to this headline">¶</a></h2>
+<p>The major improvement of the standard Python library provided by the <em>filesysobjects</em>
+is the accurate and easy cross-platform conversion of resource paths.
+This is in particular based on the options collected in this chapter.</p>
+<div class="section" id="two-resolution-layers">
+<h3>Two Resolution Layers<a class="headerlink" href="#two-resolution-layers" title="Permalink to this headline">¶</a></h3>
+<p>The overall path resolution is designed as a two-layer architecture, where the first layer
+contained in the <em>filesysobjects.paths</em> module handles basic local and remote filesystem resources.
+The first layer also applies a generic rule for the extraction of the generic UIRs to be processed
+by the following second layer.
+The second layer contained in the <em>filesysobjects.apppaths</em> module handles additionally
+concrete URIs and provides a custom dispatcher for specific applications.</p>
+</div>
+<div class="section" id="internal-string-processing">
+<h3>Internal String Processing<a class="headerlink" href="#internal-string-processing" title="Permalink to this headline">¶</a></h3>
+<p>The internal  string processing of resource addresses is based on
+dynamic parsers impleented with the standard module <em>re</em>.
+These provide various parameters for the runtime configuration
+and adaptation to the source and target platforms.</p>
+<div class="section" id="application-path-resolution">
+<h4>Application Path Resolution<a class="headerlink" href="#application-path-resolution" title="Permalink to this headline">¶</a></h4>
+<p>The scanner and parser for application resource name rules in accordance to
+Posix/IEEE-1003.1 <a class="reference internal" href="references.html#posix" id="id17">[POSIX]</a>, UNC <a class="reference internal" href="references.html#ms-dtyp" id="id18">[MS-DTYP]</a>/<a class="reference internal" href="references.html#ms-smb" id="id19">[MS-SMB]</a>/<a class="reference internal" href="references.html#ms-cifs" id="id20">[MS-CIFS]</a>/<a class="reference internal" href="references.html#fat" id="id21">[FAT]</a>, URI <a class="reference internal" href="references.html#rfc8089" id="id22">[RFC8089]</a>/<a class="reference internal" href="references.html#rfc3986" id="id23">[RFC3986]</a>,
+and others.
+Provides for multiple mixed entries in search-path syntax,
+adds some minor causal constraints on esoteric and rare cases for ambiguity resolution.</p>
+<p>The base for the application resource path compilers of <em>filesysobjects.apppaths.normapppathx</em>
+and <em>filesysobjects.apppaths.splitapppathx</em>.</p>
+</div>
+<div class="section" id="path-resolution">
+<h4>Path Resolution<a class="headerlink" href="#path-resolution" title="Permalink to this headline">¶</a></h4>
+<p>The function for string processing are callback functions to be
+used by <em>re.sub</em>.
+These base on the internal character mapping tables &#8216;ASCII_SC_*&#8217;.
+This table depicts the actually used input options.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="10%" />
+<col width="12%" />
+<col width="12%" />
+<col width="22%" />
+<col width="17%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">interface</th>
+<th class="head">it</th>
+<th class="head">spf</th>
+<th class="head">tpf</th>
+<th class="head">pathsep</th>
+<th class="head">strip</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>sub_keep</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>sub_posix</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr class="row-even"><td>sub_win</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>sub_unesc</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>x</td>
+<td>x</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p class="first"><em>it</em> - iterator</p>
+<p>The match iterator passed bu <em>re.sub</em></p>
+</li>
+<li><p class="first"><em>spf</em> - source platform</p>
+<p>Specifies the source filesystem parameters,
+selects finally the input application parser
+rules <em>APPPATHPARSER</em> or the processing callback
+of the <em>PATHPARSER</em>.</p>
+</li>
+<li><p class="first"><em>tpf</em> - target platform</p>
+<p>Specifies conversion parameters for the target
+filesystem. The standards of the target platform
+are defined by the selected parser callback.</p>
+</li>
+<li><p class="first"><em>pathsep</em> - path separator</p>
+<p>Sets the precedence for the path separator independent
+from the source and/or target platform.</p>
+<p>E.g. the <em>NTFS</em> filesystem supports &#8216;<em>/</em>&#8216; as well as &#8216;<em>\</em>&#8216;,
+but defaults to the latter.</p>
+</li>
+<li><p class="first"><em>strip</em></p>
+<p>The boolean control whether to strip the &#8216;null-resulting&#8217; characters.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="the-design-of-scanners-and-parsers">
+<h2>The Design of Scanners and Parsers<a class="headerlink" href="#the-design-of-scanners-and-parsers" title="Permalink to this headline">¶</a></h2>
+<p>The design of the string analysis of common resource paths is
+based on dynamic regular expressions.
+These rely on static compiled state machines with dynamic assigned and
+parameterized callbacks for the processing of tokens and syntax elements.
+The callbacks are in particularly context aware and track the history.</p>
+<div class="section" id="id24">
+<h3>Application Path Resolution<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<p>The base for the application resource path compilers of <em>filesysobjects.apppaths.normapppathx</em>
+and <em>filesysobjects.apppaths.splitapppathx</em>.</p>
+<span class="target" id="module-filesysobjects.apppaths"></span><p>The &#8216;filesysobjects.apppaths&#8217; module provides operations on static application resource paths.</p>
+<ul>
+<li><p class="first"><strong>APPPATHPARSER</strong></p>
+<p>The main regular expression for split of PATH variables with support for URIs.</p>
+<dl class="data">
+<dt id="filesysobjects.apppaths.APPPATHSCANNER_COL">
+<code class="descclassname">filesysobjects.apppaths.</code><code class="descname">APPPATHSCANNER_COL</code><em class="property"> = &lt;_sre.SRE_Pattern object at 0x2e46b90&gt;</em><a class="headerlink" href="#filesysobjects.apppaths.APPPATHSCANNER_COL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scanner/Parser for colon based search path separator:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span> <span class="o">==</span> <span class="s1">&#39;:&#39;</span>
+</pre></div>
+</div>
+<p>The applied rules are:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span> <span class="mi">4</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;file://[/]&#39;</span> <span class="o">+</span><span class="mi">2</span><span class="n">SEP</span> <span class="o">|</span> <span class="n">unc</span><span class="p">:</span><span class="o">//</span><span class="p">)</span>  <span class="o">+</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>  <span class="o">+</span><span class="mi">1</span><span class="n">SEP</span>  <span class="o">+</span><span class="p">(</span><span class="n">share</span><span class="p">)</span>  <span class="o">+</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>  <span class="c1"># [MS-DTYP] 2.2.57</span>
+<span class="mi">12</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;file://&#39;</span><span class="p">)</span>                    <span class="o">+</span><span class="p">()</span>      <span class="o">+</span><span class="p">()</span>    <span class="o">+</span><span class="p">(</span><span class="n">drive</span><span class="p">)</span>  <span class="o">+</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>    <span class="c1"># RFC8089 -</span>
+<span class="mi">20</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;file://&#39;</span><span class="p">)</span>                    <span class="o">+</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>  <span class="o">+</span><span class="p">()</span>    <span class="o">+</span><span class="p">()</span>       <span class="o">+</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>    <span class="c1"># RFC8089 - non-local files</span>
+<span class="mi">28</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;file://|file:&#39;</span><span class="p">)</span>              <span class="o">+</span><span class="p">()</span>      <span class="o">+</span><span class="p">()</span>    <span class="o">+</span><span class="p">()</span>       <span class="o">+</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>    <span class="c1"># RFC8089 - traditional</span>
+<span class="mi">36</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;smb://&#39;</span><span class="o">|</span><span class="s1">&#39;cifs://&#39;</span><span class="p">)</span>  <span class="o">+</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>  <span class="o">+</span><span class="mi">1</span><span class="n">SEP</span>  <span class="o">+</span><span class="p">(</span><span class="n">share</span><span class="p">)</span>  <span class="o">+</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>             <span class="c1"># RFC-SMB</span>
+<span class="mi">44</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="n">SEP</span><span class="p">)</span>                <span class="o">+</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>  <span class="o">+</span><span class="mi">1</span><span class="n">SEP</span>  <span class="o">+</span><span class="p">(</span><span class="n">share</span><span class="p">)</span>  <span class="o">+</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>             <span class="c1"># [MS-DTYP] 2.2.57 - a share present</span>
+<span class="mi">52</span><span class="p">:</span> <span class="p">(</span><span class="n">scheme</span> <span class="s1">&#39;://&#39;</span><span class="p">)</span>           <span class="o">+</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span>  <span class="o">+</span><span class="mi">1</span><span class="n">SEP</span>  <span class="o">+</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>   <span class="o">+</span><span class="s2">&quot;?&quot;</span> <span class="o">+</span><span class="p">(</span><span class="n">query</span><span class="o">-</span><span class="n">fragment</span><span class="p">)</span>  <span class="c1"># RFC3869</span>
+<span class="mi">60</span><span class="p">:</span> <span class="p">()</span>                    <span class="o">+</span><span class="p">()</span>      <span class="o">+</span><span class="p">()</span>    <span class="o">+</span><span class="p">(</span><span class="n">drive</span><span class="p">)</span>  <span class="o">+</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>             <span class="c1"># MS-DOS / WIN</span>
+<span class="mi">68</span><span class="p">:</span> <span class="p">()</span>                    <span class="o">+</span><span class="p">()</span>      <span class="o">+</span><span class="p">()</span>    <span class="o">+</span><span class="p">(</span><span class="n">drive</span><span class="p">)</span>  <span class="o">+</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>             <span class="c1"># MS-DOS / WIN</span>
+<span class="mi">76</span><span class="p">:</span> <span class="p">()</span>                    <span class="o">+</span><span class="p">()</span>      <span class="o">+</span><span class="p">()</span>    <span class="o">+</span><span class="p">(</span><span class="n">drive</span><span class="p">)</span>  <span class="o">+</span><span class="p">()</span>                 <span class="c1"># MS-DOS / WIN</span>
+<span class="mi">84</span><span class="p">:</span> <span class="p">()</span>                    <span class="o">+</span><span class="p">()</span>      <span class="o">+</span><span class="p">()</span>    <span class="o">+</span><span class="p">()</span>       <span class="o">+</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>             <span class="c1"># general filesystems</span>
+<span class="mi">92</span><span class="p">:</span> <span class="p">()</span>                    <span class="o">+</span><span class="p">()</span>       <span class="o">+</span><span class="p">()</span>   <span class="o">+</span><span class="p">()</span>       <span class="o">+</span><span class="p">()</span>
+<span class="mi">94</span> <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="data">
+<dt id="filesysobjects.apppaths.APPPATHSCANNER_SEM">
+<code class="descclassname">filesysobjects.apppaths.</code><code class="descname">APPPATHSCANNER_SEM</code><em class="property"> = &lt;_sre.SRE_Pattern object at 0x2e37130&gt;</em><a class="headerlink" href="#filesysobjects.apppaths.APPPATHSCANNER_SEM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scanner/Parser for semicolon based search path separator.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span> <span class="o">==</span> <span class="s1">&#39;;&#39;</span>
+</pre></div>
+</div>
+<p>The applied rules are corresponding to <em>APPPATHSCANNER_COL</em>.</p>
+</dd></dl>
+
+</li>
+<li><p class="first"><strong>APPPATHINDEX</strong></p>
+<dl class="data">
+<dt id="filesysobjects.apppaths.APPPATHINDEX">
+<code class="descclassname">filesysobjects.apppaths.</code><code class="descname">APPPATHINDEX</code><em class="property"> = (4, 12, 20, 28, 36, 44, 52, 60, 68, 76, 84, 92)</em><a class="headerlink" href="#filesysobjects.apppaths.APPPATHINDEX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper with group indexes pointing onto the supported syntax terms of <em>APPPATHSCANNER</em>.</p>
+</dd></dl>
+
+</li>
+<li><p class="first"><strong>APPTYPES</strong></p>
+<dl class="data">
+<dt id="filesysobjects.apppaths.APPTYPES">
+<code class="descclassname">filesysobjects.apppaths.</code><code class="descname">APPTYPES</code><em class="property"> = ('share', 'ldsys', 'rfsys', 'lfsys', 'smb', 'share', 'uri', 'ldsys', 'ldsys', 'ldsys', 'lfsys', 'lfsys')</em><a class="headerlink" href="#filesysobjects.apppaths.APPTYPES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper with human readable enums for types of path variable elements of <em>APPPATHINDEX</em>.</p>
+</dd></dl>
+
+</li>
+<li><p class="first"><strong>APPTYPES_L2</strong></p>
+<dl class="data">
+<dt id="filesysobjects.apppaths.APPTYPES_L2">
+<code class="descclassname">filesysobjects.apppaths.</code><code class="descname">APPTYPES_L2</code><em class="property"> = {'//': ('share',), 'cifs://': ('smb',), '\\\\': ('share',), 'http://': ('http',), 'https://': ('https',), 'smb://': ('smb',), 'unc://': ('share',)}</em><a class="headerlink" href="#filesysobjects.apppaths.APPTYPES_L2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper with human readable enums for secondary level-2 types of <em>APPTYPES</em>.</p>
+</dd></dl>
+
+</li>
+<li><p class="first"><strong>Helper</strong></p>
+<ul>
+<li><p class="first"><em>_DUMMY</em></p>
+<dl class="data">
+<dt id="filesysobjects.apppaths._DUMMY">
+<code class="descclassname">filesysobjects.apppaths.</code><code class="descname">_DUMMY</code><em class="property"> = '(()|())'</em><a class="headerlink" href="#filesysobjects.apppaths._DUMMY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dummy for same group count for processing.</p>
+</dd></dl>
+
+</li>
+<li><p class="first"><em>_NOSEP_COL</em></p>
+<dl class="data">
+<dt id="filesysobjects.apppaths._NOSEP_COL">
+<code class="descclassname">filesysobjects.apppaths.</code><code class="descname">_NOSEP_COL</code><em class="property"> = '(\n    ([&quot;]{3}.*?[&quot;]{3}|[\']{3}.*?[\']{3}|[^:&quot;\']+|[\'&quot;])+\n   |([&quot;]{3}.*?[&quot;]{3}|[\']{3}.*?[\']{3}|[^:&quot;\']+|[\'&quot;])+\n   )'</em><a class="headerlink" href="#filesysobjects.apppaths._NOSEP_COL" title="Permalink to this definition">¶</a></dt>
+<dd><p>The tail of a path atom including possible escaped os.pathsep as ordinary character</p>
+</dd></dl>
+
+</li>
+<li><p class="first"><em>_NOSEP_SEM</em></p>
+<dl class="data">
+<dt id="filesysobjects.apppaths._NOSEP_SEM">
+<code class="descclassname">filesysobjects.apppaths.</code><code class="descname">_NOSEP_SEM</code><em class="property"> = '(\n    ([&quot;]{3}.*?[&quot;]{3}|[\']{3}.*?[\']{3}|[^;&quot;\']+|[\'&quot;])+\n   |([&quot;]{3}.*?[&quot;]{3}|[\']{3}.*?[\']{3}|[^;&quot;\']+|[\'&quot;])+\n   )'</em><a class="headerlink" href="#filesysobjects.apppaths._NOSEP_SEM" title="Permalink to this definition">¶</a></dt>
+<dd><p>The tail of a path atom including possible escaped os.pathsep as ordinary character</p>
+</dd></dl>
+
+</li>
+<li><p class="first"><em>INVALIDCHARS</em></p>
+<dl class="data">
+<dt id="filesysobjects.apppaths.INVALIDCHARS">
+<code class="descclassname">filesysobjects.apppaths.</code><code class="descname">INVALIDCHARS</code><em class="property"> = &lt;_sre.SRE_Pattern object at 0x2dde0f8&gt;</em><a class="headerlink" href="#filesysobjects.apppaths.INVALIDCHARS" title="Permalink to this definition">¶</a></dt>
+<dd><p>super position of both: r&#8217;[:&lt;&gt;*?0]&#8217;</p>
+<ul>
+<li><p class="first"><em>INVALIDCHARSPOSIX</em></p>
+<dl class="data">
+<dt id="filesysobjects.apppaths.INVALIDCHARSPOSIX">
+<code class="descclassname">filesysobjects.apppaths.</code><code class="descname">INVALIDCHARSPOSIX</code><em class="property"> = &lt;_sre.SRE_Pattern object at 0x2b24e00&gt;</em><a class="headerlink" href="#filesysobjects.apppaths.INVALIDCHARSPOSIX" title="Permalink to this definition">¶</a></dt>
+<dd><p>posix:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s1">r&#39;\0&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</li>
+<li><p class="first"><em>INVALIDCHARSWIN</em></p>
+<dl class="data">
+<dt id="filesysobjects.apppaths.INVALIDCHARSWIN">
+<code class="descclassname">filesysobjects.apppaths.</code><code class="descname">INVALIDCHARSWIN</code><em class="property"> = &lt;_sre.SRE_Pattern object at 0x2dde030&gt;</em><a class="headerlink" href="#filesysobjects.apppaths.INVALIDCHARSWIN" title="Permalink to this definition">¶</a></dt>
+<dd><p>windows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s1">r&#39;[:&lt;&gt;*?]&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</li>
+</ul>
+</dd></dl>
+
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="id25">
+<h3>Path Resolution<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
+<p>The path resolution os nased on the common token scanner.
+This implements an intermediate abstract token mapping layer in order to
+avoid the volatility of relying on the group enumeration of the regualr expressions.
+The parsing is purely implemented by callbacks with dynamic states.</p>
+<span class="target" id="module-filesysobjects.paths"></span><p>The &#8216;filesysobjects.paths&#8217; module provides operations on static file
+resource paths.</p>
+<ul>
+<li><p class="first"><strong>PATHSCANNER</strong></p>
+<p>The generic path scanner for filesystem paths including RFC8089 and
+network application of POSIX and shares of UNC.</p>
+<dl class="data">
+<dt id="filesysobjects.paths.PATHSCANNER">
+<code class="descclassname">filesysobjects.paths.</code><code class="descname">PATHSCANNER</code><em class="property"> = &lt;_sre.SRE_Pattern object at 0x2e2c6b0&gt;</em><a class="headerlink" href="#filesysobjects.paths.PATHSCANNER" title="Permalink to this definition">¶</a></dt>
+<dd><p>First stage regexpr scanner for &#8216;normpathx&#8217;, also used in &#8216;escapepathx&#8217;.</p>
+</dd></dl>
+
+</li>
+<li><p class="first"><strong>ASCII_SC_CTRL</strong></p>
+<dl class="data">
+<dt id="filesysobjects.paths.ASCII_SC_CTRL">
+<code class="descclassname">filesysobjects.paths.</code><code class="descname">ASCII_SC_CTRL</code><em class="property"> = [0, 1040, 1310, 1100, 1330, 1350, 1160, 1140, 1130, 1110, 1150, 1220, 1210, 1390, 1050, 1070, 1060, 1050, 1070, 1060, 1050, 1290, 1260, 1280, 1380, 1380, 1380, 1200, 1200, 1200, 1000, 1020, 1020, 1270, 1230, 1240, 1400, 1410, 1430, 1440, 1030, 1030, 1030]</em><a class="headerlink" href="#filesysobjects.paths.ASCII_SC_CTRL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Context maps of item indexes corresponding to group indexes onto constants.
+Performance enhancement by padding, in order to avoid hash calculations via a dictionary.</p>
+</dd></dl>
+
+<p>The following constants are defined for the dynamic positional remap of
+the token IDs.</p>
+<ul class="simple">
+<li><em>SC_BSPAIR(1000)</em> - &#8216;\&#8217; pair</li>
+<li><em>SC_CIFS(1010)</em> - cifs:</li>
+<li><em>SC_CRMASK(1020)</em> - masked &#8216;\n&#8217;</li>
+<li><em>SC_DOIT(1030)</em> - out of range</li>
+<li><em>SC_DQUOTED(1040)</em> - &#8220;</li>
+<li><em>SC_DRIVE(1050)</em> - DOS DRIVE LETTER - OR A DIRECTORY ON POSIX !!!</li>
+<li><em>SC_DRIVENPSEP(1060)</em> - dos drive letter following n * posix_sep</li>
+<li><em>SC_DRIVENWSEP(1070)</em> - dos drive letter following n * win_sep</li>
+<li><em>SC_DUMMY(1080)</em> - for tests</li>
+<li><em>SC_EACHOF(1090)</em> - assure for each</li>
+<li><em>SC_ESCCHAR(1100)</em> - &#8216;\[abf...]&#8217;</li>
+<li><em>SC_FABS(1110)</em> - <a class="reference external" href="file:///path">file:///path</a> - absolute path - rfc8089 rfc1738</li>
+<li><em>SC_FILE(1120)</em> - file:</li>
+<li><em>SC_FMIN(1130)</em> - <a class="reference external" href="file:/path">file:/path</a> - min rfc8089 - Appendix B</li>
+<li><em>SC_FNONLOCAL(1140)</em> - <a class="reference external" href="file://host/path">file://host/path</a>  non-local - rfc8089 - Appendix B / maps to Posix-App</li>
+<li><em>SC_FSHORT(1150)</em> - file:&lt;dos-drive&gt;:path - short-form - rfc8089</li>
+<li><em>SC_FUNC(1160)</em> - <a class="reference external" href="file://///">file://///</a> | <a class="reference external" href="file:////">file:////</a> - share/netapp - rfc8089 - Appendix E.3.2</li>
+<li><em>SC_HTTP(1170)</em> - http:</li>
+<li><em>SC_KEEP(1180)</em> - keep literally</li>
+<li><em>SC_MASKALL(1190)</em> - keep literally</li>
+<li><em>SC_NULLDIR(1200)</em> - &#8216;/./&#8217;</li>
+<li><em>SC_PAPP(1210)</em> - Posix-Net-App  * 2 * &#8216;/&#8217; + posix-rules + &#8220;causal constraints&#8221;</li>
+<li><em>SC_PDOM(1220)</em> - &#8216;//&#8217; share/posix-app - 2 * &#8216;/&#8217; + domain-rules</li>
+<li><em>SC_PSEPP(1230)</em> - &#8216;:&#8217;</li>
+<li><em>SC_PSEPW(1240)</em> - &#8216;;&#8217;</li>
+<li><em>SC_REPLACE(1250)</em> - replace an equal set of chars e.g. &#8216;/&#8217; or &#8216;\&#8217;</li>
+<li><em>SC_SEPP(1260)</em> - n * Posix path.sep</li>
+<li><em>SC_SEPW(1270)</em> - 1 * win path.sep</li>
+<li><em>SC_SLASH(1280)</em> - &#8216;/&#8217;</li>
+<li><em>SC_SLASHPREB(1290)</em> - &#8216;\&#8217; + &#8216;/&#8217;</li>
+<li><em>SC_SMB(1300)</em> - smb:</li>
+<li><em>SC_SQUOTED(1310)</em> - &#8216;</li>
+<li><em>SC_TOEVEN(1320)</em> - assure count is even</li>
+<li><em>SC_U16(1330)</em> - unicode-16</li>
+<li><em>SC_U16R(1340)</em> - unicode-16 raw</li>
+<li><em>SC_U32(1350)</em> - unicode-32</li>
+<li><em>SC_U32R(1360)</em> - unicode-32 raw</li>
+<li><em>SC_UNC(1370)</em> - unc:</li>
+<li><em>SC_UPDIR(1380)</em> - &#8216;/../&#8217;</li>
+<li><em>SC_WDOM(1390)</em> - Win-Domain - 2 * &#8216;\&#8217; + domain-rules</li>
+<li><em>SC_CHRCLSSTART(1400)</em></li>
+<li><em>SC_CHRCLSEND(1410)</em></li>
+<li><em>SC_ANYONECHR(1420)</em></li>
+<li><em>SC_ESCAPEDSQUOT(1430)</em></li>
+<li><em>SC_ESCAPEDDQUOT(1440)</em></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The SW-Design of <em>filesysobjects</em></a><ul>
+<li><a class="reference internal" href="#resource-paths">Resource Paths</a><ul>
+<li><a class="reference internal" href="#paths-and-application-paths">Paths and Application Paths</a></li>
+<li><a class="reference internal" href="#paths">Paths</a></li>
+<li><a class="reference internal" href="#application-paths">Application Paths</a></li>
+<li><a class="reference internal" href="#path-tools">Path Tools</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#find-vs-expand">Find vs. Expand</a></li>
+<li><a class="reference internal" href="#name-resolution-and-ambiguity">Name Resolution and Ambiguity</a></li>
+<li><a class="reference internal" href="#search-performance-optimization">Search Performance Optimization</a></li>
+<li><a class="reference internal" href="#encoding-and-deconding">Encoding and Deconding</a></li>
+<li><a class="reference internal" href="#match-syntax-of-filesysobjects">Match Syntax of <em>filesysobjects</em></a><ul>
+<li><a class="reference internal" href="#mixed-expressions">Mixed expressions</a></li>
+<li><a class="reference internal" href="#glob">glob</a></li>
+<li><a class="reference internal" href="#re">re</a><ul>
+<li><a class="reference internal" href="#any-char">Any Char</a></li>
+<li><a class="reference internal" href="#groups">Groups</a></li>
+<li><a class="reference internal" href="#logical-or">Logical OR</a></li>
+<li><a class="reference internal" href="#character-classe">Character Classe</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#common-options">Common Options</a><ul>
+<li><a class="reference internal" href="#two-resolution-layers">Two Resolution Layers</a></li>
+<li><a class="reference internal" href="#internal-string-processing">Internal String Processing</a><ul>
+<li><a class="reference internal" href="#application-path-resolution">Application Path Resolution</a></li>
+<li><a class="reference internal" href="#path-resolution">Path Resolution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#the-design-of-scanners-and-parsers">The Design of Scanners and Parsers</a><ul>
+<li><a class="reference internal" href="#id24">Application Path Resolution</a></li>
+<li><a class="reference internal" href="#id25">Path Resolution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="howto_uri.html"
+                        title="previous chapter">Howto URI</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="filesysobjects_api.html"
+                        title="next chapter">The filesysobjects API</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/filesysobjects_design.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="filesysobjects_api.html" title="The filesysobjects API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="howto_uri.html" title="Howto URI"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

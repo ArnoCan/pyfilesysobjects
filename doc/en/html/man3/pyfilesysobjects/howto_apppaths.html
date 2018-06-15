@@ -1,0 +1,451 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Howto Application Paths &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="up" title="Howto" href="howto.html" />
+    <link rel="next" title="Howto Paths" href="howto_paths.html" />
+    <link rel="prev" title="Howto" href="howto.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="howto_paths.html" title="Howto Paths"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="howto.html" title="Howto"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="howto.html" accesskey="U">Howto</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="howto-application-paths">
+<h1>Howto Application Paths<a class="headerlink" href="#howto-application-paths" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Howto Application Paths</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#general-type-support-for-normalization">General Type Support for Normalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#normalize-application-paths">Normalize Application Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#split-application-paths">Split Application Paths</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>Apppaths manages common URI paths including general application schemes like <em>http</em>.
+For local filesytem and network filesystem related paths refer
+to the module <a class="reference external" href="paths.html#">filesysobjects.paths</a>.
+or the <a class="reference external" href="howto_paths.html#">Howto Paths</a>.</p>
+<div class="section" id="general-type-support-for-normalization">
+<h2>General Type Support for Normalization<a class="headerlink" href="#general-type-support-for-normalization" title="Permalink to this headline">¶</a></h2>
+<p>The module <em>filesysobjects.apppaths</em> extends the modules <em>filesysobjects.paths</em> by
+common URI paths.
+This includes provided basic standard application shemes, which could be easily
+extended by custom URIs.</p>
+<p>The <em>os.normpath()</em> interface provides the normalization of file
+system addresses for the current specific platform, while the
+packages <em>macpath</em>, <em>ntpath</em>, and <em>posixpath</em> provide for cross-platform
+normalization.
+These cover some specifics of their target filesystems, but focus
+on pure filesystem entries only.</p>
+<p>The <em>filesysobjects.apppaths.normapppathx</em> interface extends these by <a href="#id1"><span class="problematic" id="id2">*</span></a>URI*s
+covers all platforms including cross-platform normalization.
+The current release covers the types:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">types</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="s1">&#39;share&#39;</span><span class="p">,</span> <span class="s1">&#39;ldsys&#39;</span><span class="p">,</span> <span class="s1">&#39;rfsys&#39;</span><span class="p">,</span> <span class="s1">&#39;lfsys&#39;</span><span class="p">,</span> <span class="s1">&#39;smb&#39;</span><span class="p">,</span> <span class="s1">&#39;http&#39;</span><span class="p">,</span> <span class="s1">&#39;https&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><em>file</em> - file URI - <a class="reference internal" href="references.html#rfc8089" id="id3">[RFC8089]</a></li>
+<li><em>http</em> - URI http - <a class="reference internal" href="references.html#rfc3986" id="id4">[RFC3986]</a></li>
+<li><em>https</em> - URI https - <a class="reference internal" href="references.html#rfc3986" id="id5">[RFC3986]</a></li>
+<li><em>ldsys</em> - local drive based filesystems - FAT, NTFS</li>
+<li><em>lfsys</em> - local filesystems</li>
+<li><em>rfsys</em> - remote filesystem</li>
+<li><em>share</em> - network shares - on all platforms</li>
+<li><em>smb</em> - Server Message Block filesystems, includ <em>CIFS</em> - [SMB]</li>
+<li><em>uri</em> - Currently hyper text by <em>HTTP</em> and <em>HTTPS</em></li>
+</ul>
+<p>The <em>normapppathx</em> interface in particular provides the <em>os.pathsep</em>
+of the common search path syntax.
+The call interface is exchangeable with the standard interface &#8216;os.normpath&#8217;.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path_normalized</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">normapppathx</span><span class="p">(</span><span class="n">path_raw</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>For complete details refer to
+[<a class="reference external" href="apppaths.html#normapppathx">API</a>] / [<a class="reference external" href="_modules/filesysobjects/apppaths.html#normapppathx">code</a>].</p>
+</div>
+<div class="section" id="normalize-application-paths">
+<h2>Normalize Application Paths<a class="headerlink" href="#normalize-application-paths" title="Permalink to this headline">¶</a></h2>
+<p>The <em>normapppath</em> interface provides the intermixed crossplatform filesystem paths
+and URIs with various application schemes.
+This includes also the support of search paths.</p>
+<div class="section" id="posix">
+<h3>POSIX<a class="headerlink" href="#posix" title="Permalink to this headline">¶</a></h3>
+<p>The local filesystem path could easily be converted into a file URI in
+accordance to <a class="reference internal" href="references.html#rfc8089" id="id7">[RFC8089]</a> by the call.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">&#39;/my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">apppaths</span><span class="o">.</span><span class="n">normapppathx</span><span class="p">(</span>
+         <span class="n">arg</span><span class="p">,</span>             <span class="c1"># the path to be converted</span>
+         <span class="n">apppre</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>     <span class="c1"># activate application prefix</span>
+         <span class="n">spf</span><span class="o">=</span><span class="s1">&#39;posix&#39;</span><span class="p">,</span>     <span class="c1"># source platform POSIX, default is local platform</span>
+         <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;fileuri&#39;</span><span class="p">,</span>   <span class="c1"># target platform FILEURI, default is local platform</span>
+         <span class="n">strip</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>      <span class="c1"># strip null-entries</span>
+         <span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>resulting in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">&#39;/my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="s1">&#39;file:///my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The reverse conversion is similar by altering the option &#8216;<em>apppre</em>&#8216;</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">&#39;file:///my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">apppaths</span><span class="o">.</span><span class="n">normapppathx</span><span class="p">(</span>
+         <span class="n">arg</span><span class="p">,</span>             <span class="c1"># the path to be converted</span>
+         <span class="n">apppre</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>    <span class="c1"># deactivate application prefix</span>
+         <span class="n">spf</span><span class="o">=</span><span class="s1">&#39;fileuri&#39;</span><span class="p">,</span>   <span class="c1"># target platform FILEURI, default is local platform</span>
+         <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;posix&#39;</span><span class="p">,</span>     <span class="c1"># source platform POSIX, default is local platform</span>
+         <span class="n">strip</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>      <span class="c1"># strip null-entries</span>
+         <span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>results in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">&#39;file:///my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="s1">&#39;/my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Refer to the default values for a shorter call signature
+[<a class="reference external" href="apppaths.html#normapppathx">API</a>] / [<a class="reference external" href="_modules/filesysobjects/apppaths.html#normapppathx">code</a>].</p>
+</div>
+<div class="section" id="windows">
+<h3>Windows<a class="headerlink" href="#windows" title="Permalink to this headline">¶</a></h3>
+<p>The local filesystem path could easily be converted into a file URI in
+accordance to <a class="reference internal" href="references.html#rfc8089" id="id10">[RFC8089]</a> by the call.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">r&#39;\my\odd\searchpath\&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;\myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">apppaths</span><span class="o">.</span><span class="n">normapppathx</span><span class="p">(</span>
+         <span class="n">arg</span><span class="p">,</span>             <span class="c1"># the path to be converted</span>
+         <span class="n">apppre</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>     <span class="c1"># activate application prefix</span>
+         <span class="n">spf</span><span class="o">=</span><span class="s1">&#39;win&#39;</span><span class="p">,</span>     <span class="c1"># source platform Windows, default is local platform</span>
+         <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;fileuri&#39;</span><span class="p">,</span>   <span class="c1"># target platform FILEURI, default is local platform</span>
+         <span class="n">strip</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>      <span class="c1"># strip null-entries</span>
+         <span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>resulting in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">r&#39;\my\odd\searchpath\&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;\myfile.z&#39;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="s1">&#39;file:///my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The reverse conversion is similar by altering the option &#8216;<em>apppre</em>&#8216;</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">&#39;file:///my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">apppaths</span><span class="o">.</span><span class="n">normapppathx</span><span class="p">(</span>
+         <span class="n">arg</span><span class="p">,</span>             <span class="c1"># the path to be converted</span>
+         <span class="n">apppre</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>     <span class="c1"># activate application prefix</span>
+         <span class="n">spf</span><span class="o">=</span><span class="s1">&#39;fileuri&#39;</span><span class="p">,</span>   <span class="c1"># target platform FILEURI, default is local platform</span>
+         <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;win&#39;</span><span class="p">,</span>       <span class="c1"># source platform Windows, default is local platform</span>
+         <span class="n">strip</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>      <span class="c1"># strip null-entries</span>
+         <span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>results in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">&#39;file:///my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="s1">r&#39;\my\odd\searchpath\&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;\myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Refer to the default values for a shorter call signature
+[<a class="reference external" href="apppaths.html#normapppathx">API</a>] / [<a class="reference external" href="_modules/filesysobjects/apppaths.html#normapppathx">code</a>].</p>
+</div>
+<div class="section" id="unc-shares-and-network-posix-applications">
+<h3>UNC-Shares and Network POSIX-Applications<a class="headerlink" href="#unc-shares-and-network-posix-applications" title="Permalink to this headline">¶</a></h3>
+<p>The UNC network shared and POSIX network application paths could easily cross-converted.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">r&#39;</span><span class="se">\\</span><span class="s1">my\odd\searchpath\&quot;&quot;&quot;[/xyz]&quot;&quot;&quot;.*\myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">apppaths</span><span class="o">.</span><span class="n">normapppathx</span><span class="p">(</span>
+         <span class="n">arg</span><span class="p">,</span>             <span class="c1"># the path to be converted</span>
+         <span class="n">apppre</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>     <span class="c1"># activate application prefix</span>
+         <span class="n">spf</span><span class="o">=</span><span class="s1">&#39;win&#39;</span><span class="p">,</span>       <span class="c1"># source platform Windows, default is local platform</span>
+         <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;posix&#39;</span><span class="p">,</span>     <span class="c1"># target platform POSIX, default is local platform</span>
+         <span class="n">strip</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>      <span class="c1"># strip null-entries</span>
+         <span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>resulting in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">r&#39;</span><span class="se">\\</span><span class="s1">my\odd\searchpath\&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;\myfile.z&#39;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="s1">r&#39;//my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The reverse conversion is similar by altering the option &#8216;<em>apppre</em>&#8216;</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">r&#39;//my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">apppaths</span><span class="o">.</span><span class="n">normapppathx</span><span class="p">(</span>
+         <span class="n">arg</span><span class="p">,</span>             <span class="c1"># the path to be converted</span>
+         <span class="n">apppre</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>     <span class="c1"># activate application prefix</span>
+         <span class="n">spf</span><span class="o">=</span><span class="s1">&#39;posix&#39;</span><span class="p">,</span>     <span class="c1"># target platform FILEURI, default is local platform</span>
+         <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;win&#39;</span><span class="p">,</span>       <span class="c1"># source platform POSIX, default is local platform</span>
+         <span class="n">strip</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>      <span class="c1"># strip null-entries</span>
+         <span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>results in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">r&#39;//my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="s1">r&#39;</span><span class="se">\\</span><span class="s1">my\odd\searchpath\&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;\myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Refer to the default values for a shorter call signature
+[<a class="reference external" href="apppaths.html#normapppathx">API</a>] / [<a class="reference external" href="_modules/filesysobjects/apppaths.html#normapppathx">code</a>].</p>
+</div>
+<div class="section" id="http">
+<h3>HTTP<a class="headerlink" href="#http" title="Permalink to this headline">¶</a></h3>
+<p>The local filesystem path could easily be converted into a http URI in
+accordance to [RFC3869] by the call.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">r&#39;\my\odd\searchpath\&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;\myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">apppaths</span><span class="o">.</span><span class="n">normapppathx</span><span class="p">(</span>
+         <span class="n">arg</span><span class="p">,</span>             <span class="c1"># the path to be converted</span>
+         <span class="n">apppre</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>     <span class="c1"># activate application prefix</span>
+         <span class="n">spf</span><span class="o">=</span><span class="s1">&#39;win&#39;</span><span class="p">,</span>       <span class="c1"># source platform Windows, default is local platform</span>
+         <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;http&#39;</span><span class="p">,</span>      <span class="c1"># target platform FILEURI, default is local platform</span>
+         <span class="n">strip</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>      <span class="c1"># strip null-entries</span>
+         <span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>resulting in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">r&#39;\my\odd\searchpath\&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;\myfile.z&#39;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="s1">&#39;http:///my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The reverse conversion is similar by altering the option &#8216;<em>apppre</em>&#8216;</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">&#39;http:///my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">apppaths</span><span class="o">.</span><span class="n">normapppathx</span><span class="p">(</span>
+         <span class="n">arg</span><span class="p">,</span>             <span class="c1"># the path to be converted</span>
+         <span class="n">apppre</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>     <span class="c1"># activate application prefix</span>
+         <span class="n">spf</span><span class="o">=</span><span class="s1">&#39;http&#39;</span><span class="p">,</span>      <span class="c1"># target platform FILEURI, default is local platform</span>
+         <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;win&#39;</span><span class="p">,</span>       <span class="c1"># source platform Windows, default is local platform</span>
+         <span class="n">strip</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>      <span class="c1"># strip null-entries</span>
+         <span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>results in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">&#39;http:///my/odd/searchpath/&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;/myfile.z&#39;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="s1">r&#39;\my\odd\searchpath\&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;\myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Refer to the default values for a shorter call signature
+[<a class="reference external" href="apppaths.html#normapppathx">API</a>] / [<a class="reference external" href="_modules/filesysobjects/apppaths.html#normapppathx">code</a>].</p>
+</div>
+</div>
+<div class="section" id="split-application-paths">
+<h2>Split Application Paths<a class="headerlink" href="#split-application-paths" title="Permalink to this headline">¶</a></h2>
+<p>Similar to <em>paths.splitpathx</em></p>
+<p>For complete details refer to
+[<a class="reference external" href="apppaths.html#splitapppathx">API</a>] / [<a class="reference external" href="_modules/filesysobjects/apppaths.html#splitapppathx">code</a>].</p>
+<div class="section" id="id20">
+<h3>POSIX<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="id21">
+<h3>Windows<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="id22">
+<h3>HTTP<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="id23">
+<h3>UNC-Shares and Network POSIX-Applications<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Howto Application Paths</a><ul>
+<li><a class="reference internal" href="#general-type-support-for-normalization">General Type Support for Normalization</a></li>
+<li><a class="reference internal" href="#normalize-application-paths">Normalize Application Paths</a><ul>
+<li><a class="reference internal" href="#posix">POSIX</a></li>
+<li><a class="reference internal" href="#windows">Windows</a></li>
+<li><a class="reference internal" href="#unc-shares-and-network-posix-applications">UNC-Shares and Network POSIX-Applications</a></li>
+<li><a class="reference internal" href="#http">HTTP</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#split-application-paths">Split Application Paths</a><ul>
+<li><a class="reference internal" href="#id20">POSIX</a></li>
+<li><a class="reference internal" href="#id21">Windows</a></li>
+<li><a class="reference internal" href="#id22">HTTP</a></li>
+<li><a class="reference internal" href="#id23">UNC-Shares and Network POSIX-Applications</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="howto.html"
+                        title="previous chapter">Howto</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="howto_paths.html"
+                        title="next chapter">Howto Paths</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/howto_apppaths.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="howto_paths.html" title="Howto Paths"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="howto.html" title="Howto"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="howto.html" >Howto</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

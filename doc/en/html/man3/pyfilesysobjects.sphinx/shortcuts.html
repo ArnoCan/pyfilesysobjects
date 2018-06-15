@@ -1,0 +1,836 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Shortcuts &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="next" title="A Primer on File and Directory Resources" href="filesysobjects_doc.html" />
+    <link rel="prev" title="Abstract" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="filesysobjects_doc.html" title="A Primer on File and Directory Resources"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Abstract"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="shortcuttab"><div class="section" id="shortcuts">
+<h1>Shortcuts<a class="headerlink" href="#shortcuts" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Shortcuts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#development-documents">Development Documents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api-shortcuts-filesysinfo">API Shortcuts - filesysinfo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tests">Tests</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="development-documents">
+<span id="developmentdocs"></span><h2>Development Documents<a class="headerlink" href="#development-documents" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="filesysobjects_doc.html#FILEANDDIRECTORYRESOURCES">A Primer on File and Directory Resources</a></li>
+<li><a class="reference external" href="path_syntax.html#">Addresses for File-Like Resources</a><ul>
+<li><a class="reference internal" href="path_syntax.html#filesyselemasobjects"><span class="std std-ref">Filesystem Elements as Objects</span></a></li>
+<li><a class="reference internal" href="path_syntax.html#variantspathnameparams"><span class="std std-ref">Variants of Pathname Parameters - Literals, RegExpr, and Glob</span></a></li>
+<li><a class="reference internal" href="path_syntax.html#syntaxelements"><span class="std std-ref">Syntax Elements</span></a></li>
+<li><a class="reference internal" href="path_syntax.html#callparamsapi"><span class="std std-ref">Call Parameters of the API</span></a></li>
+</ul>
+</li>
+<li><a class="reference external" href="filesysobjects_multiplatform_api.html#">Filesystem Adress Interfaces on Multiple Platforms</a></li>
+<li><a class="reference external" href="python_encode_decode.html#">Filename Encoding and Decoding</a></li>
+<li><a class="reference external" href="user_data.html#">User Data</a></li>
+<li><a class="reference external" href="os_data.html#">OS Data</a></li>
+<li><a class="reference external" href="config_data.html#">Configuration Data</a></li>
+<li><a class="reference external" href="filesysobjects_design.html#">SW-Design of &#8216;filesysobjects&#8217;</a></li>
+<li><a class="reference internal" href="filesysobjects_api.html#filesysobjectsapi"><span class="std std-ref">The filesysobjects API</span></a></li>
+<li><a class="reference external" href="howto.html#">HowTo</a></li>
+</ul>
+</div>
+<div class="section" id="api-shortcuts-filesysinfo">
+<span id="developmentapi"></span><h2>API Shortcuts - filesysinfo<a class="headerlink" href="#api-shortcuts-filesysinfo" title="Permalink to this headline">¶</a></h2>
+<p>The package <em>filesysobjects</em> contains the modules:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#sc-filesysobjects"><span class="std std-ref">filesysobjects.__init__</span></a></li>
+<li><a class="reference internal" href="#sc-filesysobjects-configdata"><span class="std std-ref">filesysobjects.confdata</span></a></li>
+<li><a class="reference internal" href="#sc-filesysobjects-netfiles"><span class="std std-ref">filesysobjects.netfiles</span></a></li>
+<li><a class="reference internal" href="#sc-filesysobjects-osdata"><span class="std std-ref">filesysobjects.osdata</span></a></li>
+<li><a class="reference internal" href="#sc-filesysobjects-paths"><span class="std std-ref">filesysobjects.paths</span></a></li>
+<li><a class="reference internal" href="#sc-filesysobjects-pathtools"><span class="std std-ref">filesysobjects.pathtools</span></a></li>
+<li><a class="reference internal" href="#sc-filesysobjects-userdata"><span class="std std-ref">filesysobjects.userdata</span></a></li>
+</ul>
+<p>The following tables present the shortcut references to the API.
+The applicable match scope for a filepathname input is displayed
+in the optional column <em>[scope]</em>.</p>
+<ul class="simple">
+<li><strong>L</strong>, <strong>l</strong>: literal</li>
+<li><strong>R</strong>, <strong>r</strong>: regexpr by &#8216;re&#8217;</li>
+<li><strong>G</strong>, <strong>g</strong>: &#8216;glob&#8217;</li>
+</ul>
+<p>The case of the characters for resolution indicate the processing:</p>
+<ul class="simple">
+<li><strong>L</strong>, <strong>R</strong>, <strong>G</strong> - Upper case letters indicate active resolution including in-memory processing and filesystem access.</li>
+<li><strong>l</strong>, <strong>r</strong>, <strong>g</strong> - Lower case letters indicate passive string acceptance with some in-memory processing.</li>
+</ul>
+<p>The optional column <em>[fs]</em> displays whether the filesystem is accessed, or in mem file search path
+string resolution is performed only.
+The search path list is supported as literal only.
+Function calls which access the filesystem are marked in the column &#8216;[fs]&#8217; with &#8216;X&#8217;.</p>
+<div class="section" id="filesysobjects">
+<span id="sc-filesysobjects"></span><span id="index-0"></span><h3>filesysobjects<a class="headerlink" href="#filesysobjects" title="Permalink to this headline">¶</a></h3>
+<p>The init module of the <em>filesysobjects</em> package contains global definitions.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="40%" />
+<col width="60%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="filesysobjects_init.html#">filesysobjects</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/__init__.html#">filesysobjects.__init__</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="filesysobjects-apppaths">
+<span id="sc-filesysobjects-apppaths"></span><span id="index-1"></span><h3>filesysobjects.apppaths<a class="headerlink" href="#filesysobjects-apppaths" title="Permalink to this headline">¶</a></h3>
+<p>The module &#8216;<em>filesysobjects.apppaths</em>&#8216; provides for the processing of application resource path names
+intermixed with file path names, and search paths.
+This enables for the transparent search and addressing of local and remote resources.</p>
+<p>The procedures try to use in-memory access only - <strong>scope=lrg</strong> - including the static resolution
+of regular expressions and globs - <strong>scope=LRG</strong>.</p>
+<p>The function interfaces are based on context parameter sets, which is thread safe.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Thread-Safety is not yet sytematically tested.</p>
+</div>
+<div class="section" id="process-resource-paths">
+<h4>Process Resource Paths<a class="headerlink" href="#process-resource-paths" title="Permalink to this headline">¶</a></h4>
+<p>Syntactically and semantically transform and disassemble resource path names
+for multiple platforms.</p>
+<p><strong>Application Paths</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="26%" />
+<col width="47%" />
+<col width="8%" />
+<col width="5%" />
+<col width="14%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+<th class="head">[scope]</th>
+<th class="head">[fs]</th>
+<th class="head">[map]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="apppaths.html#filesysobjects.apppaths.splitapppathx">splitapppathx</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/apppaths.html#splitapppathx">filesysobjects.apppaths.splitapppathx</a></td>
+<td>lrg</td>
+<td>&#8211;</td>
+<td>APPPATHSCANNER</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="apppaths.html#filesysobjects.apppaths.splitapppathx_getlocalpath">splitapppathx_getlocalpath</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/apppaths.html#splitapppathx_getlocalpath">filesysobjects.apppaths.splitapppathx_getlocalpath</a></td>
+<td>lrg</td>
+<td>&#8211;</td>
+<td>APPPATHSCANNER</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="apppaths.html#filesysobjects.apppaths.normapppathx">normapppathx</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/apppaths.html#normapppathx">filesysobjects.apppaths.normapppathx</a></td>
+<td>lrg</td>
+<td>&#8211;</td>
+<td>APPPATHSCANNER</td>
+</tr>
+</tbody>
+</table>
+<p>These interfaces mainly rely on the following scanners and parsers.</p>
+</div>
+<div class="section" id="parsers-and-scanners">
+<h4>Parsers and Scanners<a class="headerlink" href="#parsers-and-scanners" title="Permalink to this headline">¶</a></h4>
+<p>Internal functions for the resolution of the mapping tables via dynamic regular expressions.
+Based on:</p>
+<ul class="simple">
+<li><em>APPPATHPARSER, APPPATHINDEX, APPTYPES</em> [<a class="reference internal" href="apppaths.html#applicationpathscannerparser"><span class="std std-ref">doc</span></a>]</li>
+</ul>
+</div>
+<div class="section" id="helper">
+<h4>Helper<a class="headerlink" href="#helper" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="54%" />
+<col width="9%" />
+<col width="6%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+<th class="head">[scope]</th>
+<th class="head">[fs]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="apppaths.html#filesysobjects.apppaths.join_apppathx_entry">join_apppathx_entry</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/apppaths.html#join_apppathx_entry">filesysobjects.apppaths.join_apppathx_entry</a></td>
+<td>&#8211;</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="apppaths.html#gettop-from-pathstring">gettop_from_pathstring</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/apppaths.html#gettop_from_pathstring">filesysobjects.apppaths.gettop_from_pathstring</a></td>
+<td>lr</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="apppaths.html#gettop-from-pathstring-iter">gettop_from_pathstring_iter</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/apppaths.html#gettop_from_pathstring_iter">filesysobjects.apppaths.gettop_from_pathstring_iter</a></td>
+<td>lr</td>
+<td>&#8211;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="manage-search-paths">
+<h4>Manage Search Paths<a class="headerlink" href="#manage-search-paths" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="55%" />
+<col width="9%" />
+<col width="6%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+<th class="head">[scope]</th>
+<th class="head">[fs]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="apppaths.html#addpath-to-searchpath">addpath_to_searchpath</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/apppaths.html#addpath_to_searchpath">filesysobjects.apppaths.addpath_to_searchpath</a></td>
+<td>L</td>
+<td>X</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="apppaths.html#delpath-from-searchpath">delpath_from_searchpath</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/apppaths.html#delpath_from_searchpath">filesysobjects.apppaths.delpath_from_searchpath</a></td>
+<td>LRG</td>
+<td>X</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="apppaths.html#set-uppertree-searchpath">set_uppertree_searchpath</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/apppaths.html#set_uppertree_searchpath">filesysobjects.apppaths.set_uppertree_searchpath</a></td>
+<td>L</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="filesysobjects-paths">
+<span id="sc-filesysobjects-paths"></span><h3>filesysobjects.paths<a class="headerlink" href="#filesysobjects-paths" title="Permalink to this headline">¶</a></h3>
+<p>The module &#8216;<em>filesysobjects.paths</em>&#8216; provides for the processing of path names, file path names,
+and search paths.
+This is mainly based on the in-memory syntax analysis - <strong>scope=lrg</strong>, and includes in addition the static resolution
+of regular expressions and globs - <strong>scope=LRG</strong>.</p>
+<p>The calculation of canonicial resources is provided by function interfaces and path classes.
+The implementation is based on the standard <em>re</em> package, with static compiled regexpr and
+callback based dynamic evaluation of the regular expressions.</p>
+<p>The function interfaces are based on context parameter sets, which is thread safe.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Thread-Safety is not yet sytematically tested.</p>
+</div>
+<div class="section" id="id2">
+<h4>Process Resource Paths<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<p>Syntactically and semantically transform and disassemble file resource path names
+for multiple platforms.</p>
+<p><strong>Paths</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="54%" />
+<col width="13%" />
+<col width="8%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+<th class="head">[scope]</th>
+<th class="head">[fs]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="paths.html#filesysobjects.paths.escapepathx">escapepathx</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/paths.html#escapepathx">filesysobjects.paths.escapepathx</a></td>
+<td>lg</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="paths.html#getspf">getspf</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/paths.html#getspf">filesysobjects.paths.getspf</a></td>
+<td>&#8211;</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="paths.html#gettpf">gettpf</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/paths.html#gettpf">filesysobjects.paths.gettpf</a></td>
+<td>&#8211;</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="paths.html#def-normpathx">normpathx</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/paths.html#normpathx">filesysobjects.paths.normpathx</a></td>
+<td>l</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="paths.html#splitpathx">splitpathx</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/paths.html#splitpathx">filesysobjects.paths.splitpathx</a></td>
+<td>lrg</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="paths.html#filesysobjects.paths.unescapepathx">unescapepathx</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/paths.html#unescapepathx">filesysobjects.paths.unescapepathx</a></td>
+<td>lg</td>
+<td>&#8211;</td>
+</tr>
+</tbody>
+</table>
+<p>These interfaces mainly rely on the following scanners and parsers.</p>
+</div>
+<div class="section" id="id3">
+<h4>Parsers and Scanners<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p>Internal functions for the resolution of the mapping tables via dynamic regular expressions.
+Based on:</p>
+<ul class="simple">
+<li><em>PATHSCANNER, ASCII_SC_CTRL</em> [<span class="xref std std-ref">doc</span>]</li>
+</ul>
+<p>The following parser and scanner maps apply.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="37%" />
+<col width="10%" />
+<col width="6%" />
+<col width="32%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+<th class="head">[scope]</th>
+<th class="head">[fs]</th>
+<th class="head">[map]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="paths.html#filesysobjects.paths.sub_esc">sub_esc</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/paths.html#sub_esc">filesysobjects.paths.sub_esc</a></td>
+<td>lg</td>
+<td>&#8211;</td>
+<td><em>PATHSCANNER, ASCII_SC_CTRL</em></td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="paths.html#filesysobjects.paths.sub_keep">sub_keep</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/paths.html#sub_keep">filesysobjects.paths.sub_keep</a></td>
+<td>lg</td>
+<td>&#8211;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="paths.html#filesysobjects.paths.sub_posix">sub_posix</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/paths.html#sub_posix">filesysobjects.paths.sub_posix</a></td>
+<td>lg</td>
+<td>&#8211;</td>
+<td><em>PATHSCANNER, ASCII_SC_CTRL</em></td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="paths.html#filesysobjects.paths.sub_win">sub_win</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/paths.html#sub_win">filesysobjects.paths.sub_win</a></td>
+<td>lg</td>
+<td>&#8211;</td>
+<td><em>PATHSCANNER, ASCII_SC_CTRL</em></td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="paths.html#filesysobjects.paths.sub_unesc">sub_unesc</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/paths.html#sub_unesc">filesysobjects.paths.sub_unesc</a></td>
+<td>lg</td>
+<td>&#8211;</td>
+<td><em>PATHSCANNER, ASCII_SC_CTRL</em></td>
+</tr>
+</tbody>
+</table>
+<p>Remarks:</p>
+<ul class="simple">
+<li>In general: roll-back operations for conversions are not provided.</li>
+<li><em>strip</em>: A conversion with the <em>strip</em> option could not be reverted.</li>
+<li><em>sub_unesc</em>: Simply removes escape masks, is context aware. Application on e.g.
+non-escaped NTFS paths containing separators &#8216;\&#8217; leads to unpredictable results.
+While the application onto previously escaped paths is reversable.</li>
+<li><em>revert</em>: A literal revert is not supported, but each valid path representation
+could be converted to one of the other provided options and vice versa.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The scanners and parsers/path-compilers support the masking by quoting. Quoted segments of a
+pathname are kept literally as part of a nodename. These could be excluded e.g. from escaping
+by option. Thus can include any character, so also regular expressions and globs.</p>
+</div>
+</div>
+</div>
+<div class="section" id="filesysobjects-pathtools">
+<span id="sc-filesysobjects-pathtools"></span><h3>filesysobjects.pathtools<a class="headerlink" href="#filesysobjects-pathtools" title="Permalink to this headline">¶</a></h3>
+<p>The module <em>filesysobjects.pathtools</em> supports the dynamic evaluation by creation of</p>
+<p>Filesystem Positions and Navigation for <em>sys.path</em>, and extended alternatives.
+<a class="reference external" href="path_syntax.html#">[docs]</a> <a class="reference external" href="pyfilesysobjects.html#">[API]</a></p>
+<div class="section" id="search-and-find">
+<h4>Search and Find<a class="headerlink" href="#search-and-find" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="55%" />
+<col width="9%" />
+<col width="6%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+<th class="head">[scope]</th>
+<th class="head">[fs]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.findpattern">findpattern</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/pathtools.html#findpattern">filesysobjects.pathtools.findpattern</a></td>
+<td>LRG</td>
+<td>X</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.findrelpath_in_searchpath">findrelpath_in_searchpath</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/pathtools.html#findrelpath-in-searchpath">filesysobjects.pathtools.findrelpath_in_searchpath</a></td>
+<td>LG</td>
+<td>X</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.findrelpath_in_uppertree">findrelpath_in_uppertree</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/pathtools.html#findrelpath-in-uppertree">filesysobjects.pathtools.findrelpath_in_uppertree</a></td>
+<td>LG</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="iterators">
+<h4>Iterators<a class="headerlink" href="#iterators" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<colgroup>
+<col width="32%" />
+<col width="55%" />
+<col width="8%" />
+<col width="5%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+<th class="head">[scope]</th>
+<th class="head">[fs]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.findrelpath_in_searchpath_iter">findrelpath_in_searchpath_iter</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/pathtools.html#findrelpath-in-searchpath-iter">filesysobjects.pathtools.findrelpath_in_searchpath_iter</a></td>
+<td>LG</td>
+<td>X</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.findrelpath_in_uppertree_iter">findrelpath_in_uppertree_iter</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/pathtools.html#findrelpath-in-uppertree-iter">filesysobjects.pathtools.findrelpath_in_uppertree_iter</a></td>
+<td>LG</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="paths-and-search-paths">
+<h4>Paths and Search Paths<a class="headerlink" href="#paths-and-search-paths" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="56%" />
+<col width="10%" />
+<col width="7%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+<th class="head">[scope]</th>
+<th class="head">[fs]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.clearpath">clearpath</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/pathtools.html#clearpath">filesysobjects.pathtools.clearpath</a></td>
+<td>L</td>
+<td>X</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.expandpath">expandpath</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/pathtools.html#expandpath">filesysobjects.pathtools.expandpath</a></td>
+<td>LRG</td>
+<td>X</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.get_subpath_product">get_subpath_product</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/pathtools.html#get_subpath_product">filesysobjects.pathtools.get_subpath_product</a></td>
+<td>L</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="miscellaneous">
+<h4>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="73%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.glob_to_re">glob_to_re</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/pathtools.html#glob_to_re">filesysobjects.pathtools.glob_to_re</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="filesysobjects-pprint">
+<span id="sc-filesysobjects-pprint"></span><h3>filesysobjects.pprint<a class="headerlink" href="#filesysobjects-pprint" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="pprint.html#filesysobjects.pprint.PPPathVar">PPPathVar</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/pprint.html#PPPathVar.__init__">filesysobjects.pprint.PPPathVar.__init__</a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="pprint.html#filesysobjects.pprint.PPPathVar.__repr__">__repr__</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/pprint.html#PPPathVar.__repr__">filesysobjects.pprint.PPPathVar.__repr__</a></td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="pprint.html#filesysobjects.pprint.PPPathVar.__str__">__str__</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/pprint.html#PPPathVar.__str__">filesysobjects.pprint.PPPathVar.__str__</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="filesysobjects-userdata">
+<span id="sc-filesysobjects-userdata"></span><h3>filesysobjects.userdata<a class="headerlink" href="#filesysobjects-userdata" title="Permalink to this headline">¶</a></h3>
+<p>Filesystem Positions and Navigation for <em>sys.path</em>, and extended alternatives.
+<a class="reference external" href="userdata.html#">[docs]</a> <a class="reference external" href="pyfilesysobjects.html#">[API]</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="55%" />
+<col width="10%" />
+<col width="7%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+<th class="head">[scope]</th>
+<th class="head">[fs]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="userdata.html#filesysobjects.userdata.gethome">gethome</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/userdata.html#gethome">filesysobjects.userdata.gethome</a></td>
+<td>lrg</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="userdata.html#filesysobjects.userdata.getdir_userhome">getdir_userhome</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/userdata.html#getdir_userhome">filesysobjects.userdata.getdir_userhome</a></td>
+<td>lrg</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="userdata.html#filesysobjects.userdata.getdir_userdata">getdir_userdata</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/userdata.html#getdir_userdata">filesysobjects.userdata.getdir_userdata</a></td>
+<td>lrg</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="userdata.html#filesysobjects.userdata.getdir_userconfigdata">getdir_userconfigdata</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/userdata.html#getdir_userconfigdata">filesysobjects.userdata.getdir_userconfigdata</a></td>
+<td>lrg</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="userdata.html#filesysobjects.userdata.getdir_userappdata">getdir_userappdata</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/userdata.html#getdir_userappdata">filesysobjects.userdata.getdir_userappdata</a></td>
+<td>lrg</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="userdata.html#filesysobjects.userdata.getcurrent_username">getcurrent_username</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/userdata.html#getcurrent_username">filesysobjects.userdata.getcurrent_username</a></td>
+<td>lrg</td>
+<td>&#8211;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="filesysobjects-osdata">
+<span id="sc-filesysobjects-osdata"></span><h3>filesysobjects.osdata<a class="headerlink" href="#filesysobjects-osdata" title="Permalink to this headline">¶</a></h3>
+<p>Search path object for OS specific configurations.
+<a class="reference external" href="os_data.html#">[docs]</a> <a class="reference external" href="osdata.html#">[API]</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="54%" />
+<col width="10%" />
+<col width="7%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+<th class="head">[scope]</th>
+<th class="head">[fs]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="osdata.html#filesysobjects.osdata._getdir_osconfigdata">getdir_osconfigdata</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/osdata.html#getdir_osconfigdata">filesysobjects.osdata.getdir_osconfigdata</a></td>
+<td>lrg</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="osdata.html#filesysobjects.osdata.getdir_osappdata">getdir_osappdata</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/osdata.html#getdir_osappdata">filesysobjects.osdata.getdir_osappdata</a></td>
+<td>lrg</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="osdata.html#filesysobjects.osdata.getdir_osappconfigdata">getdir_osappconfigdata</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/osdata.html#getdir_osappconfigdata">filesysobjects.osdata.getdir_osappconfigdata</a></td>
+<td>lrg</td>
+<td>&#8211;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="filesysobjects-configdata">
+<span id="sc-filesysobjects-configdata"></span><h3>filesysobjects.configdata<a class="headerlink" href="#filesysobjects-configdata" title="Permalink to this headline">¶</a></h3>
+<p>Search path object for configuration files
+<a class="reference external" href="config_data.html#">[docs]</a> <a class="reference external" href="configdata.html#">[API]</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="50%" />
+<col width="8%" />
+<col width="5%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+<th class="head">[scope]</th>
+<th class="head">[fs]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="configdata.html#init">ConfigPath</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/configdata.html#ConfigPath.__init__">filesysobjects.configdata.__init__</a></td>
+<td>LRG</td>
+<td>X</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="configdata.html#get-config-path-list">ConfigPath.get_config_path_list</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/configdata.html#ConfigPath.get_config_path_list">filesysobjects.configdata.get_config_path_list</a></td>
+<td>LRG</td>
+<td>X</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="configdata.html#get-config-filepath">ConfigPath.get_config_filepath</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/configdata.html#ConfigPath.get_config_filepath">filesysobjects.configdata.get_config_filepath</a></td>
+<td>LRG</td>
+<td>X</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="configdata.html#get-config-filepath-list">ConfigPath.get_config_filepath_list</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/configdata.html#ConfigPath.get_config_filepath_list">filesysobjects.configdata.get_config_filepath_list</a></td>
+<td>LRG</td>
+<td>X</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="configdata.html#get-filepathname-by-ext">ConfigPath.get_filepathname_by_ext</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/configdata.html#ConfigPath.get_filepathname_by_ext">filesysobjects.configdata.get_filepathname_by_ext</a></td>
+<td>LRG</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="netfiles-net-normpathx">
+<span id="sc-filesysobjects-netfiles"></span><h3>netfiles.net_normpathx<a class="headerlink" href="#netfiles-net-normpathx" title="Permalink to this headline">¶</a></h3>
+<p>For now experimental and non-productive, for review and comments <a class="reference external" href="netfiles.html#">[docs]</a></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="45%" />
+<col width="15%" />
+<col width="10%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[docs]</th>
+<th class="head">[source]</th>
+<th class="head">[scope]</th>
+<th class="head">[fs]</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="netfiles.html#filesysobjects.netfiles.net_normpathx">net_normpathx</a></td>
+<td><a class="reference external" href="_modules/filesysobjects/netfiles.html#net_normpathx">netfiles.net_normpathx</a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="tests">
+<span id="runtimetestdata"></span><h2>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h2>
+<p>The tests are base on <em>PyUnit</em> and <em>Eclipse</em>.
+These are contained in the subdirectory <em>tests</em> and optionally in the subdirectory <em>UseCases</em>.</p>
+<p>The test cases are in particular based on normative input data arrays - <em>data.py</em>,
+and related normative result arrays.
+With additional explicit test cases.
+The contained tests at the time of writing is in total about 4400 test-cases.</p>
+</div></div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Shortcuts</a><ul>
+<li><a class="reference internal" href="#development-documents">Development Documents</a></li>
+<li><a class="reference internal" href="#api-shortcuts-filesysinfo">API Shortcuts - filesysinfo</a><ul>
+<li><a class="reference internal" href="#filesysobjects">filesysobjects</a></li>
+<li><a class="reference internal" href="#filesysobjects-apppaths">filesysobjects.apppaths</a><ul>
+<li><a class="reference internal" href="#process-resource-paths">Process Resource Paths</a></li>
+<li><a class="reference internal" href="#parsers-and-scanners">Parsers and Scanners</a></li>
+<li><a class="reference internal" href="#helper">Helper</a></li>
+<li><a class="reference internal" href="#manage-search-paths">Manage Search Paths</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#filesysobjects-paths">filesysobjects.paths</a><ul>
+<li><a class="reference internal" href="#id2">Process Resource Paths</a></li>
+<li><a class="reference internal" href="#id3">Parsers and Scanners</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#filesysobjects-pathtools">filesysobjects.pathtools</a><ul>
+<li><a class="reference internal" href="#search-and-find">Search and Find</a></li>
+<li><a class="reference internal" href="#iterators">Iterators</a></li>
+<li><a class="reference internal" href="#paths-and-search-paths">Paths and Search Paths</a></li>
+<li><a class="reference internal" href="#miscellaneous">Miscellaneous</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#filesysobjects-pprint">filesysobjects.pprint</a></li>
+<li><a class="reference internal" href="#filesysobjects-userdata">filesysobjects.userdata</a></li>
+<li><a class="reference internal" href="#filesysobjects-osdata">filesysobjects.osdata</a></li>
+<li><a class="reference internal" href="#filesysobjects-configdata">filesysobjects.configdata</a></li>
+<li><a class="reference internal" href="#netfiles-net-normpathx">netfiles.net_normpathx</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tests">Tests</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Abstract</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="filesysobjects_doc.html"
+                        title="next chapter">A Primer on File and Directory Resources</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/shortcuts.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="filesysobjects_doc.html" title="A Primer on File and Directory Resources"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Abstract"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

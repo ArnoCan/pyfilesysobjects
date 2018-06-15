@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>fsysobj &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fsysobj">
+<span id="fsysobj-main"></span><h1>fsysobj<a class="headerlink" href="#fsysobj" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="synopsis">
+<span id="synopsis-jsondc"></span><h2>SYNOPSIS:<a class="headerlink" href="#synopsis" title="Permalink to this headline">¶</a></h2>
+<pre class="literal-block">
+<a class="reference internal" href="#fsysobj-main"><span class="std std-ref">fsysobj</span></a>           <a class="reference internal" href="#options-fsysobj"><span class="std std-ref">[OPTIONS]</span></a> [COMMAND] [CMDOPTIONS] &lt;path-filelist&gt;
+python <a class="reference internal" href="#fsysobj-main"><span class="std std-ref">fsysobj.py</span></a> <a class="reference internal" href="#options-fsysobj"><span class="std std-ref">[OPTIONS]</span></a> [COMMAND] [CMDOPTIONS] &lt;path-filelist&gt;
+</pre>
+<p><strong>Commands</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="19%" />
+<col width="23%" />
+<col width="22%" />
+<col width="23%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">[COMMAND]</th>
+<th class="head">Context Options</th>
+<th class="head">Arguments</th>
+<th class="head">Description</th>
+<th class="head">HowTo</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="fsysobj_find.html#fsysobj-find"><span class="std std-ref">find</span></a></td>
+<td><a class="reference internal" href="fsysobj_find.html#options-fsysobjfind"><span class="std std-ref">find-options</span></a></td>
+<td><a class="reference internal" href="fsysobj_find.html#arguments-fsysobjfind"><span class="std std-ref">&lt;find-path-filelist&gt;</span></a></td>
+<td><a class="reference internal" href="fsysobj_find.html#description-fsysobjfind"><span class="std std-ref">find-description</span></a></td>
+<td><a class="reference external" href="howto_cli_fsysobj_find.html">Howto fsysobject find</a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="fsysobj_findpath.html#fsysobj-findpath"><span class="std std-ref">findpath</span></a></td>
+<td><a class="reference internal" href="fsysobj_findpath.html#options-fsysobjfindpath"><span class="std std-ref">findpath-options</span></a></td>
+<td><a class="reference internal" href="fsysobj_findpath.html#arguments-fsysobjfindpath"><span class="std std-ref">&lt;findpath-file-path-list&gt;</span></a></td>
+<td><a class="reference internal" href="fsysobj_findpath.html#description-fsysobjfindpath"><span class="std std-ref">findpath-description</span></a></td>
+<td><a class="reference external" href="howto_cli_fsysobj_findpath.html">Howto fsysobject findpath</a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="fsysobj_lspath.html#fsysobj-lspath"><span class="std std-ref">lspath</span></a></td>
+<td><a class="reference internal" href="fsysobj_lspath.html#options-fsysobjlspath"><span class="std std-ref">lspath-options</span></a></td>
+<td><a class="reference internal" href="fsysobj_lspath.html#arguments-fsysobjlspath"><span class="std std-ref">&lt;lspath-path-filelist&gt;</span></a></td>
+<td><a class="reference internal" href="fsysobj_lspath.html#description-fsysobjlspath"><span class="std std-ref">lspath-description</span></a></td>
+<td><a class="reference external" href="howto_cli_fsysobj_lspath.html">Howto fsysobject lspath</a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="fsysobj_normalize.html#fsysobj-normalize"><span class="std std-ref">normalize</span></a></td>
+<td><a class="reference internal" href="fsysobj_normalize.html#options-fsysobjnormalize"><span class="std std-ref">normalize-options</span></a></td>
+<td><a class="reference internal" href="fsysobj_normalize.html#arguments-fsysobjnormalize"><span class="std std-ref">&lt;normalize-path-filelist&gt;</span></a></td>
+<td><a class="reference internal" href="fsysobj_normalize.html#description-fsysobjnormalize"><span class="std std-ref">normalize-description</span></a></td>
+<td><a class="reference external" href="howto_cli_fsysobj_normalize.html">Howto fsysobject normalize</a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="fsysobj_expand.html#fsysobj-expand"><span class="std std-ref">expand</span></a></td>
+<td><a class="reference internal" href="fsysobj_expand.html#options-fsysobjexpand"><span class="std std-ref">expand-options</span></a></td>
+<td><a class="reference internal" href="fsysobj_expand.html#arguments-fsysobjexpand"><span class="std std-ref">&lt;expand-path-filelist&gt;</span></a></td>
+<td><a class="reference internal" href="fsysobj_expand.html#description-fsysobjexpand"><span class="std std-ref">expand-description</span></a></td>
+<td><a class="reference external" href="howto_cli_fsysobj_expand.html">Howto fsysobject expand</a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="fsysobj_mkpath.html#fsysobj-mkpath"><span class="std std-ref">mkpath</span></a></td>
+<td><a class="reference internal" href="fsysobj_mkpath.html#options-fsysobjmkpath"><span class="std std-ref">mkpath-options</span></a></td>
+<td><a class="reference internal" href="fsysobj_mkpath.html#arguments-fsysobjmkpath"><span class="std std-ref">&lt;mkpath-path-filelist&gt;</span></a></td>
+<td><a class="reference internal" href="fsysobj_mkpath.html#description-fsysobjmkpath"><span class="std std-ref">mkpath-description</span></a></td>
+<td><a class="reference external" href="howto_cli_fsysobj_mkpath.html">Howto fsysobject mkpath</a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="fsysobj_convert.html#fsysobj-convert"><span class="std std-ref">convert</span></a></td>
+<td><a class="reference internal" href="fsysobj_convert.html#options-fsysobjconvert"><span class="std std-ref">convert-options</span></a></td>
+<td><a class="reference internal" href="fsysobj_convert.html#arguments-fsysobjconvert"><span class="std std-ref">&lt;convert-path-filelist&gt;</span></a></td>
+<td><a class="reference internal" href="fsysobj_convert.html#description-fsysobjconvert"><span class="std std-ref">convert-description</span></a></td>
+<td><a class="reference external" href="howto_cli_fsysobj_convert.html">Howto fsysobject convert</a></td>
+</tr>
+<tr class="row-odd"><td><span class="xref std std-ref">config</span></td>
+<td><span class="xref std std-ref">config-options</span></td>
+<td><a class="reference internal" href="fsysobj_convert.html#arguments-fsysobjconvert"><span class="std std-ref">&lt;convert-path-filelist&gt;</span></a></td>
+<td><a class="reference internal" href="fsysobj_convert.html#description-fsysobjconvert"><span class="std std-ref">convert-description</span></a></td>
+<td><a class="reference external" href="howto_cli_fsysobj_config.html">Howto fsysobject config</a></td>
+</tr>
+<tr class="row-even"><td><span class="xref std std-ref">os</span></td>
+<td><span class="xref std std-ref">os-options</span></td>
+<td><a class="reference internal" href="fsysobj_convert.html#arguments-fsysobjconvert"><span class="std std-ref">&lt;convert-path-filelist&gt;</span></a></td>
+<td><a class="reference internal" href="fsysobj_convert.html#description-fsysobjconvert"><span class="std std-ref">convert-description</span></a></td>
+<td><a class="reference external" href="howto_cli_fsysobj_os.html">Howto fsysobject os</a></td>
+</tr>
+<tr class="row-odd"><td><span class="xref std std-ref">user</span></td>
+<td><span class="xref std std-ref">user-options</span></td>
+<td><a class="reference internal" href="fsysobj_convert.html#arguments-fsysobjconvert"><span class="std std-ref">&lt;convert-path-filelist&gt;</span></a></td>
+<td><a class="reference internal" href="fsysobj_convert.html#description-fsysobjconvert"><span class="std std-ref">convert-description</span></a></td>
+<td><a class="reference external" href="howto_cli_fsysobj_user.html">Howto fsysobject user</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="options">
+<span id="options-fsysobj"></span><h2>OPTIONS:<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h2>
+<span id="index-0"></span><dl class="docutils" id="appname">
+<dt>-a &#8211;appname</dt>
+<dd><p class="first">Name of application. Used for deafults, e.g. configuration file names.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">appname</span><span class="o">=&lt;</span><span class="n">appname</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p class="last">default: jsondc</p>
+</dd>
+</dl>
+<span id="index-1"></span><dl class="docutils" id="configfile">
+<dt>-c &#8211;configfile</dt>
+<dd><p class="first">A single configuration file, see inline comments for details:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">configfile</span><span class="o">=&lt;</span><span class="n">configfile</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>default: jsondc.ini</p>
+<p>The search path for the configuration file is:</p>
+<ol class="last arabic simple" start="0">
+<li>Environment variable as search path <em>JSONDATA_PATH</em>.</li>
+<li>User app data, see
+<em>filesysobjects.osdata.getdir_userappdata()</em> [filesysobjects].</li>
+<li>User config data, see
+<em>filesysobjects.osdata.getdir_userconfigdata()</em> [filesysobjects].</li>
+<li>OS config data, see
+<em>filesysobjects.osdata.getdir_osconfigdata()</em> [filesysobjects].</li>
+<li>Install directory of the package, see
+<em>pysourceinfo.fileinfo.getcaller_pathname()</em> [sourceinfo].</li>
+</ol>
+</dd>
+</dl>
+<span id="index-2"></span><dl class="docutils" id="debug">
+<dt>-d &#8211;debug</dt>
+<dd>Debug entries, does NOT work with &#8216;python -O ...&#8217;.
+Developer output, aimed for filtering.
+When provided mulltiple times the level is raised.</dd>
+</dl>
+<span id="index-3"></span><dl class="docutils" id="help">
+<dt>-h &#8211;help</dt>
+<dd>This help.</dd>
+</dl>
+<span id="index-4"></span><dl class="docutils" id="nodefaultpath">
+<dt>-n &#8211;no-default-path</dt>
+<dd><p class="first">Supress load of default path.</p>
+<p class="last">default: False</p>
+</dd>
+</dl>
+<span id="index-5"></span><dl class="docutils" id="pathlist">
+<dt>-p &#8211;pathlist</dt>
+<dd><p class="first">Search path for JSON data file(s), standard list for current platform.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">--</span><span class="n">pathlist</span><span class="o">=&lt;</span><span class="n">search</span><span class="o">-</span><span class="n">path</span><span class="o">-</span><span class="n">JSON</span><span class="o">-</span><span class="n">data</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p class="last">default:= ../dirname(__file__)/:dirname(__file__)/:/etc/:$HOME/</p>
+</dd>
+</dl>
+<span id="index-6"></span><dl class="docutils" id="printdata">
+<dt>&#8211;print-data</dt>
+<dd><p class="first">Pretty print data.</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="o">--</span><span class="nb">print</span><span class="o">-</span><span class="n">data</span><span class="p">[</span><span class="o">=&lt;</span><span class="nb">format</span><span class="o">&gt;</span><span class="p">]</span>
+
+  <span class="nb">format</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+      <span class="s1">&#39;json-line&#39;</span>      <span class="c1"># all in one line with JSON syntax</span>
+    <span class="o">|</span> <span class="s1">&#39;json-struct&#39;</span>    <span class="c1"># tree-structure with JSON syntax</span>
+    <span class="o">|</span> <span class="s1">&#39;python-line&#39;</span>    <span class="c1"># all in one line with Python syntax</span>
+    <span class="o">|</span> <span class="s1">&#39;python-struct&#39;</span>  <span class="c1"># tree-structure  with Python syntax</span>
+    <span class="o">|</span> <span class="s1">&#39;repr&#39;</span>           <span class="c1"># repr() - raw string, Python syntax</span>
+    <span class="o">|</span> <span class="s1">&#39;str&#39;</span>            <span class="c1"># str() - formatted string, Python syntax</span>
+  <span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<span id="index-7"></span><dl class="docutils" id="selftest">
+<dt>&#8211;selftest</dt>
+<dd><p class="first">Performs a basic functional selftest by load, verify, and validate.</p>
+<ol class="last arabic simple" start="0">
+<li>jsondata/data.json + jsondata/schema.jsd</li>
+<li>jsondata/selftest.json + jsondata/selftest.jsd</li>
+</ol>
+</dd>
+</dl>
+<span id="index-8"></span><dl class="docutils" id="versiondetails">
+<dt>&#8211;Version</dt>
+<dd>Current version - detailed.</dd>
+</dl>
+<span id="index-9"></span><dl class="docutils" id="verbose">
+<dt>-v &#8211;verbose</dt>
+<dd>Verbose, some relevant states for basic analysis.
+When <em>&#8211;selftest</em> is set, repetition raises the display level.</dd>
+</dl>
+<span id="index-10"></span><dl class="docutils" id="version">
+<dt>&#8211;version</dt>
+<dd>Current version - terse.</dd>
+</dl>
+</div>
+<div class="section" id="description">
+<span id="description-jsondc"></span><h2>DESCRIPTION:<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>The <em>fsysobj</em> executable provides the commandline interface to the filesys objects library.</p>
+</div>
+<div class="section" id="examples">
+<h2>EXAMPLES:<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="seealso">
+<h2>SEEALSO:<a class="headerlink" href="#seealso" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="howto_cli_fsysobj.html">How to CLI jsondc</a></p>
+</div>
+<div class="section" id="copyright">
+<h2>COPYRIGHT:<a class="headerlink" href="#copyright" title="Permalink to this headline">¶</a></h2>
+<p>Arno-Can Uestuensoez &#64;Ingenieurbuero Arno-Can Uestuensoez Copyright (C)2016-2018 Arno-Can Uestuensoez</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">fsysobj</a><ul>
+<li><a class="reference internal" href="#synopsis">SYNOPSIS:</a></li>
+<li><a class="reference internal" href="#options">OPTIONS:</a></li>
+<li><a class="reference internal" href="#description">DESCRIPTION:</a></li>
+<li><a class="reference internal" href="#examples">EXAMPLES:</a></li>
+<li><a class="reference internal" href="#seealso">SEEALSO:</a></li>
+<li><a class="reference internal" href="#copyright">COPYRIGHT:</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/fsysobj.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

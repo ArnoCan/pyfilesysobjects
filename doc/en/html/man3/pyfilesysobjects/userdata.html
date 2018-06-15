@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>‘filesysobjects.userdata’ - Module &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="next" title="‘filesysobjects.osdata’ - Module" href="osdata.html" />
+    <link rel="prev" title="‘filesysobjects.pathtools’ - Module" href="pathtools.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="osdata.html" title="‘filesysobjects.osdata’ - Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pathtools.html" title="‘filesysobjects.pathtools’ - Module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="filesysobjects-userdata-module">
+<h1>&#8216;filesysobjects.userdata&#8217; - Module<a class="headerlink" href="#filesysobjects-userdata-module" title="Permalink to this headline">¶</a></h1>
+<p>The <em>filesysobjects.userdata</em> module provides user related filesystem data.</p>
+<div class="section" id="module-filesysobjects.userdata">
+<span id="module"></span><h2>Module<a class="headerlink" href="#module-filesysobjects.userdata" title="Permalink to this headline">¶</a></h2>
+<p>The filesysobjects.userdata module provides information on user data locations.</p>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="getcurrent-username">
+<h3>getcurrent_username<a class="headerlink" href="#getcurrent-username" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.userdata.getcurrent_username">
+<code class="descclassname">filesysobjects.userdata.</code><code class="descname">getcurrent_username</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/userdata.html#getcurrent_username"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.userdata.getcurrent_username" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets current user name.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="getdir-userappdata">
+<h3>getdir_userappdata<a class="headerlink" href="#getdir-userappdata" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.userdata.getdir_userappdata">
+<code class="descclassname">filesysobjects.userdata.</code><code class="descname">getdir_userappdata</code><span class="sig-paren">(</span><em>appname=''</em>, <em>user=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/userdata.html#getdir_userappdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.userdata.getdir_userappdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets data directory for applications.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>appname</strong>:</dt>
+<dd><p class="first">The application name, for default see:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">pysourceinfo</span><span class="o">.</span><span class="n">fileinfo</span><span class="o">.</span><span class="n">getcaller_package_filename</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt><strong>user</strong>:</dt>
+<dd>The user name, default is current.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>The user configuration directory of current platform.</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="getdir-userappconfigdata">
+<h3>getdir_userappconfigdata<a class="headerlink" href="#getdir-userappconfigdata" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.userdata.getdir_userappconfigdata">
+<code class="descclassname">filesysobjects.userdata.</code><code class="descname">getdir_userappconfigdata</code><span class="sig-paren">(</span><em>appname=''</em>, <em>user=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/userdata.html#getdir_userappconfigdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.userdata.getdir_userappconfigdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets configuration directory for applications.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>appname</strong>:</dt>
+<dd><p class="first">The application name, for default see:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">pysourceinfo</span><span class="o">.</span><span class="n">fileinfo</span><span class="o">.</span><span class="n">getcaller_package_filename</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt><strong>user</strong>:</dt>
+<dd>The user name, default is current.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>The user configuration directory of current platform.</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="getdir-userconfigdata">
+<h3>getdir_userconfigdata<a class="headerlink" href="#getdir-userconfigdata" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.userdata.getdir_userconfigdata">
+<code class="descclassname">filesysobjects.userdata.</code><code class="descname">getdir_userconfigdata</code><span class="sig-paren">(</span><em>user=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/userdata.html#getdir_userconfigdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.userdata.getdir_userconfigdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets configuration data directory for configuration.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>user</strong>:</dt>
+<dd>The user name, default is current.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>The user configuration directory of current platform.</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="getdir-userdata">
+<h3>getdir_userdata<a class="headerlink" href="#getdir-userdata" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.userdata.getdir_userdata">
+<code class="descclassname">filesysobjects.userdata.</code><code class="descname">getdir_userdata</code><span class="sig-paren">(</span><em>user=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/userdata.html#getdir_userdata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.userdata.getdir_userdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets data directory with complete local file path name, eventually drive.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="getdir-userhome">
+<h3>getdir_userhome<a class="headerlink" href="#getdir-userhome" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.userdata.getdir_userhome">
+<code class="descclassname">filesysobjects.userdata.</code><code class="descname">getdir_userhome</code><span class="sig-paren">(</span><em>user=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/userdata.html#getdir_userhome"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.userdata.getdir_userhome" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets HOME directory of user, default current user.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="gethome">
+<h3>gethome<a class="headerlink" href="#gethome" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.userdata.gethome">
+<code class="descclassname">filesysobjects.userdata.</code><code class="descname">gethome</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/userdata.html#gethome"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.userdata.gethome" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets home directory with complete local file path name, eventually drive.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="userdataexception">
+<h3>UserdataException<a class="headerlink" href="#userdataexception" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="filesysobjects.userdata.UserdataException">
+<em class="property">class </em><code class="descclassname">filesysobjects.userdata.</code><code class="descname">UserdataException</code><a class="reference internal" href="_modules/filesysobjects/userdata.html#UserdataException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.userdata.UserdataException" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">&#8216;filesysobjects.userdata&#8217; - Module</a><ul>
+<li><a class="reference internal" href="#module-filesysobjects.userdata">Module</a></li>
+<li><a class="reference internal" href="#functions">Functions</a><ul>
+<li><a class="reference internal" href="#getcurrent-username">getcurrent_username</a></li>
+<li><a class="reference internal" href="#getdir-userappdata">getdir_userappdata</a></li>
+<li><a class="reference internal" href="#getdir-userappconfigdata">getdir_userappconfigdata</a></li>
+<li><a class="reference internal" href="#getdir-userconfigdata">getdir_userconfigdata</a></li>
+<li><a class="reference internal" href="#getdir-userdata">getdir_userdata</a></li>
+<li><a class="reference internal" href="#getdir-userhome">getdir_userhome</a></li>
+<li><a class="reference internal" href="#gethome">gethome</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#exceptions">Exceptions</a><ul>
+<li><a class="reference internal" href="#userdataexception">UserdataException</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>API</h4><p class="topless"><a href="epydoc/index.html" title="API">Programming Interface</a></p><h4>Previous topic</h4>
+  <p class="topless"><a href="pathtools.html"
+                        title="previous chapter">&#8216;filesysobjects.pathtools&#8217; - Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="osdata.html"
+                        title="next chapter">&#8216;filesysobjects.osdata&#8217; - Module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/userdata.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="osdata.html" title="‘filesysobjects.osdata’ - Module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pathtools.html" title="‘filesysobjects.pathtools’ - Module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

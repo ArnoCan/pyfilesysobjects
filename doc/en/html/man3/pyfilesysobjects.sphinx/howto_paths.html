@@ -1,0 +1,620 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Howto Paths &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="up" title="Howto" href="howto.html" />
+    <link rel="next" title="Howto Path Tools" href="howto_pathtools.html" />
+    <link rel="prev" title="Howto Application Paths" href="howto_apppaths.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="howto_pathtools.html" title="Howto Path Tools"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="howto_apppaths.html" title="Howto Application Paths"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="howto.html" accesskey="U">Howto</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="howto-paths">
+<h1>Howto Paths<a class="headerlink" href="#howto-paths" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Howto Paths</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#normalize-paths-by-normpathx">Normalize Paths by <em>normpathx</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convert-os-path-sep-os-sep">Convert &#8216;os.path.sep&#8217; / &#8216;os.sep&#8217;</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#escape-and-unescape-arbitrary-paths">Escape and Unescape Arbitrary Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#split-paths-into-directory-items-and-files">Split Paths into Directory Items and Files</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<p>The <em>filesysobjects.paths</em> module manages files and file related application schemes only.
+For URI paths including general application schemes like <em>http</em> refer
+to the module <a class="reference external" href="apppaths.html#">filesysobjects.apppaths</a>
+or the <a class="reference external" href="howto_apppaths.html#">Howto Appaths</a>.</p>
+<div class="section" id="normalize-paths-by-normpathx">
+<h2>Normalize Paths by <em>normpathx</em><a class="headerlink" href="#normalize-paths-by-normpathx" title="Permalink to this headline">¶</a></h2>
+<p>The <em>os.normpath()</em> interface provides the normalization of file
+system addresses for the current specific platform, while the
+packages <em>macpath</em>, <em>ntpath</em>, and <em>posixpath</em> provide for cross-platform
+normalization.
+These cover some specifics of their target filesystems, but focus
+on pure filesystem entries only.</p>
+<p>The <em>filesysobjects.paths.normpathx</em> interface covers all platforms including
+cross-platform normalization.
+This includes network filesystems including application and domain prefixes
+for <em>POSIX</em> and <em>UNC</em>.
+The provided options enable the filesystem related URIs of type <em>file://</em>.</p>
+<p>The call interface is exchangeable with the standard interfaces:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path_normalized</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">normpathx</span><span class="p">(</span><span class="n">path_raw</span><span class="p">)</span>
+
+<span class="n">path_normalized</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">normpathx</span><span class="p">(</span><span class="n">path_raw</span><span class="p">,</span> <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">)</span>  <span class="c1"># local filesystem</span>
+<span class="n">path_normalized</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">normpathx</span><span class="p">(</span><span class="n">path_raw</span><span class="p">,</span> <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;posix&#39;</span><span class="p">)</span>  <span class="c1"># posix - Linux, MacOS, Unix</span>
+<span class="n">path_normalized</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">normpathx</span><span class="p">(</span><span class="n">path_raw</span><span class="p">,</span> <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;win&#39;</span><span class="p">)</span>    <span class="c1"># Windows - NTFS, FATxx</span>
+<span class="n">path_normalized</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">normpathx</span><span class="p">(</span><span class="n">path_raw</span><span class="p">,</span> <span class="n">keepsep</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="c1"># keeps trailing seperator</span>
+</pre></div>
+</td></tr></table></div>
+<p>For complete details refer to
+[<a class="reference external" href="paths.html#normpathx">API</a>] / [<a class="reference external" href="_modules/filesysobjects/paths.html#normpathx">code</a>].</p>
+</div>
+<div class="section" id="convert-os-path-sep-os-sep">
+<h2>Convert &#8216;os.path.sep&#8217; / &#8216;os.sep&#8217;<a class="headerlink" href="#convert-os-path-sep-os-sep" title="Permalink to this headline">¶</a></h2>
+<p>The path separator &#8216;os.path.sep&#8217;, or for short &#8216;os.sep&#8217; cold be seamlessly
+converted between all platforms.
+The cross-conversion itself is platform independent when the source platform <em>spf</em>,
+and/or the target platform <em>tpf</em> are selected by call parameters.
+The conversion is either literally, where no null-direcotry entries are stripped off,
+or by stripping the path from redundnacies to the resulting shortest representation.</p>
+<div class="section" id="posix-to-windows">
+<h3>Posix to Windows<a class="headerlink" href="#posix-to-windows" title="Permalink to this headline">¶</a></h3>
+<p>The raw representation of a POSIX network application path:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">&#39;//hostname/tests//////a/b/hostname//c////////d/tests/b///c&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>could be simply normalized by the call:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">normpathx</span><span class="p">(</span>
+   <span class="n">arg</span><span class="p">,</span>
+   <span class="n">spf</span><span class="o">=</span><span class="s1">&#39;posix&#39;</span><span class="p">,</span>  <span class="c1"># source platform</span>
+   <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;win&#39;</span><span class="p">,</span>    <span class="c1"># target platform</span>
+   <span class="n">strip</span><span class="o">=</span><span class="bp">True</span>    <span class="c1"># this is the default</span>
+<span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>to the representation:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">r&#39;//hostname/tests//////a/b/hostname//c////////d/tests/b///c&#39;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="s1">r&#39;</span><span class="se">\\</span><span class="s1">hostname\tests\a\b\hostname\c\d\tests\b\c&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>When the conversion of the <em>os.sep</em> is required only, the call:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">normpathx</span><span class="p">(</span>
+   <span class="n">arg</span><span class="p">,</span>
+   <span class="n">spf</span><span class="o">=</span><span class="s1">&#39;posix&#39;</span><span class="p">,</span>  <span class="c1"># source platform</span>
+   <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;win&#39;</span><span class="p">,</span>    <span class="c1"># target platform</span>
+   <span class="n">strip</span><span class="o">=</span><span class="bp">False</span>   <span class="c1"># suppress reduction</span>
+<span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>results in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">r&#39;//hostname/tests//////a/b/hostname//c////////d/tests/b///c&#39;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="s1">r&#39;</span><span class="se">\\</span><span class="s1">hostname\tests</span><span class="se">\\\\\\</span><span class="s1">a\b\hostname</span><span class="se">\\</span><span class="s1">c</span><span class="se">\\\\\\\\</span><span class="s1">d\tests\b</span><span class="se">\\</span><span class="s1">\c&#39;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="windows-to-posix">
+<h3>Windows to Posix<a class="headerlink" href="#windows-to-posix" title="Permalink to this headline">¶</a></h3>
+<p>The raw representation of a Windows share path:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">r&#39;</span><span class="se">\\</span><span class="s1">hostname\tests</span><span class="se">\\\\\\</span><span class="s1">a\b\hostname</span><span class="se">\\</span><span class="s1">c</span><span class="se">\\\\\\\\</span><span class="s1">d\tests\b</span><span class="se">\\</span><span class="s1">\c&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>could be simply normalized by the call:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">normpathx</span><span class="p">(</span>
+   <span class="n">arg</span><span class="p">,</span>
+   <span class="n">spf</span><span class="o">=</span><span class="s1">&#39;win&#39;</span><span class="p">,</span>   <span class="c1"># source platform</span>
+   <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;posix&#39;</span><span class="p">,</span> <span class="c1"># target platform</span>
+   <span class="n">strip</span><span class="o">=</span><span class="bp">True</span>   <span class="c1"># this is the default</span>
+<span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>to the representation:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">r&#39;</span><span class="se">\\</span><span class="s1">hostname\tests</span><span class="se">\\\\\\</span><span class="s1">a\b\hostname</span><span class="se">\\</span><span class="s1">c</span><span class="se">\\\\\\\\</span><span class="s1">d\tests\b</span><span class="se">\\</span><span class="s1">\c&#39;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="s1">r&#39;//hostname/tests/a/b/hostname/c/d/tests/b/c&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>When the conversion of the <em>os.sep</em> is required only without reduction, the call:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">normpathx</span><span class="p">(</span>
+   <span class="n">arg</span><span class="p">,</span>
+   <span class="n">spf</span><span class="o">=</span><span class="s1">&#39;posix&#39;</span><span class="p">,</span>  <span class="c1"># source platform</span>
+   <span class="n">tpf</span><span class="o">=</span><span class="s1">&#39;win&#39;</span><span class="p">,</span>    <span class="c1"># target platform</span>
+   <span class="n">strip</span><span class="o">=</span><span class="bp">False</span>   <span class="c1"># suppress reduction</span>
+<span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>results in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s1">r&#39;</span><span class="se">\\</span><span class="s1">hostname\tests</span><span class="se">\\\\\\</span><span class="s1">a\b\hostname</span><span class="se">\\</span><span class="s1">c</span><span class="se">\\\\\\\\</span><span class="s1">d\tests\b</span><span class="se">\\</span><span class="s1">\c&#39;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="s1">r&#39;//hostname/tests//////a/b/hostname//c////////d/tests/b///c&#39;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+</div>
+<div class="section" id="escape-and-unescape-arbitrary-paths">
+<h2>Escape and Unescape Arbitrary Paths<a class="headerlink" href="#escape-and-unescape-arbitrary-paths" title="Permalink to this headline">¶</a></h2>
+<p>The following variants of escaping and unescaping of path strings are supported.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="39%" />
+<col width="43%" />
+<col width="10%" />
+<col width="7%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">scope</th>
+<th class="head">&nbsp;</th>
+<th class="head">POSIX</th>
+<th class="head">win</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Python Escape Characters</td>
+<td>\a \b \f \n \r \t \v</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>backslash</td>
+<td>\</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>os.path.sep / os.sep</td>
+<td>&nbsp;</td>
+<td>/</td>
+<td>\</td>
+</tr>
+<tr class="row-odd"><td>custom characters</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>With the following parameters for the interfaces.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="17%" />
+<col width="34%" />
+<col width="14%" />
+<col width="12%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">scope</th>
+<th class="head">option</th>
+<th class="head">Python Escape Characters</th>
+<th class="head">backslash</th>
+<th class="head">default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="paths.html#escapepathx">escapepathx</a></td>
+<td>force=True</td>
+<td>X</td>
+<td>X</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>force=False</td>
+<td>X</td>
+<td>&nbsp;</td>
+<td>X</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="paths.html#unescapepathx">unescapepathx</a></td>
+<td>force=True</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>force=False</td>
+<td>&nbsp;</td>
+<td>X</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>In addition parts of the path string could be protected from escaping and unescaping by quotes,
+with the interface</p>
+<pre class="literal-block">
+<a class="reference external" href="pathtools.html#stripquotes">filesysobjects.pathtools.stripquotes()</a>
+</pre>
+<p>for the final remove of the quotes.</p>
+<div class="section" id="escape-file-path-names">
+<h3>Escape File Path Names<a class="headerlink" href="#escape-file-path-names" title="Permalink to this headline">¶</a></h3>
+<p>The escaping of file path names is required in various scenes,
+but in particular on Windows platforms.
+This is even more required, when <em>globs</em> and <em>re</em> are included in the path string.
+The <em>filesysobjects</em> solves this with a minimal remaining fuzz.</p>
+<p>The escaping inlcudes the support for regular expressions such as</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">odd</span><span class="o">/</span><span class="n">searchpath</span><span class="o">/</span><span class="p">[</span><span class="o">/</span><span class="n">xyz</span><span class="p">]</span><span class="o">.*/</span><span class="n">myfile</span><span class="o">.</span><span class="n">z</span>
+
+\<span class="n">my</span>\<span class="n">odd</span>\<span class="n">searchpath</span>\<span class="p">[</span>\\<span class="n">xyz</span><span class="p">]</span><span class="o">.*</span>\<span class="n">myfile</span><span class="o">.</span><span class="n">z</span>
+</pre></div>
+</td></tr></table></div>
+<p>Which is here a regular expression to be applied on full pathnames including
+paths separators.</p>
+<p>The syntax allows for quoting and unquoting in Python style by triple-quotes.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">odd</span><span class="o">/</span><span class="n">searchpath</span><span class="o">/</span><span class="s2">&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;</span><span class="o">/</span><span class="n">myfile</span><span class="o">.</span><span class="n">z</span>
+<span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">odd</span><span class="o">/</span><span class="n">searchpath</span><span class="o">/</span><span class="s1">&#39;&#39;&#39;[/xyz].*&#39;&#39;&#39;</span><span class="o">/</span><span class="n">myfile</span><span class="o">.</span><span class="n">z</span>
+</pre></div>
+</td></tr></table></div>
+<p>The basic call is:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;\my\odd\searchpath</span><span class="se">\a\b</span><span class="s1">\c\[</span><span class="se">\\</span><span class="s1">xyz].*\myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">escapepathx</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>resulting in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;\my\odd\searchpath</span><span class="se">\a\b</span><span class="s1">\c\[</span><span class="se">\\</span><span class="s1">xyz].*\myfile.z&#39;</span>
+<span class="n">res</span>  <span class="o">=</span> <span class="s1">&#39;\my\odd\searchpath</span><span class="se">\\</span><span class="s1">a</span><span class="se">\\</span><span class="s1">b\c\[</span><span class="se">\\</span><span class="s1">xyz].*\myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The basic call escapes the known Python escape-characters by default.
+Regular expressions regularly require the escaping of additional characters.
+The option &#8216;<em>all</em>&#8216; or &#8216;<em>force</em>&#8216; add the escape of all backslashes to the
+known escape characters.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;\my\odd\searchpath</span><span class="se">\a\b</span><span class="s1">\c\[</span><span class="se">\\</span><span class="s1">xyz].*\myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">escapepathx</span><span class="p">(</span>
+   <span class="n">path</span><span class="p">,</span>
+   <span class="nb">all</span><span class="o">=</span><span class="bp">True</span>   <span class="c1"># default is False</span>
+   <span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>resulting in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;\my\odd\searchpath</span><span class="se">\a\b</span><span class="s1">\c\[</span><span class="se">\\</span><span class="s1">xyz].*\myfile.z&#39;</span>
+<span class="n">res</span>  <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">my</span><span class="se">\\</span><span class="s1">odd</span><span class="se">\\</span><span class="s1">searchpath</span><span class="se">\\</span><span class="s1">a</span><span class="se">\\</span><span class="s1">b</span><span class="se">\\</span><span class="s1">c</span><span class="se">\\</span><span class="s1">[</span><span class="se">\\</span><span class="s1">xyz].*</span><span class="se">\\</span><span class="s1">myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>For complete details refer to
+[<a class="reference external" href="paths.html#escapepathx">API</a>] / [<a class="reference external" href="_modules/filesysobjects/paths.html#escapepathx">code</a>].</p>
+</div>
+<div class="section" id="unescape-file-path-names">
+<h3>Unescape File Path Names<a class="headerlink" href="#unescape-file-path-names" title="Permalink to this headline">¶</a></h3>
+<p>The unescaping of file path names reverses the escaping.
+The unescaping includes the support for regular expressions such as</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">odd</span><span class="o">/</span><span class="n">searchpath</span><span class="o">/</span><span class="p">[</span>\\<span class="o">/</span><span class="n">xyz</span><span class="p">]</span><span class="o">.*/</span><span class="n">myfile</span><span class="o">.</span><span class="n">z</span>
+
+\<span class="n">my</span>\<span class="n">odd</span>\<span class="n">searchpath</span>\<span class="p">[</span>\\<span class="n">xyz</span><span class="p">]</span><span class="o">.*</span>\<span class="n">myfile</span><span class="o">.</span><span class="n">z</span>
+</pre></div>
+</td></tr></table></div>
+<p>Which is here a regular expression to be applied on full pathnames including
+paths separators.</p>
+<p>The syntax allows for quoting and unquoting in Python style by triple-quotes.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">odd</span><span class="o">/</span><span class="n">searchpath</span><span class="o">/</span><span class="s2">&quot;&quot;&quot;[/xyz].*&quot;&quot;&quot;</span><span class="o">/</span><span class="n">myfile</span><span class="o">.</span><span class="n">z</span>
+<span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">odd</span><span class="o">/</span><span class="n">searchpath</span><span class="o">/</span><span class="s1">&#39;&#39;&#39;[/xyz].*&#39;&#39;&#39;</span><span class="o">/</span><span class="n">myfile</span><span class="o">.</span><span class="n">z</span>
+</pre></div>
+</td></tr></table></div>
+<p>The basic call is:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path</span>  <span class="o">=</span> <span class="s1">&#39;\my\odd\searchpath</span><span class="se">\\</span><span class="s1">a</span><span class="se">\\</span><span class="s1">b\c\[</span><span class="se">\\</span><span class="s1">xyz].*\myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">unescapepathx</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>resulting in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;\my\odd\searchpath</span><span class="se">\\</span><span class="s1">a</span><span class="se">\\</span><span class="s1">b\c\[</span><span class="se">\\</span><span class="s1">xyz].*\myfile.z&#39;</span>
+<span class="n">res</span>  <span class="o">=</span> <span class="s1">&#39;\my\odd\searchpath</span><span class="se">\a\b</span><span class="s1">\c\[</span><span class="se">\\</span><span class="s1">xyz].*\myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The basic call unescapes all possible escape sequences as supported
+by the <em>escapepathx</em> call with active <em>force</em> option.
+This includes the known Python escape-characters as well as any
+non-quoted double back-shlashes.
+The option &#8216;<em>all</em>&#8216; or &#8216;<em>force</em>&#8216; controls the degree of the unescape.</p>
+<p>The default call is set to <em>force=True</em> for the maximum:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">my</span><span class="se">\\</span><span class="s1">odd</span><span class="se">\\</span><span class="s1">searchpath</span><span class="se">\\</span><span class="s1">a</span><span class="se">\\</span><span class="s1">b</span><span class="se">\\</span><span class="s1">c</span><span class="se">\\</span><span class="s1">&quot;&quot;&quot;[</span><span class="se">\\</span><span class="s1">xyz].*&quot;&quot;&quot;</span><span class="se">\\</span><span class="s1">myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">escapepathx</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>results in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">my</span><span class="se">\\</span><span class="s1">odd</span><span class="se">\\</span><span class="s1">searchpath</span><span class="se">\\</span><span class="s1">a</span><span class="se">\\</span><span class="s1">b</span><span class="se">\\</span><span class="s1">c</span><span class="se">\\</span><span class="s1">&quot;&quot;&quot;[</span><span class="se">\\</span><span class="s1">xyz].*&quot;&quot;&quot;</span><span class="se">\\</span><span class="s1">myfile.z&#39;</span>
+<span class="n">res</span>  <span class="o">=</span> <span class="s1">&#39;\my\odd\searchpath</span><span class="se">\a\b</span><span class="s1">\c</span><span class="se">\&quot;</span><span class="s1">&quot;&quot;[</span><span class="se">\\</span><span class="s1">xyz].*&quot;&quot;&quot;\myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>For the removal of the quotes call:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">pathtools</span><span class="o">.</span><span class="n">stripquote</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="n">res</span>  <span class="o">=</span> <span class="s1">&#39;\my\odd\searchpath</span><span class="se">\a\b</span><span class="s1">\c</span><span class="se">\&quot;</span><span class="s1">&quot;&quot;[</span><span class="se">\\</span><span class="s1">xyz].*&quot;&quot;&quot;\myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>Results in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">res</span>  <span class="o">=</span> <span class="s1">&#39;\my\odd\searchpath</span><span class="se">\a\b</span><span class="s1">\c\[</span><span class="se">\\</span><span class="s1">xyz].*\myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The following call limits the unescape default call:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">my</span><span class="se">\\</span><span class="s1">odd</span><span class="se">\\</span><span class="s1">searchpath</span><span class="se">\\</span><span class="s1">a</span><span class="se">\\</span><span class="s1">b</span><span class="se">\\</span><span class="s1">c</span><span class="se">\\</span><span class="s1">[</span><span class="se">\\</span><span class="s1">xyz].*</span><span class="se">\\</span><span class="s1">myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">escapepathx</span><span class="p">(</span>
+   <span class="n">path</span><span class="p">,</span>
+   <span class="nb">all</span><span class="o">=</span><span class="bp">True</span>   <span class="c1"># default is False</span>
+   <span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>resulting in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">my</span><span class="se">\\</span><span class="s1">odd</span><span class="se">\\</span><span class="s1">searchpath</span><span class="se">\\</span><span class="s1">a</span><span class="se">\\</span><span class="s1">b</span><span class="se">\\</span><span class="s1">c</span><span class="se">\\</span><span class="s1">[</span><span class="se">\\</span><span class="s1">xyz].*</span><span class="se">\\</span><span class="s1">myfile.z&#39;</span>
+<span class="n">res</span>  <span class="o">=</span> <span class="s1">&#39;\my\odd\searchpath</span><span class="se">\a\b</span><span class="s1">\c\[</span><span class="se">\\</span><span class="s1">xyz].*\myfile.z&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>For complete details refer to
+[<a class="reference external" href="paths.html#unescapepathx">API</a>] / [<a class="reference external" href="_modules/filesysobjects/paths.html#unescapepathx">code</a>].</p>
+</div>
+<div class="section" id="idempotence-of-escape-unescape-sequences">
+<h3>Idempotence of Escape-Unescape Sequences<a class="headerlink" href="#idempotence-of-escape-unescape-sequences" title="Permalink to this headline">¶</a></h3>
+<p>The escape-unescape sequence is not idempotent in general.
+This is due to the possiblility of present manual escapes as well
+as a mixed-up of separators within the raw path string.
+The reverse escaping may e.g. drop the previous present manual
+escapes.
+Thus the escape-unescape sequence is idempotent inly in case of a complete control
+of the escape sequences, and without additional calls like normalization or unquoting.</p>
+</div>
+</div>
+<div class="section" id="split-paths-into-directory-items-and-files">
+<h2>Split Paths into Directory Items and Files<a class="headerlink" href="#split-paths-into-directory-items-and-files" title="Permalink to this headline">¶</a></h2>
+<p>The excessive processing of file path names by traversing over directories
+requires frequently the split of the path into its node names components.
+This becomes quickly as challanging when <em>globs</em> and <em>re</em> are involved.
+The <em>filesysobjects</em> solves this with a minimal remaining fuzz.</p>
+<p>The split includes the support for regular expressions same as the other interfaces</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">odd</span><span class="o">/</span><span class="n">searchpath</span><span class="o">/</span><span class="p">[</span><span class="o">/</span><span class="n">xyz</span><span class="p">]</span><span class="o">.*/</span><span class="n">myfile</span><span class="o">.</span><span class="n">z</span>
+
+\<span class="n">my</span>\<span class="n">odd</span>\<span class="n">searchpath</span>\<span class="p">[</span>\\<span class="n">xyz</span><span class="p">]</span><span class="o">.*</span>\<span class="n">myfile</span><span class="o">.</span><span class="n">z</span>
+</pre></div>
+</td></tr></table></div>
+<p>Which is here a regular expression to be applied on full pathnames including
+paths separators.</p>
+<p>The syntax allows for quoting and unquoting in Python style by triple-quotes,
+just can spare parts of the path transparently from the split operation.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># POSIX</span>
+<span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">odd</span><span class="o">/</span><span class="n">searchpath</span><span class="o">/</span><span class="s2">&quot;&quot;&quot;this/part/is/spared/[/xyz].*/to/this/point&quot;&quot;&quot;</span><span class="o">/</span><span class="n">myfile</span><span class="o">.</span><span class="n">z</span>
+<span class="o">/</span><span class="n">my</span><span class="o">/</span><span class="n">odd</span><span class="o">/</span><span class="n">searchpath</span><span class="o">/</span><span class="s1">&#39;&#39;&#39;this/part/is/spared/[/xyz].*/to/this/point&#39;&#39;&#39;</span><span class="o">/</span><span class="n">myfile</span><span class="o">.</span><span class="n">z</span>
+
+<span class="c1"># Windows</span>
+\<span class="n">my</span>\<span class="n">odd</span><span class="o">/</span><span class="n">searchpath</span>\<span class="s2">&quot;&quot;&quot;this\part\is\spared\[</span><span class="se">\\</span><span class="s2">xyz].*</span><span class="se">\t</span><span class="s2">o</span><span class="se">\t</span><span class="s2">his\point&quot;&quot;&quot;</span>\<span class="n">myfile</span><span class="o">.</span><span class="n">z</span>
+\<span class="n">my</span>\<span class="n">odd</span>\<span class="n">searchpath</span>\<span class="s1">&#39;&#39;&#39;this\part\is\spared\[/xyz].*</span><span class="se">\t</span><span class="s1">o</span><span class="se">\t</span><span class="s1">his\point&#39;&#39;&#39;</span>\<span class="n">myfile</span><span class="o">.</span><span class="n">z</span>
+</pre></div>
+</td></tr></table></div>
+<p>The basic call:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/my/odd/searchpath/&quot;&quot;&quot;this/part/is/spared/[/xyz].*/to/this/point&quot;&quot;&quot;/myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">splitpathx</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>results in - with kept quotes:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/my/odd/searchpath/&quot;&quot;&quot;this/part/is/spared/[/xyz].*/to/this/point&quot;&quot;&quot;/myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="p">[</span>
+   <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;my&#39;</span><span class="p">,</span> <span class="s1">&#39;odd&#39;</span><span class="p">,</span> <span class="s1">&#39;searchpath&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&quot;&quot;this/part/is/spared/[/xyz].*/to/this/point&quot;&quot;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;myfile.z&#39;</span>
+<span class="p">]</span>
+</pre></div>
+</td></tr></table></div>
+<p>The call including the option <em>stripquotes</em>:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/my/odd/searchpath/&quot;&quot;&quot;this/part/is/spared/[/xyz].*/to/this/point&quot;&quot;&quot;/myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">filesysobjects</span><span class="o">.</span><span class="n">paths</span><span class="o">.</span><span class="n">splitpathx</span><span class="p">(</span>
+   <span class="n">path</span><span class="p">,</span>
+   <span class="n">stripquotes</span><span class="o">=</span><span class="bp">True</span>  <span class="c1"># default is False</span>
+   <span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>results in:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/my/odd/searchpath/&quot;&quot;&quot;this/part/is/spared/[/xyz].*/to/this/point&quot;&quot;&quot;/myfile.z&#39;</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="p">[</span>
+   <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;my&#39;</span><span class="p">,</span> <span class="s1">&#39;odd&#39;</span><span class="p">,</span> <span class="s1">&#39;searchpath&#39;</span><span class="p">,</span> <span class="s1">&#39;this/part/is/spared/[/xyz].*/to/this/point&#39;</span><span class="p">,</span> <span class="s1">&#39;myfile.z&#39;</span>
+<span class="p">]</span>
+</pre></div>
+</td></tr></table></div>
+<p>For complete details refer to
+[<a class="reference external" href="paths.html#splitpathx">API</a>] / [<a class="reference external" href="_modules/filesysobjects/paths.html#splitpathx">code</a>].</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Howto Paths</a><ul>
+<li><a class="reference internal" href="#normalize-paths-by-normpathx">Normalize Paths by <em>normpathx</em></a></li>
+<li><a class="reference internal" href="#convert-os-path-sep-os-sep">Convert &#8216;os.path.sep&#8217; / &#8216;os.sep&#8217;</a><ul>
+<li><a class="reference internal" href="#posix-to-windows">Posix to Windows</a></li>
+<li><a class="reference internal" href="#windows-to-posix">Windows to Posix</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#escape-and-unescape-arbitrary-paths">Escape and Unescape Arbitrary Paths</a><ul>
+<li><a class="reference internal" href="#escape-file-path-names">Escape File Path Names</a></li>
+<li><a class="reference internal" href="#unescape-file-path-names">Unescape File Path Names</a></li>
+<li><a class="reference internal" href="#idempotence-of-escape-unescape-sequences">Idempotence of Escape-Unescape Sequences</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#split-paths-into-directory-items-and-files">Split Paths into Directory Items and Files</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="howto_apppaths.html"
+                        title="previous chapter">Howto Application Paths</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="howto_pathtools.html"
+                        title="next chapter">Howto Path Tools</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/howto_paths.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="howto_pathtools.html" title="Howto Path Tools"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="howto_apppaths.html" title="Howto Application Paths"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="howto.html" >Howto</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

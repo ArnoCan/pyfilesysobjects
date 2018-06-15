@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Path and File Examples &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="path-and-file-examples">
+<h1>Path and File Examples<a class="headerlink" href="#path-and-file-examples" title="Permalink to this headline">¶</a></h1>
+<p>Local path names:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span>
+</pre></div>
+</div>
+<p>Remote path names in case of RFS - Remote Filesystem:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">//</span><span class="n">hostname</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span>
+</pre></div>
+</div>
+<p>Valid entries - which are equal:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span>
+<span class="o">///</span><span class="n">local</span><span class="o">///</span><span class="n">path</span><span class="o">///</span><span class="n">name</span>
+<span class="o">/////</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">///</span><span class="n">name</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">foo</span><span class="o">/../</span><span class="n">path</span><span class="o">/</span><span class="n">bar</span><span class="o">/../</span><span class="n">name</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">foo</span><span class="o">/../</span><span class="n">path</span><span class="o">/</span><span class="n">bar</span><span class="o">/../../</span><span class="n">what</span><span class="o">/</span><span class="n">the</span><span class="o">/</span><span class="n">heck</span><span class="o">/../../../</span><span class="n">name</span>
+</pre></div>
+</div>
+<p>Same on Windows including the python abstraction by os.path.normpath:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span>
+<span class="o">///</span><span class="n">local</span><span class="o">///</span><span class="n">path</span><span class="o">///</span><span class="n">name</span>
+<span class="o">/////</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">///</span><span class="n">name</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">foo</span><span class="o">/../</span><span class="n">path</span><span class="o">/</span><span class="n">bar</span><span class="o">/../</span><span class="n">name</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">foo</span><span class="o">/../</span><span class="n">path</span><span class="o">/</span><span class="n">bar</span><span class="o">/../../</span><span class="n">what</span><span class="o">/</span><span class="n">the</span><span class="o">/</span><span class="n">heck</span><span class="o">/../../../</span><span class="n">name</span>
+
+\<span class="n">local</span>\<span class="n">path</span>\<span class="n">name</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>The following entries are either equal or not as depicted:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span> <span class="o">==</span> <span class="o">/</span><span class="n">local</span><span class="o">//</span><span class="n">path</span><span class="o">//</span><span class="n">name</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">name</span> <span class="o">!=</span> <span class="o">//</span><span class="n">local</span><span class="o">//</span><span class="n">path</span><span class="o">//</span><span class="n">name</span>
+</pre></div>
+</div>
+<p>The following URI subset is supported:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="p">:</span><span class="o">//</span><span class="n">top</span><span class="o">/</span><span class="n">x</span><span class="o">/</span><span class="n">y</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">top</span><span class="o">/</span><span class="n">x</span><span class="o">/</span><span class="n">y</span>
+<span class="n">file</span><span class="p">:</span><span class="o">////</span><span class="n">top</span><span class="o">/</span><span class="n">x</span><span class="o">/</span><span class="n">y</span>
+<span class="n">file</span><span class="p">:</span><span class="o">/////</span><span class="n">top</span><span class="o">/</span><span class="n">x</span><span class="o">/</span><span class="n">y</span>
+</pre></div>
+</div>
+<p>For code examples refer to:</p>
+<ul class="simple">
+<li><a class="reference external" href="UseCases.html#">UseCases</a></li>
+<li><a class="reference external" href="tests.html#">tests</a></li>
+</ul>
+</div>
+<div class="section" id="application-examples">
+<h1>Application examples<a class="headerlink" href="#application-examples" title="Permalink to this headline">¶</a></h1>
+<p>The functions are initially designed for the internal requirements based on the authors own projects.
+Typical requirements are here generic test case definitions as drop-in units.</p>
+<ul class="simple">
+<li><dl class="first docutils">
+<dt>bash-core - <a class="reference external" href="https://sourceforge.net/projects/bash-core/">https://sourceforge.net/projects/bash-core/</a></dt>
+<dd>Location independent normalization of test cases for environments with various
+PATH calculations.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>bash-core-library - <a class="reference external" href="https://sourceforge.net/projects/bashcorelib/">https://sourceforge.net/projects/bashcorelib/</a></dt>
+<dd>Location independent normalization of testcases for environments with various
+PATH calculations.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>ePyUnit - <a class="reference external" href="https://pypi.python.org/pypi/epyunit">https://pypi.python.org/pypi/epyunit</a></dt>
+<dd>Location independent normalization of paths for drop-in testcases.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>jsondata - <a class="reference external" href="https://pypi.python.org/pypi/jsondata">https://pypi.python.org/pypi/jsondata</a></dt>
+<dd>Location independent normalization of paths for drop-in testcases.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>jsoncompute - <a class="reference external" href="https://pypi.python.org/pypi/jsoncompute">https://pypi.python.org/pypi/jsoncompute</a></dt>
+<dd>Location independent normalization of paths for drop-in testcases.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>ctysNG - <a class="reference external" href="https://sourceforge.net/projects/ctysng/">https://sourceforge.net/projects/ctysng/</a></dt>
+<dd>Various path calculations on a distributed modular platform.</dd>
+</dl>
+</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Path and File Examples</a></li>
+<li><a class="reference internal" href="#application-examples">Application examples</a></li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/path_syntax_examples.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

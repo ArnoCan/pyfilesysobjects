@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Howto &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="next" title="Howto Application Paths" href="howto_apppaths.html" />
+    <link rel="prev" title="draft-crhertel-smb-url-12" href="reference_draft_smb_url.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="howto_apppaths.html" title="Howto Application Paths"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="reference_draft_smb_url.html" title="draft-crhertel-smb-url-12"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="howto">
+<h1>Howto<a class="headerlink" href="#howto" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Howto</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#application-paths">Application Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#paths">Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#path-tools">Path Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#user-data">User Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#os-data">OS Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#selected-use-cases">Selected Use-Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-regexpr">Use <em>regexpr</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#howto-uri">Howto URI</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="application-paths">
+<h2>Application Paths<a class="headerlink" href="#application-paths" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="howto_apppaths.html">Howto Application Paths</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="howto_apppaths.html#general-type-support-for-normalization">General Type Support for Normalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_apppaths.html#normalize-application-paths">Normalize Application Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_apppaths.html#split-application-paths">Split Application Paths</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="paths">
+<h2>Paths<a class="headerlink" href="#paths" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="howto_paths.html">Howto Paths</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="howto_paths.html#normalize-paths-by-normpathx">Normalize Paths by <em>normpathx</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_paths.html#convert-os-path-sep-os-sep">Convert &#8216;os.path.sep&#8217; / &#8216;os.sep&#8217;</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_paths.html#escape-and-unescape-arbitrary-paths">Escape and Unescape Arbitrary Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_paths.html#split-paths-into-directory-items-and-files">Split Paths into Directory Items and Files</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="path-tools">
+<h2>Path Tools<a class="headerlink" href="#path-tools" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="howto_pathtools.html">Howto Path Tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="howto_pathtools.html#expand-a-wildcard-path">Expand a Wildcard Path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_pathtools.html#find-with-re-and-glob-pattern">Find with &#8216;re&#8217; and &#8216;glob&#8217; Pattern</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_pathtools.html#find-relative-sub-paths-in-search-paths">Find Relative Sub-Paths in Search Paths</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="user-data">
+<h2>User Data<a class="headerlink" href="#user-data" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="howto_userdata.html">Howto User Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="howto_userdata.html#get-current-user-name">Get Current User Name</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_userdata.html#get-home-directory">Get HOME Directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_userdata.html#get-user-home-directories">Get User HOME Directories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_userdata.html#get-user-data-directories">Get User Data Directories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_userdata.html#get-user-configuration-directories">Get User Configuration Directories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_userdata.html#get-user-app-configuration-directories">Get User App Configuration Directories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_userdata.html#get-user-app-data-directories">Get User App Data Directories</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="os-data">
+<h2>OS Data<a class="headerlink" href="#os-data" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="howto_osdata.html">Howto OS Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="howto_osdata.html#get-directory-with-os-configuration">Get Directory with OS Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_osdata.html#get-directory-with-application-configuration">Get Directory with Application Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_osdata.html#get-directory-with-application-data">Get Directory with Application Data</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="selected-use-cases">
+<h2>Selected Use-Cases<a class="headerlink" href="#selected-use-cases" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usecases.html">UseCase-Shortcuts - Selected Common UsesCases</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usecases.html#manage-search-paths">Manage Search Paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usecases.html#search-for-files-directories-and-branches">Search for Files, Directories, and Branches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usecases.html#match-on-path-strings">Match on Path Strings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usecases.html#patterns-for-library-functions">Patterns for Library Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usecases.html#project-applications">Project Applications</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="use-regexpr">
+<h2>Use <em>regexpr</em><a class="headerlink" href="#use-regexpr" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="howto_regexpr.html">Howto Regular Expressions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="howto_regexpr.html#basic-notation">Basic Notation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="howto-uri">
+<h2>Howto URI<a class="headerlink" href="#howto-uri" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="howto_uri.html">Howto URI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="howto_uri.html#types-of-uri">Types of URI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_uri.html#mask-uri-reserved-characters">Mask URI Reserved Characters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_uri.html#normalize-vs-split">Normalize vs. Split</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_uri.html#supported-standars-uris">Supported Standars URIs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="howto_uri.html#custom-uris">Custom URIs</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Howto</a><ul>
+<li><a class="reference internal" href="#application-paths">Application Paths</a></li>
+<li><a class="reference internal" href="#paths">Paths</a></li>
+<li><a class="reference internal" href="#path-tools">Path Tools</a></li>
+<li><a class="reference internal" href="#user-data">User Data</a></li>
+<li><a class="reference internal" href="#os-data">OS Data</a></li>
+<li><a class="reference internal" href="#selected-use-cases">Selected Use-Cases</a></li>
+<li><a class="reference internal" href="#use-regexpr">Use <em>regexpr</em></a></li>
+<li><a class="reference internal" href="#howto-uri">Howto URI</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="reference_draft_smb_url.html"
+                        title="previous chapter">draft-crhertel-smb-url-12</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="howto_apppaths.html"
+                        title="next chapter">Howto Application Paths</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/howto.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="howto_apppaths.html" title="Howto Application Paths"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="reference_draft_smb_url.html" title="draft-crhertel-smb-url-12"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

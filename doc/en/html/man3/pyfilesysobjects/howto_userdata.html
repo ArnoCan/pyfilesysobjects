@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Howto User Data &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="up" title="Howto" href="howto.html" />
+    <link rel="next" title="Howto OS Data" href="howto_osdata.html" />
+    <link rel="prev" title="Howto Path Tools" href="howto_pathtools.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="howto_osdata.html" title="Howto OS Data"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="howto_pathtools.html" title="Howto Path Tools"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="howto.html" accesskey="U">Howto</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="howto-user-data">
+<h1>Howto User Data<a class="headerlink" href="#howto-user-data" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Howto User Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#get-current-user-name">Get Current User Name</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-home-directory">Get HOME Directory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-user-home-directories">Get User HOME Directories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-user-data-directories">Get User Data Directories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-user-configuration-directories">Get User Configuration Directories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-user-app-configuration-directories">Get User App Configuration Directories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-user-app-data-directories">Get User App Data Directories</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="get-current-user-name">
+<h2>Get Current User Name<a class="headerlink" href="#get-current-user-name" title="Permalink to this headline">¶</a></h2>
+<p>The current logon user name could be
+retrieved by the call:</p>
+<div class="highlight-pyhton"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span>import filesysobjects.userdata
+
+filesysobjects.userdata.getcurrent_username()
+</pre></div>
+</td></tr></table></div>
+<p>For complete details refer to
+[<a class="reference external" href="userdata.html#getcurrent-username">API</a>] / [<a class="reference external" href="_modules/filesysobjects/userdata.html#ConfigPath.getcurrent_username">code</a>].</p>
+</div>
+<div class="section" id="get-home-directory">
+<h2>Get HOME Directory<a class="headerlink" href="#get-home-directory" title="Permalink to this headline">¶</a></h2>
+<p>The current logon user home directory could be
+retrieved by the call:</p>
+<div class="highlight-pyhton"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span>import filesysobjects.userdata
+
+filesysobjects.userdata.gethome()
+</pre></div>
+</td></tr></table></div>
+<p>For complete details refer to
+[<a class="reference external" href="userdata.html#gethome">API</a>] / [<a class="reference external" href="_modules/filesysobjects/userdata.html#ConfigPath.gethome">code</a>].</p>
+</div>
+<div class="section" id="get-user-home-directories">
+<h2>Get User HOME Directories<a class="headerlink" href="#get-user-home-directories" title="Permalink to this headline">¶</a></h2>
+<p>The specific HOME directory of an user could be
+retrieved by the call:</p>
+<div class="highlight-pyhton"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span>import filesysobjects.userdata
+
+filesysobjects.userdata.getdir_userhome()  # default is current user
+filesysobjects.userdata.getdir_userhome(&#39;userx&#39;)
+</pre></div>
+</td></tr></table></div>
+<p>For complete details refer to
+[<a class="reference external" href="userdata.html#getdir-userhome">API</a>] / [<a class="reference external" href="_modules/filesysobjects/userdata.html#ConfigPath.getdir_userhome">code</a>].</p>
+</div>
+<div class="section" id="get-user-data-directories">
+<h2>Get User Data Directories<a class="headerlink" href="#get-user-data-directories" title="Permalink to this headline">¶</a></h2>
+<p>The specific data directory of an user could be
+retrieved by the call:</p>
+<div class="highlight-pyhton"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span>import filesysobjects.userdata
+
+filesysobjects.userdata.getdir_userdata()  # default is current user
+filesysobjects.userdata.getdir_userdata(&#39;userx&#39;)
+</pre></div>
+</td></tr></table></div>
+<p>For complete details refer to
+[<a class="reference external" href="userdata.html#getdir-userdata">API</a>] / [<a class="reference external" href="_modules/filesysobjects/userdata.html#ConfigPath.getdir_userdata">code</a>].</p>
+</div>
+<div class="section" id="get-user-configuration-directories">
+<h2>Get User Configuration Directories<a class="headerlink" href="#get-user-configuration-directories" title="Permalink to this headline">¶</a></h2>
+<p>The specific configuration directory of an user could be
+retrieved by the call:</p>
+<div class="highlight-pyhton"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span>import filesysobjects.userdata
+
+filesysobjects.userdata.getdir_userconfigdata()  # default is current user
+filesysobjects.userdata.getdir_userconfigdata(&#39;userx&#39;)
+</pre></div>
+</td></tr></table></div>
+<p>For complete details refer to
+[<a class="reference external" href="userdata.html#getdir-userconfigdata">API</a>] / [<a class="reference external" href="_modules/filesysobjects/userdata.html#ConfigPath.getdir_userconfigdata">code</a>].</p>
+</div>
+<div class="section" id="get-user-app-configuration-directories">
+<h2>Get User App Configuration Directories<a class="headerlink" href="#get-user-app-configuration-directories" title="Permalink to this headline">¶</a></h2>
+<p>The specific application directory within a user context could be
+retrieved by the call:</p>
+<div class="highlight-pyhton"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span>import filesysobjects.userdata
+
+filesysobjects.userdata.getdir_userappconfigdata()  # default is current user
+filesysobjects.userdata.getdir_userappconfigdata(&#39;userx&#39;)
+</pre></div>
+</td></tr></table></div>
+<p>For complete details refer to
+[<a class="reference external" href="userdata.html#getdir-userappconfigdata">API</a>] / [<a class="reference external" href="_modules/filesysobjects/userdata.html#ConfigPath.getdir_userappconfigdata">code</a>].</p>
+</div>
+<div class="section" id="get-user-app-data-directories">
+<h2>Get User App Data Directories<a class="headerlink" href="#get-user-app-data-directories" title="Permalink to this headline">¶</a></h2>
+<p>The specific application data within the context of an user could be
+retrieved by the call:</p>
+<div class="highlight-pyhton"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span>import filesysobjects.userdata
+
+filesysobjects.userdata.getdir_userappdata()  # default is current user
+filesysobjects.userdata.getdir_userappdata(&#39;appx&#39;, &#39;usery&#39;)
+</pre></div>
+</td></tr></table></div>
+<p>For complete details refer to
+[<a class="reference external" href="userdata.html#getdir-userappdata">API</a>] / [<a class="reference external" href="_modules/filesysobjects/userdata.html#ConfigPath.getdir_userappdata">code</a>].</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Howto User Data</a><ul>
+<li><a class="reference internal" href="#get-current-user-name">Get Current User Name</a></li>
+<li><a class="reference internal" href="#get-home-directory">Get HOME Directory</a></li>
+<li><a class="reference internal" href="#get-user-home-directories">Get User HOME Directories</a></li>
+<li><a class="reference internal" href="#get-user-data-directories">Get User Data Directories</a></li>
+<li><a class="reference internal" href="#get-user-configuration-directories">Get User Configuration Directories</a></li>
+<li><a class="reference internal" href="#get-user-app-configuration-directories">Get User App Configuration Directories</a></li>
+<li><a class="reference internal" href="#get-user-app-data-directories">Get User App Data Directories</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="howto_pathtools.html"
+                        title="previous chapter">Howto Path Tools</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="howto_osdata.html"
+                        title="next chapter">Howto OS Data</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/howto_userdata.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="howto_osdata.html" title="Howto OS Data"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="howto_pathtools.html" title="Howto Path Tools"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="howto.html" >Howto</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,689 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>‘filesysobjects.__init__’ - Module &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="next" title="‘filesysobjects.apppaths’ - Module" href="apppaths.html" />
+    <link rel="prev" title="The filesysobjects API" href="filesysobjects_api.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="apppaths.html" title="‘filesysobjects.apppaths’ - Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="filesysobjects_api.html" title="The filesysobjects API"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="filesysobjects-init-module">
+<h1>&#8216;filesysobjects.__init__&#8217; - Module<a class="headerlink" href="#filesysobjects-init-module" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-filesysobjects.__init__">
+<span id="module"></span><h2>Module<a class="headerlink" href="#module-filesysobjects.__init__" title="Permalink to this headline">¶</a></h2>
+<p>The package &#8216;filesysobjects&#8217; provides utilities for the handling of
+file system like resource paths as class trees containing files as objects.</p>
+</div>
+<div class="section" id="constants">
+<h2>Constants<a class="headerlink" href="#constants" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The displayed numeric values for the enums are for debugging support only
+and may change apperantly, use the symbolic names only.</p>
+</div>
+<div class="section" id="python-version">
+<h3>Python Version<a class="headerlink" href="#python-version" title="Permalink to this headline">¶</a></h3>
+<ul class="simple" id="index-0">
+<li><strong>V3K</strong>: Python3.5+, else Python2.7</li>
+<li><strong>ISSTR</strong>: string and unicode for type comparison</li>
+<li><strong>unicode</strong>: for Python3, remaps <em>unicode</em> to <em>str</em></li>
+</ul>
+</div>
+<div class="section" id="platform-definitions">
+<span id="enum-platform"></span><h3>Platform Definitions<a class="headerlink" href="#platform-definitions" title="Permalink to this headline">¶</a></h3>
+<p>The internal representation of the platform parameter is an <em>int</em> used
+as bit-array for binary logic operations.
+The most interfaces support the bit-array representation as well as the
+alternatively string name macros as defined by the <em>sys.platform</em> interface.
+The bit-mask representation sould be preferred, but requires the import
+of <em>filesysobjects</em>, while the string macros just require the import
+of the interfaces. These may also provide advace when used for custom
+types or resource paths, e.g. <em>SNMP</em>.</p>
+<div class="section" id="structure-of-bit-masks">
+<h4>Structure of Bit-Masks<a class="headerlink" href="#structure-of-bit-masks" title="Permalink to this headline">¶</a></h4>
+<p>The predefined bitmasks are provided as a label of form <em>RTE_&lt;name&gt;</em>, which covers
+the grouping of bit-mask blocks and the increments within these groups.
+The comitted <strong>interface</strong> is the <strong>NAMED ENUMERATION only</strong>, <strong>NOT the numeric value</strong>.
+Therefore the values must never be accessed explicitly.</p>
+<p>The general algorithm of the calculation for the bit-mask is a combination of
+category bit-masks for bit-blocks and the addition of sub-blocks for context-bitmasks
+for the family grouping it&#8217;s members.
+This combines the performance of logical bit-operations with the reduction of the number
+of required bits.
+This is required due to the vast number of combinations, which else would lead to
+bit arrays of astronomical dimensions.</p>
+<p>The current implementation covers all major - practically almost all - filesystems, UNC,
+and URI resources with a required number of 15-bits, where the 16-th is reserved for future use.
+Thus may fit also to 16-bit based platforms such as embedded systems.
+This provides more than 30.000 variants platforms for resource paths, which seems future proof.</p>
+</div>
+<div class="section" id="bit-mask-definitions">
+<h4>Bit-Mask Definitions<a class="headerlink" href="#bit-mask-definitions" title="Permalink to this headline">¶</a></h4>
+<p>The following additional definitions are introduced.</p>
+<ul>
+<li><p class="first">The following aliasses are defined in addition:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="64%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><em>sys.platform</em></th>
+<th class="head"><em>alias</em></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>win32</td>
+<td>win</td>
+</tr>
+<tr class="row-odd"><td>darwin</td>
+<td>osx</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p class="first">The bit-mask provides the bit for the OS as well as the bit for the
+base category and the family.
+The masks contain the actual runtime environment of the execution platform
+as well as the virtual runtime environment of the resource path.
+The values representing the platform could be used as source and target platform.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="23%" />
+<col width="18%" />
+<col width="38%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Syntax Domain</th>
+<th class="head"><em>sys.platform</em></th>
+<th class="head">Category</th>
+<th class="head">Family</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Windows</td>
+<td>win</td>
+<td>RTE_WIN32</td>
+<td>RTE_WIN32</td>
+</tr>
+<tr class="row-odd"><td>Cygwin</td>
+<td>cygwin</td>
+<td>RTE_POSIX</td>
+<td>RTE_CYGWIN</td>
+</tr>
+<tr class="row-even"><td>Linux</td>
+<td>linux, linux2</td>
+<td>RTE_POSIX</td>
+<td>RTE_LINUX</td>
+</tr>
+<tr class="row-odd"><td>Solaris</td>
+<td>sunos</td>
+<td>RTE_POSIX</td>
+<td>RTE_SOLARIS</td>
+</tr>
+<tr class="row-even"><td>BSD</td>
+<td>bsd</td>
+<td>RTE_POSIX</td>
+<td>RTE_BSD</td>
+</tr>
+<tr class="row-odd"><td>OS-X</td>
+<td>darwin</td>
+<td>RTE_POSIX</td>
+<td>RTE_OSX</td>
+</tr>
+<tr class="row-even"><td>UNC</td>
+<td>n.a.</td>
+<td>RTE_UNC</td>
+<td>RTE_OSX</td>
+</tr>
+<tr class="row-odd"><td>URI</td>
+<td>n.a.</td>
+<td>RTE_URI</td>
+<td>all URIs with schemes</td>
+</tr>
+<tr class="row-even"><td>GENERIC</td>
+<td>n.a.</td>
+<td>RTE_GENERIC</td>
+<td>abstract representation,
+network, local, and drive</td>
+</tr>
+</tbody>
+</table>
+<p>For example the <em>RTE_FILEURI</em> defines the URI in accordance to <a class="reference internal" href="references.html#rfc8089" id="id1">[RFC8089]</a>
+for the data environment, while the the actual runtime execution environemnt
+could be e.g. <em>RTE_WIN32</em> or <em>RTE_LINUX</em>.
+When the execution environment bit is provided only, the major filesystem type
+is set for the resource path type.</p>
+</li>
+</ul>
+<ul id="index-1">
+<li><p class="first">Enum Values:</p>
+<ul>
+<li><p class="first">Base type blocks:</p>
+<ul>
+<li><p class="first"><strong>RTE_CYGWIN</strong> - <strong>cygwin</strong>: Cygwin <a class="reference internal" href="references.html#cygwin" id="id2">[CYGWIN]</a></p>
+</li>
+<li><p class="first"><strong>RTE_POSIX</strong> - <strong>posix</strong>: Posix systems using <em>fcntl</em> <a class="reference internal" href="references.html#posix" id="id3">[POSIX]</a>.</p>
+</li>
+<li><p class="first"><strong>RTE_WIN32</strong> - <strong>win</strong>: All Windows systems <a class="reference internal" href="references.html#ms-dtyp" id="id4">[MS-DTYP]</a></p>
+</li>
+<li><p class="first"><strong>RTE_UNC</strong> - <strong>unc</strong>: UNC <a class="reference internal" href="references.html#ms-dtyp" id="id5">[MS-DTYP]</a></p>
+<p>With back-slash &#8216;\\&#8217;:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>\\\\<span class="n">path</span>\<span class="n">to</span>\<span class="n">file</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>RTE_URI</strong>: URI - <a class="reference internal" href="references.html#rfc3986" id="id6">[RFC3986]</a></p>
+</li>
+<li><p class="first"><strong>RTE_GENERIC</strong>: Undefined platform for special cases</p>
+</li>
+</ul>
+<p>.</p>
+</li>
+<li><p class="first">POSIX base system platforms with implied filesystem resource path types:</p>
+<ul class="simple">
+<li><strong>RTE_BSD</strong> - <strong>bsd</strong>: BSD, - OpenBSD, FreeBSD, NetBSD - as Posix system <a class="reference internal" href="references.html#posix" id="id7">[POSIX]</a>.</li>
+<li><strong>RTE_DARWIN</strong> - <strong>darwin</strong>: Darwin/OS-X, as Posix system <a class="reference internal" href="references.html#posix" id="id8">[POSIX]</a>, no macpath-legacy.</li>
+<li><strong>RTE_LINUX</strong> - <strong>linux</strong>: Linux with specific add-ons - OS, DIST, GNU - as Posix system <a class="reference internal" href="references.html#posix" id="id9">[POSIX]</a>.</li>
+<li><strong>RTE_OSX</strong> - <strong>osx</strong>: Darwin/OS-X, as Posix system <a class="reference internal" href="references.html#posix" id="id10">[POSIX]</a>, no macpath-legacy.</li>
+<li><strong>RTE_SOLARIS</strong> - <strong>solaris</strong>: UNIX/Solaris, as Posix system <a class="reference internal" href="references.html#posix" id="id11">[POSIX]</a>.</li>
+</ul>
+<p>.</p>
+</li>
+<li><p class="first">Virtual runtime domains of specific resource path syntax:</p>
+<ul>
+<li><p class="first"><strong>RTE_FILEURI</strong> - <strong>fileuri</strong>: file-URI <a class="reference internal" href="references.html#rfc8089" id="id12">[RFC8089]</a></p>
+<p>Traditional representation</p>
+</li>
+<li><p class="first"><strong>RTE_FILEURI0</strong> - <strong>fileuri0</strong>: file-URI <a class="reference internal" href="references.html#rfc8089" id="id13">[RFC8089]</a> Appendix E</p>
+<p>Minimal representation:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="p">:</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+<span class="n">file</span><span class="p">:</span><span class="n">c</span><span class="p">:</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+<span class="n">file</span><span class="p">:</span><span class="o">//</span><span class="n">host</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>RTE_FILEURI4</strong> - <strong>fileuri4</strong>: file-URI <a class="reference internal" href="references.html#rfc8089" id="id14">[RFC8089]</a> Appendix E</p>
+<p>Traditional representation:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">c</span><span class="p">:</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+<span class="n">file</span><span class="p">:</span><span class="o">////</span><span class="n">host</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>RTE_FILEURI5</strong> - <strong>fileuri5</strong>: file-URI <a class="reference internal" href="references.html#rfc8089" id="id15">[RFC8089]</a> Appendix E</p>
+<p>With extra slash &#8216;/&#8217;:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">c</span><span class="p">:</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+<span class="n">file</span><span class="p">:</span><span class="o">/////</span><span class="n">host</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>RTE_CIFS</strong> - <strong>cifs</strong>: CIFS <a class="reference internal" href="references.html#smbcifs" id="id16">[SMBCIFS]</a></p>
+</li>
+<li><p class="first"><strong>RTE_HTTP</strong> - <strong>https</strong>: virtual add-on bit for URI specific handling, see <a class="reference internal" href="references.html#rfc3986" id="id17">[RFC3986]</a></p>
+</li>
+<li><p class="first"><strong>RTE_HTTPS</strong> - <strong>http</strong>: virtual add-on bit for URI specific handling, see <a class="reference internal" href="references.html#rfc3986" id="id18">[RFC3986]</a></p>
+</li>
+<li><p class="first"><strong>RTE_SMB</strong> - <strong>smb</strong>: SMB <a class="reference internal" href="references.html#smbcifs" id="id19">[SMBCIFS]</a></p>
+</li>
+<li><p class="first">predefinitions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>RTE_FTP</strong>: see <a class="reference internal" href="references.html#rfc1738" id="id20">[RFC1738]</a></li>
+<li><strong>RTE_GIT</strong>: see generic <a class="reference internal" href="references.html#rfc3986" id="id21">[RFC3986]</a></li>
+<li><strong>RTE_LDAP</strong>: LDAP <a class="reference internal" href="references.html#rfc1959" id="id22">[RFC1959]</a>, <a class="reference internal" href="references.html#rfc2255" id="id23">[RFC2255]</a></li>
+<li><strong>RTE_NFS</strong>: see <a class="reference internal" href="references.html#rfc2224" id="id24">[RFC2224]</a></li>
+<li><strong>RTE_PKCS11</strong>: see [RFC7512]</li>
+<li><strong>RTE_RSYNC</strong>: see <a class="reference internal" href="references.html#rfc5781" id="id26">[RFC5781]</a></li>
+<li><strong>RTE_SNMP</strong>: SNMP <a class="reference internal" href="references.html#rfc4088" id="id27">[RFC4088]</a></li>
+<li><strong>RTE_SSH</strong>: see <a class="reference internal" href="references.html#rfcsshuri" id="id28">[RFCSSHURI]</a></li>
+<li><strong>RTE_TFTP</strong>: see <a class="reference internal" href="references.html#rfc3617" id="id29">[RFC3617]</a></li>
+<li><strong>RTE_VNC</strong>: see <a class="reference internal" href="references.html#rfc7869" id="id30">[RFC7869]</a></li>
+<li><strong>RTE_XMPP</strong>: see <a class="reference internal" href="references.html#rfc5122" id="id31">[RFC5122]</a></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>.</p>
+</li>
+<li><p class="first"><strong>RTE_GENERIC</strong>: Undefined platform for special cases.</p>
+</li>
+</ul>
+</li>
+<li><p class="first">Control Variables:</p>
+<ul class="simple">
+<li><strong>RTE</strong>: Current runtime-environment variable.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="calculation-of-bit-masks">
+<h4>Calculation of Bit-Masks<a class="headerlink" href="#calculation-of-bit-masks" title="Permalink to this headline">¶</a></h4>
+<p>A typical example for the base of the mapping and algorithms is:</p>
+<pre class="literal-block">
+# category: posix
+RTE_POSIX = 8192  #: Posix systems using <em>fcntl</em> <a class="reference internal" href="references.html#posix" id="id32">[POSIX]</a>.
+
+# family: OS-X
+# bit-block: Apple - OS-X
+RTE_DARWIN = RTE_POSIX + 1  #: Darwin/OS-X, as Posix system <a class="reference internal" href="references.html#posix" id="id33">[POSIX]</a>, no macpath-legacy.
+RTE_OSX = RTE_POSIX + 2  #: Darwin/OS-X, as Posix system <a class="reference internal" href="references.html#posix" id="id34">[POSIX]</a>, no macpath-legacy.
+
+# family: Sun - Solaris
+RTE_SOLARIS = RTE_POSIX + 16  #: UNIX/Solaris, as Posix system <a class="reference internal" href="references.html#posix" id="id35">[POSIX]</a>.
+
+# family: BSD
+RTE_BSD = RTE_POSIX + 32  #: BSD, - OpenBSD, FreeBSD, NetBSD - as Posix system <a class="reference internal" href="references.html#posix" id="id36">[POSIX]</a>.
+
+# family: Linux
+RTE_LINUX = RTE_POSIX + 64  #: Linux with specific add-ons - OS, DIST, GNU - as Posix system <a class="reference internal" href="references.html#posix" id="id37">[POSIX]</a>.
+
+# members&quot; Linux
+RTE_CENTOS  = RTE_LINUX + 1  #: CentOS
+RTE_CENTOS4 = RTE_LINUX + 2  #: CentOS-4
+RTE_CENTOS5 = RTE_LINUX + 3  #: CentOS-5
+RTE_CENTOS6 = RTE_LINUX + 4  #: CentOS-6
+RTE_CENTOS7 = RTE_LINUX + 5  #: CentOS-7
+
+RTE_FEDORA = RTE_LINUX + 32  #: Fedora
+RTE_FEDORA19 = RTE_LINUX + 33  #: Fedora-19
+RTE_FEDORA27 = RTE_LINUX + 34  #: Fedora-27
+
+RTE_DEBIAN = RTE_LINUX + 64  #: Debian
+RTE_DEBIAN6 = RTE_LINUX + 65  #: Debian - squeeze
+RTE_DEBIAN7 = RTE_LINUX + 66  #: Debian - wheezy
+RTE_DEBIAN8 = RTE_LINUX + 67  #: Debian - jessy
+RTE_DEBIAN9 = RTE_LINUX + 68  #: Debian - stretch
+</pre>
+<p>The calculations are for OS and distributions:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#</span>
+<span class="c1"># explicit</span>
+<span class="c1">#</span>
+<span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_POSIX</span><span class="p">:</span> <span class="c1"># use category</span>
+   <span class="k">pass</span>
+
+<span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_LINUX</span><span class="p">:</span> <span class="c1"># use family</span>
+   <span class="k">pass</span>
+
+<span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_CENTOS</span><span class="p">:</span> <span class="c1"># use distro</span>
+   <span class="k">pass</span>
+
+<span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_CENTOS7</span><span class="p">:</span> <span class="c1"># use release</span>
+   <span class="k">pass</span>
+
+<span class="c1">#</span>
+<span class="c1"># hierarchical</span>
+<span class="c1">#</span>
+<span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_POSIX</span><span class="p">:</span> <span class="c1"># use category</span>
+   <span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_LINUX</span><span class="p">:</span> <span class="c1"># use family</span>
+      <span class="c1"># do s.th. ...</span>
+
+      <span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_CENTOS7</span><span class="p">:</span> <span class="c1"># use release</span>
+         <span class="k">pass</span>
+      <span class="k">else</span><span class="p">:</span>
+         <span class="c1"># do s.th. ...</span>
+
+   <span class="k">elif</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_BSD</span><span class="p">:</span> <span class="c1"># use family</span>
+      <span class="c1"># do s.th. else...</span>
+
+      <span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_OPENBSD</span><span class="p">:</span> <span class="c1"># use release</span>
+         <span class="k">pass</span>
+      <span class="k">else</span><span class="p">:</span>
+         <span class="c1"># do s.th. else...</span>
+</pre></div>
+</div>
+<p>The calculations are for URI and schemes:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_URI</span><span class="p">:</span> <span class="c1"># use category</span>
+   <span class="k">pass</span>
+
+<span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_HTTP</span><span class="p">:</span> <span class="c1"># use scheme</span>
+   <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="miscelaneous">
+<h3>Miscelaneous<a class="headerlink" href="#miscelaneous" title="Permalink to this headline">¶</a></h3>
+<p>Control Variables:</p>
+<ul class="simple">
+<li><strong>verbose</strong></li>
+<li><strong>debug</strong></li>
+</ul>
+</div>
+<div class="section" id="node-types">
+<h3>Node Types<a class="headerlink" href="#node-types" title="Permalink to this headline">¶</a></h3>
+<p>File system node type enums as bit values
+[<a class="reference external" href="_modules/filesysobjects/__init__.html#">code</a>].</p>
+<ul class="simple" id="index-2">
+<li><strong>T_ALL(1)</strong>: All files and empty directories.</li>
+<li><strong>T_DEV(64)</strong>: Devices nodes.</li>
+<li><strong>T_DIR(4)</strong>: Directories.</li>
+<li><strong>T_EXP(256)</strong>: Exported filesystems.</li>
+<li><strong>T_FILE(2)</strong>:Files.</li>
+<li><strong>T_HARDL(32)</strong>: Hard links.</li>
+<li><strong>T_LOCAL(512)</strong>: Local file system entries only.</li>
+<li><strong>T_MNT(128)</strong>: Mount points.</li>
+<li><strong>T_NODES(8)</strong>: Files and empty directories. Is superposed by T_FILES and T_DIR.</li>
+<li><strong>T_SYML(16)</strong>: Symbolic links.</li>
+</ul>
+</div>
+<div class="section" id="search-parameters">
+<h3>Search Parameters<a class="headerlink" href="#search-parameters" title="Permalink to this headline">¶</a></h3>
+<p>Search directions control parameters for <em>findpattern()</em>.
+[<a class="reference external" href="_modules/filesysobjects/__init__.html#">code</a>]</p>
+<ul class="simple" id="index-3">
+<li><strong>L_MEM_CACHE_ONE(4)</strong>: Caches one node-level only.</li>
+<li><strong>L_TDOWN_WALK(0)</strong>: See os.walk(topdown=True)</li>
+<li><strong>L_UP_EXT(3)</strong>: Caches M_UP_WALK, and provides same behavior as M_TDOWN_WALK.</li>
+<li><strong>L_UP_WALK(1)</strong>: See os.walk(topdown=False)</li>
+</ul>
+</div>
+<div class="section" id="search-flow-control">
+<h3>Search Flow Control<a class="headerlink" href="#search-flow-control" title="Permalink to this headline">¶</a></h3>
+<p>Bit values for the search proceeding behaviour of <em>findpattern()</em>
+[<a class="reference external" href="_modules/filesysobjects/__init__.html#">code</a>].</p>
+<ul class="simple" id="index-4">
+<li><strong>M_ACCURATE(4)</strong>: ffs.</li>
+<li><strong>M_ALL(32)</strong>: Returns all matched results.</li>
+<li><strong>M_FILTERS(1)</strong>: Applies to all filters.</li>
+<li><strong>M_FILTPAR(3)</strong>: Applies all filters and parameters.</li>
+<li><strong>M_FIRST(8)</strong>: Breaks after first match.</li>
+<li><strong>M_IGNORE(0)</strong>: Filters and parameters are ignored.</li>
+<li><strong>M_LAST(16)</strong>: Matches all, but returns the last only.</li>
+<li><strong>M_NEST(64)</strong>: Clears nested directory path matches.</li>
+<li><strong>M_NOCANON(128)</strong>: Do not convert input paths to canonical absolute.</li>
+<li><strong>M_PARAMS(2)</strong>: Applies to all parameters.</li>
+<li><strong>M_REL(256)</strong>: Keep relative names.</li>
+</ul>
+</div>
+<div class="section" id="control-of-pattern-application">
+<h3>Control of Pattern Application<a class="headerlink" href="#control-of-pattern-application" title="Permalink to this headline">¶</a></h3>
+<p>The main design target of the <em>filesysobjects</em> includes the efficient path resolution
+by arbitrary match pattern, which is very close to the search of resource trees with applied
+match filters of arbitrary pattern.
+Both rely deeply on the parameter sets for their performance.</p>
+<p>Another aspect is the partial ambiguity of globs and regexpr, which
+in addition is superposed by the different valid character sets of the
+various OSs. This is even worst in case of mounted shares between different
+OSs. Thus the final resolution of globs and regexpr require actual file system
+access in order to reolve the ambiguity.
+For wildcard expansion this results in final iterationn on the filesystem,
+which could result in large sets of matched nodes. Thus
+it could cost for large sets of nodes a significant amount of performance.</p>
+<p>The provided bitmask constants control the applied algorithms.</p>
+<ul class="simple" id="index-5">
+<li><strong>W_GLOB(1)</strong> - considers the provided expressions as <em>glob*s or *literal</em></li>
+<li><strong>W_LITERAL(0)</strong> - considers the provided expressions as <em>literal</em> match-patterns</li>
+<li><strong>W_RE(2)</strong> - considers the provided expressions as <em>re</em>, <em>glob</em>, or <em>literal</em></li>
+<li><strong>W_RE_FULL(16)</strong> - disables performance optimization, enables full scale <em>re</em> syntax including <em>groups</em> and  &#8216;<em>|</em>&#8216; (or)</li>
+</ul>
+<p>The following expression demonstrates the issue of name resolution in case of
+ambiguity.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">filepathname</span> <span class="o">=</span> <span class="s1">&#39;/path/to/.*[d].*&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The expression is a valid <em>glob</em> and a valid <em>re</em>
+on all platforms - in addition a <em>literal</em> on seemingly all platforms too.</p>
+<ul>
+<li><p class="first">static name resolution</p>
+<p>For a generic path expansion function it is not possible to decide static offline,
+what actually matches.</p>
+</li>
+<li><p class="first">dynamic name resolution</p>
+<p>In case of dynamic name binding resolution it is still not possible to determine accurately,
+which type(s) were intended by the caller.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="getspf">
+<h3>getspf<a class="headerlink" href="#getspf" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.__init__.getspf">
+<code class="descclassname">filesysobjects.__init__.</code><code class="descname">getspf</code><span class="sig-paren">(</span><em>pf</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/__init__.html#getspf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.__init__.getspf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluates the resulting parameters for the source platform.</p>
+<p>See also <a class="reference external" href="filesysobjects_design.html#tpf-and-spf">tpf and spf</a>.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>spf</strong>:</dt>
+<dd><p class="first">Source platform, defines the input syntax domain.
+For the syntax refer to API in the manual at <a class="reference internal" href="filesysobjects_api.html#opts-spf"><span class="std std-ref">spf</span></a>.</p>
+<p class="last">For additi0onal details refer to
+<a class="reference internal" href="filesysobjects_api.html#tpf-and-spf"><span class="std std-ref">tpf and spf</span></a>,
+<a class="reference external" href="paths.html#getspf">paths.getspf()</a>,
+<a class="reference internal" href="apppaths.html#def-normapppathx"><span class="std std-ref">normapppathx()</span></a>,
+<a class="reference external" href="paths.html#normpathx">normpathx()</a>.</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd><p class="first">The path syntax parameters for the target platform:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="k">return</span> <span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="n">pathsep</span><span class="p">,</span> <span class="n">spf</span><span class="p">,</span> <span class="n">rte</span><span class="p">)</span>
+
+<span class="n">sep</span> <span class="p">:</span><span class="o">=</span> <span class="p">[</span><span class="o">/</span>\\<span class="p">]</span>
+<span class="n">pathsep</span> <span class="p">:</span><span class="o">=</span> <span class="p">[:;]</span>
+<span class="n">spf</span> <span class="p">:</span><span class="o">=</span> <span class="n">string</span><span class="o">-</span><span class="n">representation</span>
+<span class="n">string</span><span class="o">-</span><span class="n">representation</span> <span class="p">:</span><span class="o">=</span> <span class="n">predefined</span> <span class="o">|</span> <span class="n">custom</span>
+<span class="n">predefined</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span> <span class="o">&lt;</span><span class="n">rte_map</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="o">&gt;</span> <span class="p">)</span>
+<span class="n">rte</span> <span class="p">:</span><span class="o">=</span> <span class="n">bitmask</span>
+<span class="n">bitmask</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span> <span class="o">&lt;</span><span class="n">RTE_</span><span class="o">*&gt;</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="gettpf">
+<h3>gettpf<a class="headerlink" href="#gettpf" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.__init__.gettpf">
+<code class="descclassname">filesysobjects.__init__.</code><code class="descname">gettpf</code><span class="sig-paren">(</span><em>pf</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/__init__.html#gettpf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.__init__.gettpf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluates the resulting parameters for the target platform.</p>
+<p>See also <a class="reference external" href="filesysobjects_design.html#tpf-and-spf">tpf and spf</a>.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>pf</strong>:</dt>
+<dd><p class="first">Target platform for the file pathname. Supports multiple
+entries, where the first has precedence.</p>
+<p class="last">For details refer to &#8216;normpathx] &lt;#normpathx&gt;`_.</p>
+</dd>
+<dt>kw:</dt>
+<dd><dl class="first last docutils">
+<dt>apppre:</dt>
+<dd><p class="first">Application prefix.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">apppre</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span><span class="o">|</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">default := False</p>
+</dd>
+<dt>pathsep:</dt>
+<dd><p class="first">Prepends to the path separator set by the <em>spf</em>, thus has
+precedence over the standard separator of the source platform.
+The resulting first character decides the type of the
+scanner <em>APPPATHSCANNER</em>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pathsep</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="s1">&#39;;&#39;</span> <span class="o">|</span> <span class="s1">&#39;:&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">default = &#8216;&#8217;</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd><p class="first">The path syntax parameters for the target platform:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="k">return</span> <span class="p">(</span><span class="n">sep</span><span class="p">,</span> <span class="n">pathsep</span><span class="p">,</span> <span class="n">tpf</span><span class="p">,</span> <span class="n">rte</span><span class="p">,</span> <span class="n">apppre</span><span class="p">)</span>
+
+<span class="n">sep</span> <span class="p">:</span><span class="o">=</span> <span class="p">[</span><span class="o">/</span>\\<span class="p">]</span>
+<span class="n">pathsep</span> <span class="p">:</span><span class="o">=</span> <span class="p">[:;]</span>
+<span class="n">tpf</span> <span class="p">:</span><span class="o">=</span> <span class="n">string</span><span class="o">-</span><span class="n">representation</span>
+<span class="n">rte</span> <span class="p">:</span><span class="o">=</span> <span class="n">bitmask</span>
+<span class="n">apppre</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="kc">True</span> <span class="o">|</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="n">string</span><span class="o">-</span><span class="n">representation</span> <span class="p">:</span><span class="o">=</span> <span class="n">predefined</span> <span class="o">|</span> <span class="n">custom</span>
+<span class="n">predefined</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span> <span class="o">&lt;</span><span class="n">rte_map</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="o">&gt;</span> <span class="p">)</span>
+<span class="n">bitmask</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span> <span class="o">&lt;</span><span class="n">RTE_</span><span class="o">*&gt;</span> <span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="filesysobjects.__init__.FileSysObjectsError">
+<em class="property">class </em><code class="descclassname">filesysobjects.__init__.</code><code class="descname">FileSysObjectsError</code><a class="reference internal" href="_modules/filesysobjects/__init__.html#FileSysObjectsError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.__init__.FileSysObjectsError" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">&#8216;filesysobjects.__init__&#8217; - Module</a><ul>
+<li><a class="reference internal" href="#module-filesysobjects.__init__">Module</a></li>
+<li><a class="reference internal" href="#constants">Constants</a><ul>
+<li><a class="reference internal" href="#python-version">Python Version</a></li>
+<li><a class="reference internal" href="#platform-definitions">Platform Definitions</a><ul>
+<li><a class="reference internal" href="#structure-of-bit-masks">Structure of Bit-Masks</a></li>
+<li><a class="reference internal" href="#bit-mask-definitions">Bit-Mask Definitions</a></li>
+<li><a class="reference internal" href="#calculation-of-bit-masks">Calculation of Bit-Masks</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#miscelaneous">Miscelaneous</a></li>
+<li><a class="reference internal" href="#node-types">Node Types</a></li>
+<li><a class="reference internal" href="#search-parameters">Search Parameters</a></li>
+<li><a class="reference internal" href="#search-flow-control">Search Flow Control</a></li>
+<li><a class="reference internal" href="#control-of-pattern-application">Control of Pattern Application</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">Functions</a><ul>
+<li><a class="reference internal" href="#getspf">getspf</a></li>
+<li><a class="reference internal" href="#gettpf">gettpf</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="filesysobjects_api.html"
+                        title="previous chapter">The filesysobjects API</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apppaths.html"
+                        title="next chapter">&#8216;filesysobjects.apppaths&#8217; - Module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/filesysobjects_init.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="apppaths.html" title="‘filesysobjects.apppaths’ - Module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="filesysobjects_api.html" title="The filesysobjects API"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

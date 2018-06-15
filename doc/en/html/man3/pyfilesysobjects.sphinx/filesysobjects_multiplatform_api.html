@@ -1,0 +1,1939 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Filesystem Address Interfaces on Multiple Platforms &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="next" title="Filename Encoding and Decoding" href="python_encode_decode.html" />
+    <link rel="prev" title="A Primer on File and Directory Resources" href="filesysobjects_doc.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="python_encode_decode.html" title="Filename Encoding and Decoding"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="filesysobjects_doc.html" title="A Primer on File and Directory Resources"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="filesystem-address-interfaces-on-multiple-platforms">
+<h1>Filesystem Address Interfaces on Multiple Platforms<a class="headerlink" href="#filesystem-address-interfaces-on-multiple-platforms" title="Permalink to this headline">¶</a></h1>
+<p>The development and operations of modern applications require
+commonly the support of multiple platforms.
+This in particular spans Posix based filesystems and Windows based filesystems,
+which use different characters as separators for path names and search paths.
+Additionaly - even worst - the path name separator &#8216;\&#8217; is also the escape character
+on both platforms.
+This restricts in some cases the applicability of the provided common variables
+&#8216;<em>os.pathsep</em>&#8216; and &#8216;<em>os.path.sep</em>&#8216;.</p>
+<p>Extensions exist in addition to the simple local file address,
+which provide for application prefixes - for example for shares, network mounts, and URIs.
+A common issue arises here in particular when shared filesystems are accessed by clients and servers.
+This is due to the common fact, that the filesystem is transparently used by various clients
+operating on different OS.
+Again, modern applications work transaparently for local and distributed applications,
+provide the transparent processing of file names - resource identifiers - provided by
+various formats and semantics.
+For local applications as well as distributed applications - in general for cloud applications
+including their management and infrastructure interfaces.</p>
+<p>The <em>filesysobjects</em> API adds this features to the standard libraries
+by introducing an abstract address layer.</p>
+<p>The common transparent interface last but not least finally saves development efforts as well as
+enhances the overall performance by a centralized and neat library.
+In particular enhances the quality by well tested interfaces covering the
+bunches of the special cases with more than 4500 test
+cases included into <em>filesysobjects</em> - at the time of writing.</p>
+<div class="section" id="names-and-paths">
+<h2>Names and Paths<a class="headerlink" href="#names-and-paths" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="node-names">
+<h3>Node Names<a class="headerlink" href="#node-names" title="Permalink to this headline">¶</a></h3>
+<p>The names of the filesystem nodes - directories and files - require some attention
+when implementing a generic file system toolset.
+This is in particular of importance, because the seperator characters are different on
+the platforms, and have multiple semantics depending on the context, while still
+has to be processed as semantic control characters of the pathnames, e.g. as seperator, and
+part of an ordinary nodename too - even intermixed.
+Thus poses as a little challanges for the design and implementation of an appropriate regular expression.</p>
+<div class="section" id="chracter-sets">
+<h4>Chracter Sets<a class="headerlink" href="#chracter-sets" title="Permalink to this headline">¶</a></h4>
+<p>The collection and comparison of the valid characters is focussing on modern systems based on OSs with internationalization support.
+These provide filesystems which in most cases support unicode characters for file and directory names.
+The <em>filesysobjects</em> works with any characters set, detecting the filesystem specific reserved characters, and managing the context specific semantics of
+the filesystem specific address resolution control characters. For example the colon &#8216;:&#8217; with multiple semantics as search path seperator(Posix),
+replacement for a &#8216;/&#8217; in filenames(OS-X), and also a valid character in file and directory names(Posix, OS-X).
+While the semi-colon &#8216;;&#8217; is a shell seperator, it is also a valid character for file and pathnames on all platforms.</p>
+<p>The short discussion is required for the analysis of the regexpr due to the vaious placement and resulting context specific semantocs
+of multiple characters used as path and search path seperators.</p>
+<p>The current most relevant filesystems on the supported OSs provide commonly localization.</p>
+<ul class="simple">
+<li>Major Linux filesystesm like &#8216;ext4&#8217; support unicode.</li>
+<li>The newer Micrososft-Windows filesystems support UTF-16.</li>
+<li>The newer filesystems for OS-X support UTF-16.</li>
+</ul>
+<p>Therefore from the requirements view of the <em>filesysobjects</em> it is basically only required to analyse the reserved characters and words
+for each OS/Filesystem.</p>
+</div>
+<div class="section" id="reservered-characters">
+<h4>Reservered Characters<a class="headerlink" href="#reservered-characters" title="Permalink to this headline">¶</a></h4>
+<p>The following table lists the reserved characters for the supported filesystems and in additionally special characters, which are
+frequently reserved for special semantics of shells and applications.</p>
+<p>The resulting characters to be processed with specific control semantics as seperators and file access rediredirectors are extracted into the following table.
+The table lists whether the characters could occur in file names, while still beeing control characters for the format and resolution processing of the
+file path names.
+Thus require special attention for the reguylar expressions and the functional tests.</p>
+<p>The following characters are in particular of importance for the <em>filesysobjects</em> as seperator for the disassembly and analysis of pathnames.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="4%" />
+<col width="9%" />
+<col width="3%" />
+<col width="3%" />
+<col width="3%" />
+<col width="4%" />
+<col width="8%" />
+<col width="3%" />
+<col width="6%" />
+<col width="5%" />
+<col width="3%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="30%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">char</th>
+<th class="head">name</th>
+<th class="head">num</th>
+<th class="head">hex</th>
+<th class="head">all</th>
+<th class="head">avoid</th>
+<th class="head">non-portable</th>
+<th class="head">non</th>
+<th class="head">Posix(2)</th>
+<th class="head">Cygwin</th>
+<th class="head">BSD</th>
+<th class="head">Linux</th>
+<th class="head">OS-X</th>
+<th class="head">Solaris</th>
+<th class="head">Windows</th>
+<th class="head">Seamntics</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code>/</code></td>
+<td><strong>slash</strong></td>
+<td>47</td>
+<td>2F</td>
+<td>&nbsp;</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>n(1)</td>
+<td>n</td>
+<td>n</td>
+<td>n</td>
+<td>s(0)</td>
+<td>&nbsp;</td>
+<td>n</td>
+<td>path sep.</td>
+</tr>
+<tr class="row-odd"><td><code>&#92;</code></td>
+<td><strong>backslash</strong></td>
+<td>92</td>
+<td>5C</td>
+<td>&nbsp;</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>n</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>n</td>
+<td>path sep., esc char, regexpr</td>
+</tr>
+<tr class="row-even"><td><code>:</code></td>
+<td><strong>colon</strong></td>
+<td>58</td>
+<td>3A</td>
+<td>&nbsp;</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>s(0)</td>
+<td>v</td>
+<td>n</td>
+<td>drive-sep., app-sep, slash-alias(OS-X), regexpr</td>
+</tr>
+<tr class="row-odd"><td><code>.</code></td>
+<td><strong>dot</strong> (3)</td>
+<td>46</td>
+<td>2E</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>postfix-separator, regexpr, glob</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><strong>v</strong>: valid</li>
+<li><strong>n</strong>: non-valid</li>
+<li><strong>s</strong>: special behavior</li>
+</ul>
+<ol class="arabic" start="0">
+<li><p class="first">OS-X - Names containing slashes &#8216;/&#8217; could be created within finder(by &#8216;/&#8217;) and CLI(by &#8216;:&#8217;),
+but actually results in names where the &#8216;/&#8217; and &#8216;:&#8217; are used &#8216;almost&#8217; interchangeably by the shell
+and the finder.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Names containing a shlash should be avoided, a short example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># in finder the name is displayed as &#39;/&#39;, could be used for create too</span>
+<span class="n">mkdir</span> <span class="s1">&#39;:&#39;</span>  <span class="c1"># creates a local subdirectory with name &#39;/&#39;(finder), or &#39;:&#39;(shell)</span>
+
+<span class="c1"># ls displays &#39;:&#39;, while finder displays &#39;/&#39;</span>
+<span class="n">ls</span>
+
+<span class="c1"># access to the local subdirectory named &#39;/&#39;</span>
+<span class="n">echo</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="o">./</span><span class="p">:</span><span class="o">/</span><span class="n">file0</span> <span class="c1"># uses local subdirectory named &#39;/&#39;</span>
+
+<span class="c1"># the following does not work</span>
+<span class="n">echo</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="o">.//</span><span class="n">file0</span>  <span class="c1"># actually uses current directory &#39;.&#39;</span>
+<span class="n">echo</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">file0</span>    <span class="c1"># actually uses root directory &#39;/&#39;</span>
+</pre></div>
+</div>
+<p>The &#8216;:&#8217; in addition collides with the &#8216;os.pathsep&#8217; on OS-X.</p>
+<div class="last admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Avoid the characters &#8216;/&#8217;, &#8216;\&#8217;, &#8216;;&#8217;, and &#8216;:&#8217; in file system node names.</p>
+</div>
+</div>
+</li>
+<li><p class="first">The &#8216;JFS&#8217; seems to support &#8216;/&#8217;, while the only and one prohibited character is NULL.</p>
+</li>
+<li><p class="first">The posix based filsystems are e.g. ext2, ext3, ext4, jfs, xfs, and ReiserFS(Hi Hans, hope your OK... <a class="reference internal" href="references.html#wikihansreiser" id="id1">[WikiHansReiser]</a> )</p>
+</li>
+<li><p class="first">The dot &#8216;.&#8217; is a valid character, but the two special words &#8216;.&#8217; and &#8216;..&#8217; are reserved words on all major filesystems,
+in addition the dot has the special meaning in the context of file postfixes.</p>
+</li>
+</ol>
+<p>The next set of embedded characters within path names is of particular relevance for the glob and
+regexpr feature of wildcard resolution, because these are valid characters for names, and are special
+characters for regular expressions.
+Thus these require some special attention for the implementation.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="4%" />
+<col width="12%" />
+<col width="3%" />
+<col width="3%" />
+<col width="3%" />
+<col width="4%" />
+<col width="9%" />
+<col width="3%" />
+<col width="6%" />
+<col width="5%" />
+<col width="3%" />
+<col width="4%" />
+<col width="4%" />
+<col width="6%" />
+<col width="6%" />
+<col width="24%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">char</th>
+<th class="head">name</th>
+<th class="head">num</th>
+<th class="head">hex</th>
+<th class="head">all</th>
+<th class="head">avoid</th>
+<th class="head">non-portable</th>
+<th class="head">non</th>
+<th class="head">Posix(2)</th>
+<th class="head">Cygwin</th>
+<th class="head">BSD</th>
+<th class="head">Linux</th>
+<th class="head">OS-X</th>
+<th class="head">Solaris</th>
+<th class="head">Windows</th>
+<th class="head">Seamntics</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code>;</code></td>
+<td>semi-colon</td>
+<td>59</td>
+<td>3B</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>command-sep, regexpr</td>
+</tr>
+<tr class="row-odd"><td><code>*</code></td>
+<td>asterisk</td>
+<td>42</td>
+<td>2A</td>
+<td>&nbsp;</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>n</td>
+<td>wildcard, glob, regexpr</td>
+</tr>
+<tr class="row-even"><td><code>?</code></td>
+<td>question mark</td>
+<td>63</td>
+<td>3F</td>
+<td>&nbsp;</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>n</td>
+<td>single char shell, regexpr, glob</td>
+</tr>
+<tr class="row-odd"><td><code><</code></td>
+<td>lt</td>
+<td>60</td>
+<td>3C</td>
+<td>&nbsp;</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>n</td>
+<td>redirect, regexpr</td>
+</tr>
+<tr class="row-even"><td><code>></code></td>
+<td>gt</td>
+<td>62</td>
+<td>3E</td>
+<td>&nbsp;</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>n</td>
+<td>redirect, regexpr</td>
+</tr>
+<tr class="row-odd"><td><code>!</code></td>
+<td>exclamation point</td>
+<td>33</td>
+<td>21</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>negation glob, regexpr, glob</td>
+</tr>
+<tr class="row-even"><td><code>~</code></td>
+<td>tilde</td>
+<td>126</td>
+<td>7E</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>regexpr</td>
+</tr>
+<tr class="row-odd"><td><code>&</code></td>
+<td>ampersand</td>
+<td>38</td>
+<td>26</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>shell fork, redirect, regexpr</td>
+</tr>
+<tr class="row-even"><td><code>&#40;</code></td>
+<td>parenthesis</td>
+<td>40</td>
+<td>28</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>command group, regexpr</td>
+</tr>
+<tr class="row-odd"><td><code>&#41;</code></td>
+<td>parenthesis</td>
+<td>41</td>
+<td>29</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>command group, regexpr</td>
+</tr>
+<tr class="row-even"><td><code>&#123;</code></td>
+<td>curly brace</td>
+<td>123</td>
+<td>7B</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>command group, regexpr</td>
+</tr>
+<tr class="row-odd"><td><code>&#125;</code></td>
+<td>curly brace</td>
+<td>125</td>
+<td>7D</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>command group, regexpr</td>
+</tr>
+<tr class="row-even"><td><code>&#94;</code></td>
+<td>caret</td>
+<td>94</td>
+<td>5E</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>regexpr</td>
+</tr>
+<tr class="row-odd"><td><code>$</code></td>
+<td>dollar</td>
+<td>36</td>
+<td>24</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>shell variable, shell locale, regexpr</td>
+</tr>
+<tr class="row-even"><td><code>&#91;</code></td>
+<td>bracket</td>
+<td>91</td>
+<td>5B</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>regexpr, glob</td>
+</tr>
+<tr class="row-odd"><td><code>&#93;</code></td>
+<td>bracket</td>
+<td>93</td>
+<td>5D</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>regexpr, glob</td>
+</tr>
+<tr class="row-even"><td><code>&#129;</code></td>
+<td>unknown</td>
+<td>129</td>
+<td>&nbsp;</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>generic replacement encode-err</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><strong>v</strong>: valid</li>
+<li><strong>n</strong>: non-valid</li>
+<li><strong>s</strong>: special behavior</li>
+</ul>
+<p>The following characters are of secondary relevance as building blocks for the syntactical expression of path names, an their processing by shell.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="5%" />
+<col width="11%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="11%" />
+<col width="4%" />
+<col width="8%" />
+<col width="6%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="7%" />
+<col width="7%" />
+<col width="9%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">char</th>
+<th class="head">name</th>
+<th class="head">num</th>
+<th class="head">hex</th>
+<th class="head">all</th>
+<th class="head">avoid</th>
+<th class="head">non-portable</th>
+<th class="head">non</th>
+<th class="head">Posix(2)</th>
+<th class="head">Cygwin</th>
+<th class="head">BSD</th>
+<th class="head">Linux</th>
+<th class="head">OS-X</th>
+<th class="head">Solaris</th>
+<th class="head">Windows</th>
+<th class="head">Seamntics</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code>'</code></td>
+<td>single quote</td>
+<td>39</td>
+<td>27</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td><code>"</code></td>
+<td>quote</td>
+<td>34</td>
+<td>22</td>
+<td>&nbsp;</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>n</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><code>&#124;</code></td>
+<td>pipe</td>
+<td>124</td>
+<td>7C</td>
+<td>&nbsp;</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>n</td>
+<td>redirect</td>
+</tr>
+<tr class="row-odd"><td><code>`</code></td>
+<td>grave accent</td>
+<td>96</td>
+<td>60</td>
+<td>x</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>v</td>
+<td>&nbsp;</td>
+<td>v</td>
+<td>shell-exec</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><strong>v</strong>: valid</li>
+<li><strong>n</strong>: non-valid</li>
+<li><strong>s</strong>: special behavior</li>
+</ul>
+</div>
+<div class="section" id="reserved-names">
+<h4>Reserved Names<a class="headerlink" href="#reserved-names" title="Permalink to this headline">¶</a></h4>
+<p>The listed names are reseved and could not be used for application nodes or files.</p>
+<div class="section" id="common">
+<h5>Common<a class="headerlink" href="#common" title="Permalink to this headline">¶</a></h5>
+<p>The following names are served by almost all OS/File systems:</p>
+<ul class="simple">
+<li>&#8216;.&#8217; - current directory</li>
+<li>&#8216;..&#8217; - parent directory</li>
+</ul>
+</div>
+<div class="section" id="posix">
+<h5>Posix<a class="headerlink" href="#posix" title="Permalink to this headline">¶</a></h5>
+<p>The posix filesystem reserves less beneath the common dot-names.
+Some entries are commonly reserved by the full pathnames such as device nodes
+within the <em>/dev</em> directory and the <em>/etc</em> directory.
+his depends on the filesystem hierarchy standard applied onto the concrete
+OS.</p>
+</div>
+<div class="section" id="microsoft-windows-tm">
+<h5>Microsoft Windows(TM)<a class="headerlink" href="#microsoft-windows-tm" title="Permalink to this headline">¶</a></h5>
+<ul>
+<li><p class="first">The following names are reserved by the
+OS:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">CON</span><span class="p">,</span> <span class="n">PRN</span><span class="p">,</span> <span class="n">AUX</span><span class="p">,</span> <span class="n">NUL</span><span class="p">,</span> <span class="n">COM1</span><span class="p">,</span> <span class="n">COM2</span><span class="p">,</span> <span class="n">COM3</span><span class="p">,</span> <span class="n">COM4</span><span class="p">,</span> <span class="n">COM5</span><span class="p">,</span> <span class="n">COM6</span><span class="p">,</span> <span class="n">COM7</span><span class="p">,</span> <span class="n">COM8</span><span class="p">,</span> <span class="n">COM9</span><span class="p">,</span>
+<span class="n">LPT1</span><span class="p">,</span> <span class="n">LPT2</span><span class="p">,</span> <span class="n">LPT3</span><span class="p">,</span> <span class="n">LPT4</span><span class="p">,</span> <span class="n">LPT5</span><span class="p">,</span> <span class="n">LPT6</span><span class="p">,</span> <span class="n">LPT7</span><span class="p">,</span> <span class="n">LPT8</span><span class="p">,</span> <span class="n">LPT9</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="special-cases">
+<h4>Special Cases<a class="headerlink" href="#special-cases" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="cygwin">
+<h5>Cygwin<a class="headerlink" href="#cygwin" title="Permalink to this headline">¶</a></h5>
+<p>Cygwin <a class="reference internal" href="references.html#cygwin" id="id2">[CYGWIN]</a> has a specific behavior when it mets characters forbidden in node/file names,
+In these cases the characters are replaces by their Unicode equivalent,
+see user manual &#8220;Forbidden characters in filenames&#8221;.</p>
+<p>This is also the case when one path is expected, but for example
+a search path containing multiple paths with drives is provided.
+In those cases the drive letters from the second on are replaces as &#8216;detected filenames&#8217;
+with their Unicode characters.</p>
+<div class="highlight-shell"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span></span>$ cygpath -w d://:e:/
+D:<span class="se">\</span>e<span class="se">\</span>
+
+acue@w7u /cygdrive/e
+$ cygpath -w d://:e:/ <span class="p">|</span> od -c -t x1
+<span class="m">0000000</span>   D   :   <span class="se">\ </span><span class="m">357</span> <span class="m">200</span> <span class="m">272</span>   e <span class="m">357</span> <span class="m">200</span> <span class="m">272</span>   <span class="se">\ </span> <span class="se">\n</span>
+         <span class="m">44</span>  3a  5c  ef  <span class="m">80</span>  ba  <span class="m">65</span>  ef  <span class="m">80</span>  ba  5c  0a
+0000014
+</pre></div>
+</td></tr></table></div>
+<p>The syntax for the recognition of multiple paths requires the paths to be pre-splitted - here by inserting spaces:</p>
+<div class="highlight-shell"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span></span>$ cygpath -w d:// e:/
+D:<span class="se">\\</span>
+E:<span class="se">\</span>
+
+$ cygpath -u d:// e:/
+/cygdrive/d/
+/cygdrive/e/
+</pre></div>
+</td></tr></table></div>
+<p>The <em>filesysobjects</em> does not adapt this behavior.
+Interfaces for the split of search paths are available when requires, e.g. <em>filesysobjects.paths.splitpathx()</em>,
+and <em>filesysobjects.paths.splitpathx_pathvar()</em>.</p>
+</div>
+<div class="section" id="os-x-darwin">
+<h5>OS-X - Darwin<a class="headerlink" href="#os-x-darwin" title="Permalink to this headline">¶</a></h5>
+<p>The following characters - &#8220;path-separator-symbolic-name&#8221; - are reserved by the OS/File system:</p>
+<ul>
+<li><p class="first">&#8216;:&#8217; - colon in node names on HPF/HPF+.</p>
+<p>The colon within a node name as visible from the shell is treated as a shlash &#8216;/&#8217; within
+the <em>finder</em>.</p>
+<p>This historic legacy <a class="reference internal" href="references.html#os-path" id="id3">[os.path]</a> <a class="reference internal" href="references.html#macpath" id="id4">[macpath]</a> is not supported by the <em>filesysobjects</em>.
+The <em>filesysobjects</em> supports on OS-X the posix standard for local components of file system path names.
+Thus still the application tags and URIs/URLs..</p>
+</li>
+</ul>
+</div>
+<div class="section" id="os-2">
+<h5>OS/2<a class="headerlink" href="#os-2" title="Permalink to this headline">¶</a></h5>
+<p>The <em>OS/2</em> - os2emxpath / Python2 - is not supported by the <em>filesysobjects</em>.</p>
+</div>
+</div>
+<div class="section" id="ambiguous-syntax-elements">
+<h4>Ambiguous Syntax Elements<a class="headerlink" href="#ambiguous-syntax-elements" title="Permalink to this headline">¶</a></h4>
+<p>The application of a common syntax scanner for multiple platforms introduces a number of ambiguities,
+which could only be resolved with the appropriate context information.
+Thus a static analysis of the syntax for the resource path is restricted to the unambiguous
+cases, while the ambigous require additional information.</p>
+<p>The application is onto a provided path strings, which has to be analysed in order to split it into it&#8217;s
+logical path parts. Basically the same has to be considered when analysing a single path, which is
+for the Python interpreter not obviously a single path.</p>
+<p>The concrete ambiguity - which actually &#8216;hurts&#8217; - is the multiple use of the colon character &#8216;:&#8217;.
+This is used in the following semantics:</p>
+<ul class="simple">
+<li>Posix:<ul>
+<li>path separator - os.pathsep</li>
+<li>node name element - For example &#8216;/my/path:node/file:name.txt&#8217; is valid, the same as the corresponding
+search path &#8220;/my/path:node/:/any/path&#8221;, where &#8220;path:node&#8221; is actually a directory name.
+This search path could not be split by static analysis, but requires dynamic file system lookup.
+Thus a remote offline validation by static analysis is not possible.</li>
+<li>Node names are permitted to contain semi-colons &#8216;;&#8217; too, which could also &#8216;hurt&#8217;, when this
+is used as a replacement for the colon.</li>
+</ul>
+</li>
+<li>Windows:<ul>
+<li>drive names</li>
+</ul>
+</li>
+<li>OS-X - HPF/HPF+:<ul>
+<li>represents in nodenames an alias for the slash &#8216;/&#8217;</li>
+<li>in addition the posix standard applies</li>
+</ul>
+</li>
+<li>URI/URL<ul>
+<li>is part of the application prefix</li>
+</ul>
+</li>
+</ul>
+<p>The following is provided non-ambiguous by the parser and scanner without required action:</p>
+<ol class="arabic simple">
+<li>The scanner analyses URI/URL accurately</li>
+<li>The scanner analyses drive names - seemingly - accurately</li>
+<li>Special support for the OS-X case is not supported.</li>
+<li>Remote-lookups are currently not supported.</li>
+<li>The Windows platform works perfectly by definition for valid files and characters.
+The acces to nodes and files on mounted file systems requires valid character sets.</li>
+</ol>
+<p>The default behavior on Posix based file systems is perfectly applicable, for the cases:</p>
+<ul class="simple">
+<li>no colons &#8216;:&#8217; are used in filenames</li>
+<li>search paths are required by the application only and are configured by semi-colons &#8216;;&#8217; as
+path separator (os.pathseparator), but no semi-colons are than contained in file names.</li>
+</ul>
+<p>While the Windows platform works perfectly by definition, the Posix platform may work in the
+majority of 99%(?) of standard applications from the box.</p>
+<p><strong>The following resolution of ambiguity is provided as default:</strong></p>
+<ol class="arabic simple">
+<li><strong>IF</strong> the colon &#8216;:&#8217; is part of one of the syntax elements URL/URI or DOS drive name,
+use it.</li>
+<li><strong>ELSE-IF</strong> the pathname contains one or more semi-colons &#8216;;&#8217;, these are treated as
+path separator for posix based filesystems too, while each colon is treated as a part of node name.</li>
+<li><strong>Else</strong> the scanner by default suggestes each &#8216;colon&#8217; for posix based filesystems as
+path separator - <em>os.pathsep</em></li>
+</ol>
+<p><strong>The following could be selected by choice:</strong></p>
+<ol class="arabic simple">
+<li>A calloption disables the forced use of the semi-colon as path separator.</li>
+<li>A calloption is provided, enabling/disabling the &#8216;colon&#8217; as a possible part of a node/file name.</li>
+<li>A calloption is provided, enabling the dynamic look-up of node-names containing &#8216;:&#8217;, this
+may result in some performance degree.</li>
+</ol>
+</div>
+<div class="section" id="syntax">
+<h4>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h4>
+<p>The syntax of path descriptions is provided in two constellations, the first is an simple path
+pointing to a resource, the second is a search path, which assembles possible locations for requested
+resource.
+These two scenarios require at least two types of separators for the contained filesystem nodes,
+a separator for the path itself, and a separator for the search paths.
+The syntax elements of the filenames contain in addition on Posix systems the separator characters,
+leading to ambiguity for the static offline analysis of a given path.
+In addition pathnames can contain application prefixes, which are defined either by a specific number of separator
+characters, and/or have their own separator character.</p>
+<p>The detailed description of the path syntax is provided in the section <a class="reference internal" href="path_syntax.html#syntaxelements"><span class="std std-ref">Syntax Elements</span></a>.</p>
+</div>
+</div>
+<div class="section" id="node-paths">
+<h3>Node Paths<a class="headerlink" href="#node-paths" title="Permalink to this headline">¶</a></h3>
+<p>Node paths are analysed in accordance to the supported syntax [<a class="reference internal" href="path_syntax.html#syntaxelements"><span class="std std-ref">Syntax Elements</span></a>]
+based on the contained nodes.</p>
+</div>
+</div>
+<div class="section" id="file-and-resource-path-processing-standard-apis">
+<h2>File and Resource Path Processing Standard APIs<a class="headerlink" href="#file-and-resource-path-processing-standard-apis" title="Permalink to this headline">¶</a></h2>
+<p>The Python libraries offer specialized interfaces for file path name processings,
+and generic string processing APIs.
+The <em>os</em> module is the low-level API providing for basic local file and path addressing,
+with added functionality by the <em>string</em> class.
+The <em>re</em> package provides the processing of arbitrary strings by regular expressions.</p>
+<div class="section" id="os-package">
+<h3>&#8216;os&#8217; package<a class="headerlink" href="#os-package" title="Permalink to this headline">¶</a></h3>
+<p>The &#8216;<em>os</em>&#8216; package provides the low-level interfaces tightly coupled to the underlying OS.
+This is accompanied by the &#8216;<em>sys</em>&#8216; package covering the underlying system related APIs,
+which in parts overlap with features of &#8216;<em>os</em>&#8216;.</p>
+<div class="section" id="os-path-normpath">
+<h4>os.path.normpath<a class="headerlink" href="#os-path-normpath" title="Permalink to this headline">¶</a></h4>
+<p>The &#8216;os.path.normpath()&#8217; <a class="reference internal" href="references.html#normpath" id="id5">[normpath]</a> interface is a quite important interface
+when it comes to canonical file path names across multiple platforms.
+But it has still some inconsistencies between multiple platforms.
+The interface in particular is fixed on the current runtime environment,
+thus lacks the creation of canonical names for crossplatform application.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="o">&lt;</span><span class="nb">file</span><span class="o">-</span><span class="n">path</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>The following table lists the native calls.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="8%" />
+<col width="11%" />
+<col width="11%" />
+<col width="8%" />
+<col width="11%" />
+<col width="11%" />
+<col width="14%" />
+<col width="14%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">platform</th>
+<th class="head">d:/</th>
+<th class="head">d:/:e:</th>
+<th class="head">d:/:e:/</th>
+<th class="head">d:\</th>
+<th class="head">d:\:e:</th>
+<th class="head">d:\;e:</th>
+<th class="head">d:\:e:\</th>
+<th class="head">d:\;e:\</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>linux</td>
+<td>d:</td>
+<td>d:/:e:</td>
+<td>d:/:e:</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+<td>d:\:e:\</td>
+<td>d:\;e:\</td>
+</tr>
+<tr class="row-odd"><td>BSD</td>
+<td>d:</td>
+<td>d:/:e:</td>
+<td>d:/:e:</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+<td>d:\:e:\</td>
+<td>d:\;e:\</td>
+</tr>
+<tr class="row-even"><td>OS-X</td>
+<td>d:</td>
+<td>d:/:e:</td>
+<td>d:/:e:</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+<td>d:\:e:\</td>
+<td>d:\;e:\</td>
+</tr>
+<tr class="row-odd"><td>Solaris</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>Cygwin</td>
+<td>d:</td>
+<td>d:/:e:</td>
+<td>d:/:e:</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+<td>d:\:e:\</td>
+<td>d:\;e:\</td>
+</tr>
+<tr class="row-odd"><td>Windows</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\:e:</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\:e:</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+</tr>
+</tbody>
+</table>
+<p>With Linux, BSD, Solaris, and OS-X as Posix based platforms.</p>
+</div>
+<div class="section" id="os-split">
+<h4>os.split<a class="headerlink" href="#os-split" title="Permalink to this headline">¶</a></h4>
+<p>The split class splits the path from the file name part.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="o">&lt;</span><span class="nb">file</span><span class="o">-</span><span class="n">path</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>This behaves for the literally equal variants of the pathnames on
+both platforms slightly different.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="9%" />
+<col width="11%" />
+<col width="11%" />
+<col width="10%" />
+<col width="12%" />
+<col width="12%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">platform</th>
+<th class="head">d:/</th>
+<th class="head">d:/:e:</th>
+<th class="head">d:/:e:/</th>
+<th class="head">d:\</th>
+<th class="head">d:\:e:</th>
+<th class="head">d:\;e:</th>
+<th class="head">d:\:e:\</th>
+<th class="head">d:\;e:\</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>linux</td>
+<td>(&#8216;d:&#8217;, &#8216;&#8217;)</td>
+<td>(&#8216;d:&#8217;, &#8216;:e:&#8217;)</td>
+<td>(&#8216;d:/:e:&#8217;, &#8216;&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\:e:&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\;e:&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\:e:\&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\;e:\&#8217;)</td>
+</tr>
+<tr class="row-odd"><td>BSD</td>
+<td>(&#8216;d:&#8217;, &#8216;&#8217;)</td>
+<td>(&#8216;d:&#8217;, &#8216;:e:&#8217;)</td>
+<td>(&#8216;d:/:e:&#8217;, &#8216;&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\:e:&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\;e:&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\:e:\&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\;e:\&#8217;)</td>
+</tr>
+<tr class="row-even"><td>OS-X</td>
+<td>(&#8216;d:&#8217;, &#8216;&#8217;)</td>
+<td>(&#8216;d:&#8217;, &#8216;:e:&#8217;)</td>
+<td>(&#8216;d:/:e:&#8217;, &#8216;&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\:e:&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\;e:&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\:e:\&#8217;)</td>
+<td>(&#8216;&#8217;, &#8216;d:\;e:\&#8217;)</td>
+</tr>
+<tr class="row-odd"><td>Solaris</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>Windows</td>
+<td>(&#8216;d:/&#8217;, &#8216;&#8217;)</td>
+<td>(&#8216;d:/&#8217;, &#8216;:e:&#8217;)</td>
+<td>(&#8216;d:/:e:&#8217;, &#8216;&#8217;)</td>
+<td>(&#8216;d:\&#8217;, &#8216;&#8217;)</td>
+<td>(&#8216;d:\&#8217;, &#8216;:e:&#8217;)</td>
+<td>(&#8216;d:\&#8217;, &#8216;;e:&#8217;)</td>
+<td>(&#8216;d:\:e:&#8217;, &#8216;&#8217;)</td>
+<td>(&#8216;d:\;e:&#8217;, &#8216;&#8217;)</td>
+</tr>
+</tbody>
+</table>
+<p>With Linux, BSD, Solaris, and OS-X as Posix based platforms.</p>
+</div>
+</div>
+<div class="section" id="string-class">
+<h3>string class<a class="headerlink" href="#string-class" title="Permalink to this headline">¶</a></h3>
+<p>The frequent task required for file system analysis is the split of filepathnames
+into it&#8217;s path components and the filename.
+This could be performed e.g. by the interface <em>string.split()</em>
+and reversed by the interface <em>string.join()</em>.</p>
+<p>This works good, until it comes to some more sophisticated file system names including
+drive letters, application prefixes, network shares, URI, etc., where the things quickly become odd.
+Therefore the application of regular expressions offers a more accurate means of
+splitting paths, but requires advanced coding for pathsplit and escaping of contained
+special characters.</p>
+<p>The following call is expected to split a search path - PATH - into it&#8217;s parts of
+single search paths.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="nb">file</span><span class="o">-</span><span class="n">path</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>resulting in</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="7%" />
+<col width="13%" />
+<col width="13%" />
+<col width="8%" />
+<col width="13%" />
+<col width="12%" />
+<col width="15%" />
+<col width="13%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">platform</th>
+<th class="head">d:/</th>
+<th class="head">d:/:e:</th>
+<th class="head">d:/:e:/</th>
+<th class="head">d:\</th>
+<th class="head">d:\:e:</th>
+<th class="head">d:\;e:</th>
+<th class="head">d:\:e:\</th>
+<th class="head">d:\;e:\</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>linux</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;, &#8216;/&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;, &#8216;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;, &#8216;e&#8217;, &#8216;\&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\;e&#8217;, &#8216;\&#8217;]</td>
+</tr>
+<tr class="row-odd"><td>BSD</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;, &#8216;/&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;, &#8216;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;, &#8216;e&#8217;, &#8216;\&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\;e&#8217;, &#8216;\&#8217;]</td>
+</tr>
+<tr class="row-even"><td>OS-X</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;, &#8216;/&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;, &#8216;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;, &#8216;e&#8217;, &#8216;\&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\;e&#8217;, &#8216;\&#8217;]</td>
+</tr>
+<tr class="row-odd"><td>Solaris</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td>Windows</td>
+<td>[&#8216;d:/&#8217;]</td>
+<td>[&#8216;d:/:e:&#8217;]</td>
+<td>[&#8216;d:/:e:/&#8217;]</td>
+<td>[&#8216;d:\&#8217;]</td>
+<td>[&#8216;d:\:e:&#8217;]</td>
+<td>[&#8216;d:\&#8217;, &#8216;e:&#8217;]</td>
+<td>[&#8216;d:\:e:\&#8217;]</td>
+<td>[&#8216;d:\&#8217;, &#8216;e:\&#8217;]</td>
+</tr>
+</tbody>
+</table>
+<p>The following call is aimed to split in addition the matched path into a list of
+directory components.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">px</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="nb">file</span><span class="o">-</span><span class="n">path</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">):</span>
+   <span class="n">px</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="regexpr-with-re">
+<h3>regexpr with re<a class="headerlink" href="#regexpr-with-re" title="Permalink to this headline">¶</a></h3>
+<p>The most accurate framework for splitting pathnames into it&#8217;s components is
+provided by the <em>re</em> package based on string processing of arbitrary
+file system path names.
+The <em>re</em> package is extensively applied by the <em>filesysobjects</em> package
+[<a class="reference external" href="_modules/filesysobjects/paths.html#">paths</a>].
+[<a class="reference external" href="_modules/filesysobjects/apppaths.html#">apppaths</a>].
+[<a class="reference external" href="_modules/filesysobjects/pathtools.html#">pathtools</a>].</p>
+</div>
+</div>
+<div class="section" id="filesysobjects-package">
+<span id="filesysobjectsnormpathx"></span><h2>&#8216;filesysobjects&#8217; package<a class="headerlink" href="#filesysobjects-package" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="target-platform-parameter">
+<h3>Target Platform Parameter<a class="headerlink" href="#target-platform-parameter" title="Permalink to this headline">¶</a></h3>
+<p>The syntax of the supported file system paths could be categorized into the two major blocks
+<em>posix</em> and <em>win</em>, which are distinguished in particular by the separator characters.
+In addition some extra differences exist for the <em>posix</em> based file systems.
+The option <em>tpf</em> controls the conversion of the path syntax for the various platforms.</p>
+<p>The following overview depicts the effect of the option
+<em>tpf</em>.
+The &#8216;<em>local</em>&#8216; parameter of the &#8216;<em>filesysobjects.paths.normpathx()</em>&#8216;
+provides the transparent call-through of the local native &#8216;<em>os.normpath()</em>&#8216;.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="14%" />
+<col width="11%" />
+<col width="65%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">tpf</th>
+<th class="head">compatible
+to normpath</th>
+<th class="head">cross
+platform</th>
+<th class="head">behaviour</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>keep</td>
+<td>n.a.</td>
+<td>yes</td>
+<td>keeps input literally</td>
+</tr>
+<tr class="row-odd"><td>local</td>
+<td>yes</td>
+<td>no</td>
+<td>calls local os.path.normpath()</td>
+</tr>
+<tr class="row-even"><td>posix</td>
+<td>no</td>
+<td>yes*
+(<a href="#id6"><span class="problematic" id="id7">*</span></a>pchar)</td>
+<td>transforms all separators to &#8216;/&#8217; or &#8216;:&#8217;
+Portable for IEEE1003.1, 2013/3.276 Portable Character Set</td>
+</tr>
+<tr class="row-odd"><td>win</td>
+<td>no</td>
+<td>no</td>
+<td>transforms all separators to &#8216;\&#8217; or &#8216;;&#8217;</td>
+</tr>
+<tr class="row-even"><td>default</td>
+<td>no</td>
+<td>no</td>
+<td>adapts &#8216;win&#8217;(on win) or &#8216;posix&#8217;(on posix) to local os</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>.</p>
+<ol class="last arabic simple">
+<li>Supports standard Posix. The special semantics of OS-X/Darwin on HFS/HFS+ for the
+colon &#8216;:&#8217;, which is silently exchanged within names by the &#8216;finder&#8217; to a slash &#8216;/&#8217;, is not
+supported. The colon is kept literally, while the slash is interpreted as a path name
+separator in accordance to Posix.</li>
+<li>Shortcut named options:</li>
+</ol>
+</div>
+</div>
+<div class="section" id="filesysobjects-normpathx">
+<h3>&#8216;filesysobjects.normpathx&#8217;<a class="headerlink" href="#filesysobjects-normpathx" title="Permalink to this headline">¶</a></h3>
+<p>The
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.paths.normpathx">filesysobjects.paths.normpathx()</a>
+, and
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.pathtools.splitpathx">filesysobjects.pathtools.splitpathx()</a>
+extends the interface provided by <em>os</em> and <em>String</em> for accurate and advanced processing
+of resource paths in accordance to the full scope of standards and/or compatible to the native target
+platform, while the <em>os</em> and <em>String</em> packages/classes provide basic processing of file path names.</p>
+<p>Some basic examples are:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="7%" />
+<col width="10%" />
+<col width="12%" />
+<col width="7%" />
+<col width="10%" />
+<col width="10%" />
+<col width="12%" />
+<col width="12%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">platform</th>
+<th class="head">d:/</th>
+<th class="head">d:/:e:</th>
+<th class="head">d:/:e:/</th>
+<th class="head">d:\</th>
+<th class="head">d:\:e:</th>
+<th class="head">d:\;e:</th>
+<th class="head">d:\:e:\</th>
+<th class="head">d:\;e:\</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>keep</td>
+<td>d:/</td>
+<td>d:/:e:</td>
+<td>d:/:e:/</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+<td>d:\:e:\</td>
+<td>d:\;e:\</td>
+</tr>
+<tr class="row-odd"><td>local(on linux)</td>
+<td>d:</td>
+<td>d:/:e:</td>
+<td>d:/:e:</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+<td>d:\:e:\</td>
+<td>d:\;e:\</td>
+</tr>
+<tr class="row-even"><td>local(on win7)</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\:e:</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+</tr>
+<tr class="row-odd"><td>posix</td>
+<td>d:/</td>
+<td>d:/:e:</td>
+<td>d:/:e:/</td>
+<td>d:/</td>
+<td>d:/:e:</td>
+<td>d:/;e:</td>
+<td>d:/:e:/</td>
+<td>d:/;e:/</td>
+</tr>
+<tr class="row-even"><td>win</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\:e:\</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+<td>d:\:e:\</td>
+<td>d:\;e:\</td>
+</tr>
+<tr class="row-odd"><td>default(posix/win)</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>.</p>
+<ol class="last arabic simple" start="0">
+<li>The results from <em>os.path.normpath()</em> are as expected, while the cli <em>cygpath</em>
+diplays erroneous results e.g. in case of multiple colons &#8216;:&#8217;.</li>
+</ol>
+</div>
+</div>
+<div class="section" id="filesysobjects-splitpathx">
+<h3>&#8216;filesysobjects.splitpathx&#8217;<a class="headerlink" href="#filesysobjects-splitpathx" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="10%" />
+<col width="15%" />
+<col width="19%" />
+<col width="5%" />
+<col width="8%" />
+<col width="8%" />
+<col width="10%" />
+<col width="10%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">platform</th>
+<th class="head">d:/</th>
+<th class="head">d:/:e:</th>
+<th class="head">d:/:e:/</th>
+<th class="head">d:\</th>
+<th class="head">d:\:e:</th>
+<th class="head">d:\;e:</th>
+<th class="head">d:\:e:\</th>
+<th class="head">d:\;e:\</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>keep</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>local(on linux)</td>
+<td>[&#8216;d&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;, &#8216;/&#8217;]</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+<td>d:\:e:\</td>
+<td>d:\;e:\</td>
+</tr>
+<tr class="row-even"><td>local(on win7)</td>
+<td>[&#8216;d:&#8217;, \</td>
+<td>d:\:e:</td>
+<td>d:\:e:</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\:e:</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+</tr>
+<tr class="row-odd"><td>posix</td>
+<td>d:/</td>
+<td>d:/:e:</td>
+<td>d:/:e:/</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+<td>d:\:e:\</td>
+<td>d:\;e:\</td>
+</tr>
+<tr class="row-even"><td>win</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>default</td>
+<td>d:</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="filesysobjects-splitpathx-appprefix">
+<h3>&#8216;filesysobjects.splitpathx_appprefix&#8217;<a class="headerlink" href="#filesysobjects-splitpathx-appprefix" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="10%" />
+<col width="15%" />
+<col width="19%" />
+<col width="5%" />
+<col width="8%" />
+<col width="8%" />
+<col width="10%" />
+<col width="10%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">platform</th>
+<th class="head">d:/</th>
+<th class="head">d:/:e:</th>
+<th class="head">d:/:e:/</th>
+<th class="head">d:\</th>
+<th class="head">d:\:e:</th>
+<th class="head">d:\;e:</th>
+<th class="head">d:\:e:\</th>
+<th class="head">d:\;e:\</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>keep</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>local(on linux)</td>
+<td>[&#8216;d&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;, &#8216;/&#8217;]</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+<td>d:\:e:\</td>
+<td>d:\;e:\</td>
+</tr>
+<tr class="row-even"><td>local(on win7)</td>
+<td>[&#8216;d:&#8217;, \</td>
+<td>d:\:e:</td>
+<td>d:\:e:</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\:e:</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+</tr>
+<tr class="row-odd"><td>posix</td>
+<td>d:/</td>
+<td>d:/:e:</td>
+<td>d:/:e:/</td>
+<td>d:\</td>
+<td>d:\:e:</td>
+<td>d:\;e:</td>
+<td>d:\:e:\</td>
+<td>d:\;e:\</td>
+</tr>
+<tr class="row-even"><td>win</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>default</td>
+<td>d:</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="filesysobjects-splitpathx-pathvar">
+<h3>&#8216;filesysobjects.splitpathx_pathvar&#8217;<a class="headerlink" href="#filesysobjects-splitpathx-pathvar" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="7%" />
+<col width="12%" />
+<col width="12%" />
+<col width="7%" />
+<col width="12%" />
+<col width="13%" />
+<col width="13%" />
+<col width="14%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">platform</th>
+<th class="head">d:/</th>
+<th class="head">d:/:e:</th>
+<th class="head">d:/:e:/</th>
+<th class="head">d:\</th>
+<th class="head">d:\:e:</th>
+<th class="head">d:\;e:</th>
+<th class="head">d:\:e:\</th>
+<th class="head">d:\;e:\</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>keep</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>local(on linux)</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;, &#8216;/&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;, &#8216;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\;&#8217;, &#8216;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;, &#8216;e&#8217;, &#8216;\&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\;&#8217;, &#8216;d&#8217;, &#8216;\&#8217;]</td>
+</tr>
+<tr class="row-even"><td>local(on win7)</td>
+<td>[&#8216;d:&#8217;, &#8216;/&#8217;</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;, &#8216;&#8217;]</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>posix</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;/&#8217;, &#8216;e&#8217;, &#8216;/&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;, &#8216;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\;&#8217;, &#8216;e&#8217;, &#8216;&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\&#8217;, &#8216;e&#8217;, &#8216;\&#8217;]</td>
+<td>[&#8216;d&#8217;, &#8216;\;&#8217;, &#8216;d&#8217;, &#8216;\&#8217;]</td>
+</tr>
+<tr class="row-even"><td>win</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td>default</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="filesysobjects-vs-standard-libraries">
+<h2>&#8216;filesysobjects&#8217; vs. Standard Libraries<a class="headerlink" href="#filesysobjects-vs-standard-libraries" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="normpathx-vs-normpath">
+<h3>&#8216;normpathx&#8217; vs. &#8216;normpath&#8217;<a class="headerlink" href="#normpathx-vs-normpath" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference external" href="pyfilesysobjects.html#filesysobjects.paths.normpathx">filesysobjects.paths.normpathx()</a>
+extends the interface provided by <em>os</em>.
+While the   <em>os</em> packages provides limited basic processing of file path names,
+the &#8216;<em>filesysobjects</em>&#8216; package provides accuracy and extension to full scope of
+standard resource path names.</p>
+<p>The table compares &#8216;<em>string.split(os.pathsep)</em>&#8216; with
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.paths.normpathx">filesysobjects.paths.normpathx()</a>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="63%" />
+<col width="7%" />
+<col width="30%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&nbsp;</th>
+<th class="head">os</th>
+<th class="head">filesysobjects</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>native platform paths</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>cross-platform paths</td>
+<td>&nbsp;</td>
+<td>x</td>
+</tr>
+<tr class="row-even"><td>shares and application addresses</td>
+<td>&nbsp;</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>URI file prefixes</td>
+<td>&nbsp;</td>
+<td>x</td>
+</tr>
+<tr class="row-even"><td>native platform escaping</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>cross-platform escaping</td>
+<td>&nbsp;</td>
+<td>x</td>
+</tr>
+<tr class="row-even"><td>mixed paths</td>
+<td>&nbsp;</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td><em>Cygwin</em></td>
+<td>&nbsp;</td>
+<td>x</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="splitpathx-vs-split">
+<span id="filesysobjectssplitpath"></span><h3>&#8216;splitpathx&#8217; vs. &#8216;split&#8217;<a class="headerlink" href="#splitpathx-vs-split" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference external" href="pyfilesysobjects.html#filesysobjects.pathtools.splitpathx">filesysobjects.pathtools.splitpathx()</a>
+extend the interface provided by <em>os</em> and <em>String</em> for accurate processing.
+While the   <em>os</em> and <em>String</em> packages/classes provide basic processing of file path names
+with limited applicability in particular for non-local filenames,
+the &#8216;<em>filesysobjects</em>&#8216; package provides accuracy and extension to the full scope
+standard resource path names.</p>
+<p>The table compares &#8216;<em>string.split(os.pathsep)</em>&#8216; with
+<a class="reference external" href="pyfilesysobjects.html#filesysobjects.pathtools.splitpathx">filesysobjects.pathtools.splitpathx()</a>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="59%" />
+<col width="14%" />
+<col width="28%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">&nbsp;</th>
+<th class="head">String</th>
+<th class="head">filesysobjects</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>native platform paths</td>
+<td>x(0)</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>cross-platform paths</td>
+<td>x(1)</td>
+<td>x</td>
+</tr>
+<tr class="row-even"><td>shares and application addresses</td>
+<td>&nbsp;</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td>URI file prefixes</td>
+<td>&nbsp;</td>
+<td>x</td>
+</tr>
+<tr class="row-even"><td>mixed paths</td>
+<td>x(2)</td>
+<td>x</td>
+</tr>
+<tr class="row-odd"><td><em>Cygwin</em></td>
+<td>x(3)</td>
+<td>x</td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="0">
+<li>String.split() applicable for local file system paths, no app-prefixes,
+limited shares.</li>
+<li>String.split() applicable for local file system paths on remote sytem,
+no app-prefixes, limited shares.</li>
+<li>Simple paths could be handled by multiple calls, one for each platform.
+Applicable for local/native file system paths only, no app-prefixes,
+limited shares.</li>
+<li>No special support for intermixed <em>Cygwin</em> paths.</li>
+</ol>
+</div>
+</div>
+<div class="section" id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
+<p>The supported standards in accordance to <a class="reference internal" href="references.html#posix" id="id12">[POSIX]</a>/<a class="reference internal" href="references.html#ieee" id="id13">[IEEE]</a>, <a class="reference internal" href="references.html#ietf" id="id14">[IETF]</a>, and
+filesystem conventions <a class="reference internal" href="references.html#msdn" id="id15">[MSDN]</a> and <a class="reference internal" href="references.html#msospec" id="id16">[MSOSPEC]</a> are:</p>
+<ul class="simple">
+<li><a class="reference internal" href="references.html#cifs" id="id17">[CIFS]</a>: Common Internet File System</li>
+<li><a class="reference internal" href="references.html#cygwin" id="id18">[CYGWIN]</a>: Cygwin.org</li>
+<li><a class="reference internal" href="references.html#ieee1003c412" id="id19">[IEEE1003C412]</a>: IEEE Std 1003.1(TM), 2013 Edition; Chapter 4.12</li>
+<li><a class="reference internal" href="references.html#ms-cifs" id="id20">[MS-CIFS]</a>: Common Internet File System (CIFS) Protocol; Microsoft Inc.</li>
+<li><a class="reference internal" href="references.html#ms-dtyp" id="id21">[MS-DTYP]</a>: Windows Data Types - Chap. 2.2.57 UNC; Microsoft Inc.</li>
+<li><a class="reference internal" href="references.html#ms-smb" id="id22">[MS-SMB]</a>: Server Message Block (SMB) Protocol; Microsoft Inc.</li>
+<li><a class="reference internal" href="references.html#ntfs" id="id23">[NTFS]</a> NTFS Technical Reference</li>
+<li><a class="reference internal" href="references.html#os" id="id24">[os]</a>: os; Python.org</li>
+<li><a class="reference internal" href="references.html#os-path" id="id25">[os.path]</a>: os.path - <em>os.path.normpath()</em> variants;Python.org</li>
+<li><a class="reference internal" href="references.html#posix" id="id26">[POSIX]</a>: IEEE Std 1003.1(TM), 2013 Edition</li>
+<li><a class="reference internal" href="references.html#rfc1738" id="id27">[RFC1738]</a>: Uniform Resource Locators (URL)</li>
+<li><a class="reference internal" href="references.html#rfc1808" id="id28">[RFC1808]</a>: Relative Uniform Resource Locators</li>
+<li><a class="reference internal" href="references.html#rfc2396" id="id29">[RFC2396]</a>: Uniform Resource Identifiers (URI): Generic Syntax</li>
+<li><a class="reference internal" href="references.html#rfc2648" id="id30">[RFC2648]</a>: A URN Namespace for IETF Documents</li>
+<li><a class="reference internal" href="references.html#rfc3986" id="id31">[RFC3986]</a>: Uniform Resource Identifier - URI: Generic Syntax</li>
+<li><a class="reference internal" href="references.html#rfc4122" id="id32">[RFC4122]</a>: A Universally Unique IDentifier (UUID) URN Namespace</li>
+<li><a class="reference internal" href="references.html#rfc6570" id="id33">[RFC6570]</a>: URI Template</li>
+<li><a class="reference internal" href="references.html#rfc7320" id="id34">[RFC7320]</a>: URI Design and Ownership</li>
+<li><a class="reference internal" href="references.html#smbcifs" id="id35">[SMBCIFS]</a>: Microsoft SMB Protocol and CIFS Protocol</li>
+<li><a class="reference internal" href="references.html#unc" id="id36">[UNC]</a>: UNC: Common definition in <a class="reference internal" href="references.html#ms-dtyp" id="id37">[MS-DTYP]</a>: Windows Data Types - Chap. 2.2.57 UNC; Microsoft Inc.</li>
+<li><a class="reference internal" href="references.html#urischeme" id="id38">[URISCHEME]</a>: The file URI Scheme - draft-kerwin-file-scheme-13; IETF</li>
+<li>updates and and additional others...</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Filesystem Address Interfaces on Multiple Platforms</a><ul>
+<li><a class="reference internal" href="#names-and-paths">Names and Paths</a><ul>
+<li><a class="reference internal" href="#node-names">Node Names</a><ul>
+<li><a class="reference internal" href="#chracter-sets">Chracter Sets</a></li>
+<li><a class="reference internal" href="#reservered-characters">Reservered Characters</a></li>
+<li><a class="reference internal" href="#reserved-names">Reserved Names</a><ul>
+<li><a class="reference internal" href="#common">Common</a></li>
+<li><a class="reference internal" href="#posix">Posix</a></li>
+<li><a class="reference internal" href="#microsoft-windows-tm">Microsoft Windows(TM)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#special-cases">Special Cases</a><ul>
+<li><a class="reference internal" href="#cygwin">Cygwin</a></li>
+<li><a class="reference internal" href="#os-x-darwin">OS-X - Darwin</a></li>
+<li><a class="reference internal" href="#os-2">OS/2</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ambiguous-syntax-elements">Ambiguous Syntax Elements</a></li>
+<li><a class="reference internal" href="#syntax">Syntax</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#node-paths">Node Paths</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#file-and-resource-path-processing-standard-apis">File and Resource Path Processing Standard APIs</a><ul>
+<li><a class="reference internal" href="#os-package">&#8216;os&#8217; package</a><ul>
+<li><a class="reference internal" href="#os-path-normpath">os.path.normpath</a></li>
+<li><a class="reference internal" href="#os-split">os.split</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#string-class">string class</a></li>
+<li><a class="reference internal" href="#regexpr-with-re">regexpr with re</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#filesysobjects-package">&#8216;filesysobjects&#8217; package</a><ul>
+<li><a class="reference internal" href="#target-platform-parameter">Target Platform Parameter</a></li>
+<li><a class="reference internal" href="#filesysobjects-normpathx">&#8216;filesysobjects.normpathx&#8217;</a></li>
+<li><a class="reference internal" href="#filesysobjects-splitpathx">&#8216;filesysobjects.splitpathx&#8217;</a></li>
+<li><a class="reference internal" href="#filesysobjects-splitpathx-appprefix">&#8216;filesysobjects.splitpathx_appprefix&#8217;</a></li>
+<li><a class="reference internal" href="#filesysobjects-splitpathx-pathvar">&#8216;filesysobjects.splitpathx_pathvar&#8217;</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#filesysobjects-vs-standard-libraries">&#8216;filesysobjects&#8217; vs. Standard Libraries</a><ul>
+<li><a class="reference internal" href="#normpathx-vs-normpath">&#8216;normpathx&#8217; vs. &#8216;normpath&#8217;</a></li>
+<li><a class="reference internal" href="#splitpathx-vs-split">&#8216;splitpathx&#8217; vs. &#8216;split&#8217;</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#resources">Resources</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="filesysobjects_doc.html"
+                        title="previous chapter">A Primer on File and Directory Resources</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="python_encode_decode.html"
+                        title="next chapter">Filename Encoding and Decoding</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/filesysobjects_multiplatform_api.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="python_encode_decode.html" title="Filename Encoding and Decoding"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="filesysobjects_doc.html" title="A Primer on File and Directory Resources"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

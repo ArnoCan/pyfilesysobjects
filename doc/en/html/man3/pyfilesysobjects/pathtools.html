@@ -1,0 +1,1483 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>‘filesysobjects.pathtools’ - Module &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="next" title="‘filesysobjects.userdata’ - Module" href="userdata.html" />
+    <link rel="prev" title="‘filesysobjects.paths’ - Module" href="paths.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="userdata.html" title="‘filesysobjects.userdata’ - Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="paths.html" title="‘filesysobjects.paths’ - Module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="filesysobjects-pathtools-module">
+<h1>&#8216;filesysobjects.pathtools&#8217; - Module<a class="headerlink" href="#filesysobjects-pathtools-module" title="Permalink to this headline">¶</a></h1>
+<p>The <em>filesysobjects.pathtools</em> module provides advanced operations on paths, sub-paths,
+and side branches.</p>
+<div class="section" id="implementation-details">
+<h2>Implementation Details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="common-call-parameters">
+<h3>Common Call Parameters<a class="headerlink" href="#common-call-parameters" title="Permalink to this headline">¶</a></h3>
+<p>The current version calls &#8216;os.path.normpath&#8217; by default - when &#8216;raw&#8217; is
+not selected. This is consistent for all path related parameters including
+search paths: start, top, plist, spath, etc.. Thus generally clears double
+slashes, but also replaces symbolic links, so later literal post processing
+e.g. for match based processing should be normalized too.</p>
+<p>Current supported URIs for filenames are: &#8216;<a class="reference external" href="file://">file://</a>&#8216;, &#8216;<a class="reference external" href="smb://">smb://</a>&#8216;, and
+&#8216;cifs://&#8217;.
+Additionally UNC names and Posix-Netapps are suppored by
+the prefixes &#8216;\\&#8217; and &#8216;//&#8217;.
+The syntax formats are interchangeable in accordance to RFC8089 <a class="reference internal" href="references.html#rfc8089" id="id1">[RFC8089]</a>
+including the Annex.</p>
+<p>For application specific URIs refer to <a class="reference external" href="apppaths.html#">filesysobjects.apppaths</a>
+The following options are generic and common to multiple interfaces:</p>
+<div class="section" id="matchidx-idx">
+<h4>matchidx=#idx<a class="headerlink" href="#matchidx-idx" title="Permalink to this headline">¶</a></h4>
+<p>Matches on the provided index count
+only:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#idx==2 - ignores 0,1 and &gt;2, matches idx==2</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="matchcnt-num">
+<h4>matchcnt=#num<a class="headerlink" href="#matchcnt-num" title="Permalink to this headline">¶</a></h4>
+<p>The maximal number of matches returned when
+multiple occur:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1">#num==0 - all</span>
+<span class="c1">#num&gt;0  - number of matches returned</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="spath">
+<h4>spath<a class="headerlink" href="#spath" title="Permalink to this headline">¶</a></h4>
+<p>An existing path to be added to an entry
+from &#8216;plist&#8217;. The following cases are supported,
+for further specifics refer to the interfaces.</p>
+<ol class="arabic" start="0">
+<li><p class="first">Independent path entry - spath is absolute, just added.</p>
+</li>
+<li><p class="first">Subpath of current directory
+spath is relative and present in
+current working directory, added
+py prefixing &#8216;pwd&#8217;.</p>
+</li>
+<li><p class="first">Arbitrary side-branch of a provided path
+spath is relative, searched in plist
+for an insertion hook, added when
+found as absolute.</p>
+</li>
+<li><p class="first">Pattern matching - see manual &#8216;Semi-Literals&#8217;
+and shortcut tables in manual:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>regexpr:</dt>
+<dd><p class="first last">Regular expressions are applicable for
+match on &#8216;plist&#8217; only. Thus the part to be
+matched on the file system is required to be a
+literal.</p>
+</dd>
+<dt>glob:</dt>
+<dd><p class="first last">Glob expressions are applicable on the file system
+itself only, thus the part to be matched on the
+&#8216;plist&#8217; is required to be a literal.</p>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><dl class="first docutils">
+<dt>Is absolute path:</dt>
+<dd><p class="first last">Is checked to be a sub path of at least one of &#8216;plist&#8217;,
+than applied.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+<div class="section" id="start">
+<h4>start<a class="headerlink" href="#start" title="Permalink to this headline">¶</a></h4>
+<p>Start directory or file, when a file is provided the
+directory portion is used as the starting pointer.</p>
+<p>Each part is compared separately, but as a whole string.</p>
+</div>
+<div class="section" id="top">
+<h4>top<a class="headerlink" href="#top" title="Permalink to this headline">¶</a></h4>
+<p>The topmost path within a directory tree as an end point
+for a search operation. This is defined by the end of
+a directory path name string. E.g. the the bottom-up search
+beginning at the start directory:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">start</span><span class="o">=/</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="n">c</span><span class="o">/</span><span class="n">d</span><span class="o">/</span><span class="n">e</span><span class="o">/</span><span class="n">f</span><span class="o">/</span><span class="n">g</span>
+</pre></div>
+</div>
+<p>is terminated by:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">top</span><span class="o">=</span><span class="n">d</span>
+</pre></div>
+</div>
+<p>at:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="n">c</span><span class="o">/</span><span class="n">d</span>
+</pre></div>
+</div>
+<p>This is used as a match string for processing literally
+on the parts of the provided start directory. The match
+is checked after application of
+&#8216;os.path.normpath&#8217;. Providing absolute paths still match,
+because of the string, but eventually match multiple times
+when equal sub paths exist and the match order is changed
+to bottom-up search.</p>
+<p>The containment of &#8216;top&#8217; within the absolute &#8216;start&#8217; path
+is verified.</p>
+<p>Each part is compared separately, but as a whole string.</p>
+</div>
+<div class="section" id="plist">
+<h4>plist<a class="headerlink" href="#plist" title="Permalink to this headline">¶</a></h4>
+<p>List of strings to be searched. By default first match
+is used. Each is split into it&#8217;s components and matched
+separately.</p>
+<p>default := sys.path</p>
+</div>
+<div class="section" id="raw">
+<h4>raw<a class="headerlink" href="#raw" title="Permalink to this headline">¶</a></h4>
+<p>Suppress normalization by call of &#8216;os.path.normpath&#8217;. The
+caller has than to take care for appropriate measures for
+a feasible match.</p>
+</div>
+</div>
+<div class="section" id="glob-parametters">
+<h3>Glob Parametters<a class="headerlink" href="#glob-parametters" title="Permalink to this headline">¶</a></h3>
+<p>The &#8216;<em>glob</em>&#8216; wildcard definitions comprise a subset of regular expressions
+whith some deviation of their semantics.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path0</span> <span class="o">=</span> <span class="s1">&#39;/a/b/(x[!opq]*.py&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The resolution of contained path-elements as &#8216;<em>glob&#8217;</em> expressions
+is proceeded dynamically by applying the glob module onto the file system nodes.</p>
+</div>
+<div class="section" id="regular-expressions">
+<h3>Regular Expressions<a class="headerlink" href="#regular-expressions" title="Permalink to this headline">¶</a></h3>
+<p>The regular expressions support the full scope of the standard Pyhton &#8216;<em>re</em>&#8216; module.
+The expressions are used as post scan match-filter onto a set of fetched resource
+path names.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path0</span> <span class="o">=</span> <span class="s1">&#39;/a/b/(x[^opq]*|XYZ[^abc]*).(py|pyc|pyo)&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The regexpr are by default compiled/loaded once statically during load time of the module.
+The regular expressions for the path analysis permit the &#8216;<em>os.path.sep</em>&#8216; of the current platform
+thus supports multi-level path patterns.</p>
+<p>In order to avoid conflicts of the search patterns with reserved characters such as &#8216;/&#8217;, &#8216;\&#8217;,
+&#8216;;&#8217;, and &#8216;:&#8217;, the <em>filesysobjects</em> supports two types of quoting, which could be used to
+mask arbitrary parts of a path. The quotes parts are kept literally, including non-printable
+and unicode characters.</p>
+<ul>
+<li><p class="first">triple double-quotes</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path0</span> <span class="o">=</span> <span class="s1">&#39;/a/b/(x[^&quot;&quot;&quot;</span><span class="se">\\\\</span><span class="s1">/;:&quot;&quot;&quot;]*|XYZ[^abc]*).(py|pyc|pyo)&#39;</span>
+<span class="n">path0</span> <span class="o">=</span> <span class="s1">&#39;/a/b/(x&quot;&quot;&quot;[^</span><span class="se">\\\\</span><span class="s1">/;:]&quot;&quot;&quot;*|XYZ[^abc]*).(py|pyc|pyo)</span>
+<span class="n">path0</span> <span class="o">=</span> <span class="s1">&#39;/a/b/(&quot;&quot;&quot;x[^</span><span class="se">\\\\</span><span class="s1">/;:]*|XYZ[^abc]*&quot;&quot;&quot;).(py|pyc|pyo)&#39;</span>
+<span class="n">path0</span> <span class="o">=</span> <span class="s1">&#39;/a/b/&quot;&quot;&quot;(x[^</span><span class="se">\\\\</span><span class="s1">/;:]*|XYZ[^abc]*).(py|pyc|pyo)&quot;&quot;&quot;&#39;</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+<li><p class="first">triple single-quotes</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">path0</span> <span class="o">=</span> <span class="s2">&quot;/a/b/(x[^&#39;&#39;&#39;</span><span class="se">\\\\</span><span class="s2">/;:&#39;&#39;&#39;]*|XYZ[^abc]*).(py|pyc|pyo)&quot;</span>
+</pre></div>
+</td></tr></table></div>
+</li>
+</ul>
+<p>The quotings could be removed by the common parameter <em>stripquote</em>, which removes pairs of triple
+quotes.</p>
+<p>The interfaces within <em>pathtools</em> remove the quotes by default before applying the provided
+paths.</p>
+</div>
+<div class="section" id="glob-parametters-and-regular-expressions">
+<h3>Glob Parametters and Regular Expressions<a class="headerlink" href="#glob-parametters-and-regular-expressions" title="Permalink to this headline">¶</a></h3>
+<p>The &#8216;<em>glob</em>&#8216; wildcard definitions comprise a subset of regular expressions
+whith some deviation of their semantics.</p>
+<p>In the case of a dot for example this could be in addition ambiguous.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># file path name: /a/b/xname</span>
+<span class="n">path0</span> <span class="o">=</span> <span class="s1">&#39;/a/b/x.*&#39;</span>
+
+<span class="c1"># regexpr: matches</span>
+<span class="c1"># glob:    does not match</span>
+</pre></div>
+</td></tr></table></div>
+<p>or</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># file path name: /a/b/xname.c</span>
+<span class="n">path0</span> <span class="o">=</span> <span class="s1">&#39;/a/b/x.*&#39;</span>
+
+<span class="c1"># regexpr: matches</span>
+<span class="c1"># glob:    does not match</span>
+</pre></div>
+</td></tr></table></div>
+<p>or</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># file path name: /a/b/x.name.c</span>
+<span class="n">path0</span> <span class="o">=</span> <span class="s1">&#39;/a/b/x.*&#39;</span>
+
+<span class="c1"># regexpr: matches</span>
+<span class="c1"># glob:    matches</span>
+</pre></div>
+</td></tr></table></div>
+<p>or</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># file path name: /a/b/x.name.c</span>
+<span class="n">path0</span> <span class="o">=</span> <span class="s1">&#39;/a/b/x*.*&#39;</span>
+
+<span class="c1"># regexpr: matches</span>
+<span class="c1"># glob:    does not match</span>
+</pre></div>
+</td></tr></table></div>
+<p>Generally the regular expressions of Python provide a more flexible set of features.</p>
+</div>
+<div class="section" id="performance-optimization">
+<h3>Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permalink to this headline">¶</a></h3>
+<p>The internal performance optimization is based on the step-wise scan of the resource tree.
+This is the case when regular expressions spanning multiple directory segments are applied.
+When active, the regular expressions are - when possible - splitted into segments and
+applied for each segment partially.
+Due to the provided advanced and complex syntax of <em>re</em>, the applied optimization
+constraints some elements see <a class="reference internal" href="filesysobjects_design.html#searchperformanceopt"><span class="std std-ref">Search Performance Optimization</span></a>.
+This is based mainly on the compiled regular expression</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">_glob_prefix</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">r&quot;&quot;&quot;</span>
+<span class="s2">   (\[[\^][^\]]*\][*]*)                # 1 - [^...]  it is a re</span>
+<span class="s2">   |(\[[^/\]]*\][*]*)                  # 2 - [...]   a char class without separator</span>
+<span class="s2">   |(\[[!][^/\]]*[/][^\]]*\][*]*)      # 3 - [!.../...]   a non-def char class with separator</span>
+<span class="s2">   |(\[[/]*\][*]*)                     # 4 - [/]   a char class with posix-separator ONLY</span>
+<span class="s2">   |(\[[^/\[\]]*[/][^/\[]*\][*]*)      # 5 - [.../...]   a char class with posix-separator</span>
+<span class="s2">   |(\[[\\\\]*\][*]*)                  # 6 - [\\\\]   a char class with nt-separator ONLY</span>
+<span class="s2">   |(\[[^\\\\]*[\\\\][^\\\\]*\][*]*)   # 7 - [...\\\\...]   a char class with nt-separator</span>
+<span class="s2">   |(?&lt;![\\\\])([/]+)                  # 8 - &#39;/&#39;     class-less n * posix-separator</span>
+<span class="s2">   |(?&lt;![\\\\])([\\\\]+)               # 9 - &#39;\\&#39;    class-less n * nt-separator</span>
+<span class="s2">   |([.][*])                           # 10 - &#39;.*&#39;    any char wildcard</span>
+<span class="s2">   |([*])                              # 11 - wildcard character</span>
+<span class="s2">   |([^/\[\]]+)                        # 12 - any character</span>
+<span class="s2">   |(\[)                               # 13 - basically a syntax error, but could be a literal too</span>
+<span class="s2">   |(\])                               # 14 - basically a syntax error, but could be a literal too</span>
+<span class="s2">   &quot;&quot;&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>As shown, this implies some constraints on the application of the <em>re</em> syntax elements.</p>
+</div>
+<div class="section" id="whitelists-and-blacklists">
+<h3>Whitelists and Blacklists<a class="headerlink" href="#whitelists-and-blacklists" title="Permalink to this headline">¶</a></h3>
+<p>The match parameters provide for positive lists and for negative droplists.
+These lists are defined as lists of regular expressions, which are dynamically compiled and applied on the
+searched names.</p>
+<ul class="simple">
+<li>whitelist parameters select in case of a match.</li>
+<li>blacklist parameters drop in case of a match.</li>
+</ul>
+<p>The whitelist parameters select in case of a match, thus these are applied on the names
+of files and directories for match.
+The input could be either a list of regular expressions, which are applied in the provided order,
+or a single regular expression covering multiple filters.</p>
+<p>The whitelist parameters are either file name arguments, which contain globs or reqgular expressions,
+or parameters for specific interfaces.</p>
+<p>The blacklist parameters use a syntax similar to the whitelist parameters, but drop in case of a match.</p>
+</div>
+</div>
+<div class="section" id="module-filesysobjects.pathtools">
+<span id="module"></span><h2>Module<a class="headerlink" href="#module-filesysobjects.pathtools" title="Permalink to this headline">¶</a></h2>
+<p>The filesysobjects.pathstools module provides operations
+for address paths of file system based resources.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Current version supports local accessible file systems only.</p>
+</div>
+</div>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="clearpath">
+<h3>clearpath<a class="headerlink" href="#clearpath" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.pathtools.clearpath">
+<code class="descclassname">filesysobjects.pathtools.</code><code class="descname">clearpath</code><span class="sig-paren">(</span><em>plist=None</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pathtools.html#clearpath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pathtools.clearpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears, splits and joins a list of path variables by various criteria.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>plist</strong>:</dt>
+<dd><p class="first">List of paths to be cleared.
+See common options for details.</p>
+<p class="last">default := sys.path</p>
+</dd>
+<dt>kargs:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>abs</strong>:</dt>
+<dd><p class="first">Converts all entries into absolute pathnames.
+This implies the activation of the options
+<em>shellvars</em> and <em>uservars</em>.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>existent</strong>:</dt>
+<dd><p class="first">Removes all existing items. For test
+and verification.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>nonexistent</strong>:</dt>
+<dd><p class="first">Removes all items which do not exist.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>nonredundant</strong>:</dt>
+<dd><p class="first">Removes all items which are not redundant.
+Results e.g. in multiple incarnations of the same
+file/path type.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>normpath</strong>:</dt>
+<dd><p class="first">Calls &#8216;os.path.normpath&#8217; on each result.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>redundant</strong>:</dt>
+<dd><p class="first">Clears all items from redundancies.</p>
+<p class="last">default := True</p>
+</dd>
+<dt><strong>rel</strong>:</dt>
+<dd><p class="first">Converts all entries into relative pathnames.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>reverse</strong>:</dt>
+<dd><p class="first">This reverses the resulting search order
+from bottom-up to top-down. Takes effect on
+&#8216;redundant&#8217; only.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>shellvars</strong>:</dt>
+<dd><p class="first">Replaces shell variables within pathnames.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$VAR, ${VAR}
+%VAR%
+</pre></div>
+</div>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>uservars</strong>:</dt>
+<dd><p class="first">Replaces special user variables as
+path-prefix. Currently support:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>~ (tilde)
+$HOME, ${HOME}
+%HOME%
+</pre></div>
+</div>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>shrink</strong>:</dt>
+<dd><p class="first">Drops resulting empty items.</p>
+<p class="last">default := True</p>
+</dd>
+<dt><strong>split</strong>:</dt>
+<dd><p class="first">Forces split of multiple paths items within
+one item into separate item entries.</p>
+<p class="last">default := True</p>
+</dd>
+<dt><strong>stripquote</strong>:</dt>
+<dd><p class="first">Removes paired triple-quotes of protected/masked
+string sections.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;/a/&#39;&#39;&#39;head:&#39;&#39;&#39;/c&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;/a/head:/c&quot;</span>
+</pre></div>
+</div>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>withinItemOnly</strong>:</dt>
+<dd><p class="first">Performs any action for each
+item of &#8216;plist&#8217; only.</p>
+<p class="last">default := False</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>When successful returns &#8216;True&#8217;, else returns either &#8216;False&#8217;,
+or raises an exception.</dd>
+<dt>Raises:</dt>
+<dd>passed through exceptions:</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="expandpath">
+<h3>expandpath<a class="headerlink" href="#expandpath" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.pathtools.expandpath">
+<code class="descclassname">filesysobjects.pathtools.</code><code class="descname">expandpath</code><span class="sig-paren">(</span><em>*paths</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pathtools.html#expandpath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pathtools.expandpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Splits, expands and normalizes a list of paths and search paths.</p>
+<p><strong>REMINDER</strong>: Non-existent path entries are dropped.</p>
+<p>The input list &#8216;<em>*paths</em>&#8216; may contain mixed entries of:</p>
+<ul class="simple">
+<li>search paths - combined by <em>os.pathsep</em></li>
+<li>wildcards-paths containing &#8216;<em>literal</em>&#8216;, &#8216;<em>glob</em>&#8216;, and &#8216;<em>regexpr</em>&#8216; parts</li>
+<li>inserted user directory</li>
+<li>inserted environment variables</li>
+<li>file and directory paths</li>
+</ul>
+<p>The resulting normalized <em>list</em> contains in case of matches
+one path in each entry by the following algorithm.</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>Expand contained:
+
+1. expand environment variables
+2. expand user directory
+3. check and use if exists, else continue
+
+If wildcards are selected continue with
+
+4. split and resolve paths and remove quotes - *stripquote*
+5. expand *literals* and *globs*
+6. expand *literals* and *regexpr*
+</pre></div>
+</div>
+<p>Args:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>paths</strong>:</dt>
+<dd><p class="first">A list of paths and search paths to be expanded. For
+supported pattern of following table refer to parameter
+<em>wildcards</em>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="26%" />
+<col width="20%" />
+<col width="17%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">type</th>
+<th class="head"><em>W_LITERAL</em></th>
+<th class="head"><em>W_GLOB</em></th>
+<th class="head"><em>W_RE</em></th>
+<th class="head"><em>W_FULL</em></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>literal</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr class="row-odd"><td>glob</td>
+<td>&nbsp;</td>
+<td>X</td>
+<td>&nbsp;</td>
+<td>X</td>
+</tr>
+<tr class="row-even"><td>re</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>X</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+<p class="last">default := <em>W_RE</em>  # see parameter <strong>wildcards</strong></p>
+</dd>
+</dl>
+<p>kargs:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>dironly</strong>:</dt>
+<dd><p class="first">Contained file name paths are cut to their <em>dirname</em>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">expandvars</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="kc">True</span> <span class="o">|</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">default := <em>False</em></p>
+</dd>
+<dt><strong>expandvars</strong>:</dt>
+<dd><p class="first">Expand embedded environment variables.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">expandvars</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="kc">True</span> <span class="o">|</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">default := True</p>
+</dd>
+<dt><strong>expanduser</strong>:</dt>
+<dd><p class="first">Expand embedded user directories.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">expandvars</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="kc">True</span> <span class="o">|</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">default := True</p>
+</dd>
+<dt><strong>isDir</strong>:</dt>
+<dd><p class="first">Returns directories only.</p>
+<p class="last">default := all</p>
+</dd>
+<dt><strong>isFile</strong>:</dt>
+<dd><p class="first">Returns files only.</p>
+<p class="last">default := all</p>
+</dd>
+<dt><strong>nestclear</strong>:</dt>
+<dd><p class="first">Clear nested subdirectories</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">expandvars</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="kc">True</span> <span class="o">|</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>when <em>True</em>, e.g.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="p">:</span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="n">c</span><span class="p">::</span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="n">c</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b</span>
+</pre></div>
+</div>
+<p class="last">default := <em>False</em></p>
+</dd>
+<dt><strong>regexprspandir</strong>:</dt>
+<dd><p class="first">Controls whether regexpr may span multiple
+directories, thus handling os.path.sep as
+ordinary chars.</p>
+<p>This in particular controls the technical
+implementation of the iterative path
+resolution for  paths by intermixed
+wildcards.</p>
+<ul class="last">
+<li><p class="first">True:</p>
+<p>The treatment of path seperators within
+regexpr has to be assured by the caller.</p>
+</li>
+<li><p class="first">False:</p>
+<p>The regular experessions are resolved
+in chunks seperated by the path seperator.
+Thus each chunk is technically wrapped by
+the re-module:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s1">&#39;&lt;regexpr&gt;&#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s1">&#39;$&#39;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd>
+<dt><strong>strip</strong>:</dt>
+<dd><p class="first">Reduces by dropping redundancies. The strip parameter
+influences the match of regular expressions, which just
+do a pattern match, thus hit null-separator directories too.
+The strip of these prevents from unwanted matches on separator
+characters.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">strip</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+     <span class="kc">True</span>      <span class="c1"># clear null-separators</span>
+   <span class="o">|</span> <span class="kc">False</span>     <span class="c1"># no strip at all</span>
+   <span class="o">|</span> <span class="nb">all</span>       <span class="c1"># clear any redundancy</span>
+   <span class="o">|</span> <span class="n">contain</span>   <span class="c1"># contained sub directories</span>
+   <span class="o">|</span> <span class="n">multiple</span>  <span class="c1"># multiple occurance</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">default := True</p>
+</dd>
+<dt><strong>spf</strong>:</dt>
+<dd><p class="first">Source platform, defines the input syntax domain.
+For the syntax refer to API in the manual at <a class="reference internal" href="filesysobjects_api.html#opts-spf"><span class="std std-ref">spf</span></a>.</p>
+<p class="last">For additi0onal details refer to
+<a class="reference internal" href="filesysobjects_api.html#tpf-and-spf"><span class="std std-ref">tpf and spf</span></a>,
+<a class="reference external" href="paths.html#getspf">paths.getspf()</a>,
+<a class="reference internal" href="apppaths.html#def-normapppathx"><span class="std std-ref">normapppathx()</span></a>,
+<a class="reference external" href="paths.html#normpathx">normpathx()</a>.</p>
+</dd>
+<dt><strong>wildcards</strong>:</dt>
+<dd><p class="first">Controls the type of path evaluation.
+Supported <em>paths</em> values types are:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">wildcards</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+    <span class="n">W_LITERAL</span>      <span class="c1"># literal existence check</span>
+    <span class="o">|</span> <span class="n">W_GLOB</span>       <span class="c1"># globs, contains W_LITERAL</span>
+    <span class="o">|</span> <span class="n">W_RE</span>         <span class="c1"># re, contains W_GLOB</span>
+    <span class="o">|</span> <span class="n">W_FULL</span>       <span class="c1"># re</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Expects mixed path names with <em>literals</em>, <em>globs</em>, and <em>regexpr</em>.</p>
+<p class="last">default := <em>W_RE</em></p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>In case of success a list with directory entries with
+splitted search paths. An empty list when no results.</dd>
+<dt>Raises:</dt>
+<dd><p class="first">PathToolsError</p>
+<p class="last">pass-through</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="findpattern">
+<h3>findpattern<a class="headerlink" href="#findpattern" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.pathtools.findpattern">
+<code class="descclassname">filesysobjects.pathtools.</code><code class="descname">findpattern</code><span class="sig-paren">(</span><em>*srcdirs</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pathtools.html#findpattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pathtools.findpattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes on each <em>srcdirs</em> a tree search with match and drop patterns.
+The interface is basically similar to &#8216;find&#8217; with enhanced match options.</p>
+<p>The search operation relies for Python3.5+ on <em>os.scandir()</em> - for
+Python2.7 on <em>scandir.scandir()</em>. The interface extends the lower layer
+API by lists of filters with support for &#8216;literal&#8217;, &#8216;glob&#8217; and/or
+&#8216;regexpr&#8217; pattern.</p>
+<p>The search algorithm is performed as:</p>
+<ol class="arabic" start="0">
+<li><p class="first">If <em>srcdirs</em> is provided use each as starting file path,
+else initialize based on current working directory.</p>
+</li>
+<li><p class="first">Set behavior attributes, see options:</p>
+<ol class="arabic simple" start="0">
+<li><em>listorder</em></li>
+<li><em>followlinks</em></li>
+<li><em>matchbehavior</em></li>
+<li><em>matchcnt</em></li>
+</ol>
+<p>.</p>
+</li>
+<li><p class="first">If no filter parameters are present return afterwards.</p>
+<p>Else apply filter parameters. Each non-matching condition
+continues with next filter cycle by default. When no match
+the result is accepted, see options:</p>
+<ol class="arabic simple" start="0">
+<li>check <em>level</em></li>
+<li>check <em>blacklist</em></li>
+<li>check <em>whitelist</em></li>
+<li>check <em>dropdirs</em></li>
+<li>check <em>type</em></li>
+</ol>
+<p>.</p>
+</li>
+<li><p class="first">Apply string manipulation, see options</p>
+<ol class="loweralpha simple">
+<li>check-cut <em>topcutlist</em></li>
+</ol>
+<p>.</p>
+</li>
+</ol>
+<p>The general behavior for the parameters is additive, this means
+e.g. when provided <em>wildcards</em>, <em>globs</em>, <em>regexpr</em>, and <em>filter</em>
+these are applied subsequently. Each match is added by default
+to the result list. The drop parameters instantly remove the match
+from the result list.</p>
+<p>Args:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt><strong>srcdirs</strong>:</dt>
+<dd><p class="first">List of top level paths for search. Supports <em>literal</em>,
+<em>re</em>, and <em>glob</em>.</p>
+<p class="last">default := <em>[&lt;current-workdir&gt;,]</em></p>
+</dd>
+<dt>kargs:</dt>
+<dd><p class="first">Additional control:</p>
+<dl class="last docutils">
+<dt><strong>abs</strong>:</dt>
+<dd><p class="first">Defines the type of returned path value,
+when present.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">abs</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+      <span class="kc">True</span>    <span class="c1"># Force absolute paths.</span>
+    <span class="o">|</span> <span class="kc">False</span>   <span class="c1"># Force relative paths.</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">default := &#8220;depends on type of input&#8221;</p>
+</dd>
+<dt><strong>blacklist</strong>:</dt>
+<dd><p class="first">File system nodes to be dropped from the result.
+Supports Python <em>re</em> expressions,
+See <a class="reference external" href="path_syntax.html#variants-of-pathname-parameters-literals-regexpr-and-glob">Variants of Pathname Parameters - Literals, RegExpr, and Glob</a></p>
+<p class="last">default := None</p>
+</dd>
+<dt><strong>whitelist</strong>:</dt>
+<dd><p class="first">File system nodes to be added to the result.
+Supports Python <em>re</em> expressions,
+See <a class="reference external" href="path_syntax.html#variants-of-pathname-parameters-literals-regexpr-and-glob">Variants of Pathname Parameters - Literals, RegExpr, and Glob</a></p>
+<p class="last">default := <em>*</em></p>
+</dd>
+<dt><strong>followlinks</strong>:</dt>
+<dd><p class="first">Follow symbolic links.</p>
+<p class="last">default := <em>False</em></p>
+</dd>
+<dt><strong>gid</strong>:</dt>
+<dd>Group ID.</dd>
+<dt><strong>level</strong>:</dt>
+<dd><p class="first">Depth of search. The values are:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kc">None</span><span class="p">:</span> <span class="n">Search</span> <span class="n">the</span> <span class="n">subtree</span> <span class="n">unlimited</span><span class="o">.</span>
+<span class="mi">0</span><span class="p">:</span>    <span class="n">Current</span> <span class="n">directory</span> <span class="n">only</span><span class="p">,</span> <span class="n">basically</span>
+      <span class="n">the</span> <span class="n">same</span> <span class="k">as</span> <span class="o">*</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">()</span><span class="o">*.</span>
+<span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>   <span class="n">Sub</span><span class="o">-</span><span class="n">directories</span> <span class="n">of</span> <span class="n">given</span> <span class="n">level</span><span class="o">.</span>
+</pre></div>
+</div>
+<p class="last">default := <em>None</em></p>
+</dd>
+<dt><strong>matchcnt</strong>:</dt>
+<dd><p class="first">Defines the selection of matches:</p>
+<ul class="simple">
+<li><em>n&lt;0</em>: the last <em>n</em>, last := <em>-1</em>.</li>
+<li><em>n=0</em>: all</li>
+<li><em>n&gt;0</em>: the first <em>n</em>, first := <em>1</em>.</li>
+</ul>
+<p class="last">default := 0</p>
+</dd>
+<dt><strong>nopostfix</strong>:</dt>
+<dd>Deletes for files the postfix.</dd>
+<dt><strong>output</strong>:</dt>
+<dd><p class="first">Output format. Current available formats are:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+    <span class="n">OF_LIST_STR</span><span class="p">,</span>   <span class="c1"># list of file system path names</span>
+    <span class="n">OF_LIST_OID</span><span class="p">,</span>   <span class="c1"># list of dotted object notation</span>
+    <span class="n">OF_RAW</span>         <span class="c1"># list of raw entries *DirEntry*, see scandir</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt><strong>topcutlist</strong>:</dt>
+<dd><p class="first">Cut listed topmost path elements from
+found list elements, resulting in relative
+pathnames.</p>
+<p class="last">default := <em>[&#8216;.&#8217; + os.sep]</em></p>
+</dd>
+<dt><strong>topdown</strong>:</dt>
+<dd><p class="first">Defines the order or the resulting list, same as
+<em>os.walk</em>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">topdown</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="kc">True</span> <span class="o">|</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">default := True</p>
+</dd>
+<dt><strong>types</strong>:</dt>
+<dd><p class="first">Search and list selected types only.
+The value is a bit-array.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">T_ALL</span><span class="p">,</span> <span class="n">T_DEV</span><span class="p">,</span> <span class="n">T_FILE</span><span class="p">,</span> <span class="n">T_DIR</span><span class="p">,</span> <span class="n">T_HARDL</span><span class="p">,</span>
+<span class="n">T_EXP</span><span class="p">,</span> <span class="n">T_LOCAL</span><span class="p">,</span> <span class="n">T_MNT</span><span class="p">,</span> <span class="n">T_NODES</span><span class="p">,</span>
+<span class="n">T_SYML</span>
+</pre></div>
+</div>
+<p class="last">default := <em>T_ALL</em></p>
+</dd>
+<dt><strong>uid</strong>:</dt>
+<dd>User ID.</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>Results in an list of found entries. When none,
+an empty list.</dd>
+</dl>
+<p>Raises:</p>
+<blockquote>
+<div>ffs.</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="findrelpath-in-searchpath">
+<h3>findrelpath_in_searchpath<a class="headerlink" href="#findrelpath-in-searchpath" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.pathtools.findrelpath_in_searchpath">
+<code class="descclassname">filesysobjects.pathtools.</code><code class="descname">findrelpath_in_searchpath</code><span class="sig-paren">(</span><em>spath</em>, <em>plist=None</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pathtools.html#findrelpath_in_searchpath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pathtools.findrelpath_in_searchpath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for subdirectory trees <em>spath</em> of the paths
+contained in <em>plist</em>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">MATCH</span> <span class="p">:</span>  <span class="n">plist</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">/</span><span class="n">spath</span>
+</pre></div>
+</div>
+<p>supports <em>glob</em>.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>spath</strong>:</dt>
+<dd><p class="first">A path to be hooked into &#8216;plist[]&#8217; when present.
+Could be either a literal, or a glob as an relative
+or absolute path. Valid <em>spath</em> wildcard types:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="69%" />
+<col width="31%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>literal</td>
+<td>X</td>
+</tr>
+<tr class="row-even"><td>re</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td>glob</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+<p>See common options for details.</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">spath</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="n">literal</span><span class="o">|</span><span class="n">glob</span><span class="p">):</span>
+</pre></div>
+</div>
+</dd>
+<dt><strong>plist</strong>:</dt>
+<dd><p class="first">List of potential hooks for &#8216;spath&#8217;.
+The following formats are provided:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>list of single paths - used literally</li>
+<li>list of search path strings - each search path is split</li>
+<li>string with search path - split into it&#8217;s components</li>
+<li>string with a single path - used literally</li>
+</ol>
+</div></blockquote>
+<p>The default behavior is:</p>
+<blockquote>
+<div><ul class="simple">
+<li>first: (1.)</li>
+<li>second: (3.), this contains (4.)</li>
+</ul>
+</div></blockquote>
+<p>The case (2.) has to be forced by the key-option: &#8216;subsplit&#8217;,
+or to be prepared by the call &#8216;clearpath(split=True,)&#8217;.</p>
+<p>Due to performance the case #1 should be preferred in order
+to save repetitive automatic conversion.</p>
+<p>See common options for further details.</p>
+<p class="last">default := sys.path</p>
+</dd>
+<dt>kargs:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>isDir</strong>:</dt>
+<dd>Is a directory.</dd>
+<dt><strong>isFile</strong>:</dt>
+<dd>Is a file.</dd>
+<dt><strong>isLink</strong>:</dt>
+<dd>Is a symbolic link.</dd>
+<dt><strong>isPathByLink</strong>:</dt>
+<dd>Has a symbolic link in path.</dd>
+<dt><strong>matchidx</strong>:</dt>
+<dd><p class="first">Ignore matches &#8216;&lt; #idx&#8217;,
+return match &#8216;== #idx&#8217;. Depends on
+&#8216;reverse&#8217;</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">matchidx</span> <span class="p">:</span><span class="o">=</span> <span class="c1">#idx:</span>
+</pre></div>
+</div>
+<p class="last">default := 0 # first match</p>
+</dd>
+<dt><strong>noglob</strong>:</dt>
+<dd>Suppress application of &#8216;glob&#8217;.</dd>
+<dt><strong>not</strong>:</dt>
+<dd>Inverts to does not matched defined
+criteria.</dd>
+<dt><strong>raw</strong>:</dt>
+<dd>Suppress normalization by call of
+&#8216;os.path.normpath&#8217;.</dd>
+<dt><strong>reverse</strong>:</dt>
+<dd>Reversed search order.</dd>
+<dt><strong>subsplit</strong>:</dt>
+<dd>Splits each item part of a &#8216;plist&#8217; option.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>When successful returns the absolute pathname,
+else &#8216;None&#8217;. For a list refer to iterator.</dd>
+<dt>Raises:</dt>
+<dd>PathToolsError
+passed through exceptions</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="findrelpath-in-searchpath-iter">
+<h3>findrelpath_in_searchpath_iter<a class="headerlink" href="#findrelpath-in-searchpath-iter" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.pathtools.findrelpath_in_searchpath_iter">
+<code class="descclassname">filesysobjects.pathtools.</code><code class="descname">findrelpath_in_searchpath_iter</code><span class="sig-paren">(</span><em>spath</em>, <em>plist=None</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pathtools.html#findrelpath_in_searchpath_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pathtools.findrelpath_in_searchpath_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates all matches in plist, see <em>findrelpath_in_searchpath</em>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="findrelpath-in-uppertree">
+<h3>findrelpath_in_uppertree<a class="headerlink" href="#findrelpath-in-uppertree" title="Permalink to this headline">¶</a></h3>
+<p>Convenience function, uses &#8216;<em>findrelpath_in_searchpath</em>&#8216; and &#8216;<em>set_uppertree_searchpath</em>&#8216;.</p>
+<dl class="function">
+<dt id="filesysobjects.pathtools.findrelpath_in_uppertree">
+<code class="descclassname">filesysobjects.pathtools.</code><code class="descname">findrelpath_in_uppertree</code><span class="sig-paren">(</span><em>spath</em>, <em>plist=None</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pathtools.html#findrelpath_in_uppertree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pathtools.findrelpath_in_uppertree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates all matches in plist, see findrelpath_in_searchpath.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="findrelpath-in-uppertree-iter">
+<h3>findrelpath_in_uppertree_iter<a class="headerlink" href="#findrelpath-in-uppertree-iter" title="Permalink to this headline">¶</a></h3>
+<p>Convenience function, uses &#8216;<em>findrelpath_in_searchpath</em>&#8216; and &#8216;<em>set_uppertree_searchpath</em>&#8216;.</p>
+<dl class="function">
+<dt id="filesysobjects.pathtools.findrelpath_in_uppertree_iter">
+<code class="descclassname">filesysobjects.pathtools.</code><code class="descname">findrelpath_in_uppertree_iter</code><span class="sig-paren">(</span><em>spath</em>, <em>plist=None</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pathtools.html#findrelpath_in_uppertree_iter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pathtools.findrelpath_in_uppertree_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates all matches in plist, see <em>findrelpath_in_uppertree</em>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="get-subpath-product">
+<h3>get_subpath_product<a class="headerlink" href="#get-subpath-product" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.pathtools.get_subpath_product">
+<code class="descclassname">filesysobjects.pathtools.</code><code class="descname">get_subpath_product</code><span class="sig-paren">(</span><em>dirs</em>, <em>subpaths</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pathtools.html#get_subpath_product"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pathtools.get_subpath_product" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the textual cartesian product of directories and relative sub-paths.
+Addditional checks sould be applied by <em>clearpath()</em> and <em>expandpath()</em>.</p>
+<p>The calls for the specific platforms notations:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cprod_posix</span> <span class="o">=</span> <span class="n">get_subpath_product</span><span class="p">((</span><span class="s1">&#39;/path/0&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/1&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;suba&#39;</span><span class="p">,</span> <span class="s1">&#39;subb&#39;</span><span class="p">))</span>
+<span class="n">cprod_win32</span> <span class="o">=</span> <span class="n">get_subpath_product</span><span class="p">((</span><span class="s1">&#39;c:\path &#39;</span><span class="p">,</span> <span class="s1">&#39;d:\path&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;suba&#39;</span><span class="p">,</span> <span class="s1">&#39;subb&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>results in:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cprod_posix</span> <span class="o">==</span> <span class="p">[</span>
+    <span class="s1">&#39;/path/0/suba&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/0/subb&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;/path/1/suba&#39;</span>  <span class="s1">&#39;/path/1/subb&#39;</span>
+ <span class="p">]</span>
+<span class="n">cprod_win32</span> <span class="o">==</span> <span class="p">[</span>
+    <span class="s1">&#39;c:\path \suba&#39;</span><span class="p">,</span> <span class="s1">&#39;c:\path \subb&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;d:\path\suba&#39;</span>  <span class="s1">&#39;d:\path\subb&#39;</span>
+ <span class="p">]</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>dirs</strong>:</dt>
+<dd>Base directories for the provided subdirectories.</dd>
+<dt><strong>subpaths</strong>:</dt>
+<dd>Sub-paths, each to be located within each of the
+directories <em>dirs</em>.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>The list of path names resulting from the literal textual
+cartesian product.</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="glob-to-re">
+<h3>glob_to_re<a class="headerlink" href="#glob-to-re" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.pathtools.glob_to_re">
+<code class="descclassname">filesysobjects.pathtools.</code><code class="descname">glob_to_re</code><span class="sig-paren">(</span><em>expr</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pathtools.html#glob_to_re"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pathtools.glob_to_re" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compiles a <em>glob</em> to the corresponding <em>re</em>.
+The following mapping is implemented:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">glob</th>
+<th class="head">re</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>*</td>
+<td>.*</td>
+</tr>
+<tr class="row-odd"><td>[!x]</td>
+<td>[^x]</td>
+</tr>
+<tr class="row-even"><td>.</td>
+<td>[.]</td>
+</tr>
+<tr class="row-odd"><td>?</td>
+<td>.</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>expr</strong>:</dt>
+<dd>A <em>glob</em> expression. The function relies on
+the caller and &#8216;blindly&#8217; assumes to process
+a glob.</dd>
+<dt>kargs:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>spf</strong>:</dt>
+<dd>The platform defining the syntax domain
+of <em>expr</em>.</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>The converted expression.</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+<p><strong>Description:</strong></p>
+<p>The compilation of <em>glob</em> expressions into <em>re</em> expressions is basically
+straight forward. I is required in particular when partial <em>glob</em> expressions
+have to be used in combination with <em>re</em> expressions for match filters on
+file path names.
+The result is as long unambiguous, as long the input expression is actually a
+<em>glob</em> expression. The choosen compilation is not neccessarily syntactic idempotent.
+The compilation results may look suprisingly, because the input is trusted as
+a pure <em>glob</em> expression.
+So for example the expression</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">a</span><span class="o">/.*/</span><span class="n">b</span>
+</pre></div>
+</td></tr></table></div>
+<p>is compiled to</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="p">[</span><span class="o">.</span><span class="p">]</span><span class="o">.*/</span><span class="n">b</span>
+</pre></div>
+</td></tr></table></div>
+<p>This is perfectly allright.</p>
+<ul>
+<li><p class="first">The term &#8216;<em>.*</em>&#8216; has the semantics in the <em>glob</em> domain:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="n">dot</span> <span class="n">folowed</span> <span class="n">by</span> <span class="nb">any</span> <span class="n">number</span> <span class="n">of</span> <span class="nb">any</span> <span class="n">characters</span><span class="p">,</span> <span class="n">which</span> <span class="ow">is</span> <span class="n">terminated</span>
+<span class="n">by</span> <span class="n">the</span> <span class="nb">next</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">While in the <em>re</em> domain the term &#8216;<em>.*</em>&#8216; has a slightly different semantics :</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Any</span> <span class="n">character</span> <span class="n">followed</span> <span class="n">by</span> <span class="n">an</span> <span class="n">arbitrary</span> <span class="n">number</span> <span class="n">of</span> <span class="nb">any</span> <span class="n">characters</span><span class="p">,</span>
+<span class="n">which</span> <span class="ow">is</span> <span class="n">terminated</span> <span class="n">by</span> <span class="n">the</span> <span class="nb">next</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>So the <em>glob</em> compiled as:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="p">[</span><span class="o">.</span><span class="p">]</span><span class="o">.*/</span><span class="n">b</span>
+
+<span class="c1"># 0. /a/.        =&gt;   /a/[.]</span>
+
+<span class="c1"># 1. /a/[.]*/b   =&gt;   /a/[.].*/b</span>
+</pre></div>
+</td></tr></table></div>
+<p>This will match on any name within &#8216;<em>/a/</em>&#8216; starting with a &#8216;.&#8217;.</p>
+<p>Thus for the design of the reagular expressions the specifics have to be considered.</p>
+<p>The possible additional semantic of e.g. null-dir is not considered for the compilation,
+but is processed by the normalization interfaces accordingly.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="s1">&#39;*/./././*&#39;</span>   <span class="o">=&gt;</span>  <span class="s1">&#39;*/[.]/[.]/[.]/*&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The semantics with the representation of one/character names is:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="s1">&#39;*/?/?/?/*&#39;</span>   <span class="o">=&gt;</span>  <span class="s1">&#39;*/./././*&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>For this reasons the basic compilation is not idempotent, which means that
+multiple calls finally change the semantics. The following repetitive
+application</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="mf">0.</span> <span class="s1">&#39;a/*/b&#39;</span>       <span class="o">=&gt;</span>  <span class="s1">&#39;a/.*/b&#39;</span>
+ <span class="mf">1.</span> <span class="s1">&#39;a/.*/b&#39;</span>      <span class="o">=&gt;</span>  <span class="s1">&#39;a/[.].*/b&#39;</span>
+ <span class="mf">2.</span> <span class="s1">&#39;a/[.].*/b&#39;</span>   <span class="o">=&gt;</span>  <span class="s1">&#39;a/[.][.].*/b&#39;</span>
+
+ <span class="ow">and</span> <span class="n">so</span> <span class="n">on</span><span class="o">...</span>
+</pre></div>
+</td></tr></table></div>
+<p>leads to an unexpected result.</p>
+<p>The windows domain requires special attention when prohibited special characters
+are used in a multiple platform application.
+The back-slash separator requires in general special consideration.</p>
+<p>The following escaped characters on POSIX platforms are handled different on
+Windows platforms due to the standard file systems restrictions.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span>/\:*?&quot;&lt;&gt;|
+</pre></div>
+</td></tr></table></div>
+<p>Resulting in the non-ambiguous compilation of:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span> <span class="mf">0.</span> <span class="s1">&#39;a</span><span class="se">\\</span><span class="s1">b</span><span class="se">\\</span><span class="s1">*&#39;</span>        <span class="o">=&gt;</span>  <span class="n">a</span> <span class="n">wildcard</span><span class="p">,</span> <span class="n">no</span> <span class="n">escape</span> <span class="k">for</span> <span class="s1">&#39;*&#39;</span>
+ <span class="mf">1.</span> <span class="s1">&#39;a</span><span class="se">\\</span><span class="s1">b</span><span class="se">\\</span><span class="s1">?&#39;</span>        <span class="o">=&gt;</span>  <span class="n">a</span> <span class="n">single</span> <span class="n">character</span><span class="p">,</span> <span class="n">no</span> <span class="n">escape</span> <span class="k">for</span> <span class="s1">&#39;?&#39;</span>
+ <span class="mf">2.</span> <span class="s1">&#39;a</span><span class="se">\\\\</span><span class="s1">b</span><span class="se">\\\\</span><span class="s1">?&#39;</span>    <span class="o">=&gt;</span>  <span class="n">still</span> <span class="n">the</span> <span class="n">path</span> <span class="s1">&#39;a</span><span class="se">\\</span><span class="s1">b</span><span class="se">\\</span><span class="s1">?&#39;</span><span class="p">,</span> <span class="n">no</span> <span class="n">escape</span> <span class="k">for</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The regular expressions may contain in addition control sequences and special
+terms of the <em>re</em> package. These are not yet supported.</p>
+<p>See also <em>pathtools.split_re_glob</em></p>
+</div>
+<div class="section" id="split-re-glob">
+<h3>split_re_glob<a class="headerlink" href="#split-re-glob" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.pathtools.split_re_glob">
+<code class="descclassname">filesysobjects.pathtools.</code><code class="descname">split_re_glob</code><span class="sig-paren">(</span><em>expr</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pathtools.html#split_re_glob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pathtools.split_re_glob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Splits a mixed path expression into the <em>glob</em> + <em>literal</em>
+prefix and the regular expression <em>re</em> postfix. The cut for the
+expression is done by grouping the expressions at the edge of
+paths by matched free characters of path separators. The
+detection of the first <em>re</em> is done by detecting an unambiguously
+non-glob expression. These are considered as <em>re</em> expressions:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>[^...]     a exclusive character class
+(...)      a group
+\[ or \]   escaped square brackets
+</pre></div>
+</div>
+<p>Due to the various permitted character ranges,
+where e.g. POSIX allows almost any character these
+maz still be valid characters. In this case they have
+to be either escaped, or to be applied within character
+classes.</p>
+<p>The type resolution could in addition controlled by
+the option <em>typeprio</em>, which redfines some compilation
+priorities.</p>
+<p>See manual for further details.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>expr</strong>:</dt>
+<dd>expression to be split</dd>
+<dt>kargs:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>spf</strong>:</dt>
+<dd><p class="first">Source platform, defines the separator for path items.</p>
+<p class="last">default := None</p>
+</dd>
+<dt><strong>typeprio</strong>:</dt>
+<dd><p class="first">The priority type in case of ambiguity.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">typeprio</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+     <span class="n">W_GLOB</span>     <span class="c1"># interprets as *glob*</span>
+   <span class="o">|</span> <span class="n">W_RE</span>       <span class="c1"># interprets as *re*</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p class="last">default := W_RE</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>A list of two elements,
+&#8216;L[0]- glob&#8217; and &#8216;L[1]- re&#8217;</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+<p><strong>Description:</strong></p>
+<p>The interpretation of the paramater <em>typeprio</em> resolves the ambiguity for
+ambiguous syntax terms.
+The ambiguous terms are syntactical present in <em>glob</em> and <em>re</em>, while in
+could be even a <em>literal</em>.
+The interpretation results in the assignment to the return part with
+&#8216;<em>ret[0]</em>&#8216; as a <em>literal</em> or <em>glob</em> for direct resolution.
+The second part &#8216;<em>ret[1]</em>&#8216; as the regular expression <em>re</em> for the filtered
+resolution on of a search result.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">ret</span> <span class="o">=</span> <span class="p">[</span>
+   <span class="p">[],</span>   <span class="c1"># 0: resolved by glob(ret[0])</span>
+   <span class="p">[]</span>    <span class="c1"># 1: resolved by the post-filtered result of glob(ret[0]/*) by ret[1]</span>
+<span class="p">]</span>
+
+<span class="n">ret</span> <span class="o">=</span> <span class="n">split_re_glob</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">typeprio</span><span class="o">=</span><span class="n">W_FULL</span><span class="p">)</span>
+</pre></div>
+</td></tr></table></div>
+<p>The prefered assignment of terms containing the free ambiguous characters is performed in
+accordance to the folowing table.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="6%" />
+<col width="6%" />
+<col width="10%" />
+<col width="11%" />
+<col width="4%" />
+<col width="52%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">type</th>
+<th class="head">.*</th>
+<th class="head">/*</th>
+<th class="head">[!..]</th>
+<th class="head">[^...]</th>
+<th class="head">?</th>
+<th class="head">description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>W_GLOB</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>split into prefered <em>glob</em> and <em>re</em></td>
+</tr>
+<tr class="row-odd"><td>W_RE</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>split into prefered <em>re</em> and <em>glob</em></td>
+</tr>
+</tbody>
+</table>
+<p>The assignment to the seconf <em>re</em> group for seacrh and filter operations could be
+forced by insertion of an unambiguous <em>re</em> expression, e.g. by</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s2">&quot;/a/b/[^^]?/c&quot;</span>  <span class="o">=&gt;</span> <span class="p">[[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],[</span><span class="s1">&#39;[^^]?&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]]</span>
+</pre></div>
+</td></tr></table></div>
+<p>The free characters are defined, when these are not masked.
+The characters could be masked by</p>
+<ol class="arabic simple" start="0">
+<li>enclosing in a character class</li>
+<li>escaping by &#8216;\&#8217;</li>
+<li>triple quoting &#8216;&#8217;&#8217; or &#8220;&#8221;&#8220;</li>
+</ol>
+<p>For example by</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">arg</span> <span class="o">=</span> <span class="s2">&quot;/a/b/[\!abc]/[.]*/\[abc\]/[\^abc]/[?]/&quot;</span>
+<span class="n">arg</span> <span class="o">=</span> <span class="s2">&quot;/a/b/[&#39;&#39;&#39;!&#39;&#39;&#39;abc]/&#39;&#39;&#39;.&#39;&#39;&#39;*/&#39;&#39;&#39;[abc]&#39;&#39;&#39;/[&#39;&#39;&#39;^&#39;&#39;&#39;abc]/&#39;&#39;&#39;?&#39;&#39;&#39;/&quot;</span>
+<span class="n">arg</span> <span class="o">=</span> <span class="s1">&#39;/a/b/[&quot;&quot;&quot;!&quot;&quot;&quot;abc]/&quot;&quot;&quot;.&quot;&quot;&quot;*/&quot;&quot;&quot;[abc]&quot;&quot;&quot;/[&quot;&quot;&quot;^&quot;&quot;&quot;abc]/&quot;&quot;&quot;?&quot;&quot;&quot;/&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>In case of ambiguity these could be resolved by forcing specific <em>re</em>
+syntax via zero-dummy entries. For exampe:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="p">[</span><span class="o">^^</span><span class="p">]{</span><span class="mi">0</span><span class="p">}</span><span class="n">c</span><span class="o">/</span>  <span class="o">=&gt;</span> <span class="n">matches</span><span class="p">:</span> <span class="o">/</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="n">c</span><span class="o">/</span>
+                <span class="o">=&gt;</span> <span class="k">with</span> <span class="n">ret</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;[^^]{0}c&#39;</span><span class="p">]]</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="splitre-separator">
+<h3>splitre_separator<a class="headerlink" href="#splitre-separator" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.pathtools.splitre_separator">
+<code class="descclassname">filesysobjects.pathtools.</code><code class="descname">splitre_separator</code><span class="sig-paren">(</span><em>expr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pathtools.html#splitre_separator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pathtools.splitre_separator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Splits a literal and/or wildcard expressions into it&#8217;s
+directory items. This provides for intermediate file sets
+evaluated by directory-wise <em>glob</em> and <em>re</em>.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>expr</strong>:</dt>
+<dd>expression to be split</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>A list of partial wildcard expressions</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="stripquotes">
+<h3>stripquotes<a class="headerlink" href="#stripquotes" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="filesysobjects.pathtools.stripquotes">
+<code class="descclassname">filesysobjects.pathtools.</code><code class="descname">stripquotes</code><span class="sig-paren">(</span><em>path</em>, <em>scope=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/pathtools.html#stripquotes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pathtools.stripquotes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strips quotes.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>path</strong>:</dt>
+<dd>Path to strip off of quotes.</dd>
+<dt><strong>scope</strong>:</dt>
+<dd><p class="first">Scope to be applied.</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">scope</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+     <span class="n">Q_ALL_TRIPLE</span>     <span class="c1"># &quot; * 3 and &#39; * 3</span>
+   <span class="o">|</span> <span class="n">Q_DOUBLE_TRIPLE</span>  <span class="c1"># &quot; * 3</span>
+   <span class="o">|</span> <span class="n">Q_SINGLE_TRIPLE</span>  <span class="c1"># &#39; * 3</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>Path without selected triple-quotes.</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="sub-glob-prefix">
+<h3>sub_glob_prefix<a class="headerlink" href="#sub-glob-prefix" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pathtoolserror">
+<h3>PathToolsError<a class="headerlink" href="#pathtoolserror" title="Permalink to this headline">¶</a></h3>
+<dl class="exception">
+<dt id="filesysobjects.pathtools.PathToolsError">
+<em class="property">exception </em><code class="descclassname">filesysobjects.pathtools.</code><code class="descname">PathToolsError</code><a class="reference internal" href="_modules/filesysobjects.html#PathToolsError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.pathtools.PathToolsError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generic exception for module <em>pathtools</em>.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">&#8216;filesysobjects.pathtools&#8217; - Module</a><ul>
+<li><a class="reference internal" href="#implementation-details">Implementation Details</a><ul>
+<li><a class="reference internal" href="#common-call-parameters">Common Call Parameters</a><ul>
+<li><a class="reference internal" href="#matchidx-idx">matchidx=#idx</a></li>
+<li><a class="reference internal" href="#matchcnt-num">matchcnt=#num</a></li>
+<li><a class="reference internal" href="#spath">spath</a></li>
+<li><a class="reference internal" href="#start">start</a></li>
+<li><a class="reference internal" href="#top">top</a></li>
+<li><a class="reference internal" href="#plist">plist</a></li>
+<li><a class="reference internal" href="#raw">raw</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#glob-parametters">Glob Parametters</a></li>
+<li><a class="reference internal" href="#regular-expressions">Regular Expressions</a></li>
+<li><a class="reference internal" href="#glob-parametters-and-regular-expressions">Glob Parametters and Regular Expressions</a></li>
+<li><a class="reference internal" href="#performance-optimization">Performance Optimization</a></li>
+<li><a class="reference internal" href="#whitelists-and-blacklists">Whitelists and Blacklists</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-filesysobjects.pathtools">Module</a></li>
+<li><a class="reference internal" href="#functions">Functions</a><ul>
+<li><a class="reference internal" href="#clearpath">clearpath</a></li>
+<li><a class="reference internal" href="#expandpath">expandpath</a></li>
+<li><a class="reference internal" href="#findpattern">findpattern</a></li>
+<li><a class="reference internal" href="#findrelpath-in-searchpath">findrelpath_in_searchpath</a></li>
+<li><a class="reference internal" href="#findrelpath-in-searchpath-iter">findrelpath_in_searchpath_iter</a></li>
+<li><a class="reference internal" href="#findrelpath-in-uppertree">findrelpath_in_uppertree</a></li>
+<li><a class="reference internal" href="#findrelpath-in-uppertree-iter">findrelpath_in_uppertree_iter</a></li>
+<li><a class="reference internal" href="#get-subpath-product">get_subpath_product</a></li>
+<li><a class="reference internal" href="#glob-to-re">glob_to_re</a></li>
+<li><a class="reference internal" href="#split-re-glob">split_re_glob</a></li>
+<li><a class="reference internal" href="#splitre-separator">splitre_separator</a></li>
+<li><a class="reference internal" href="#stripquotes">stripquotes</a></li>
+<li><a class="reference internal" href="#sub-glob-prefix">sub_glob_prefix</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#exceptions">Exceptions</a><ul>
+<li><a class="reference internal" href="#pathtoolserror">PathToolsError</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>API</h4><p class="topless"><a href="epydoc/index.html" title="API">Programming Interface</a></p><h4>Previous topic</h4>
+  <p class="topless"><a href="paths.html"
+                        title="previous chapter">&#8216;filesysobjects.paths&#8217; - Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="userdata.html"
+                        title="next chapter">&#8216;filesysobjects.userdata&#8217; - Module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pathtools.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="userdata.html" title="‘filesysobjects.userdata’ - Module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="paths.html" title="‘filesysobjects.paths’ - Module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

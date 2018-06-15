@@ -1,0 +1,395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>‘filesysobjects.configdata’ - Module &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="next" title="‘filesysobjects.netfiles’ - Module" href="netfiles.html" />
+    <link rel="prev" title="‘filesysobjects.osdata’ - Module" href="osdata.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="netfiles.html" title="‘filesysobjects.netfiles’ - Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="osdata.html" title="‘filesysobjects.osdata’ - Module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="filesysobjects-configdata-module">
+<h1>&#8216;filesysobjects.configdata&#8217; - Module<a class="headerlink" href="#filesysobjects-configdata-module" title="Permalink to this headline">¶</a></h1>
+<p>The <em>filesysobjects.configdata</em> module provides configuration related filesystem paths.
+For examples see <a class="reference external" href="howto_configdata.html">HowTo Config Data</a>.</p>
+<div class="section" id="module-filesysobjects.configdata">
+<span id="module"></span><h2>Module<a class="headerlink" href="#module-filesysobjects.configdata" title="Permalink to this headline">¶</a></h2>
+<p>Platform independent path names for configuration files.</p>
+</div>
+<div class="section" id="class-configpath">
+<h2>Class ConfigPath<a class="headerlink" href="#class-configpath" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="filesysobjects.configdata.ConfigPath">
+<em class="property">class </em><code class="descclassname">filesysobjects.configdata.</code><code class="descname">ConfigPath</code><span class="sig-paren">(</span><em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/configdata.html#ConfigPath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.configdata.ConfigPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>A small class that manages the search for configuration files
+located at standard paths.</p>
+</dd></dl>
+
+<div class="section" id="methods">
+<h3>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="init">
+<h4>__init__<a class="headerlink" href="#init" title="Permalink to this headline">¶</a></h4>
+<dl class="method">
+<dt id="filesysobjects.configdata.ConfigPath.__init__">
+<code class="descclassname">ConfigPath.</code><code class="descname">__init__</code><span class="sig-paren">(</span><em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/configdata.html#ConfigPath.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.configdata.ConfigPath.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the search paths.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">kargs:</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt><strong>append</strong>:</dt>
+<dd>A list of search paths to be added to the standard search.</dd>
+<dt><strong>filext</strong>:</dt>
+<dd><p class="first">A list of default file extensions to be used in search
+operations. Default</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">filext</span> <span class="p">:</span><span class="o">=</span> <span class="p">[</span><span class="n">ini</span><span class="s1">&#39;, &#39;</span><span class="n">conf</span><span class="s1">&#39;, &#39;</span><span class="n">json</span><span class="s1">&#39;, &#39;</span><span class="n">xml</span><span class="s1">&#39;]</span>
+</pre></div>
+</div>
+</dd>
+<dt><strong>prepend</strong>:</dt>
+<dd>A list of search paths to be checked at the beginning of
+the standard search.</dd>
+<dt><strong>replace</strong>:</dt>
+<dd>A list of search paths to replace the standard search.</dd>
+</dl>
+</div></blockquote>
+</dd>
+<dt>Returns:</dt>
+<dd>object/None</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="get-config-path-list">
+<h4>get_config_path_list<a class="headerlink" href="#get-config-path-list" title="Permalink to this headline">¶</a></h4>
+<dl class="method">
+<dt id="filesysobjects.configdata.ConfigPath.get_config_path_list">
+<code class="descclassname">ConfigPath.</code><code class="descname">get_config_path_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/configdata.html#ConfigPath.get_config_path_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.configdata.ConfigPath.get_config_path_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the list of current search path entries for configuration files.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>None</dd>
+<dt>Returns:</dt>
+<dd>The list of current search paths.</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="get-config-filepath">
+<h4>get_config_filepath<a class="headerlink" href="#get-config-filepath" title="Permalink to this headline">¶</a></h4>
+<dl class="method">
+<dt id="filesysobjects.configdata.ConfigPath.get_config_filepath">
+<code class="descclassname">ConfigPath.</code><code class="descname">get_config_filepath</code><span class="sig-paren">(</span><em>conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/configdata.html#ConfigPath.get_config_filepath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.configdata.ConfigPath.get_config_filepath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the first matched configuration file.</p>
+<p>The standard search hierarchy is:</p>
+<ol class="arabic simple" start="0">
+<li>absolute file path: &lt;conf&gt;</li>
+<li>relative to current workdir: &lt;conf&gt;</li>
+<li>USER context by: getdir_userconfigdata()/&lt;conf&gt;</li>
+<li>HOME of user: getdir_userhome()/&lt;conf&gt;</li>
+<li>Application config: getdir_osappconfigdata()/&lt;conf&gt;</li>
+<li>OS config: getdir_osappconfigdata()/&lt;conf&gt;</li>
+<li><dl class="first docutils">
+<dt>the final default from distribution:</dt>
+<dd>pysourceinfo.fileinfo.getcaller_package_filepathname()/&lt;conf&gt;</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>the final default from module:</dt>
+<dd>pysourceinfo.fileinfo.getcaller_pathname()/&lt;conf&gt;</dd>
+</dl>
+</li>
+</ol>
+<p>The priorities 6 + 7 are the last, because the caller itself could be
+a library sub call, so is not necessarily closely related to the
+calling application.</p>
+<p>This could be altered by the parameters <em>replace</em>, <em>prepend</em>, and <em>append</em>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">replace</span><span class="p">:</span>
+   <span class="n">replace</span> <span class="n">standard</span> <span class="n">by</span> <span class="nb">list</span>
+<span class="k">if</span> <span class="n">prepend</span><span class="p">:</span>
+   <span class="n">prepend</span> <span class="nb">any</span> <span class="nb">list</span><span class="p">(</span><span class="n">standard</span><span class="o">/</span><span class="n">replace</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">append</span><span class="p">:</span>
+   <span class="n">append</span> <span class="n">to</span> <span class="nb">any</span> <span class="nb">list</span><span class="p">(</span><span class="n">standard</span><span class="o">/</span><span class="n">replace</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>conf</strong>:</dt>
+<dd><p class="first">Configuration file name including suffix.
+Valid <em>conf</em> file name wildcard types are:</p>
+<table border="1" class="last docutils">
+<colgroup>
+<col width="69%" />
+<col width="31%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>literal</td>
+<td>X</td>
+</tr>
+<tr class="row-even"><td>re</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td>glob</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>The first file path name matched by <em>conf</em>,
+else None.</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="get-config-filepath-list">
+<h4>get_config_filepath_list<a class="headerlink" href="#get-config-filepath-list" title="Permalink to this headline">¶</a></h4>
+<dl class="method">
+<dt id="filesysobjects.configdata.ConfigPath.get_config_filepath_list">
+<code class="descclassname">ConfigPath.</code><code class="descname">get_config_filepath_list</code><span class="sig-paren">(</span><em>conf=None</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/configdata.html#ConfigPath.get_config_filepath_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.configdata.ConfigPath.get_config_filepath_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of matched configuration files.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>conf</strong>:</dt>
+<dd><p class="first">Search expression for configuration file names.
+Valid <em>conf</em> file name wildcard types are:</p>
+<table border="1" class="last docutils">
+<colgroup>
+<col width="69%" />
+<col width="31%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>literal</td>
+<td>X</td>
+</tr>
+<tr class="row-even"><td>re</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td>glob</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>kargs:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>isDir</strong>:</dt>
+<dd><p class="first">Include directories.</p>
+<p class="last">default := False</p>
+</dd>
+<dt><strong>isFile</strong>:</dt>
+<dd><p class="first">Include files.</p>
+<p class="last">default := True</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>A list of file path names matched by &#8216;conf&#8217;.</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="get-filepathname-by-ext">
+<h4>get_filepathname_by_ext<a class="headerlink" href="#get-filepathname-by-ext" title="Permalink to this headline">¶</a></h4>
+<dl class="method">
+<dt id="filesysobjects.configdata.ConfigPath.get_filepathname_by_ext">
+<code class="descclassname">ConfigPath.</code><code class="descname">get_filepathname_by_ext</code><span class="sig-paren">(</span><em>fnam</em>, <em>fext=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/filesysobjects/configdata.html#ConfigPath.get_filepathname_by_ext"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#filesysobjects.configdata.ConfigPath.get_filepathname_by_ext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the file path name by specified list of
+extensions. Searches the defined path list by
+<em>self</em>, returns the first match.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt><strong>fnam</strong>:</dt>
+<dd><p class="first">File name. Valid types are</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fnam</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+     <span class="o">&lt;</span><span class="n">absolute</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="n">path</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+   <span class="o">|</span> <span class="o">&lt;</span><span class="n">relative</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="n">path</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;</span>
+   <span class="o">|</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">-</span><span class="k">with</span><span class="o">-</span><span class="n">suffix</span><span class="o">&gt;</span>
+   <span class="o">|</span> <span class="o">&lt;</span><span class="n">filename</span><span class="o">-</span><span class="n">without</span><span class="o">-</span><span class="n">suffix</span><span class="o">&gt;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Matches of file path name without additional suffix
+are returned immediately.</p>
+<p>Valid <em>fnam</em> file name wildcard types are:</p>
+<table border="1" class="last docutils">
+<colgroup>
+<col width="69%" />
+<col width="31%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>literal</td>
+<td>X</td>
+</tr>
+<tr class="row-even"><td>re</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td>glob</td>
+<td>X</td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt><strong>fext</strong>:</dt>
+<dd>File extension list. Each will be returned in the
+order of the provided extensions, grouped in the
+order of the provided search paths.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>The first found absolute file path name.</dd>
+<dt>Raises:</dt>
+<dd>pass-through</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+</div>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Currently only passed-through.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">&#8216;filesysobjects.configdata&#8217; - Module</a><ul>
+<li><a class="reference internal" href="#module-filesysobjects.configdata">Module</a></li>
+<li><a class="reference internal" href="#class-configpath">Class ConfigPath</a><ul>
+<li><a class="reference internal" href="#methods">Methods</a><ul>
+<li><a class="reference internal" href="#init">__init__</a></li>
+<li><a class="reference internal" href="#get-config-path-list">get_config_path_list</a></li>
+<li><a class="reference internal" href="#get-config-filepath">get_config_filepath</a></li>
+<li><a class="reference internal" href="#get-config-filepath-list">get_config_filepath_list</a></li>
+<li><a class="reference internal" href="#get-filepathname-by-ext">get_filepathname_by_ext</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>API</h4><p class="topless"><a href="epydoc/index.html" title="API">Programming Interface</a></p><h4>Previous topic</h4>
+  <p class="topless"><a href="osdata.html"
+                        title="previous chapter">&#8216;filesysobjects.osdata&#8217; - Module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="netfiles.html"
+                        title="next chapter">&#8216;filesysobjects.netfiles&#8217; - Module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/configdata.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="netfiles.html" title="‘filesysobjects.netfiles’ - Module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="osdata.html" title="‘filesysobjects.osdata’ - Module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

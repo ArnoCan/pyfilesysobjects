@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Howto Pretty Print Paths &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="howto-pretty-print-paths">
+<h1>Howto Pretty Print Paths<a class="headerlink" href="#howto-pretty-print-paths" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Howto Pretty Print Paths</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#about-source-platform-and-target-platform">About Source Platform and Target Platform</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-source-platform-spf">The Source Platform - <em>spf</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-target-platform-tpf">The Target Platform - <em>tpf</em></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pretty-print-search-parths">Pretty Print Search Parths</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#output-for-awk-scripts">Output for <em>awk</em> scripts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-for-bash-scripts">Output for <em>bash</em> scripts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-for-conf-files">Output for <em>CONF</em> Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-for-cfg-files">Output for <em>CFG</em> Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-for-ini-files">Output for <em>INI</em> Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-as-json">Output as <em>JSON</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-as-lua">Output as <em>LUA</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-for-properties-files">Output for <em>properties</em>  Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-as-python-syntax">Output as <em>Python</em> Syntax</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-as-xml">Output as <em>XML</em></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output-as-yaml">Output as <em>YAML</em></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<p>The <em>filesysobjects.pprint</em> module provides pretty printers for resource
+addresses.
+This includes vatious targets formats of string output, including console display,
+and formats of syntaxes for automated processing such as <em>INI</em>, <em>CONF</em>, <em>JSON</em>, <em>XML</em>, and <em>YAML</em>.</p>
+<div class="section" id="about-source-platform-and-target-platform">
+<h2>About Source Platform and Target Platform<a class="headerlink" href="#about-source-platform-and-target-platform" title="Permalink to this headline">¶</a></h2>
+<p>The platform defines the representation syntax of the resource path.
+E.g. the <em>spf=&#8217;win32&#8217;</em> defines the <em>os.pathsep=&#8217;;&#8217;</em>, and the default <em>os.sep=&#8217;\&#8217;</em>,
+while the <em>spf=&#8217;posix&#8217;</em> defines the <em>os.pathsep=&#8217;:&#8217;</em>, and the default <em>os.sep=&#8217;/&#8217;</em>,
+the latter <em>category</em> of platforms is e.g. the same for the <em>family</em> of
+the platforms Linux as <em>spf=&#8217;linux&#8217;</em> or <em>spf=&#8217;RTE_LINUX&#8217;</em>.</p>
+<p>For additional details refer to <a class="reference external" href="filesysobjects_init.html#platform">Platform Definitions</a>.</p>
+<div class="section" id="the-source-platform-spf">
+<h3>The Source Platform - <em>spf</em><a class="headerlink" href="#the-source-platform-spf" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="the-target-platform-tpf">
+<h3>The Target Platform - <em>tpf</em><a class="headerlink" href="#the-target-platform-tpf" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="pretty-print-search-parths">
+<h2>Pretty Print Search Parths<a class="headerlink" href="#pretty-print-search-parths" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="output-for-awk-scripts">
+<h3>Output for <em>awk</em> scripts<a class="headerlink" href="#output-for-awk-scripts" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="list-array-syntax">
+<h4>List <em>ARRAY</em> syntax<a class="headerlink" href="#list-array-syntax" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+<div class="section" id="output-for-bash-scripts">
+<h3>Output for <em>bash</em> scripts<a class="headerlink" href="#output-for-bash-scripts" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="path-syntax">
+<h4><em>PATH</em> syntax<a class="headerlink" href="#path-syntax" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="id1">
+<h4>List <em>ARRAY</em> syntax<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+<div class="section" id="output-for-conf-files">
+<h3>Output for <em>CONF</em> Files<a class="headerlink" href="#output-for-conf-files" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="output-for-cfg-files">
+<h3>Output for <em>CFG</em> Files<a class="headerlink" href="#output-for-cfg-files" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="output-for-ini-files">
+<h3>Output for <em>INI</em> Files<a class="headerlink" href="#output-for-ini-files" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="ini-syntax">
+<h4><em>ini</em> syntax<a class="headerlink" href="#ini-syntax" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="ini0-syntax">
+<h4><em>ini0</em> syntax<a class="headerlink" href="#ini0-syntax" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="ini1-syntax">
+<h4><em>ini1</em> syntax<a class="headerlink" href="#ini1-syntax" title="Permalink to this headline">¶</a></h4>
+</div>
+<div class="section" id="ini2-syntax">
+<h4><em>ini2</em> syntax<a class="headerlink" href="#ini2-syntax" title="Permalink to this headline">¶</a></h4>
+</div>
+</div>
+<div class="section" id="output-as-json">
+<h3>Output as <em>JSON</em><a class="headerlink" href="#output-as-json" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="output-as-lua">
+<h3>Output as <em>LUA</em><a class="headerlink" href="#output-as-lua" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="output-for-properties-files">
+<h3>Output for <em>properties</em>  Files<a class="headerlink" href="#output-for-properties-files" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="output-as-python-syntax">
+<h3>Output as <em>Python</em> Syntax<a class="headerlink" href="#output-as-python-syntax" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="output-as-xml">
+<h3>Output as <em>XML</em><a class="headerlink" href="#output-as-xml" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="output-as-yaml">
+<h3>Output as <em>YAML</em><a class="headerlink" href="#output-as-yaml" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Howto Pretty Print Paths</a><ul>
+<li><a class="reference internal" href="#about-source-platform-and-target-platform">About Source Platform and Target Platform</a><ul>
+<li><a class="reference internal" href="#the-source-platform-spf">The Source Platform - <em>spf</em></a></li>
+<li><a class="reference internal" href="#the-target-platform-tpf">The Target Platform - <em>tpf</em></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pretty-print-search-parths">Pretty Print Search Parths</a><ul>
+<li><a class="reference internal" href="#output-for-awk-scripts">Output for <em>awk</em> scripts</a><ul>
+<li><a class="reference internal" href="#list-array-syntax">List <em>ARRAY</em> syntax</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#output-for-bash-scripts">Output for <em>bash</em> scripts</a><ul>
+<li><a class="reference internal" href="#path-syntax"><em>PATH</em> syntax</a></li>
+<li><a class="reference internal" href="#id1">List <em>ARRAY</em> syntax</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#output-for-conf-files">Output for <em>CONF</em> Files</a></li>
+<li><a class="reference internal" href="#output-for-cfg-files">Output for <em>CFG</em> Files</a></li>
+<li><a class="reference internal" href="#output-for-ini-files">Output for <em>INI</em> Files</a><ul>
+<li><a class="reference internal" href="#ini-syntax"><em>ini</em> syntax</a></li>
+<li><a class="reference internal" href="#ini0-syntax"><em>ini0</em> syntax</a></li>
+<li><a class="reference internal" href="#ini1-syntax"><em>ini1</em> syntax</a></li>
+<li><a class="reference internal" href="#ini2-syntax"><em>ini2</em> syntax</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#output-as-json">Output as <em>JSON</em></a></li>
+<li><a class="reference internal" href="#output-as-lua">Output as <em>LUA</em></a></li>
+<li><a class="reference internal" href="#output-for-properties-files">Output for <em>properties</em>  Files</a></li>
+<li><a class="reference internal" href="#output-as-python-syntax">Output as <em>Python</em> Syntax</a></li>
+<li><a class="reference internal" href="#output-as-xml">Output as <em>XML</em></a></li>
+<li><a class="reference internal" href="#output-as-yaml">Output as <em>YAML</em></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/howto_pprint.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

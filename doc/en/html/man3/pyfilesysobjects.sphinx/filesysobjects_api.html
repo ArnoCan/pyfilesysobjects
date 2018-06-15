@@ -1,0 +1,1310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The filesysobjects API &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="next" title="‘filesysobjects.__init__’ - Module" href="filesysobjects_init.html" />
+    <link rel="prev" title="The SW-Design of filesysobjects" href="filesysobjects_design.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="filesysobjects_init.html" title="‘filesysobjects.__init__’ - Module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="filesysobjects_design.html" title="The SW-Design of filesysobjects"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="shortcuttab"><div class="section" id="the-filesysobjects-api">
+<span id="filesysobjectsapi"></span><h1>The filesysobjects API<a class="headerlink" href="#the-filesysobjects-api" title="Permalink to this headline">¶</a></h1>
+<p>The <em>filesysobjects</em> API covers a variety of interfaces for the processing of
+resource path addresses, and the search of resources.
+The initial set of interfaces forcusses on filesystem resources in a basic distributed
+environment.
+This covers in particular a basic set of call parameters, which are common for a
+subset of the call interfaces.</p>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="interfaces">
+<h3>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this headline">¶</a></h3>
+<div class="apisynopsis"><ul class="simple">
+<li><a class="reference internal" href="#if-processpaths"><span class="std std-ref">process paths</span></a></li>
+<li><a class="reference internal" href="#if-managesearchpaths"><span class="std std-ref">manage search paths</span></a></li>
+<li><a class="reference internal" href="#if-searchpaths"><span class="std std-ref">search for files, directories, and branches</span></a></li>
+<li><a class="reference internal" href="#if-matchpaths"><span class="std std-ref">match files, directories, and branches into path strings</span></a></li>
+<li><a class="reference internal" href="#if-config"><span class="std std-ref">configuration</span></a></li>
+<li><a class="reference internal" href="#if-os"><span class="std std-ref">os</span></a></li>
+<li><a class="reference internal" href="#if-user"><span class="std std-ref">user</span></a></li>
+</ul>
+<p>.</p>
+<ul class="simple" id="if-processpaths">
+<li><strong>process paths</strong> - normalize, split, and join resource paths</li>
+</ul>
+<blockquote>
+<div><pre class="literal-block">
+<a class="reference external" href="apppaths.html#filesysobjects.apppaths.normapppathx">normapppathx(spath, **kargs)</a>
+<a class="reference external" href="paths.html#normpathx">normpathx(spath, **kargs)</a>
+
+<a class="reference external" href="apppaths.html#filesysobjects.apppaths.splitapppathx">splitapppathx(spath, **kargs)</a>
+<a class="reference external" href="apppaths.html#filesysobjects.apppaths.splitapppathx_getlocalpath">splitapppathx_getlocalpath(elems, **kargs)</a>
+<a class="reference external" href="apppaths.html#filesysobjects.apppaths.join_apppathx_entry">join_apppathx_entry(entry, tpf=5, **kw)</a>
+
+<a class="reference external" href="paths.html#splitpathx">splitpathx(p, tpf=5, **kw)</a>
+
+<a class="reference external" href="paths.html#filesysobjects.paths.escapepathx">escapepathx(spath, tpf=None, **kargs)</a>
+<a class="reference external" href="pathtools.html#filesysobjects.pathtools.expandpath">expandpath(*paths, **kargs)</a>
+<a class="reference external" href="paths.html#filesysobjects.paths.unescapepathx">unescapepathx(p, tpf=None, **kargs)</a>
+</pre>
+</div></blockquote>
+<ul class="simple" id="if-managesearchpaths">
+<li><strong>manage search paths</strong> - create, add, remove, and clear search paths</li>
+</ul>
+<blockquote>
+<div><pre class="literal-block">
+<a class="reference external" href="apppaths.html#addpath-to-searchpath">addpath_to_searchpath(spath, plist=None, **kargs)</a>
+<a class="reference external" href="pathtools.html#filesysobjects.pathtools.clearpath">clearpath(plist=None, **kargs)</a>
+<a class="reference external" href="apppaths.html#delpath-from-searchpath">delpath_from_searchpath(dellist, plist=None, **kargs)</a>
+
+<a class="reference external" href="apppaths.html#set-uppertree-searchpath">set_uppertree_searchpath(start=None, top=None, plist=None, **kargs)</a>
+</pre>
+</div></blockquote>
+<ul class="simple" id="if-searchpaths">
+<li><strong>search for files, directories, and branches</strong> - find resources by search on media</li>
+</ul>
+<blockquote>
+<div><pre class="literal-block">
+<a class="reference external" href="pathtools.html#filesysobjects.pathtools.findpattern">findpattern(*srcdirs, **kargs)</a>
+
+<a class="reference external" href="pathtools.html#filesysobjects.pathtools.findrelpath_in_searchpath">findrelpath_in_searchpath(spath, plist=None, **kargs)</a>
+<a class="reference external" href="pathtools.html#filesysobjects.pathtools.findrelpath_in_searchpath_iter">findrelpath_in_searchpath_iter(spath, plist=None, **kargs)</a>
+
+<a class="reference external" href="pathtools.html#filesysobjects.pathtools.findrelpath_in_uppertree">findrelpath_in_uppertree(spath, plist=None, **kargs)</a>
+<a class="reference external" href="pathtools.html#filesysobjects.pathtools.findrelpath_in_uppertree_iter">findrelpath_in_uppertree_iter(spath, plist=None, **kargs)</a>
+</pre>
+</div></blockquote>
+<ul class="simple" id="if-matchpaths">
+<li><strong>match files, directories, and branches into path strings</strong> - search resources on strings only</li>
+</ul>
+<blockquote>
+<div><pre class="literal-block">
+<a class="reference external" href="apppaths.html#gettop-from-pathstring">gettop_from_pathstring(start, plist=None, **kargs)</a>
+<a class="reference external" href="apppaths.html#gettop-from-pathstring-iter">gettop_from_pathstring_iter(start, plist=None, **kargs)</a>
+
+<a class="reference external" href="pathtools.html#filesysobjects.pathtools.get_subpath_product">get_subpath_product(dirs, subpaths)</a>
+</pre>
+</div></blockquote>
+<ul class="simple" id="if-config">
+<li><strong>configuration</strong> - abstraction of specific configuration directories for various platforms</li>
+</ul>
+<blockquote>
+<div><pre class="literal-block">
+<a class="reference external" href="configdata.html#get-config-filepath">get_config_filepath(conf)</a>
+<a class="reference external" href="configdata.html#get-config-filepath-list">get_config_filepath_list()</a>
+<a class="reference external" href="configdata.html#get-config-path-list">get_config_path_list()</a>
+<a class="reference external" href="configdata.html#get-filepathname-by-ext">get_filepathname_by_ext(fnam, fext=[])</a>
+</pre>
+</div></blockquote>
+<ul class="simple" id="if-os">
+<li><strong>os</strong> - abstraction of specific OS directories for various platforms</li>
+</ul>
+<blockquote>
+<div><pre class="literal-block">
+<a class="reference external" href="osdata.html#filesysobjects.osdata.getdir_osappconfigdata">getdir_osappconfigdata()</a>
+<a class="reference external" href="osdata.html#filesysobjects.osdata.getdir_osappdata">getdir_osappdata(appname='')</a>
+<a class="reference external" href="osdata.html#filesysobjects.osdata._getdir_osconfigdata">getdir_osconfigdata(appname='')</a>
+</pre>
+</div></blockquote>
+<ul class="simple" id="if-user">
+<li><strong>user</strong> - abstraction of specific user directories for various platforms</li>
+</ul>
+<blockquote>
+<div><pre class="literal-block">
+<a class="reference external" href="userdata.html#filesysobjects.userdata.getcurrent_username">getcurrent_username()</a>
+<a class="reference external" href="userdata.html#filesysobjects.userdata.gethome">gethome()</a>
+
+<a class="reference external" href="userdata.html#filesysobjects.userdata.getdir_userappdata">getdir_userappdata(appname='', user=None)</a>
+<a class="reference external" href="userdata.html#filesysobjects.userdata.getdir_userappconfigdata">getdir_userappconfigdata(appname='', user=None)</a>
+
+<a class="reference external" href="userdata.html#filesysobjects.userdata.getdir_userconfigdata">getdir_userconfigdata(user=None)</a>
+<a class="reference external" href="userdata.html#filesysobjects.userdata.getdir_userdata">getdir_userdata(user=None)</a>
+<a class="reference external" href="userdata.html#filesysobjects.userdata.getdir_userhome">getdir_userhome(user='')</a>
+</pre>
+</div></blockquote>
+</div></div>
+<div class="section" id="major-options-by-interfaces">
+<h3>Major Options by Interfaces<a class="headerlink" href="#major-options-by-interfaces" title="Permalink to this headline">¶</a></h3>
+<p>The cross-platform related options are</p>
+<ul class="simple">
+<li><a class="reference internal" href="#opt-apppre"><span class="std std-ref">apppre</span></a> - application prefix - scheme</li>
+<li><a class="reference internal" href="#opt-pathsep"><span class="std std-ref">pathsep</span></a> - special path separator</li>
+<li><a class="reference internal" href="#opt-spf"><span class="std std-ref">spf</span></a> - source platform</li>
+<li><a class="reference internal" href="#opt-tpf"><span class="std std-ref">tpf</span></a> - target platform</li>
+</ul>
+<p>The following table displays the support of interfaces with some additional
+path separator processing options.
+For the full set of options refer to the interfaces.</p>
+<div class="tabcolumncolor"><table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="10%" />
+<col width="11%" />
+<col width="9%" />
+<col width="9%" />
+<col width="11%" />
+<col width="12%" />
+<col width="11%" />
+<col width="10%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">interface</th>
+<th class="head">spath</th>
+<th class="head">apppre</th>
+<th class="head">spf</th>
+<th class="head">tpf</th>
+<th class="head">pathsep</th>
+<th class="head">appsplit</th>
+<th class="head">keepsep</th>
+<th class="head">strip</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference external" href="apppaths.html#addpath-to-searchpath">addpath_to_searchpath</a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-spf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-tpf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-pathsep"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-strip"><span class="std std-ref">x</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.clearpath">clearpath</a></td>
+<td>&#8211;</td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-spf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-tpf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-pathsep"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-strip"><span class="std std-ref">x</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="apppaths.html#delpath-from-searchpath">delpath_from_searchpath</a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-tpf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-pathsep"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-strip"><span class="std std-ref">x</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="paths.html#filesysobjects.paths.escapepathx">escapepathx</a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-spf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-tpf"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-strip"><span class="std std-ref">x</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.expandpath">expandpath</a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-spf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-tpf"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.findpattern&gt;`_">findpattern</a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.findrelpath_in_searchpath_iter">findrelpath_in_searchpath_iter</a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.findrelpath_in_searchpath">findrelpath_in_searchpath</a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.findrelpath_in_uppertree_iter">findrelpath_in_uppertree_iter</a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.findrelpath_in_uppertree">findrelpath_in_uppertree</a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="pathtools.html#filesysobjects.pathtools.get_subpath_product">get_subpath_product</a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="apppaths.html#def-gettop-from-pathstring"><span class="std std-ref">gettop_from_pathstring</span></a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-spf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-tpf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-pathsep"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-keepsep"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="apppaths.html#filesysobjects.apppaths.join_apppathx_entry">join_apppathx_entry</a></td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-apppre"><span class="std std-ref">x</span></a></td>
+<td>&#8211;</td>
+<td><a class="reference internal" href="#opt-tpf"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="apppaths.html#def-normapppathx"><span class="std std-ref">normapppathx</span></a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-apppre"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-spf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-tpf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-pathsep"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-appsplit"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-strip"><span class="std std-ref">x</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="paths.html#def-normpathx"><span class="std std-ref">normpathx</span></a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-spf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-tpf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-pathsep"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-strip"><span class="std std-ref">x</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="apppaths.html#set-uppertree-searchpath">set_uppertree_searchpath</a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-spf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-tpf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-pathsep"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-strip"><span class="std std-ref">x</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="paths.html#def-splitpathx"><span class="std std-ref">splitpathx</span></a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-spf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-tpf"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-strip"><span class="std std-ref">x</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="apppaths.html#def-splitapppathx"><span class="std std-ref">splitapppathx</span></a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-apppre"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-spf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-tpf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-pathsep"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-appsplit"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-keepsep"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-strip"><span class="std std-ref">x</span></a></td>
+</tr>
+<tr class="row-even"><td><a class="reference external" href="apppaths.html#filesysobjects.apppaths.splitapppathx_getlocalpath">splitapppathx_getlocalpath</a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-spf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-tpf"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-strip"><span class="std std-ref">x</span></a></td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="paths.html#filesysobjects.paths.unescapepathx">unescapepathx</a></td>
+<td><a class="reference internal" href="#opt-spath"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-spf"><span class="std std-ref">x</span></a></td>
+<td><a class="reference internal" href="#opt-tpf"><span class="std std-ref">x</span></a></td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td><a class="reference internal" href="#opt-strip"><span class="std std-ref">x</span></a></td>
+</tr>
+</tbody>
+</table>
+</div><div class="section" id="tpf-and-spf">
+<span id="index-0"></span><span id="id6"></span><h4><em>tpf</em> and <em>spf</em><a class="headerlink" href="#tpf-and-spf" title="Permalink to this headline">¶</a></h4>
+<p>The <em>filesysobjects</em> provides crossplatform conversion of resource addresses for a variety
+of platforms, including ordinary local filesystems, network filesystes, UNC, URI, URL and
+others.
+Therefore the source and target platfors could be adapted by the parameters <em>tpf</em> for the
+target and <em>spf</em> for the source.</p>
+<p>The source and target platform options define the separators &#8216;sep&#8217; and &#8216;pathsep&#8217;,
+and some structural context such as drive letters on the path layer,
+and additional application schemes as prefixes and additional structural information
+such as fragments and queries for URLs.
+While the target platform parameter supports one value only, the source platform parameter
+enables the combination of multiple platforms.
+The latter enables in particular the cross-conversion of mixed terms by accurate handling
+of the structural components of all platforms.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="13%" />
+<col width="13%" />
+<col width="12%" />
+<col width="15%" />
+<col width="10%" />
+<col width="13%" />
+<col width="6%" />
+<col width="10%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">type</th>
+<th class="head">constant</th>
+<th class="head">tpf</th>
+<th class="head">spf</th>
+<th class="head">scheme</th>
+<th class="head">host</th>
+<th class="head">share</th>
+<th class="head">path</th>
+<th class="head">option</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>URL/URI</td>
+<td>RTE_URI,
+RTE_HTTP,
+RTE_HTTPS</td>
+<td>http, https</td>
+<td>&nbsp;</td>
+<td>http/https</td>
+<td>hostname</td>
+<td>&nbsp;</td>
+<td>path</td>
+<td>query
+fragment</td>
+</tr>
+<tr class="row-odd"><td>file-URI</td>
+<td>RTE_FILEURI</td>
+<td>posix, win</td>
+<td>posix, win</td>
+<td>file</td>
+<td>hostname</td>
+<td>drive, share</td>
+<td>path</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-even"><td>ldsys</td>
+<td>RTE_WIN32</td>
+<td>win</td>
+<td>win</td>
+<td>&#8211;</td>
+<td>&#8211;</td>
+<td>drive</td>
+<td>path</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td>lfsys</td>
+<td>RTE_POSIX,
+RTE_WIN32</td>
+<td>posix, win</td>
+<td>posix, win</td>
+<td>&#8211;</td>
+<td>&#8211;</td>
+<td>&#8211;</td>
+<td>path</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-even"><td>RAW</td>
+<td>&nbsp;</td>
+<td>all</td>
+<td>all</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td>share</td>
+<td>&nbsp;</td>
+<td>win</td>
+<td>win</td>
+<td>//, \\</td>
+<td>hostname</td>
+<td>share</td>
+<td>path</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-even"><td>SMB/CIFS</td>
+<td>RTE_SMB</td>
+<td>win, posix</td>
+<td>&nbsp;</td>
+<td>smb</td>
+<td>hostname</td>
+<td>share</td>
+<td>path</td>
+<td>&#8211;</td>
+</tr>
+<tr class="row-odd"><td>UNC</td>
+<td>RTE_UNC</td>
+<td>win, posix</td>
+<td>&nbsp;</td>
+<td>file, //, \\</td>
+<td>hostname</td>
+<td>share</td>
+<td>path</td>
+<td>&#8211;</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><em>RAW</em></li>
+<li><em>SMB</em> - SMB File Sharing URI Scheme <a class="reference internal" href="references.html#smburi" id="id7">[SMBURI]</a>, <a class="reference internal" href="references.html#samba" id="id8">[SAMBA]</a>, <a class="reference internal" href="references.html#ms-dtyp" id="id9">[MS-DTYP]</a>, <a class="reference internal" href="references.html#ms-smb" id="id10">[MS-SMB]</a>, <a class="reference internal" href="references.html#ms-smb2" id="id11">[MS-SMB2]</a>, <a class="reference internal" href="references.html#ms-cifs" id="id12">[MS-CIFS]</a></li>
+<li><em>UNC</em> - UNC: Common definition in <a class="reference internal" href="references.html#ms-dtyp" id="id13">[MS-DTYP]</a> Windows Data Types <a class="reference internal" href="references.html#unc" id="id14">[UNC]</a></li>
+<li><em>URL</em> / <em>URI</em> - Uniform Resource Identifier - URI: Generic Syntax <a class="reference internal" href="references.html#rfc3986" id="id15">[RFC3986]</a>, <a class="reference internal" href="references.html#urlparsing" id="id16">[URLPARSING]</a></li>
+<li><em>file-URI</em> - RFC8089 <a class="reference internal" href="references.html#rfc8089" id="id17">[RFC8089]</a>, <a class="reference internal" href="references.html#urischeme" id="id18">[URISCHEME]</a></li>
+<li><em>ldsys</em> - Local Drive File System - <a class="reference internal" href="references.html#ms-dtyp" id="id19">[MS-DTYP]</a></li>
+<li><em>lfsys</em> - Local File System - <a class="reference internal" href="references.html#posix" id="id20">[POSIX]</a>, <a class="reference internal" href="references.html#ms-dtyp" id="id21">[MS-DTYP]</a></li>
+<li><em>share</em> UNC <a class="reference internal" href="references.html#unc" id="id22">[UNC]</a> or Posix network app <a class="reference internal" href="references.html#posix" id="id23">[POSIX]</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="options">
+<h3>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
+<p>The call interface provides for groups of functions and classes with a set of
+common parameters and additional context specific modifications.</p>
+<p>The provided function sets comprise the categories:</p>
+<ul class="simple">
+<li>Filesystem Positions and Navigation</li>
+<li>Canonical Node Address</li>
+</ul>
+<p>Various common options are supported, which may not be available for each interface.</p>
+<div class="section" id="spath">
+<span id="opt-spath"></span><span id="index-1"></span><h4><em>spath</em><a class="headerlink" href="#spath" title="Permalink to this headline">¶</a></h4>
+<p>The processed path, either to be added to the search list,
+or to be find in a earch list.</p>
+</div>
+<div class="section" id="plist">
+<span id="opt-plist"></span><span id="index-2"></span><h4><em>plist</em><a class="headerlink" href="#plist" title="Permalink to this headline">¶</a></h4>
+<p>A path list for search operations, default is &#8216;sys.path&#8217;.</p>
+</div>
+<div class="section" id="kargs">
+<h4>kargs<a class="headerlink" href="#kargs" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="apppre">
+<span id="opt-apppre"></span><span id="index-3"></span><h5><em>apppre</em><a class="headerlink" href="#apppre" title="Permalink to this headline">¶</a></h5>
+<p>Application prefix, application scheme.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">appsplit</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+     <span class="kc">True</span>     <span class="c1"># add application scheme</span>
+   <span class="o">|</span> <span class="kc">False</span>    <span class="c1"># remove application scheme</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>default := False</p>
+</div>
+<div class="section" id="appsplit">
+<span id="opt-appsplit"></span><span id="index-4"></span><h5>appsplit<a class="headerlink" href="#appsplit" title="Permalink to this headline">¶</a></h5>
+<p>Split into scheme and components of an application path.</p>
+</div>
+<div class="section" id="delnulpsep">
+<span id="opt-delnulpsep"></span><span id="index-5"></span><h5><em>delnulpsep</em><a class="headerlink" href="#delnulpsep" title="Permalink to this headline">¶</a></h5>
+<p>Constraints the <em>strip</em> option. Keeps the separators after reduction.</p>
+<p>default := True</p>
+</div>
+<div class="section" id="keepsep">
+<span id="opt-keepsep"></span><span id="index-6"></span><h5><em>keepsep</em><a class="headerlink" href="#keepsep" title="Permalink to this headline">¶</a></h5>
+<p>Modifies the behavior of the &#8216;strip&#8217; parameter.
+If &#8216;False&#8217;, the trailing separator is dropped.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">normapppathx</span><span class="p">(</span><span class="s1">&#39;/a/b&#39;</span><span class="p">,</span> <span class="n">keepsep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>   <span class="o">=&gt;</span> <span class="s1">&#39;/a/b&#39;</span>
+<span class="n">normapppathx</span><span class="p">(</span><span class="s1">&#39;/a/b/&#39;</span><span class="p">,</span> <span class="n">keepsep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="o">=&gt;</span> <span class="s1">&#39;/a/b&#39;</span>
+</pre></div>
+</div>
+<p>for &#8216;True&#8217; trailing separators are kept as directory
+marker:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">normapppathx</span><span class="p">(</span><span class="s1">&#39;/a/b&#39;</span><span class="p">,</span> <span class="n">keepsep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>    <span class="o">=&gt;</span> <span class="s1">&#39;/a/b&#39;</span>
+<span class="n">normapppathx</span><span class="p">(</span><span class="s1">&#39;/a/b/&#39;</span><span class="p">,</span> <span class="n">keepsep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   <span class="o">=&gt;</span> <span class="s1">&#39;/a/b/&#39;</span>
+</pre></div>
+</div>
+<p>default := True # for URIs except: <a class="reference external" href="file://">file://</a>, <a class="reference external" href="smb://">smb://</a>
+default := False # for file path names</p>
+</div>
+<div class="section" id="pathsep">
+<span id="opt-pathsep"></span><span id="index-7"></span><h5><em>pathsep</em><a class="headerlink" href="#pathsep" title="Permalink to this headline">¶</a></h5>
+<p>Forces the use of the provided &#8216;<em>pathsep</em>&#8216; for the analysis of the input.
+WHile the application related interfaces in general provide multiple paths
+separated bu &#8216;<em>pathsep</em>&#8216;, the path related interfaces provide this optionally.
+Thus the parameter for path interfaces comes into effect when provided.</p>
+<p>This could comprise &#8216;<em>:;</em>&#8216;, which are applied literally as generic tokens,
+while the options &#8216;<em>posix</em>&#8216; and/or &#8216;<em>win</em>&#8216; recognize the structural element
+context too.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pathsep</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span>
+    <span class="kc">True</span>            <span class="c1"># uses default from *spf*</span>
+  <span class="o">|</span> <span class="kc">False</span>           <span class="c1"># keeps unchanged</span>
+  <span class="o">|</span> <span class="p">[:;]</span><span class="o">*</span>           <span class="c1"># replaces &#39;:&#39; and/or &#39;;&#39;</span>
+  <span class="o">|</span> <span class="s1">&#39;win&#39;</span>           <span class="c1"># replaces &#39;;&#39;</span>
+  <span class="o">|</span> <span class="s1">&#39;posix&#39;</span>         <span class="c1"># replaces &#39;:&#39;</span>
+<span class="p">)</span>
+
+<span class="n">default</span><span class="p">:</span><span class="o">=</span><span class="kc">False</span>
+</pre></div>
+</div>
+<p>The value <em>True</em> just activates the application of the <em>pathsep</em> as defined by the
+<em>spf</em>, which defaults to <em>os.pathsep</em>.</p>
+</div>
+<div class="section" id="raw">
+<span id="index-8"></span><h5><em>raw</em><a class="headerlink" href="#raw" title="Permalink to this headline">¶</a></h5>
+<p>Suppress normalization by call of &#8216;os.path.normpath&#8217;.</p>
+</div>
+<div class="section" id="strip">
+<span id="opt-strip"></span><span id="index-9"></span><h5><em>strip</em><a class="headerlink" href="#strip" title="Permalink to this headline">¶</a></h5>
+<p>Removes resulting <em>null-entries</em>.
+This relies on the choosen target platform, because some chaarcters are used
+for multiple syntax elements, thus without context information lead to ambiguity.
+An example is here again the DOS-drive.
+The interpretation of the separator characters by the undelying OS is the
+base for the processing of the strip operation.</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">spf</span><span class="o">=</span><span class="s1">&#39;posix&#39;</span><span class="p">:</span>  <span class="n">d</span><span class="p">:</span><span class="o">/</span>  <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">&#39;d&#39;</span><span class="p">,</span>  <span class="s1">&#39;/&#39;</span><span class="p">]</span>  <span class="c1"># two directories</span>
+<span class="n">spf</span><span class="o">=</span><span class="s1">&#39;win&#39;</span><span class="p">:</span>    <span class="n">d</span><span class="p">:</span><span class="o">/</span>  <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">&#39;d:&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">]</span>  <span class="c1"># drive &#39;d:&#39;. and the root directory on &#39;d:&#39;</span>
+                                    <span class="c1"># as node-name</span>
+</pre></div>
+</td></tr></table></div>
+<p>Thus the option <em>strip</em> leads to the following results:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">spf</span><span class="o">=</span><span class="s1">&#39;posix&#39;</span><span class="p">:</span>  <span class="n">d</span><span class="p">:</span><span class="o">/</span>  <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">&#39;d&#39;</span><span class="p">]</span>        <span class="c1"># one directory</span>
+<span class="n">spf</span><span class="o">=</span><span class="s1">&#39;win&#39;</span><span class="p">:</span>    <span class="n">d</span><span class="p">:</span><span class="o">/</span>  <span class="o">=&gt;</span> <span class="p">[</span> <span class="s1">&#39;d:&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">]</span>  <span class="c1"># drive &#39;d:&#39;. and the root directory on &#39;d:&#39;</span>
+</pre></div>
+</td></tr></table></div>
+<p>The supported target platforms encounter the following effect when
+<em>strip</em> is set to <em>True</em>.</p>
+<ul>
+<li><p class="first"><em>URL</em> / <em>URI</em></p>
+<ul class="simple">
+<li>multiple occurances of <em>sep</em> and <em>pathsep</em></li>
+</ul>
+</li>
+<li><p class="first"><em>ldsys</em></p>
+<ul class="simple">
+<li>multiple occurances of <em>sep</em> and <em>pathsep</em></li>
+<li>terminating  <em>sep</em> and <em>pathsep</em></li>
+</ul>
+</li>
+<li><p class="first"><em>&#8216;lfsys&#8217;</em></p>
+<ul class="simple">
+<li>multiple occurances of <em>sep</em> and <em>pathsep</em></li>
+<li>terminating  <em>sep</em> and <em>pathsep</em></li>
+</ul>
+</li>
+<li><p class="first"><em>RAW</em></p>
+<p>n.a.</p>
+</li>
+<li><p class="first"><em>share</em></p>
+<ul class="simple">
+<li>multiple occurances of <em>sep</em> and <em>pathsep</em></li>
+<li>terminating  <em>sep</em> and <em>pathsep</em></li>
+</ul>
+</li>
+<li><p class="first"><em>SMB</em></p>
+<ul class="simple">
+<li>multiple occurances of <em>sep</em> and <em>pathsep</em></li>
+<li>terminating  <em>sep</em> and <em>pathsep</em></li>
+</ul>
+</li>
+<li><p class="first"><em>UNC</em></p>
+<ul class="simple">
+<li>multiple occurances of <em>sep</em> and <em>pathsep</em></li>
+<li>terminating  <em>sep</em> and <em>pathsep</em></li>
+</ul>
+</li>
+</ul>
+<p>default := True</p>
+</div>
+<div class="section" id="spf-source-platform">
+<span id="opt-spf"></span><span id="opts-spf"></span><span id="index-10"></span><h5>spf - Source Platform<a class="headerlink" href="#spf-source-platform" title="Permalink to this headline">¶</a></h5>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="5%" />
+<col width="9%" />
+<col width="8%" />
+<col width="38%" />
+<col width="34%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">spf</th>
+<th class="head">string</th>
+<th class="head">constant</th>
+<th class="head">compatible
+to normpath</th>
+<th class="head">cross
+platform</th>
+<th class="head">behaviour</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>local</td>
+<td>posix,
+win</td>
+<td><em>RTE_POSIX</em>,
+<em>RTE_WIN32</em></td>
+<td>yes</td>
+<td>no</td>
+<td>calls local os.path.normpath()</td>
+</tr>
+<tr class="row-odd"><td>posix</td>
+<td>posix</td>
+<td><em>RTE_POSIX</em></td>
+<td>no
+(<a href="#id24"><span class="problematic" id="id25">*</span></a>pchar)</td>
+<td>yes,
+Portable for IEEE1003.1, 2013/3.276 Portable Character Set</td>
+<td>transforms all separators to &#8216;/&#8217; or &#8216;:&#8217;</td>
+</tr>
+<tr class="row-even"><td>uri</td>
+<td>http,
+https,
+smb,
+file</td>
+<td><em>RTE_HTTP</em>,
+<em>RTE_HTTPS</em>,
+<em>RTE_SMB</em>,
+<em>RTE_FILEURI</em></td>
+<td>no</td>
+<td>yes</td>
+<td>transforms all separators to &#8216;/&#8217;</td>
+</tr>
+<tr class="row-odd"><td>win</td>
+<td>win</td>
+<td><em>RTE_WIN32</em></td>
+<td>no</td>
+<td>no</td>
+<td>transforms all separators to &#8216;\\&#8217; or &#8216;;&#8217;</td>
+</tr>
+<tr class="row-even"><td>default</td>
+<td>&nbsp;</td>
+<td><em>RTE</em></td>
+<td>no</td>
+<td>no</td>
+<td>adapts &#8216;win&#8217;(on win) or &#8216;posix&#8217;(on posix) to local os</td>
+</tr>
+</tbody>
+</table>
+<p>Defines the characters to be used as path separator, and
+the additional specific semantics. Default is the current
+platform, with a single character for the &#8216;os.pathsep&#8217; and
+the support for the specific semantics like DOS drives for
+the platform &#8216;win&#8217;.</p>
+<p>Application and URL/URI file prefixes and tags like &#8216;<a class="reference external" href="smb://">smb://</a>&#8216;,
+&#8216;<a class="reference external" href="file://">file://</a>&#8216;, &#8216;<a class="reference external" href="file:////">file:////</a>&#8216;, and &#8216;<a class="reference external" href="file://///">file://///</a>&#8216; are detected in
+any case. Thus these are treated as reserved words.</p>
+<p>The syntax is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spf</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="o">&lt;</span><span class="n">macros</span><span class="o">&gt;|&lt;</span><span class="n">char</span><span class="o">-</span><span class="n">string</span><span class="o">&gt;</span><span class="p">)</span>
+
+<span class="n">macros</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="s1">&#39;posix&#39;</span><span class="o">|</span><span class="s1">&#39;win&#39;</span><span class="p">)[,</span> <span class="n">macros</span><span class="p">]</span>
+<span class="n">char</span><span class="o">-</span><span class="n">string</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="o">|</span><span class="s1">&#39;;&#39;</span><span class="o">|</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">*</span>
+
+<span class="n">default</span> <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="s1">&#39;posix&#39;</span><span class="o">|</span><span class="s1">&#39;win&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul>
+<li><p class="first">posix:</p>
+<p>String for POSIX based platforms. Is aware of the POSIX
+syntax and semantics, single character &#8216;/&#8217; as separator.
+Ignores pattern for potential DOS drives.</p>
+</li>
+<li><p class="first">win:</p>
+<p>String for the Windows platform. Is aware of the Windows
+syntax and semantics, single character &#8216;\&#8217; as separator.
+Recognizes string pattern of DOS drives.
+Undestands in addition the separator &#8216;/&#8217;.</p>
+</li>
+<li><p class="first">URI char-string:</p>
+<p>Applies the selected URI.</p>
+</li>
+</ul>
+<p>For mixed input for example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spf</span> <span class="p">:</span><span class="o">=</span> <span class="s1">&#39;:;&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tpf-target-platform">
+<span id="opt-tpf"></span><span id="opts-tpf"></span><span id="index-11"></span><h5>tpf - Target Platform<a class="headerlink" href="#tpf-target-platform" title="Permalink to this headline">¶</a></h5>
+<p>Due to some deviations from the expected behavior in
+case of cross platform development the following options
+are defined:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="9%" />
+<col width="9%" />
+<col width="40%" />
+<col width="37%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">tpf</th>
+<th class="head">constant</th>
+<th class="head">compatible
+to normpath</th>
+<th class="head">cross
+platform</th>
+<th class="head">behaviour</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>cnp</td>
+<td>&nbsp;</td>
+<td>yes(posix)</td>
+<td>no</td>
+<td>calls posixpath.normpath()</td>
+</tr>
+<tr class="row-odd"><td>cnw</td>
+<td>&nbsp;</td>
+<td>yes(win)</td>
+<td>no</td>
+<td>calls ntpath.normpath()</td>
+</tr>
+<tr class="row-even"><td>local</td>
+<td>&nbsp;</td>
+<td>yes</td>
+<td>no</td>
+<td>calls local os.path.normpath()</td>
+</tr>
+<tr class="row-odd"><td>posix</td>
+<td><em>RTE_POSIX</em></td>
+<td>no
+(<a href="#id26"><span class="problematic" id="id27">*</span></a>pchar)</td>
+<td>yes*
+Portable for IEEE1003.1, 2013/3.276 Portable Character Set</td>
+<td>transforms all separators to &#8216;/&#8217; or &#8216;:&#8217;</td>
+</tr>
+<tr class="row-even"><td>uri</td>
+<td>&nbsp;</td>
+<td>no</td>
+<td>yes</td>
+<td>transforms all separators to &#8216;/&#8217;</td>
+</tr>
+<tr class="row-odd"><td>win</td>
+<td><em>RTE_WIN32</em></td>
+<td>no</td>
+<td>no</td>
+<td>transforms all separators to &#8216;\\&#8217; or &#8216;;&#8217;</td>
+</tr>
+<tr class="row-even"><td>default</td>
+<td><em>RTE</em></td>
+<td>no</td>
+<td>no</td>
+<td>adapts &#8216;win&#8217;(on win) or &#8216;posix&#8217;(on posix) to local os</td>
+</tr>
+</tbody>
+</table>
+<p>See also <a class="reference internal" href="#tpf-and-spf"><span class="std std-ref">tpf and spf</span></a>,
+for a detailed comparison refer to
+<a class="reference internal" href="filesysobjects_multiplatform_api.html#filesysobjectsnormpathx"><span class="std std-ref">&#8216;filesysobjects.normpathx&#8217; vs. &#8216;os.path.normpath&#8217;</span></a>.</p>
+<ul>
+<li><p class="first"><strong>cnw</strong></p>
+<p>Calls transparently</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">posixpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>cnp</strong></p>
+<p>Calls transparently</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ntpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">()</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>default</strong></p>
+<p>Adapt &#8216;<em>os.path.sep</em>&#8216; and &#8216;<em>os.pathsep</em>&#8216; to local native os, else wise
+the same behavior as the modes &#8216;<em>posix</em>&#8216; or &#8216;<em>win</em>&#8216;.</p>
+<p>This mode is in term of the structure including drives of Windows
+based file systems compatible across all supported platforms. But
+the <em>os.path.sep</em>, and the os.pathsep are adapted to the local
+platform.</p>
+<p>On POSIX platforms(Linux, MacOS, ...), e.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="p">:</span><span class="o">/</span>  <span class="o">=&gt;</span> <span class="n">d</span><span class="p">:</span>
+<span class="n">d</span><span class="p">:</span>\\  <span class="o">=&gt;</span> <span class="n">d</span><span class="p">:</span>\\
+</pre></div>
+</div>
+<p>On Windows platforms, e.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="p">:</span><span class="o">/</span>  <span class="o">=&gt;</span> <span class="n">d</span><span class="p">:</span>\\
+<span class="n">d</span><span class="p">:</span>\\  <span class="o">=&gt;</span> <span class="n">d</span><span class="p">:</span>\\
+</pre></div>
+</div>
+</li>
+</ul>
+<p><strong>local</strong>:</p>
+<blockquote>
+<div><p>Compatible to local &#8216;<em>os.path.normpath()</em>&#8216;, this includes the original
+permitted input characters.</p>
+<p>On POSIX platforms(Linux, MacOS, ...), e.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="p">:</span><span class="o">/</span>  <span class="o">=&gt;</span> <span class="n">d</span><span class="p">:</span>
+<span class="n">d</span><span class="p">:</span>\\  <span class="o">=&gt;</span> <span class="n">d</span><span class="p">:</span>\\
+</pre></div>
+</div>
+<p>On Windows platforms, e.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="p">:</span><span class="o">/</span>  <span class="o">=&gt;</span> <span class="n">d</span><span class="p">:</span>\\
+<span class="n">d</span><span class="p">:</span>\\  <span class="o">=&gt;</span> <span class="n">d</span><span class="p">:</span>\\
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong>posix</strong>:</p>
+<blockquote>
+<div><p>POSIX  based style with &#8220;<em>os.path.sep = &#8216;/&#8217;</em>&#8221; and &#8220;<em>os.pathsep = &#8216;;&#8217;</em>&#8221;.
+The special escape-characters are kept, additionally the
+following chars by escaping: &#8220;<em>[/\\:;]</em>&#8221;.
+The special case of ambiguous non-intentionally escape-character
+&#8216;<em>\\\\</em>&#8216; could be eliminated by an odd number of &#8216;<em>\\</em>&#8216;.</p>
+<p>E.g. Linux, MacOS/OS-X, BSD, Solaris, etc.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="p">:</span><span class="o">/</span>  <span class="o">=&gt;</span> <span class="n">d</span><span class="p">:</span><span class="o">/</span>
+<span class="n">d</span><span class="p">:</span>\\  <span class="o">=&gt;</span> <span class="n">d</span><span class="p">:</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>This mode is literally compatible across all supported platforms.</p>
+</div></blockquote>
+<p><strong>uri</strong>:</p>
+<p><strong>win</strong>:</p>
+<blockquote>
+<div><p>MS-Windows style with &#8220;<em>os.path.sep= &#8216;\\&#8217;</em>&#8221; and &#8220;<em>os.pathsep = &#8216;:&#8217;</em>&#8221;.
+The special escape-characters are kept, additionally the following
+chars by escaping: &#8220;<em>[/\\:;]</em>&#8221;.
+The special case of ambiguous non-intentionally escape-character
+&#8216;<em>\\\\</em>&#8216; could be eliminated by an odd number of &#8216;<em>\\</em>&#8216;.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">d</span><span class="p">:</span><span class="o">/</span>  <span class="o">=&gt;</span> <span class="n">d</span><span class="p">:</span>\\
+<span class="n">d</span><span class="p">:</span>\\  <span class="o">=&gt;</span> <span class="n">d</span><span class="p">:</span>\\
+</pre></div>
+</div>
+<p>This mode is literally compatible across all supported platforms.</p>
+</div></blockquote>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="literals-regexpr-and-glob">
+<h2>Literals, RegExpr, and Glob<a class="headerlink" href="#literals-regexpr-and-glob" title="Permalink to this headline">¶</a></h2>
+<p>The common variants of pathnames as parameters are provided by one of
+the categories:</p>
+<ul>
+<li><p class="first"><strong>Literal</strong> - literal names</p>
+<p>The applicability varies on the scope.
+Whereas literals could be applied in any scope, these are the least flexible
+search pattern.
+These just provide native matches either on single nodes, or single goups
+in case of directories represented as containers.</p>
+</li>
+<li><p class="first"><strong>Regular Expression</strong> - specific match pattern, which are implementation dependent</p>
+<p>The regular expressions in general are part of applications, either special
+autonomous conversion filters, or embedded into a greater application,
+and/or programming environment.</p>
+<p>These are strongly implementation dependent, even though a broad commen set
+is generally provided. These in particular lack the native support of
+filesystems, thus could be only used as input and/or output filters.</p>
+</li>
+<li><p class="first"><strong>Glob</strong> - platform dependent native filesystem match</p>
+<p>The &#8216;glob&#8217; expressions are a very basic type of regular expressions, which are
+platform dependent.
+These could be applied at the interface of the filesystems, and influence the
+responce of the filesystem interface directly.</p>
+<p>Globs can span multiple levels of directory paths.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">r&quot;a[0-9]*/[!xy]*/???/*&quot;</span>
+</pre></div>
+</div>
+<p>Use e.g. the following patterns to restrict on a single node name:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s2">r&quot;a*b&quot;</span><span class="o">+</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span>
+<span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s2">r&quot;a*b&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><strong>Combined</strong> - literal names combined with glob, or regexpr</p>
+<p>The pathnames are internally processed depending on the category of the interface.
+Interfaces operating in memeory on strings only apply regular expressions, The
+implementation of interfaces accessing fthe filesystem, e.g. for existence tests
+and name resolution, use literal matches and glob.</p>
+<p>The Semi-Literal type arose from the design, that &#8216;glob&#8217; and &#8216;regexpr&#8217; must not
+be intermixed because of the possible ambiguities. One of the main differences is
+the scope of match. The &#8216;glob&#8217; functions are aware of seperators, for regexpr
+they represent simply a character. The pattern has some differences too, e.g.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">regexpr</span><span class="p">:</span>  <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span>  <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">F0</span><span class="p">,</span> <span class="n">F1</span><span class="p">,</span> <span class="n">F2</span><span class="p">,</span> <span class="p">)</span>
+<span class="n">glob</span><span class="p">:</span>     <span class="n">F</span><span class="p">[</span><span class="mi">0</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span>  <span class="p">:</span><span class="o">=</span> <span class="p">(</span><span class="n">F</span><span class="o">.*</span><span class="p">,</span> <span class="n">F0</span><span class="o">.*</span><span class="p">,</span> <span class="n">F1</span><span class="o">.*</span><span class="p">,</span> <span class="n">F2</span><span class="o">.*</span><span class="p">,</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>So this basicly also prohibits functions like &#8216;fnmatch.translate()&#8217; on intermixed
+expressions. Anyhow, the user could prepare a string as regexpr before
+calling the interface. But be aware, for filesystem evaluation the glob-style is
+applied only.</p>
+<p>Literals and one only of the pattern types could be intermixed arbitrarily.</p>
+<p>The implementation and the possible intermix are provided due to the implemented
+algorithm when the following is true:</p>
+<ul>
+<li><p class="first">&#8216;regexpr&#8217; and &#8216;glob&#8217; could be intermixed, when the &#8216;glob&#8217; compiled by &#8216;re&#8217; does
+not match. Than the algorithm keeps it simply as an unknown node, and continues
+with &#8216;glob&#8217; expansion. Thus the following strict pattern of path names is
+provided, where the order is significant:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">mixed</span><span class="o">-</span><span class="n">regexpr</span><span class="o">-</span><span class="n">glob</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">=</span> <span class="o">&lt;</span><span class="n">literal</span><span class="o">-</span><span class="ow">or</span><span class="o">-</span><span class="n">regexpr</span><span class="o">&gt;&lt;</span><span class="n">literal</span><span class="o">-</span><span class="ow">or</span><span class="o">-</span><span class="n">glob</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>The rule of thumb is given by the following combinations:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>literal + glob:</dt>
+<dd><p class="first last">a literal path part matching the search path, a glob
+to be applied to the filesystem.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>regexpr + literal:</dt>
+<dd><p class="first last">a regexpr to be applied onto the in-memory path, followed
+by a literal applicable in any case.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>literal + regexpr + literal + glob + literal:</dt>
+<dd><p class="first last">this order is provided by the
+algorithm but the input pattern is not verified to be of a consistent
+type and though the applicability of the syntax has to be assured by
+the caller</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>path-pattern := [path-pattern] + (literal|regexpr|glob):</dt>
+<dd><p class="first">Arbitrary pathname pattern are by default supported by trials to match
+the longest valid parts for each type. This is inherently ambiguous when
+glob and regexpr has to be detected. Thus in cases where arbitrary types
+are required a grouping type-keyword has to be provided.</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">path</span><span class="o">-</span><span class="n">pattern</span> <span class="p">:</span><span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="o">-</span><span class="n">pattern</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span>
+        <span class="n">literal</span>   <span class="o">|</span> <span class="s1">&#39;literal(&#39;</span> <span class="n">literal</span> <span class="s1">&#39;)&#39;</span> <span class="o">|</span> <span class="s1">&#39;l(&#39;</span> <span class="n">literal</span> <span class="s1">&#39;)&#39;</span>
+        <span class="o">|</span> <span class="n">regexpr</span> <span class="o">|</span> <span class="s1">&#39;regexpr(&#39;</span> <span class="n">regexpr</span> <span class="s1">&#39;)&#39;</span> <span class="o">|</span> <span class="s1">&#39;r(&#39;</span> <span class="n">regexpr</span> <span class="s1">&#39;)&#39;</span>
+        <span class="o">|</span> <span class="n">glob</span>    <span class="o">|</span> <span class="s1">&#39;glob(&#39;</span> <span class="n">glob</span> <span class="s1">&#39;)&#39;</span>       <span class="o">|</span> <span class="s1">&#39;g(&#39;</span> <span class="n">glob</span> <span class="s1">&#39;)&#39;</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<p>The overall applicability  for specific execution and call contexts is depicted in
+the following table.</p>
+<p>The automatic resolution in absence of type-keyword starts in general with literals
+and globs from left. Than the regexpr is tried to be resolved.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="42%" />
+<col width="14%" />
+<col width="21%" />
+<col width="13%" />
+<col width="11%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Application Processing Scope</th>
+<th class="head">Literals</th>
+<th class="head">Semi-Literals</th>
+<th class="head">RegExpr</th>
+<th class="head">glob</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>In-Memory Path Strings</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes</td>
+<td>no (1)</td>
+</tr>
+<tr class="row-odd"><td>Filesystem</td>
+<td>yes</td>
+<td>yes</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr class="row-even"><td>Filesystem-Extension(3)</td>
+<td>yes</td>
+<td>yes</td>
+<td>yes(2)</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><ol class="arabic simple">
+<li>is treated as an &#8216;regexpr&#8217;, when matches this is resolved, else ends
+re-processing and is applied as a &#8216;glob&#8217;</li>
+<li>is handled by caching the file system component into memory and applying
+the &#8216;regexpr&#8217; onto the in-mem-string</li>
+<li>in case of ambiguity type-keywords have to be provided on the
+syntax parts, see &#8216;path-pattern&#8217;</li>
+</ol>
+</div></blockquote>
+<p>Thus the application  of RegExpr is implemented as an optional parameter
+performed on in.memory strings only.
+The workflow in case of required searches for unknown filesystem nodes by
+re-patterns is:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>filter and collect filesystem entries by &#8216;literal&#8217; and &#8216;glob&#8217; parameters</li>
+<li>post-filter the collected set by  &#8216;literal&#8217; and &#8216;RegExpr&#8217; type parameters.</li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="common-path-rules">
+<h2>Common Path-Rules<a class="headerlink" href="#common-path-rules" title="Permalink to this headline">¶</a></h2>
+<p>The <em>filesysobjects</em> supports an abstract API for the transparent application of resource paths.
+This includes in reality a bunch of redundancies and ambiguities of tokens ans structures.
+Therefore some minor &#8216;esoteric&#8217; limits are accepted, while still the escaping and masking for some
+application URIs is required.
+The basic concept relies on specific tokens and token characters, which indicate the applications
+and seperators of the syntax elements.
+Thus these are required in order to reliably distinguish between the various path syntaxes.
+When multiple characters - e.g. &#8216;;&#8217; or &#8216;:&#8217; as parts of the path constructs of URLs are reuqired,
+these have to be masked, or replaced by the character codes and processed by the requesting application.
+An overall generic processing for all applications e.g. by <em>splitapppathx()</em> could not be provided reliable.
+Even the masking by &#8216;backslash&#8217; runs finally into ambiguity, e.g. due to supported Windows filesystems.
+Therefore the package contains at the time of writing already more than 4000 Unit tests.</p>
+<p>The resulting advance after these practically minor - if at all - constraints is the seamless access
+to various resources by mixed resource paths. Where the major part of the management and the assignment of
+the resource locators is provided by the <em>filesysobjects</em>.</p>
+<p>This syntax represents e.g. the following valid filepathanmes with the
+current position(PWD) as reference point for relative positions.
+For the conversion API refer to
+<em>splitapppathx</em>
+<a class="reference external" href="filesysobjects.html#filesysobjects.apppaths.splitapppathx">[docs]</a>
+<a class="reference external" href="_modules/filesysobjects/pathtools.html#splitapppathx">[source]</a>
+and
+<em>splitapppathx_getlocalpath</em>
+<a class="reference external" href="filesysobjects.html#filesysobjects.pathtools.splitapppathx_getlocalpath">[docs]</a>
+<a class="reference external" href="_modules/filesysobjects/pathtools.html#splitapppathx_getlocalpath">[source]</a>
+:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span>
+</pre></div>
+</div>
+<p>Where the following equivalent transformations result</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="c1"># forces a directory</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="c1"># could be a file too</span>
+<span class="o">./</span><span class="nb">dir</span><span class="o">/</span>                  <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="c1"># forces a directory</span>
+<span class="o">./</span><span class="nb">dir</span>                   <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="c1"># could be a file too</span>
+<span class="o">../</span><span class="nb">dir</span><span class="o">/</span>                 <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span>        <span class="c1"># forces a directory</span>
+<span class="o">../</span><span class="nb">dir</span>                  <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="nb">dir</span>         <span class="c1"># could be a file too</span>
+<span class="nb">dir</span><span class="o">/</span>                    <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="c1"># forces a directory</span>
+<span class="nb">dir</span>                     <span class="o">=&gt;</span> <span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="c1"># could be a file too</span>
+</pre></div>
+</div>
+<p>Where the following basic paths are equivalent</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="o">/</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="o">/</span><span class="n">local</span><span class="o">//.///./././</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">//././/</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="o">/</span><span class="n">local</span><span class="o">//../</span><span class="n">path</span><span class="o">/////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/../../</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">!=</span> <span class="o">/</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">!=</span> <span class="o">//</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">!=</span> <span class="o">//</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span>
+</pre></div>
+</div>
+<p>Where the following basic URI paths are still equivalent</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="o">/</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="o">/</span><span class="n">local</span><span class="o">//.///./././</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">//././/</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="o">/</span><span class="n">local</span><span class="o">//../</span><span class="n">path</span><span class="o">/////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/../../</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">!=</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">!=</span> <span class="o">//</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">!=</span> <span class="o">//</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span>
+</pre></div>
+</div>
+<p>Same for the first basic URI paths on both sides</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">//.///./././</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">//././/</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/</span> <span class="o">==</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">//../</span><span class="n">path</span><span class="o">/////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/../../</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">!=</span> <span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+</pre></div>
+</div>
+<p>But for the last two no longer, because &#8216;2SEP&#8217; has to be at the beginning of the string,
+which is interpreted here as the beginning of the raw string representation</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">==</span> <span class="n">file</span><span class="p">:</span><span class="o">////</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span><span class="o">/////</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">local</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">/</span><span class="nb">dir</span>  <span class="o">==</span> <span class="n">file</span><span class="p">:</span><span class="o">////</span><span class="n">local</span><span class="o">////////</span><span class="n">path</span><span class="o">/</span><span class="n">access</span><span class="o">//</span><span class="nb">dir</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="resources">
+<span id="filesysobjects-references"></span><h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="references.html#pathlib" id="id30">[pathlib]</a> lib/pathlib - Python3</li>
+<li><a class="reference internal" href="references.html#urlvalidator" id="id31">[URLVALIDATOR]</a>: W3C Link Checker</li>
+<li><a class="reference internal" href="references.html#macpath" id="id32">[macpath]</a>: legacy lib/macpath - <em>macpath()</em> variants</li>
+<li><a class="reference internal" href="references.html#normpath" id="id33">[normpath]</a>: lib/os.path - <em>os.path.normpath()</em></li>
+<li><a class="reference internal" href="references.html#os-path" id="id34">[os.path]</a>: lib/os.path - <em>os.path.normpath()</em> variants</li>
+</ul>
+</div></div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The filesysobjects API</a><ul>
+<li><a class="reference internal" href="#api">API</a><ul>
+<li><a class="reference internal" href="#interfaces">Interfaces</a></li>
+<li><a class="reference internal" href="#major-options-by-interfaces">Major Options by Interfaces</a><ul>
+<li><a class="reference internal" href="#tpf-and-spf"><em>tpf</em> and <em>spf</em></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#options">Options</a><ul>
+<li><a class="reference internal" href="#spath"><em>spath</em></a></li>
+<li><a class="reference internal" href="#plist"><em>plist</em></a></li>
+<li><a class="reference internal" href="#kargs">kargs</a><ul>
+<li><a class="reference internal" href="#apppre"><em>apppre</em></a></li>
+<li><a class="reference internal" href="#appsplit">appsplit</a></li>
+<li><a class="reference internal" href="#delnulpsep"><em>delnulpsep</em></a></li>
+<li><a class="reference internal" href="#keepsep"><em>keepsep</em></a></li>
+<li><a class="reference internal" href="#pathsep"><em>pathsep</em></a></li>
+<li><a class="reference internal" href="#raw"><em>raw</em></a></li>
+<li><a class="reference internal" href="#strip"><em>strip</em></a></li>
+<li><a class="reference internal" href="#spf-source-platform">spf - Source Platform</a></li>
+<li><a class="reference internal" href="#tpf-target-platform">tpf - Target Platform</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#literals-regexpr-and-glob">Literals, RegExpr, and Glob</a></li>
+<li><a class="reference internal" href="#common-path-rules">Common Path-Rules</a></li>
+<li><a class="reference internal" href="#resources">Resources</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="filesysobjects_design.html"
+                        title="previous chapter">The SW-Design of <em>filesysobjects</em></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="filesysobjects_init.html"
+                        title="next chapter">&#8216;filesysobjects.__init__&#8217; - Module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/filesysobjects_api.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="filesysobjects_init.html" title="‘filesysobjects.__init__’ - Module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="filesysobjects_design.html" title="The SW-Design of filesysobjects"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

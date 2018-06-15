@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>filesysobjects.netfiles &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="../../index.html" />
+    <link rel="up" title="filesysobjects" href="../filesysobjects.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="../filesysobjects.html" accesskey="U">filesysobjects</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for filesysobjects.netfiles</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;The &#39;NetFiles&#39; module provides basic extensions for &#39;os.path.normpath&#39;.  </span>
+
+<span class="sd">.. warning::</span>
+
+<span class="sd">   This module is currently an experimental release for discussion </span>
+<span class="sd">   and may change. Do not use it in production code!</span>
+
+<span class="sd">The following subset of URLs / RFC...</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Arno-Can Uestuensoez&#39;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;Artistic-License-2.0 + Forced-Fairplay-Constraints&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2010-2016 Arno-Can Uestuensoez&quot;</span> \
+                <span class="s2">&quot; @Ingenieurbuero Arno-Can Uestuensoez&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1.20&#39;</span>
+<span class="n">__uuid__</span> <span class="o">=</span> <span class="s2">&quot;4135ab0f-fbb8-45a2-a6b1-80d96c164b72&quot;</span>
+
+<span class="n">__docformat__</span> <span class="o">=</span> <span class="s2">&quot;restructuredtext en&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">version</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+<span class="k">if</span> <span class="n">version</span> <span class="o">&lt;</span> <span class="s1">&#39;2.7&#39;</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Requires Python-2.7.* or higher&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">NetFilesException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="c1">#</span>
+<span class="c1"># for test and development</span>
+<span class="n">_mydebug</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1">#</span>
+<span class="c1"># supported URIs</span>
+<span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="c1"># keyword patterns and match vector indexes</span>
+<span class="n">_COMP</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="s2">r&quot;(((smb://)([^/]+)([^:]*))|((cifs://)([^/]+)([^:]*))|((http://)([^/][^/]*)([^:]*))|((https://)([^/][^/]*)([^:]*))|((file://)()([^:]*))|(()()([^:]*)))[:]*&quot;</span>
+<span class="p">)</span>
+<span class="n">_COMPI</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="mi">3</span><span class="p">,</span>
+    <span class="mi">7</span><span class="p">,</span>
+    <span class="mi">11</span><span class="p">,</span>
+    <span class="mi">15</span><span class="p">,</span>
+    <span class="mi">19</span><span class="p">,</span>
+    <span class="mi">23</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="net_normpathx"><a class="viewcode-back" href="../../pyfilesysobjects.html#filesysobjects.netfiles.net_normpathx">[docs]</a><span class="k">def</span> <span class="nf">net_normpathx</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extends &#39;os.path.normpathx&#39; for network filesystems applications.</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">       This module is currently an experimental release for discussion </span>
+<span class="sd">       and may change. Do not use it in production code!</span>
+
+<span class="sd">    The basic extension is the split of the full application level pathname</span>
+<span class="sd">    into it&#39;s application parts and the actual pathname of the node. The </span>
+<span class="sd">    pathname of the node is still passed onto the call &#39;os.path.normpath&#39;,</span>
+<span class="sd">    with a few exceptions only, whereas the network application part, and/or</span>
+<span class="sd">    eventual protocol key of the URI are handled separately.</span>
+
+<span class="sd">    Thus the behavior for the filesystem address - the local path almost</span>
+<span class="sd">    remains, while is extended by a network portion.</span>
+
+<span class="sd">    But due to the eventual different remote filesystem attributes the local</span>
+<span class="sd">    evaluation remains unsafe, while else requires remote access for assurance</span>
+<span class="sd">    of the parameters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        plist: List of paths to be cleared.</span>
+<span class="sd">            See common options for details.</span>
+
+<span class="sd">            default := sys.path</span>
+
+<span class="sd">        **kargs:</span>
+<span class="sd">            fstype: The type of the final target filesystem.</span>
+<span class="sd">                This is required because a remote filesystem </span>
+<span class="sd">                could be &#39;s.th.&#39; completely different, e.g.</span>
+<span class="sd">                just a virtual representation of anything.</span>
+
+<span class="sd">                default := &lt;local-filesystem-type&gt;</span>
+
+<span class="sd">            raw: Suppress of the call of &#39;os.path.normpath&#39; and</span>
+<span class="sd">                the generic term &#39;share&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        When successful returns the split file pathname, else returns </span>
+<span class="sd">        either &#39;None&#39;, or raises an exception.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        passed through exceptions:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_fstype</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">_raw</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;fstype&#39;</span><span class="p">:</span>
+            <span class="n">_fstype</span> <span class="o">=</span> <span class="n">v</span>
+        <span class="k">elif</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;raw&#39;</span><span class="p">:</span>
+            <span class="n">_raw</span> <span class="o">=</span> <span class="n">v</span>
+
+    <span class="k">def</span> <span class="nf">clearp</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">p</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">_COMP</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">_COMPI</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>  <span class="c1"># a uri</span>
+                <span class="c1"># returns one only</span>
+                <span class="k">return</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">g</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">i</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">g</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                        <span class="n">clearp</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">g</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)))</span>
+            <span class="k">elif</span> <span class="n">i</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">g</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>  <span class="c1"># the local filesystem</span>
+                <span class="c1"># returns one only</span>
+                <span class="k">return</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">g</span><span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">i</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">g</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                        <span class="n">clearp</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">g</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="../filesysobjects.html" >filesysobjects</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

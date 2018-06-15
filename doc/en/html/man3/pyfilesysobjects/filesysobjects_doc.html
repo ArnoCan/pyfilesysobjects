@@ -1,0 +1,1499 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>A Primer on File and Directory Resources &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="index.html" />
+    <link rel="next" title="Filesystem Address Interfaces on Multiple Platforms" href="filesysobjects_multiplatform_api.html" />
+    <link rel="prev" title="Shortcuts" href="shortcuts.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="filesysobjects_multiplatform_api.html" title="Filesystem Address Interfaces on Multiple Platforms"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="shortcuts.html" title="Shortcuts"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="shortcuttab"><div class="section" id="a-primer-on-file-and-directory-resources">
+<span id="fileanddirectoryresources"></span><h1>A Primer on File and Directory Resources<a class="headerlink" href="#a-primer-on-file-and-directory-resources" title="Permalink to this headline">¶</a></h1>
+<p>The package &#8216;filesysobjects&#8217; supports the hierarchical
+navigation based on resource paths, with special
+support of file system based resources.</p>
+<div class="section" id="common-path-addresses">
+<h2>Common Path Addresses<a class="headerlink" href="#common-path-addresses" title="Permalink to this headline">¶</a></h2>
+<p>The syntax elements for the normalization of pathnames are in particular
+essential for the treatment of the filesystem structure as a class and object
+hierarchy.
+Thus the behaviour has to be defined thoroughly from the beginning, even or
+better in particular in case of the foreseen evolutionary add-on extension.</p>
+<p>The current release provides the following syntax, <em>successive
+compatible extensions are going to follow soon</em>.  These the processing
+of the provided syntax is designed in two layers in accordance to
+common examples.</p>
+<p>The lower layer provides the syntax elements to construct a pathname
+for local access, whereas the upper layer provides the information for
+the location of remote filesystems.</p>
+<p>The following figure draftly weights the degree of exchangability and inter operability of the
+supported name-binding by the resource file path specifications.
+Where the darkness of the grey background symbolizes a tighter overall coupling.</p>
+<p><a class="reference internal" href="_images/pathname_types.png"><img alt="pathnametypes" src="_images/pathname_types.png" style="width: 500px;" /></a>
+<a class="reference external" href="_static/pathname_types.png"><img alt="zoom" src="_images/zoom.png" style="width: 16px;" /></a></p>
+</div>
+<div class="section" id="filesystem-paths">
+<h2>Filesystem Paths<a class="headerlink" href="#filesystem-paths" title="Permalink to this headline">¶</a></h2>
+<p>The following sections sums up and documents the required file and directory address standards
+and conventions.
+The intention is hereby to provide a quick access to the extracted relevant parts of the
+considerable amount of documents.</p>
+<div class="section" id="cygwin">
+<h3>Cygwin<a class="headerlink" href="#cygwin" title="Permalink to this headline">¶</a></h3>
+<p>Cygwin is a Unix environment on MS-Windows. It is less a filesystem, but provides the filesystem of the hosting
+Windows OS, and in addition addressing by Posix compliant file path names.
+The provided libraries distinguish hereby an additional &#8216;mixed-mode&#8217;, which adds a Posix compliant pathname to
+a conventional drive letter.</p>
+<p>The current release of <em>filesysobjects</em> provides not support for the special handling of the Cygwin conventions.
+Cygwin as runtime environment is fully supported.</p>
+</div>
+<div class="section" id="fat">
+<h3>FAT<a class="headerlink" href="#fat" title="Permalink to this headline">¶</a></h3>
+<p>File allocation table (FAT) <a class="reference internal" href="references.html#fat" id="id1">[FAT]</a> .</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>File allocation table (FAT) <a class="reference internal" href="references.html#fat" id="id2">[FAT]</a></p>
+<p><strong>FAT Root Folder Structure</strong></p>
+<table border="1" class="last docutils">
+<colgroup>
+<col width="38%" />
+<col width="20%" />
+<col width="42%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Root Folder Entry</th>
+<th class="head">Size</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Name</td>
+<td>11 bytes</td>
+<td>Name in 8.3 format.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>File allocation table (FAT) <a class="reference internal" href="references.html#fat" id="id3">[FAT]</a></p>
+<p><strong>File Naming</strong></p>
+<p>Windows Server 2003 supports both long and short file names on FAT volumes.</p>
+<p><strong>File Names on FAT Volumes</strong></p>
+<p>Files created or renamed on FAT volumes use attribute bits to
+support long file names in a way that does not interfere with how
+MS-DOS gains access to the volume.</p>
+<p>When you create a file that has a long file name, Windows Server
+2003 creates a conventional 8.3 name for the file and one or more
+secondary folder entries for the file, one for each set of 13
+characters in the long file name.  Each secondary folder entry
+stores a corresponding part of the long file name in
+Unicode. MS-DOS accesses the file by using the conventional 8.3
+file name contained in the folder entry for the file.</p>
+<p>Windows Server 2003 marks the secondary folder entries as part of a
+long file name by setting the volume ID, read-only, system, and
+hidden attribute bits. MS-DOS typically ignores folder entries with
+all these attribute bits set.</p>
+<p>The following figure shows all of the folder entries for the file
+Thequi~1.fox, which has a long name, “The quick brown.fox.” The
+long name is in Unicode and each character in the name uses 2 bytes
+in the folder entry.  The attribute field for the long-name entries
+has the value 0x0F. The attribute field for the short name has the
+value 0x20.</p>
+<p><strong>Long File Name on a FAT Volume</strong></p>
+<p><a class="reference internal" href="_images/IC196598.gif"><img alt="filesysobjectcomponents" src="_images/IC196598.gif" style="width: 400px;" /></a>
+<a class="reference external" href="_static/IC196598.gif"><img alt="zoom" src="_images/zoom.png" style="width: 16px;" /></a></p>
+<p>Note</p>
+<blockquote>
+<div>Windows NT and Windows Server 2003 do not use the same algorithm
+to create long and short file names as Windows 95, Windows 98,
+and Windows Me. However, on computers that use a multiple-boot
+configuration to start these operating systems, files that you
+create while running one operating system can be accessed while
+running another.</div></blockquote>
+<p>By default, Windows Server 2003 supports long file names on FAT
+volumes. You can disable long file names on FAT volumes if you use
+MS-DOS–based disk tools regularly on the computer. These tools
+might either eliminate the long file names created by Windows
+Server 2003 or delete the files that have long file names.</p>
+<p>Note</p>
+<blockquote>
+<div>It is advised that you do not disable long file names on FAT volumes.</div></blockquote>
+<p><strong>How Windows Server 2003 Creates File Names</strong></p>
+<p>File names in Windows Server 2003 can be up to 255 characters and
+can contain spaces, multiple periods, and special characters that
+are not allowed in MS-DOS file names. Windows Server 2003 makes it
+possible for other operating systems to access files that have long
+names by generating an MS-DOS-readable (8.3) name for each
+file. These MS-DOS-readable names also enable MS-DOS-based and
+Windows 3.x–based applications to recognize and load files that
+have long file names.  When a program saves a file on a computer
+running Windows Server 2003, both the 8.3 file name and long file
+name are retained.</p>
+<p>Note</p>
+<blockquote>
+<div><p>The 8.3 format means that files can have between 1 and 8
+characters in the file name. The name must start with a letter
+or a number and can contain any characters except the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">.</span> <span class="s2">&quot; / \ [ ] : ; | = , * ? (space)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>An 8.3 file name typically has a file name extension that is from
+one to three characters long and has the same character
+restrictions. A period separates the file name from the file name
+extension.</p>
+<p>Several special file names are reserved by the system and cannot be
+used for files or folders: CON, AUX, COM1, COM2, COM3, COM4, LPT1,
+LPT2, LPT3, PRN, and NUL.</p>
+<p>When you create a file that has a long file name, Windows Server
+2003 creates a conventional 8.3 name for the file and one or more
+secondary folder entries for the file, one for each set of 13
+characters in the long file name.  Each secondary folder entry
+stores a corresponding part of the long file name in
+Unicode. MS-DOS accesses the file by using the conventional 8.3
+file name contained in the folder entry for the file.</p>
+<p>Windows Server 2003 marks the secondary folder entries as part of a
+long file name by setting the volume ID, read-only, system, and
+hidden attribute bits. MS-DOS typically ignores folder entries with
+all these attribute bits set.</p>
+<p><strong>Generating Short File Names</strong></p>
+<p class="last">In Windows Server 2003, FAT uses the Unicode character set, which
+contains several prohibited characters that MS-DOS cannot read, for
+their names. To generate a short MS-DOS-readable file name, Windows
+Server 2003 deletes all of these characters from the long file name
+and removes any spaces, but ensures that the generated short file
+name is unique. Because an MS-DOS-readable file name can have only
+one period, Windows Server 2003 also removes extra periods from the
+file name.</p>
+</div>
+<p>.</p>
+</div>
+<div class="section" id="hfs-hfs">
+<h3>HFS/HFS+<a class="headerlink" href="#hfs-hfs" title="Permalink to this headline">¶</a></h3>
+<p>The <em>filesysobjects</em> supports on OS-X the <a class="reference internal" href="#posixdesc"><span class="std std-ref">POSIX</span></a>
+standard for local components of file system path names.  The historic
+legacy with the colon &#8216;:&#8217; as alias for the &#8216;/&#8217; in <em>finder</em> <a class="reference internal" href="references.html#os-path" id="id4">[os.path]</a>
+<a class="reference internal" href="references.html#macpath" id="id5">[macpath]</a> is not supported by the <em>filesysobjects</em>.</p>
+<p>See RFC8089 Appendix-D.3.</p>
+</div>
+<div class="section" id="nfs">
+<h3>NFS<a class="headerlink" href="#nfs" title="Permalink to this headline">¶</a></h3>
+<p>See &#8220;Network File System (NFS) version 4 Protocol&#8221; <a class="reference internal" href="references.html#rfc3530" id="id6">[RFC3530]</a>.</p>
+<p>a.s.a.p.</p>
+</div>
+<div class="section" id="ntfs">
+<h3>NTFS<a class="headerlink" href="#ntfs" title="Permalink to this headline">¶</a></h3>
+<p>Supports full scope.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>NTFS Technical Reference <a class="reference internal" href="references.html#ntfs" id="id7">[NTFS]</a></p>
+<p>How NTFS Works</p>
+<p>Updated: March 28, 2003</p>
+<p>NTFS File Attribute Types</p>
+<table border="1" class="last docutils">
+<colgroup>
+<col width="27%" />
+<col width="73%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><p class="first">File Name</p>
+<p class="last">additional file name attributes.</p>
+</td>
+<td>A repeatable attribute for both long and short file names. The long name of the file
+can be up to 255 Unicode characters. The short name is the 8.3, case-insensitive
+name for the file. Additional names, or hard links, required by POSIX can be included as</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>NTFS Technical Reference <a class="reference internal" href="references.html#ntfs" id="id8">[NTFS]</a></p>
+<p><strong>File Naming</strong></p>
+<p>Windows Server 2003 supports both long and short file names on NTFS volumes.
+File Names in Windows Server 2003</p>
+<p>Every time you create a file with a long file name, NTFS creates a
+second file entry that has a similar 8.3 short file name.  A file
+with an 8.3 short file name has a file name containing 1 to 8
+characters and a file name extension containing 1 to 3
+characters. The file name and file name extension are separated by
+a period.</p>
+<p>File names in Windows Server 2003 can be up to 255 characters and
+can contain spaces, multiple periods, and special characters that
+are not allowed in MS-DOS file names. Windows Server 2003 makes it
+possible for other operating systems to access files that have long
+names by generating an MS-DOS-readable (8.3) name for each
+file. These MS-DOS-readable names also enable MS-DOS-based and
+Windows 3.x–based applications to recognize and load files that
+have long file names. When a program saves a file on a computer
+running Windows Server 2003, both the 8.3 file name and long file
+name are retained.</p>
+<p>Note</p>
+<blockquote>
+<div><p>The 8.3 format means that files can have between 1 and 8
+characters in the file name. The name must start with a letter or
+a number and can contain any characters except the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">.</span> <span class="s2">&quot; / \ [ ] : ; | = , * ? (space)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>An 8.3 file name typically has a file name extension that is from
+one to three characters long and has the same character
+restrictions. A period separates the file name from the file name
+extension.</p>
+<p>Several special file names are reserved by the system and cannot be
+used for files or folders: CON, AUX, COM1, COM2, COM3, COM4, LPT1,
+LPT2, LPT3, PRN, NUL</p>
+<p><strong>How NTFS Generates Short File Names</strong></p>
+<p>In Windows Server 2003, both FAT and NTFS use the Unicode character
+set, which contains several prohibited characters that MS-DOS
+cannot read, for their names. To generate a short MS-DOS-readable
+file name, Windows Server 2003 deletes all of these characters from
+the long file name and removes any spaces. Because an
+MS-DOS-readable file name can have only one period, Windows Server
+2003 also removes extra periods from the file name. If necessary,
+Windows Server 2003 truncates the file name to six characters and
+appends a tilde (~) and a number. For example, each non-duplicate
+file name is appended with ~1. Duplicate file names end with ~2,
+then ~3, and so on. After the file names are truncated, the file
+name extensions are truncated to three or fewer
+characters. Finally, when displaying file names at the command
+line, Windows Server 2003 translates all characters in the file
+name and extension to uppercase.</p>
+<p>Note</p>
+<blockquote>
+<div>You can permit extended characters by using the fsutil behavior
+set command. You must restart the computer before this setting
+takes effect. For more information about using the fsutil
+behavior set command, see the topic Fsutil: behavior in Help and
+Support Center in Windows Server 2003.</div></blockquote>
+<p>When five or more files exist that can result in duplicate short
+file names, Windows Server 2003 uses a slightly different method
+for creating short file names. For the fifth and subsequent files,
+Windows Server 2003:</p>
+<p>Uses only the first two letters of the long file name.</p>
+<p>Generates the next four letters of the short file name by
+mathematically manipulating the remaining letters of the long file
+name.</p>
+<p>Appends ~1 (or another number, if necessary, to avoid a duplicate file name) to the result.</p>
+<p>This method substantially improves performance when Windows Server
+2003 must create short file names for a large number of files with
+similar long file names. Windows Server 2003 uses this method to
+create short names for files on both FAT and NTFS volumes.</p>
+<p>The following table shows the short file names for files created by six tests.</p>
+<p>Short File Names Created by Windows Server 2003 — Example One</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="54%" />
+<col width="46%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Long File Name</th>
+<th class="head">Short File Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>This is test 1.txt</td>
+<td>THISIS~1.TXT</td>
+</tr>
+<tr class="row-odd"><td>This is test 2.txt</td>
+<td>THISIS~2.TXT</td>
+</tr>
+<tr class="row-even"><td>This is test 3.txt</td>
+<td>THISIS~3.TXT</td>
+</tr>
+<tr class="row-odd"><td>This is test 4.txt</td>
+<td>THISIS~4.TXT</td>
+</tr>
+<tr class="row-even"><td>This is test 5.txt</td>
+<td>THA1CA~1.TXT</td>
+</tr>
+<tr class="row-odd"><td>This is test 6.txt</td>
+<td>THA1CE~1.TXT</td>
+</tr>
+</tbody>
+</table>
+<p>If the long file names in the preceding table are created in a different order, their short file names are different,
+as shown in the following table.</p>
+<p>Short File Names Created by Windows Server 2003 — Example Two</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="54%" />
+<col width="46%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Long File Name</th>
+<th class="head">Short File Name</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>This is test 2.txt</td>
+<td>THISIS~1.TXT</td>
+</tr>
+<tr class="row-odd"><td>This is test 3.txt</td>
+<td>THISIS~2.TXT</td>
+</tr>
+<tr class="row-even"><td>This is test 1.txt</td>
+<td>THISIS~3.TXT</td>
+</tr>
+<tr class="row-odd"><td>This is test 4.txt</td>
+<td>THISIS~4.TXT</td>
+</tr>
+<tr class="row-even"><td>This is test 5.txt</td>
+<td>THA1CA~1.TXT</td>
+</tr>
+<tr class="row-odd"><td>This is test 6.txt</td>
+<td>THA1CE~1.TXT</td>
+</tr>
+</tbody>
+</table>
+<p>When you delete a file, its short file name is also deleted. When
+you create new files in the same folder, Windows Server 2003 might
+re-use short file names that have been deleted. For instance, in
+Example 1, if you delete the file “This is test 1.txt,” and then
+create a new file called “This is test 7.txt,” its short file name
+becomes THISIS~1.TXT.</p>
+<p class="last">If you have a large number of files (300,000 or more) in a folder,
+and the files have long file names with the same initial
+characters, the time required to create the files increases. The
+increase occurs because NTFS bases the short file name on the first
+six characters of the long file name. In folders with more than
+300,000 files, the short file names start to conflict after NTFS
+uses all of the 8.3 names that are similar to the long file
+names. Repeated conflicts between a generated short file name and
+existing short file names cause NTFS to regenerate the short file
+name from 6 to 8 times.</p>
+</div>
+<p>For Posix compatibility:</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>NTFS Technical Reference <a class="reference internal" href="references.html#ntfs" id="id9">[NTFS]</a></p>
+<p><strong>POSIX Compliance</strong></p>
+<p>NTFS provides a several features to support the Portable Operating
+System Interface (POSIX) standard, which is defined by the
+Institute of Electrical and Electronic Engineers (IEEE) standard
+1003.1-1990 (also known as ISO/IEC 9945-1:1990).</p>
+<p>NTFS includes the following POSIX-compliant features.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>Case-sensitive naming</dt>
+<dd>For example, POSIX interprets README.TXT, Readme.txt, and readme.txt as separate files.</dd>
+<dt>Hard links</dt>
+<dd>A file can have more than one name. This allows two different
+file names, which can be in different folders on the same
+volume, to point to the same data.</dd>
+<dt>Additional time stamps</dt>
+<dd>These show when the file was last accessed or modified.</dd>
+</dl>
+</div></blockquote>
+<p>The POSIX subsystem included with Windows NT and Windows 2000 is
+not included with Windows Server 2003.  A new subsystem supporting
+the broad functionality found on most UNIX systems beyond the
+POSIX.1 standard is shipped as part of Interix 2.2. The Interix
+subsystem can be certified to the NIST FIPS 151-2 POSIX Conformance
+Test Suite.</p>
+<dl class="last docutils">
+<dt>Note You must use Interix-based programs to manage file names that</dt>
+<dd>differ only in case. You cannot use standard Windows Server 2003
+command-line tools (such as copy, del, and move, or their
+equivalents in Windows Explorer or My Computer) to manage file
+names that differ only in case.</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="posix-ieee-1003">
+<span id="posixdesc"></span><h3>Posix - IEEE-1003<a class="headerlink" href="#posix-ieee-1003" title="Permalink to this headline">¶</a></h3>
+<p>The filesys objects provides the full scope of the file and path names
+syntax as defined by the <em>IEEE-1003.1 - 2013</em> <a class="reference internal" href="references.html#ieee1003" id="id10">[IEEE1003]</a> .  This is
+the base for the supported file system addresses by <em>filesysobjects</em>
+on Linux, BSD, Unix, and OS-X.</p>
+<p>The specification includes ordinary local file and pathnames with an
+optional application prefix defined by double-slashes, similar to the
+leading double backslashes of a UNC.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p><strong>IEEE-1003.1 - 2013</strong> <a class="reference internal" href="references.html#ieee1003" id="id11">[IEEE1003]</a></p>
+<p>3.267 Pathname</p>
+<p>A string that is used to identify a file. In the context of
+POSIX.1-2008, a pathname may be limited to {PATH_MAX} bytes,
+including the terminating null byte. It has optional beginning
+&lt;slash&gt; characters, followed by zero or more filenames separated by
+&lt;slash&gt; characters. A pathname can optionally contain one or more
+trailing &lt;slash&gt; characters.  Multiple successive &lt;slash&gt;
+characters are considered to be the same as one &lt;slash&gt;, except for
+the case of exactly two leading &lt;slash&gt; characters.</p>
+<dl class="last docutils">
+<dt>Note:</dt>
+<dd><p class="first">If a pathname consists of only bytes corresponding to characters
+from the portable filename character set (see Portable Filename
+Character Set), &lt;slash&gt; characters, and a single terminating
+&lt;NUL&gt; character, the pathname will be usable as a character
+string in all supported locales; otherwise, the pathname might
+only be a string (rather than a character string). Additionally,
+since the single-byte encoding of the &lt;slash&gt; character is
+required to be the same across all locales and to not occur
+within a multi-byte character, references to a &lt;slash&gt; character
+within a pathname are well-defined even when the pathname is not
+a character string. However, this property does not necessarily
+hold for the remaining characters within the portable filename
+character set.</p>
+<p class="last">Pathname Resolution is defined in detail in Pathname Resolution.</p>
+</dd>
+</dl>
+</div>
+<p>The filename either names a directory component of a pathname, or literally a file.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p><strong>IEEE-1003.1 - 2013</strong> <a class="reference internal" href="references.html#ieee1003" id="id12">[IEEE1003]</a></p>
+<p>3.170 Filename</p>
+<p>A sequence of bytes consisting of 1 to {NAME_MAX} bytes used to
+name a file.  The bytes composing the name shall not contain the
+&lt;NUL&gt; or &lt;slash&gt; characters.  In the context of a pathname, each
+filename shall be followed by a &lt;slash&gt; or a &lt;NUL&gt; character;
+elsewhere, a filename followed by a &lt;NUL&gt; character forms a string
+(but not necessarily a character string). The filenames dot and
+dot-dot have special meaning. A filename is sometimes referred to
+as a &#8220;pathname component&#8221;.  See also Pathname.</p>
+<dl class="docutils">
+<dt>Note:</dt>
+<dd>Pathname Resolution is defined in detail in Pathname Resolution .</dd>
+</dl>
+<p>3.171 Filename String</p>
+<p class="last">A string consisting of a filename followed by a &lt;NUL&gt; character.</p>
+</div>
+<p>Modern filesystems accept unicode characters, the Posix specification defines
+a portablle character set, which is mandatorily available on each conformant
+system, including e.g. embedded devices.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p><strong>IEEE-1003.1 - 2013</strong> <a class="reference internal" href="references.html#ieee1003" id="id13">[IEEE1003]</a></p>
+<p>3.278 Portable Filename Character Set</p>
+<p>The set of characters from which portable filenames are
+constructed.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="n">B</span> <span class="n">C</span> <span class="n">D</span> <span class="n">E</span> <span class="n">F</span> <span class="n">G</span> <span class="n">H</span> <span class="n">I</span> <span class="n">J</span> <span class="n">K</span> <span class="n">L</span> <span class="n">M</span> <span class="n">N</span> <span class="n">O</span> <span class="n">P</span> <span class="n">Q</span> <span class="n">R</span> <span class="n">S</span> <span class="n">T</span> <span class="n">U</span> <span class="n">V</span> <span class="n">W</span> <span class="n">X</span> <span class="n">Y</span> <span class="n">Z</span>
+<span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span> <span class="n">e</span> <span class="n">f</span> <span class="n">g</span> <span class="n">h</span> <span class="n">i</span> <span class="n">j</span> <span class="n">k</span> <span class="n">l</span> <span class="n">m</span> <span class="n">n</span> <span class="n">o</span> <span class="n">p</span> <span class="n">q</span> <span class="n">r</span> <span class="n">s</span> <span class="n">t</span> <span class="n">u</span> <span class="n">v</span> <span class="n">w</span> <span class="n">x</span> <span class="n">y</span> <span class="n">z</span>
+<span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">7</span> <span class="mi">8</span> <span class="mi">9</span> <span class="o">.</span> <span class="n">_</span> <span class="o">-</span>
+</pre></div>
+</div>
+<p class="last">The last three characters are the &lt;period&gt;, &lt;underscore&gt;, and &lt;hyphen&gt;
+characters, respectively. See also Pathname.</p>
+</div>
+<p>For the pathname resolution.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p><strong>IEEE-1003.1 - 2013</strong> <a class="reference internal" href="references.html#ieee1003" id="id14">[IEEE1003]</a></p>
+<p>4.12 Pathname Resolution</p>
+<p>Pathname resolution is performed for a process to resolve a
+pathname to a particular directory entry for a file in the file
+hierarchy. There may be multiple pathnames that resolve to the same
+directory entry, and multiple directory entries for the same
+file. When a process resolves a pathname of an existing directory
+entry, the entire pathname shall be resolved as described below.
+When a process resolves a pathname of a directory entry that is to
+be created immediately after the pathname is resolved, pathname
+resolution terminates when all components of the path prefix of the
+last component have been resolved. It is then the responsibility of
+the process to create the final component.</p>
+<p>Each filename in the pathname is located in the directory specified
+by its predecessor (for example, in the pathname fragment a/b, file
+b is located in directory a). Pathname resolution shall fail if
+this cannot be accomplished. If the pathname begins with a &lt;slash&gt;,
+the predecessor of the first filename in the pathname shall be
+taken to be the root directory of the process (such pathnames are
+referred to as &#8220;absolute pathnames&#8221;). If the pathname does not
+begin with a &lt;slash&gt;, the predecessor of the first filename of the
+pathname shall be taken to be either the current working directory
+of the process or for certain interfaces the directory identified
+by a file descriptor passed to the interface (such pathnames are
+referred to as &#8220;relative pathnames&#8221;).</p>
+<p>The interpretation of a pathname component is dependent on the
+value of {NAME_MAX} and _POSIX_NO_TRUNC associated with the path
+prefix of that component. If any pathname component is longer than
+{NAME_MAX}, the implementation shall consider this an error.</p>
+<p>A pathname that contains at least one non- &lt;slash&gt; character and
+that ends with one or more trailing &lt;slash&gt; characters shall not be
+resolved successfully unless the last pathname component before the
+trailing &lt;slash&gt; characters names an existing directory or a
+directory entry that is to be created for a directory immediately
+after the pathname is resolved. Interfaces using pathname
+resolution may specify additional constraints1 when a pathname that
+does not name an existing directory contains at least one non-
+&lt;slash&gt; character and contains one or more trailing &lt;slash&gt;
+characters.</p>
+<p>If a symbolic link is encountered during pathname resolution, the
+behavior shall depend on whether the pathname component is at the end
+of the pathname and on the function being performed. If all of the
+following are true, then pathname resolution is complete:</p>
+<p>This is the last pathname component of the pathname.</p>
+<p>The pathname has no trailing &lt;slash&gt;.</p>
+<p>The function is required to act on the symbolic link itself, or
+certain arguments direct that the function act on the symbolic
+link itself.</p>
+<p>In all other cases, the system shall prefix the remaining pathname, if
+any, with the contents of the symbolic link. If the combined length
+exceeds {PATH_MAX}, and the implementation considers this to be an
+error, errno shall be set to [ENAMETOOLONG] and an error indication
+shall be returned. Otherwise, the resolved pathname shall be the
+resolution of the pathname just created. If the resulting pathname
+does not begin with a &lt;slash&gt;, the predecessor of the first filename
+of the pathname is taken to be the directory containing the symbolic
+link.</p>
+<p>If the system detects a loop in the pathname resolution process, it
+shall set errno to [ELOOP] and return an error indication. The same
+may happen if during the resolution process more symbolic links were
+followed than the implementation allows. This implementation-defined
+limit shall not be smaller than {SYMLOOP_MAX}.</p>
+<p>The special filename dot shall refer to the directory specified by its
+predecessor. The special filename dot-dot shall refer to the parent
+directory of its predecessor directory. As a special case, in the root
+directory, dot-dot may refer to the root directory itself.</p>
+<p>A pathname consisting of a single &lt;slash&gt; shall resolve to the root
+directory of the process. A null pathname shall not be successfully
+resolved. If a pathname begins with two successive &lt;slash&gt; characters,
+the first component following the leading &lt;slash&gt; characters may be
+interpreted in an implementation-defined manner, although more than
+two leading &lt;slash&gt; characters shall be treated as a single &lt;slash&gt;
+character.</p>
+<p class="last">Pathname resolution for a given pathname shall yield the same results
+when used by any interface in POSIX.1-2008 as long as there are no
+changes to any files evaluated during pathname resolution for the
+given pathname between resolutions.</p>
+</div>
+<p>The <em>filesysobjects</em> support RFC8089 Appendix-D.1.</p>
+</div>
+<div class="section" id="unc">
+<span id="uncdesc"></span><h3>UNC<a class="headerlink" href="#unc" title="Permalink to this headline">¶</a></h3>
+<p>The Universal Naming Convention (UNC) <a class="reference internal" href="references.html#ms-dtyp" id="id15">[MS-DTYP]</a> is implemented by the
+following syntax.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>Universal Naming Convention (UNC) <a class="reference internal" href="references.html#ms-dtyp" id="id16">[MS-DTYP]</a></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>UNC               = &quot;\\&quot; host-name &quot;\&quot; share-name [ &quot;\&quot; object-name ]
+host-name         = &quot;[&quot; IPv6address ‘]&quot; / IPv4address / reg-name
+   ; IPv6address, IPv4address, and reg-name as specified in [RFC3986]_
+share-name        = 1*80pchar
+pchar             = %x20-21 / %x23-29 / %x2D-2E / %x30-39 / %x40-5A / %x5E-7B / %x7D-FF
+object-name       = *path-name [ &quot;\&quot; file-name ]
+path-name         = 1*255pchar
+file-name         = 1*255fchar [ &quot;:&quot; stream-name [ &quot;:&quot; stream-type ] ]
+fchar             = %x20-21 / %x23-29 / %x2B-2E / %x30-39 / %x3B / %x3D / %x40-5B / %x5D-7B
+/                         %x7D-FF
+stream-name       = *schar
+schar             = %x01-2E / %x30-39 / %x3B-5B /%x5D-FF
+stream-type       = 1*schar
+</pre></div>
+</div>
+<dl class="last docutils">
+<dt>host-name:</dt>
+<dd>The host name of a server or the domain name of a domain hosting resource, using
+the syntax of IPv6address, IPv4address, and reg-name as specified in <a class="reference internal" href="references.html#rfc3986" id="id17">[RFC3986]</a> ,.
+The host-name string MUST be a NetBIOS name as specified in [MS-NBTE] section 2.2.1,
+a fully qualified domain name (FQDN) as specified in <a class="reference internal" href="references.html#rfc1035" id="id19">[RFC1035]</a> and <a class="reference internal" href="references.html#rfc1123" id="id20">[RFC1123]</a> ,
+or an IPv4 address as specified in <a class="reference internal" href="references.html#rfc1123" id="id21">[RFC1123]</a> section 2.1 or an IPv6 address as
+specified in <a class="reference internal" href="references.html#rfc4291" id="id22">[RFC4291]</a> section 2.2. share-name: The name of a share or a resource
+to be accessed. The format of this name depends on the actual file server protocol
+that is used to access the share. Examples of file server protocols include
+SMB (as specified in <a class="reference internal" href="references.html#ms-smb" id="id23">[MS-SMB]</a> ), NFS (as specified in <a class="reference internal" href="references.html#rfc3530" id="id24">[RFC3530]</a> ), and NCP (as
+specified in [NOVELL]).</dd>
+<dt>object-name:</dt>
+<dd>The name of an object; this name depends on the actual resource accessed.
+The notation &#8220;[object-name]*&#8221; indicates that zero or more object names may exist in the path,
+and each object-name is separated from the immediately preceding object-name with a
+backslash path separator. In a UNC path used to access files and directories in an SMB share, for
+example, object-name may be the name of a file or a directory. The host-name, share-name,
+and object-name are referred to as &#8220;pathname components&#8221; or &#8220;path components&#8221;. A valid UNC
+path consists of two or more path components. The host-name is referred to as the &#8220;first
+pathname component&#8221;, the share-name as the &#8220;second pathname component&#8221;, and so on. The
+last component of the path is also referred to as the &#8220;leaf component&#8221;. The protocol that is used to
+access the resource, and the type of resource that is being accessed, define the size and valid
+characters for a path component. The only limitations that a Distributed File System (DFS)
+places on path components are that they MUST be at least one character in length and MUST NOT
+contain a backslash or null.</dd>
+<dt>path-name:</dt>
+<dd>One or more pathname components separated by the &#8220;\&#8221; backslash character. All
+pathname components other than the last pathname component denote directories or reparse
+points.</dd>
+<dt>file-name:</dt>
+<dd>The &#8220;leaf component&#8221; of the path, optionally followed by a &#8221;:&#8221; colon character and a
+stream-name , optionally followed by a &#8221;:&#8221; colon character and a stream type. The stream-
+name, if specified, MAY be zero-length only if stream-type is also specified; otherwise, it MUST
+be at least one character. The stream-type, if specified, MUST be at least one character.</dd>
+</dl>
+</div>
+<p>A short sum-up:</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>The &#8220;file&#8221; URI Scheme <a class="reference internal" href="references.html#rfc8089" id="id25">[RFC8089]</a></p>
+<p>Appendix A.</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt>UNC Syntax</dt>
+<dd><p class="first">The UNC filespace selector string is a null-terminated sequence of
+characters from the Universal Character Set [ISO10646].
+The syntax of a UNC filespace selector string, as defined by
+<a class="reference internal" href="references.html#ms-dtyp" id="id26">[MS-DTYP]</a> , is given here in Augmented Backus-Naur Form (ABNF)
+<a class="reference internal" href="references.html#rfc5234" id="id27">[RFC5234]</a> for convenience:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">UNC</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span> <span class="n">hostname</span> <span class="s2">&quot;</span><span class="se">\&quot;</span><span class="s2"> sharename *( &quot;</span>\<span class="s2">&quot; objectname )</span>
+
+<span class="n">hostname</span> <span class="o">=</span> <span class="n">netbios</span><span class="o">-</span><span class="n">name</span> <span class="o">/</span> <span class="n">fqdn</span> <span class="o">/</span> <span class="n">ip</span><span class="o">-</span><span class="n">address</span>
+<span class="n">sharename</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">name</span> <span class="n">of</span> <span class="n">share</span> <span class="ow">or</span> <span class="n">resource</span> <span class="n">to</span> <span class="n">be</span> <span class="n">accessed</span><span class="o">&gt;</span>
+<span class="n">objectname</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">depends</span> <span class="n">on</span> <span class="n">resource</span> <span class="n">being</span> <span class="n">accessed</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>&#8220;netbios-name&#8221; from [MS-NBTE], Section 2.2.1.</li>
+<li>&#8220;fqdn&#8221; from [RFC1035] or [RFC1123]</li>
+<li>&#8220;ip-address&#8221; from Section 2.1 of [RFC1123], or Section 2.2 of <a class="reference internal" href="references.html#rfc4291" id="id28">[RFC4291]</a>.</li>
+</ul>
+<p class="last">The precise format of &#8220;sharename&#8221; depends on the protocol; see: SMB
+<a class="reference internal" href="references.html#ms-smb" id="id29">[MS-SMB]</a> , NFS <a class="reference internal" href="references.html#rfc3530" id="id30">[RFC3530]</a> , NCP [NOVELL].</p>
+</dd>
+</dl>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="dos-windows">
+<h3>DOS/Windows<a class="headerlink" href="#dos-windows" title="Permalink to this headline">¶</a></h3>
+<p>The Windows system adds the following extensions:</p>
+<ul>
+<li><p class="first">drive letters</p>
+</li>
+<li><p class="first">Universal Naming Convention (UNC) <a class="reference internal" href="references.html#ms-dtyp" id="id31">[MS-DTYP]</a></p>
+</li>
+<li><p class="first">Namespaces [Win32-Namespaces] prefixed by</p>
+<ul class="simple">
+<li>&#8220;\\?\&#8221; for Win32 File Namespaces</li>
+<li>&#8220;\\.\&#8221; for Win32 Device Namespaces</li>
+<li>&#8220;\\?UNC\&#8221; special for &#8220;Long UNC&#8221;</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">RFC8089 Appendix-C: This specification does not define a mechanism for
+translating namespaced paths to or from file URIs.</p>
+</div>
+</li>
+</ul>
+<p>The <em>filesysobjects</em> support RFC8089 Appendix-D.2 and
+Appendix-E.
+E.g.:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="p">:</span><span class="n">c</span><span class="p">:</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+<span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">c</span><span class="p">:</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+<span class="n">file</span><span class="p">:</span><span class="o">////</span><span class="n">host</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+<span class="n">file</span><span class="p">:</span><span class="o">/////</span><span class="n">host</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">&#8220;E.2.2. Vertical Line Character&#8221; is NOT supported.</p>
+</div>
+<p>The <em>splitapppathx</em> disassembles the following parts:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">splitapppathx</span><span class="p">(</span><span class="s2">&quot;file:c:/path/to/file&quot;</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="s1">&#39;file:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;c:&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/file&#39;</span><span class="p">)</span>
+
+<span class="n">splitapppathx</span><span class="p">(</span><span class="s2">&quot;file:///c:/path/to/file&quot;</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="s1">&#39;file:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;c:&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/file&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="uri-url-urn">
+<h2>URI/URL/URN<a class="headerlink" href="#uri-url-urn" title="Permalink to this headline">¶</a></h2>
+<p>The general base specification of a URI/URL/URN is provided by</p>
+<ul class="simple">
+<li>Uniform Resource Identifier - URI: Generic Syntax <a class="reference internal" href="references.html#rfc3986" id="id32">[RFC3986]</a></li>
+</ul>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<ol class="arabic simple">
+<li>Introduction <a class="reference internal" href="references.html#rfc3986" id="id33">[RFC3986]</a></li>
+</ol>
+<p>A Uniform Resource Identifier (URI) provides a simple and extensible
+means for identifying a resource. This specification of URI syntax and
+semantics is derived from concepts introduced by the World Wide Web
+global information initiative, whose use of these identifiers dates
+from 1990 and is described in &#8220;Universal Resource Identifiers in WWW&#8221;
+<a class="reference internal" href="references.html#rfc1630" id="id34">[RFC1630]</a>. The syntax is designed to meet the recommendations laid out
+in &#8220;Functional Recommendations for Internet Resource Locators&#8221;
+[RFC1736] and &#8220;Functional Requirements for Uniform Resource Names&#8221;
+[RFC1737].</p>
+<p>This document obsoletes <a class="reference internal" href="references.html#rfc2396" id="id37">[RFC2396]</a>, which merged &#8220;Uniform Resource
+Locators&#8221; <a class="reference internal" href="references.html#rfc1738" id="id38">[RFC1738]</a> and &#8220;Relative Uniform Resource Locators&#8221; <a class="reference internal" href="references.html#rfc1808" id="id39">[RFC1808]</a>
+in order to define a single, generic syntax for all URIs.  It
+obsoletes [RFC2732], which introduced syntax for an IPv6 address.  It
+excludes portions of RFC 1738 that defined the specific syntax of
+individual URI schemes; those portions will be updated as separate
+documents. The process for registration of new URI schemes is defined
+separately by [BCP35]. Advice for designers of new URI schemes can be
+found in [RFC2718]. All significant changes from RFC 2396 are noted in
+Appendix D.</p>
+<p class="last">This specification uses the terms &#8220;character&#8221; and &#8220;coded character
+set&#8221; in accordance with the definitions provided in [BCP19], and
+&#8220;character encoding&#8221; in place of what [BCP19] refers to as a
+&#8220;charset&#8221;.</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>1.1. Overview of URIs</p>
+<p>URIs are characterized as follows:</p>
+<p>Uniform</p>
+<p>Uniformity provides several benefits. It allows different types of
+resource identifiers to be used in the same context, even when the
+mechanisms used to access those resources may differ. It allows
+uniform semantic interpretation of common syntactic conventions across
+different types of resource identifiers. It allows introduction of new
+types of resource identifiers without interfering with the way that
+existing identifiers are used. It allows the identifiers to be reused
+in many different contexts, thus permitting new applications or
+protocols to leverage a pre existing, large, and widely used set of
+resource identifiers.</p>
+<p>Resource</p>
+<p>This specification does not limit the scope of what might be a
+resource; rather, the term &#8220;resource&#8221; is used in a general sense
+for whatever might be identified by a URI. Familiar examples
+include an electronic document, an image, a source of information
+with a consistent purpose (e.g., &#8220;today’s weather report for Los
+Angeles&#8221;), a service (e.g., an HTTP-to-SMS gateway), and a
+collection of other resources. A resource is not necessarily
+accessible via the Internet; e.g., human beings, corporations, and
+bound books in a library can also be resources. Likewise,
+abstract concepts can be resources, such as the operators and
+operands of a mathematical equation, the types of a relationship
+(e.g., &#8220;parent&#8221; or &#8220;employee&#8221;), or numeric values (e.g., zero,
+one, and infinity).</p>
+<p>Identifier</p>
+<p>An identifier embodies the information required to distinguish
+what is being identified from all other things within its scope of
+identification. Our use of the terms &#8220;identify&#8221; and &#8220;identifying&#8221;
+refer to this purpose of distinguishing one resource from all
+other resources, regardless of how that purpose is accomplished
+(e.g., by name, address, or context). These terms should not be
+mistaken as an assumption that an identifier defines or embodies
+the identity of what is referenced, though that may be the case
+for some identifiers. Nor should it be assumed that a system
+using URIs will access the resource identified: in many cases,
+URIs are used to denote resources without any intention that they
+be accessed. Likewise, the &#8220;one&#8221; resource identified might not be
+singular in nature (e.g., a resource might be a named set or a
+mapping that varies over time).</p>
+<p>A URI is an identifier consisting of a sequence of characters
+matching the syntax rule named &lt;URI&gt; in Section 3. It enables
+uniform identification of resources via a separately defined
+extensible set of naming schemes (Section 3.1). How that
+identification is accomplished, assigned, or enabled is delegated to
+each scheme specification.</p>
+<p>This specification does not place any limits on the nature of a
+resource, the reasons why an application might seek to refer to a
+resource, or the kinds of systems that might use URIs for the sake of
+identifying resources. This specification does not require that a
+URI persists in identifying the same resource over time, though that
+is a common goal of all URI schemes. Nevertheless, nothing in this
+specification prevents an application from limiting itself to
+particular types of resources, or to a subset of URIs that maintains
+characteristics desired by that application.</p>
+<p class="last">URIs have a global scope and are interpreted consistently regardless
+of context, though the result of that interpretation may be in
+relation to the end-user’s context. For example, &#8220;<a class="reference external" href="http://localhost/">http://localhost/</a>&#8221;
+has the same interpretation for every user of that reference, even
+though the network interface corresponding to &#8220;localhost&#8221; may be
+different for each end-user: interpretation is independent of access.
+However, an action made on the basis of that reference will take
+place in relation to the end-user’s context, which implies that an
+action intended to refer to a globally unique thing must use a URI
+that distinguishes that resource from all other things. URIs that
+identify in relation to the end-user’s local context should only be
+used when the context itself is a defining aspect of the resource,
+such as when an on-line help manual refers to a file on the end-
+user’s file system (e.g., &#8220;<a class="reference external" href="file:///etc/hosts">file:///etc/hosts</a>&#8221;).</p>
+</div>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>1.1.3. URI, URL, and URN <a class="reference internal" href="references.html#rfc3986" id="id44">[RFC3986]</a></p>
+<p>A URI can be further classified as a <strong>locator</strong>, a <strong>name</strong>, or <strong>both</strong>. The
+term &#8220;Uniform Resource Locator&#8221; (URL) refers to the subset of URIs
+that, in addition to identifying a resource, provide a means of
+locating the resource by describing its primary access mechanism
+(e.g., its network &#8220;location&#8221;). The term &#8220;Uniform Resource Name&#8221; (URN)
+has been used historically to refer to both URIs under the &#8220;urn&#8221;
+scheme <a class="reference internal" href="references.html#rfc2141" id="id45">[RFC2141]</a>, which are required to remain globally unique and
+persistent even when the resource ceases to exist or becomes
+unavailable, and to any other URI with the properties of a name.</p>
+<p class="last">An individual scheme does not have to be classified as being just one
+of &#8220;name&#8221; or &#8220;locator&#8221;. Instances of URIs from any given scheme may
+have the characteristics of names or locators or both, often depending
+on the persistence and care in the assignment of identifiers by the
+naming authority, rather than on any quality of the scheme. Future
+specifications and related documentation should use the general term
+&#8220;URI&#8221; rather than the more restrictive terms &#8220;URL&#8221; and &#8220;URN&#8221;
+<a class="reference internal" href="references.html#rfc3305" id="id46">[RFC3305]</a>.</p>
+</div>
+<p>For example</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>1.1.2. Examples <a class="reference internal" href="references.html#rfc3986" id="id47">[RFC3986]</a></p>
+<p>The following example URIs illustrate several URI schemes and
+variations in their common syntax components:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span>ftp://ftp.is.co.za/rfc/rfc1808.txt
+http://www.ietf.org/rfc/rfc2396.txt
+ldap://[2001:db8::7]/c=GB?objectClass?one
+mailto:John.Doe@example.com
+news:comp.infosystems.www.servers.unix
+tel:+1-816-555-1212
+telnet://192.0.2.16:80/
+urn:oasis:names:specification:docbook:dtd:xml:4.1.2
+</pre></div>
+</div>
+</div>
+<p>Relative URLs are defined in RFC1630 - Universal Resource Identifiers in WWW <a class="reference internal" href="references.html#rfc1630" id="id48">[RFC1630]</a>.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>RFC1630 - Universal Resource Identifiers in WWW <a class="reference internal" href="references.html#rfc1630" id="id49">[RFC1630]</a>.</p>
+<p>Examples</p>
+<p>In the context of URI</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">magic</span><span class="p">:</span><span class="o">//</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="n">c</span><span class="o">//</span><span class="n">d</span><span class="o">/</span><span class="n">e</span><span class="o">/</span><span class="n">f</span>
+</pre></div>
+</div>
+<p>the partial URIs would expand as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">g</span>           <span class="n">magic</span><span class="p">:</span><span class="o">//</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="n">c</span><span class="o">//</span><span class="n">d</span><span class="o">/</span><span class="n">e</span><span class="o">/</span><span class="n">g</span>
+<span class="o">/</span><span class="n">g</span>          <span class="n">magic</span><span class="p">:</span><span class="o">//</span><span class="n">a</span><span class="o">/</span><span class="n">g</span>
+<span class="o">//</span><span class="n">g</span>         <span class="n">magic</span><span class="p">:</span><span class="o">//</span><span class="n">g</span>
+<span class="o">../</span><span class="n">g</span>        <span class="n">magic</span><span class="p">:</span><span class="o">//</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="n">c</span><span class="o">//</span><span class="n">d</span><span class="o">/</span><span class="n">g</span>
+<span class="n">g</span><span class="p">:</span><span class="n">h</span>         <span class="n">g</span><span class="p">:</span><span class="n">h</span>
+</pre></div>
+</div>
+<p>and in the context of the URI</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">magic</span><span class="p">:</span><span class="o">//</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="o">/</span><span class="n">c</span><span class="o">//</span><span class="n">d</span><span class="o">/</span><span class="n">e</span><span class="o">/</span>
+</pre></div>
+</div>
+<p class="last">the results would be exactly the same.</p>
+</div>
+<p>The static detection of the represented structure by <em>normapppathx()/normpathx()</em>
+and though <em>splitapppathx()/splitpathx()</em> for additional &#8216;padding&#8217; separators
+is not possible.
+For example the following normalization:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>magic://a//b/c//d///e/////  =&gt;???  magic://a/b/c//d/e/
+</pre></div>
+</div>
+<p>could not safely detect the two relative paths.</p>
+<p>The current version supports relative paths literally only by the common flag &#8216;<em>strip=False</em>&#8216;,
+which keeps the number of separators &#8216;/&#8217; untouched.
+Though the responsibilty for the syntax is passed through to the specific application.</p>
+<div class="section" id="file-uri">
+<h3>FILE-URI<a class="headerlink" href="#file-uri" title="Permalink to this headline">¶</a></h3>
+<p>The <em>filesysobjects</em> transparently processes <em>HTTP</em> based file location addresses in accordance to:</p>
+<ul class="simple">
+<li>Uniform Resource Locators (URL) <a class="reference internal" href="references.html#rfc1738" id="id50">[RFC1738]</a>,</li>
+<li>Uniform Resource Identifiers (URI): Generic Syntax <a class="reference internal" href="references.html#rfc2396" id="id51">[RFC2396]</a></li>
+<li>A URN Namespace for IETF Documents <a class="reference internal" href="references.html#rfc2648" id="id52">[RFC2648]</a></li>
+<li>Uniform Resource Identifier - URI: Generic Syntax <a class="reference internal" href="references.html#rfc3986" id="id53">[RFC3986]</a></li>
+<li>The file URI Scheme - draft-kerwin-file-scheme-13; IETF <a class="reference internal" href="references.html#urischeme" id="id54">[URISCHEME]</a> / current <a class="reference internal" href="references.html#rfc8089" id="id55">[RFC8089]</a></li>
+<li>The &#8220;file&#8221; URI Scheme - 2017 <a class="reference internal" href="references.html#rfc8089" id="id56">[RFC8089]</a></li>
+</ul>
+<p>The implemented URI/URL is decribed in detail by
+The &#8220;file&#8221; URI Scheme <a class="reference internal" href="references.html#rfc8089" id="id57">[RFC8089]</a></p>
+<div class="section" id="syntax">
+<h4>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h4>
+<p>The lates standard is <a class="reference internal" href="references.html#rfc8089" id="id58">[RFC8089]</a></p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>The &#8220;file&#8221; URI Scheme <a class="reference internal" href="references.html#rfc8089" id="id59">[RFC8089]</a></p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="o">-</span><span class="n">URI</span> <span class="o">=</span> <span class="n">file</span><span class="o">-</span><span class="n">scheme</span> <span class="s2">&quot;:&quot;</span> <span class="n">file</span><span class="o">-</span><span class="n">hier</span><span class="o">-</span><span class="n">part</span>
+
+<span class="n">file</span><span class="o">-</span><span class="n">scheme</span> <span class="o">=</span> <span class="s2">&quot;file&quot;</span>
+
+<span class="n">file</span><span class="o">-</span><span class="n">hier</span><span class="o">-</span><span class="n">part</span> <span class="o">=</span> <span class="p">(</span> <span class="s2">&quot;//&quot;</span> <span class="n">auth</span><span class="o">-</span><span class="n">path</span> <span class="p">)</span>
+               <span class="o">/</span> <span class="n">local</span><span class="o">-</span><span class="n">path</span>
+
+<span class="n">auth</span><span class="o">-</span><span class="n">path</span> <span class="o">=</span> <span class="p">[</span> <span class="n">file</span><span class="o">-</span><span class="n">auth</span> <span class="p">]</span> <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+
+<span class="n">local</span><span class="o">-</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+
+<span class="n">file</span><span class="o">-</span><span class="n">auth</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span>
+            <span class="o">/</span> <span class="n">host</span>
+</pre></div>
+</div>
+</div>
+<p>Extended with UNC paths,
+see RFC8089 - E.3.2. &lt;file&gt; URI with UNC Path&#8221;.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">To</span> <span class="n">interpret</span> <span class="n">such</span> <span class="n">URIs</span><span class="p">,</span> <span class="n">the</span> <span class="s2">&quot;auth-path&quot;</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">Section</span> <span class="mi">2</span> <span class="n">can</span> <span class="n">be</span>
+<span class="n">replaced</span> <span class="k">with</span> <span class="n">the</span> <span class="n">following</span><span class="p">:</span>
+
+   <span class="n">auth</span><span class="o">-</span><span class="n">path</span> <span class="o">=</span> <span class="p">[</span> <span class="n">file</span><span class="o">-</span><span class="n">auth</span> <span class="p">]</span> <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+             <span class="o">/</span> <span class="n">unc</span><span class="o">-</span><span class="n">authority</span> <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+
+   <span class="n">unc</span><span class="o">-</span><span class="n">authority</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="mi">3</span><span class="s2">&quot;/&quot;</span> <span class="n">file</span><span class="o">-</span><span class="n">host</span>
+
+   <span class="n">file</span><span class="o">-</span><span class="n">host</span> <span class="o">=</span> <span class="n">inline</span><span class="o">-</span><span class="n">IP</span> <span class="o">/</span> <span class="n">IPv4address</span> <span class="o">/</span> <span class="n">reg</span><span class="o">-</span><span class="n">name</span>
+
+   <span class="n">inline</span><span class="o">-</span><span class="n">IP</span> <span class="o">=</span> <span class="s2">&quot;%5B&quot;</span> <span class="p">(</span> <span class="n">IPv6address</span> <span class="o">/</span> <span class="n">IPvFuture</span> <span class="p">)</span> <span class="s2">&quot;%5D&quot;</span>
+</pre></div>
+</div>
+<p>The path-absolute definition:</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>The &#8220;file&#8221; URI Scheme <a class="reference internal" href="references.html#rfc3986" id="id60">[RFC3986]</a></p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">path</span>       <span class="o">=</span> <span class="n">path</span><span class="o">-</span><span class="n">abempty</span>       <span class="p">;</span> <span class="n">begins</span> <span class="k">with</span> <span class="s2">&quot;/&quot;</span> <span class="ow">or</span> <span class="ow">is</span> <span class="n">empty</span>
+           <span class="o">/</span> <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>      <span class="p">;</span> <span class="n">begins</span> <span class="k">with</span> <span class="s2">&quot;/&quot;</span> <span class="n">but</span> <span class="ow">not</span> <span class="s2">&quot;//&quot;</span>
+           <span class="o">/</span> <span class="n">path</span><span class="o">-</span><span class="n">noscheme</span>      <span class="p">;</span> <span class="n">begins</span> <span class="k">with</span> <span class="n">a</span> <span class="n">non</span><span class="o">-</span><span class="n">colon</span> <span class="n">segment</span>
+           <span class="o">/</span> <span class="n">path</span><span class="o">-</span><span class="n">rootless</span>      <span class="p">;</span> <span class="n">begins</span> <span class="k">with</span> <span class="n">a</span> <span class="n">segment</span>
+           <span class="o">/</span> <span class="n">path</span><span class="o">-</span><span class="n">empty</span>         <span class="p">;</span> <span class="n">zero</span> <span class="n">characters</span>
+
+<span class="n">path</span><span class="o">-</span><span class="n">abempty</span>  <span class="o">=</span> <span class="o">*</span><span class="p">(</span> <span class="s2">&quot;/&quot;</span> <span class="n">segment</span> <span class="p">)</span>
+<span class="n">path</span><span class="o">-</span><span class="n">absolute</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span> <span class="p">[</span> <span class="n">segment</span><span class="o">-</span><span class="n">nz</span> <span class="o">*</span><span class="p">(</span> <span class="s2">&quot;/&quot;</span> <span class="n">segment</span> <span class="p">)</span> <span class="p">]</span>
+<span class="n">path</span><span class="o">-</span><span class="n">noscheme</span> <span class="o">=</span> <span class="n">segment</span><span class="o">-</span><span class="n">nz</span><span class="o">-</span><span class="n">nc</span> <span class="o">*</span><span class="p">(</span> <span class="s2">&quot;/&quot;</span> <span class="n">segment</span> <span class="p">)</span>
+<span class="n">path</span><span class="o">-</span><span class="n">rootless</span> <span class="o">=</span> <span class="n">segment</span><span class="o">-</span><span class="n">nz</span> <span class="o">*</span><span class="p">(</span> <span class="s2">&quot;/&quot;</span> <span class="n">segment</span> <span class="p">)</span>
+<span class="n">path</span><span class="o">-</span><span class="n">empty</span>    <span class="o">=</span> <span class="mi">0</span><span class="o">&lt;</span><span class="n">pchar</span><span class="o">&gt;</span>
+
+<span class="n">segment</span>       <span class="o">=</span> <span class="o">*</span><span class="n">pchar</span>
+<span class="n">segment</span><span class="o">-</span><span class="n">nz</span>    <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">pchar</span>
+<span class="n">segment</span><span class="o">-</span><span class="n">nz</span><span class="o">-</span><span class="n">nc</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="p">(</span> <span class="n">unreserved</span> <span class="o">/</span> <span class="n">pct</span><span class="o">-</span><span class="n">encoded</span> <span class="o">/</span> <span class="n">sub</span><span class="o">-</span><span class="n">delims</span> <span class="o">/</span> <span class="s2">&quot;@&quot;</span> <span class="p">)</span>
+              <span class="p">;</span> <span class="n">non</span><span class="o">-</span><span class="n">zero</span><span class="o">-</span><span class="n">length</span> <span class="n">segment</span> <span class="n">without</span> <span class="nb">any</span> <span class="n">colon</span> <span class="s2">&quot;:&quot;</span>
+
+<span class="n">pchar</span>         <span class="o">=</span> <span class="n">unreserved</span> <span class="o">/</span> <span class="n">pct</span><span class="o">-</span><span class="n">encoded</span> <span class="o">/</span> <span class="n">sub</span><span class="o">-</span><span class="n">delims</span> <span class="o">/</span> <span class="s2">&quot;:&quot;</span> <span class="o">/</span> <span class="s2">&quot;@&quot;</span>
+<span class="n">unreserved</span>    <span class="o">=</span> <span class="n">ALPHA</span> <span class="o">/</span> <span class="n">DIGIT</span> <span class="o">/</span> <span class="s2">&quot;-&quot;</span> <span class="o">/</span> <span class="s2">&quot;.&quot;</span> <span class="o">/</span> <span class="s2">&quot;_&quot;</span> <span class="o">/</span> <span class="s2">&quot;~&quot;</span>
+<span class="n">pct</span><span class="o">-</span><span class="n">encoded</span>   <span class="o">=</span> <span class="s2">&quot;%&quot;</span> <span class="n">HEXDIG</span> <span class="n">HEXDIG</span>
+<span class="n">sub</span><span class="o">-</span><span class="n">delims</span>    <span class="o">=</span> <span class="s2">&quot;!&quot;</span> <span class="o">/</span> <span class="s2">&quot;$&quot;</span> <span class="o">/</span> <span class="s2">&quot;&amp;&quot;</span> <span class="o">/</span> <span class="s2">&quot;’&quot;</span> <span class="o">/</span> <span class="s2">&quot;(&quot;</span> <span class="o">/</span> <span class="s2">&quot;)&quot;</span>
+                <span class="o">/</span> <span class="s2">&quot;*&quot;</span> <span class="o">/</span> <span class="s2">&quot;+&quot;</span> <span class="o">/</span> <span class="s2">&quot;,&quot;</span> <span class="o">/</span> <span class="s2">&quot;;&quot;</span> <span class="o">/</span> <span class="s2">&quot;=&quot;</span>
+</pre></div>
+</div>
+</div>
+<p>The supported RFC8089 results into the following
+URIs:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="o">-</span><span class="n">URI</span>               <span class="o">=</span> <span class="n">scheme</span>        <span class="o">+</span>  <span class="n">authority</span>    <span class="o">+</span>  <span class="n">path</span>
+
+<span class="n">file</span><span class="o">-</span><span class="n">URI</span><span class="p">(</span><span class="n">local</span><span class="o">-</span><span class="n">short</span><span class="p">)</span>  <span class="o">=</span> <span class="s2">&quot;file:&quot;</span>                          <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+<span class="n">file</span><span class="o">-</span><span class="n">URI</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>        <span class="o">=</span> <span class="s2">&quot;file://&quot;</span>                        <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+<span class="n">file</span><span class="o">-</span><span class="n">URI</span><span class="p">(</span><span class="n">local</span><span class="p">)</span>        <span class="o">=</span> <span class="s2">&quot;file://&quot;</span>        <span class="s2">&quot;localhost&quot;</span>     <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+<span class="n">file</span><span class="o">-</span><span class="n">URI</span><span class="p">(</span><span class="n">remote</span><span class="p">)</span>       <span class="o">=</span> <span class="s2">&quot;file://&quot;</span>        <span class="n">host</span>            <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+<span class="n">file</span><span class="o">-</span><span class="n">URI</span><span class="p">(</span><span class="n">unc</span><span class="p">)</span>          <span class="o">=</span> <span class="s2">&quot;file:////&quot;</span>      <span class="n">host</span>            <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+<span class="n">file</span><span class="o">-</span><span class="n">URI</span><span class="p">(</span><span class="n">unc</span><span class="p">)</span>          <span class="o">=</span> <span class="s2">&quot;file://///&quot;</span>     <span class="n">host</span>            <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+</pre></div>
+</div>
+<p>With the special cases as described in
+&#8220;RFC8089 - Appendix E. Nonstandard Syntax Variations&#8221;.</p>
+</div>
+<div class="section" id="definitions-by-rfc8089">
+<h4>Definitions by RFC8089<a class="headerlink" href="#definitions-by-rfc8089" title="Permalink to this headline">¶</a></h4>
+<p>The following table lists the supported syntax variants by <em>filesysobjects</em>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="10%" />
+<col width="3%" />
+<col width="30%" />
+<col width="27%" />
+<col width="24%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">document</th>
+<th class="head">reference</th>
+<th class="head">pg.</th>
+<th class="head">File-uri</th>
+<th class="head">Alternatives-posix</th>
+<th class="head">Alternatives-win</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>RFC8089</td>
+<td><ol class="first last arabic simple" start="2">
+<li>Syntax</li>
+</ol>
+</td>
+<td>3</td>
+<td>all</td>
+<td>all</td>
+<td>all</td>
+</tr>
+<tr class="row-odd"><td>RFC8089</td>
+<td>Annex B</td>
+<td>10</td>
+<td>file:///path/to/file</td>
+<td>/path/to/file</td>
+<td>\path\to\file</td>
+</tr>
+<tr class="row-even"><td>RFC8089</td>
+<td>Annex B</td>
+<td>10</td>
+<td>file:/path/to/file</td>
+<td>/path/to/file</td>
+<td>\path\to\file</td>
+</tr>
+<tr class="row-odd"><td>RFC8089</td>
+<td>Annex B</td>
+<td>10</td>
+<td>file://host.example.com/path/to/file</td>
+<td>host.example.com:/path/to/file</td>
+<td>\path\to\file</td>
+</tr>
+<tr class="row-even"><td>RFC8089</td>
+<td>Appendix E.2</td>
+<td>13</td>
+<td>file:c:/path/to/file</td>
+<td>c:/path/to/file</td>
+<td>c:\path\to\file</td>
+</tr>
+<tr class="row-odd"><td>RFC8089</td>
+<td>Appendix E.2</td>
+<td>13</td>
+<td>file:///c:/path/to/file</td>
+<td>c:/path/to/file</td>
+<td>c:\path\to\file</td>
+</tr>
+<tr class="row-even"><td>RFC8089</td>
+<td>Appendix E.3.1</td>
+<td>15</td>
+<td>file://host.example.com/Share/path/to/file.txt</td>
+<td>//host.example.com/Share/path/to/file.txt</td>
+<td>\\host.example.com\path\to\file</td>
+</tr>
+<tr class="row-odd"><td>RFC8089</td>
+<td>Appendix E.3.2</td>
+<td>16</td>
+<td>file:////host.example.com/path/to/file</td>
+<td>//host.example.com/path/to/file</td>
+<td>\path\to\file</td>
+</tr>
+<tr class="row-even"><td>RFC8089</td>
+<td>Appendix E.3.2</td>
+<td>16</td>
+<td>file://///host.example.com/path/to/file</td>
+<td>//host.example.com/path/to/file</td>
+<td>\\host.example.com\path\to\file</td>
+</tr>
+<tr class="row-odd"><td>RFC8089</td>
+<td>Appendix F</td>
+<td>17</td>
+<td>file:///path/to/file</td>
+<td>/path/to/file</td>
+<td>\path\to\file</td>
+</tr>
+<tr class="row-even"><td>RFC8089</td>
+<td>Appendix F</td>
+<td>17</td>
+<td>file:/path/to/file</td>
+<td>/path/to/file</td>
+<td>\path\to\file</td>
+</tr>
+<tr class="row-odd"><td>RFC8089</td>
+<td>Appendix F</td>
+<td>18</td>
+<td>file:c:/path/to/file</td>
+<td>c:/path/to/file</td>
+<td>c:\path\to\file</td>
+</tr>
+<tr class="row-even"><td>RFC8089</td>
+<td>Appendix F</td>
+<td>18</td>
+<td>file://host.example.com/path/to/file</td>
+<td>//host.example.com/path/to/file</td>
+<td>\\host.example.com\path\to\file</td>
+</tr>
+<tr class="row-odd"><td>RFC8089</td>
+<td>Appendix F</td>
+<td>18</td>
+<td>file:////host.example.com/path/to/file</td>
+<td>//host.example.com/path/to/file</td>
+<td>\\host.example.com\path\to\file</td>
+</tr>
+<tr class="row-even"><td>RFC8089</td>
+<td>Appendix F</td>
+<td>18</td>
+<td>file://///host.example.com/path/to/file</td>
+<td>//host.example.com/path/to/file</td>
+<td>\\host.example.com\path\to\file</td>
+</tr>
+</tbody>
+</table>
+<p>The support includes the conversion of mixed separators, cross-conversion, forward and revers conversion
+of path-items, search paths, and URI syntax. E.g.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">path</span>\<span class="n">to</span><span class="o">/</span><span class="n">file</span>    <span class="o">=&gt;</span>  <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span>
+<span class="n">file</span><span class="p">:</span><span class="o">//</span>\\<span class="n">path</span><span class="o">/</span><span class="n">to</span>\<span class="n">file</span>   <span class="o">=&gt;</span>  <span class="o">//</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">file</span> <span class="ow">or</span> \\<span class="n">path</span>\<span class="n">to</span>\<span class="n">file</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="ftp">
+<h3>FTP<a class="headerlink" href="#ftp" title="Permalink to this headline">¶</a></h3>
+<p>The supported syntax for FTP is defined by <a class="reference internal" href="references.html#rfc1738" id="id61">[RFC1738]</a> and <a class="reference internal" href="references.html#rfc3986" id="id62">[RFC3986]</a>.</p>
+</div>
+<div class="section" id="http-https">
+<h3>HTTP/HTTPS<a class="headerlink" href="#http-https" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id63">
+<h4>Syntax<a class="headerlink" href="#id63" title="Permalink to this headline">¶</a></h4>
+<p>The syntax for a URI as defined by the RFC is</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>Appendix A. Collected ABNF for URI <a class="reference internal" href="references.html#rfc3986" id="id64">[RFC3986]</a>:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">URI</span> <span class="o">=</span> <span class="n">scheme</span> <span class="s2">&quot;:&quot;</span> <span class="n">hier</span><span class="o">-</span><span class="n">part</span> <span class="p">[</span> <span class="s2">&quot;?&quot;</span> <span class="n">query</span> <span class="p">]</span> <span class="p">[</span> <span class="s2">&quot;#&quot;</span> <span class="n">fragment</span> <span class="p">]</span>
+
+<span class="n">hier</span><span class="o">-</span><span class="n">part</span> <span class="o">=</span> <span class="s2">&quot;//&quot;</span> <span class="n">authority</span> <span class="n">path</span><span class="o">-</span><span class="n">abempty</span>
+          <span class="o">/</span> <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+          <span class="o">/</span> <span class="n">path</span><span class="o">-</span><span class="n">rootless</span>
+          <span class="o">/</span> <span class="n">path</span><span class="o">-</span><span class="n">empty</span>
+
+<span class="n">URI</span><span class="o">-</span><span class="n">reference</span> <span class="o">=</span> <span class="n">URI</span> <span class="o">/</span> <span class="n">relative</span><span class="o">-</span><span class="n">ref</span>
+
+<span class="n">absolute</span><span class="o">-</span><span class="n">URI</span> <span class="o">=</span> <span class="n">scheme</span> <span class="s2">&quot;:&quot;</span> <span class="n">hier</span><span class="o">-</span><span class="n">part</span> <span class="p">[</span> <span class="s2">&quot;?&quot;</span> <span class="n">query</span> <span class="p">]</span>
+
+<span class="n">relative</span><span class="o">-</span><span class="n">ref</span> <span class="o">=</span> <span class="n">relative</span><span class="o">-</span><span class="n">part</span> <span class="p">[</span> <span class="s2">&quot;?&quot;</span> <span class="n">query</span> <span class="p">]</span> <span class="p">[</span> <span class="s2">&quot;#&quot;</span> <span class="n">fragment</span> <span class="p">]</span>
+
+<span class="n">relative</span><span class="o">-</span><span class="n">part</span> <span class="o">=</span> <span class="s2">&quot;//&quot;</span> <span class="n">authority</span> <span class="n">path</span><span class="o">-</span><span class="n">abempty</span>
+              <span class="o">/</span> <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>
+              <span class="o">/</span> <span class="n">path</span><span class="o">-</span><span class="n">noscheme</span>
+              <span class="o">/</span> <span class="n">path</span><span class="o">-</span><span class="n">empty</span>
+
+<span class="n">scheme</span> <span class="o">=</span> <span class="n">ALPHA</span> <span class="o">*</span><span class="p">(</span> <span class="n">ALPHA</span> <span class="o">/</span> <span class="n">DIGIT</span> <span class="o">/</span> <span class="s2">&quot;+&quot;</span> <span class="o">/</span> <span class="s2">&quot;-&quot;</span> <span class="o">/</span> <span class="s2">&quot;.&quot;</span> <span class="p">)</span>
+
+<span class="n">authority</span>  <span class="o">=</span> <span class="p">[</span> <span class="n">userinfo</span> <span class="s2">&quot;@&quot;</span> <span class="p">]</span> <span class="n">host</span> <span class="p">[</span> <span class="s2">&quot;:&quot;</span> <span class="n">port</span> <span class="p">]</span>
+<span class="n">userinfo</span>   <span class="o">=</span> <span class="o">*</span><span class="p">(</span> <span class="n">unreserved</span> <span class="o">/</span> <span class="n">pct</span><span class="o">-</span><span class="n">encoded</span> <span class="o">/</span> <span class="n">sub</span><span class="o">-</span><span class="n">delims</span> <span class="o">/</span> <span class="s2">&quot;:&quot;</span> <span class="p">)</span>
+<span class="n">host</span>       <span class="o">=</span> <span class="n">IP</span><span class="o">-</span><span class="n">literal</span> <span class="o">/</span> <span class="n">IPv4address</span> <span class="o">/</span> <span class="n">reg</span><span class="o">-</span><span class="n">name</span>
+<span class="n">port</span>       <span class="o">=</span> <span class="o">*</span><span class="n">DIGIT</span>
+
+<span class="n">IP</span><span class="o">-</span><span class="n">literal</span> <span class="o">=</span> <span class="s2">&quot;[&quot;</span> <span class="p">(</span> <span class="n">IPv6address</span> <span class="o">/</span> <span class="n">IPvFuture</span>
+
+<span class="n">IPvFuture</span> <span class="o">=</span> <span class="s2">&quot;v&quot;</span> <span class="mi">1</span><span class="o">*</span><span class="n">HEXDIG</span> <span class="s2">&quot;.&quot;</span> <span class="mi">1</span><span class="o">*</span><span class="p">(</span> <span class="n">unreserved</span> <span class="o">/</span> <span class="n">sub</span><span class="o">-</span><span class="n">delims</span> <span class="o">/</span> <span class="s2">&quot;:&quot;</span> <span class="p">)</span>
+
+<span class="n">IPv6address</span> <span class="o">=</span>                            <span class="mi">6</span><span class="p">(</span> <span class="n">h16</span> <span class="s2">&quot;:&quot;</span> <span class="p">)</span> <span class="n">ls32</span>
+            <span class="o">/</span>                       <span class="s2">&quot;::&quot;</span> <span class="mi">5</span><span class="p">(</span> <span class="n">h16</span> <span class="s2">&quot;:&quot;</span> <span class="p">)</span> <span class="n">ls32</span>
+            <span class="o">/</span> <span class="p">[</span>               <span class="n">h16</span> <span class="p">]</span> <span class="s2">&quot;::&quot;</span> <span class="mi">4</span><span class="p">(</span> <span class="n">h16</span> <span class="s2">&quot;:&quot;</span> <span class="p">)</span> <span class="n">ls32</span>
+            <span class="o">/</span> <span class="p">[</span> <span class="o">*</span><span class="mi">1</span><span class="p">(</span> <span class="n">h16</span> <span class="s2">&quot;:&quot;</span> <span class="p">)</span> <span class="n">h16</span> <span class="p">]</span> <span class="s2">&quot;::&quot;</span> <span class="mi">3</span><span class="p">(</span> <span class="n">h16</span> <span class="s2">&quot;:&quot;</span> <span class="p">)</span> <span class="n">ls32</span>
+            <span class="o">/</span> <span class="p">[</span> <span class="o">*</span><span class="mi">2</span><span class="p">(</span> <span class="n">h16</span> <span class="s2">&quot;:&quot;</span> <span class="p">)</span> <span class="n">h16</span> <span class="p">]</span> <span class="s2">&quot;::&quot;</span> <span class="mi">2</span><span class="p">(</span> <span class="n">h16</span> <span class="s2">&quot;:&quot;</span> <span class="p">)</span> <span class="n">ls32</span>
+            <span class="o">/</span> <span class="p">[</span> <span class="o">*</span><span class="mi">3</span><span class="p">(</span> <span class="n">h16</span> <span class="s2">&quot;:&quot;</span> <span class="p">)</span> <span class="n">h16</span> <span class="p">]</span> <span class="s2">&quot;::&quot;</span>    <span class="n">h16</span> <span class="s2">&quot;:&quot;</span>   <span class="n">ls32</span>
+            <span class="o">/</span> <span class="p">[</span> <span class="o">*</span><span class="mi">4</span><span class="p">(</span> <span class="n">h16</span> <span class="s2">&quot;:&quot;</span> <span class="p">)</span> <span class="n">h16</span> <span class="p">]</span> <span class="s2">&quot;::&quot;</span>              <span class="n">ls32</span>
+            <span class="o">/</span> <span class="p">[</span> <span class="o">*</span><span class="mi">5</span><span class="p">(</span> <span class="n">h16</span> <span class="s2">&quot;:&quot;</span> <span class="p">)</span> <span class="n">h16</span> <span class="p">]</span> <span class="s2">&quot;::&quot;</span>              <span class="n">h16</span>
+            <span class="o">/</span> <span class="p">[</span> <span class="o">*</span><span class="mi">6</span><span class="p">(</span> <span class="n">h16</span> <span class="s2">&quot;:&quot;</span> <span class="p">)</span> <span class="n">h16</span> <span class="p">]</span> <span class="s2">&quot;::&quot;</span>
+
+<span class="n">h16</span>         <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="mi">4</span><span class="n">HEXDIG</span>
+<span class="n">ls32</span>        <span class="o">=</span> <span class="p">(</span> <span class="n">h16</span> <span class="s2">&quot;:&quot;</span> <span class="n">h16</span> <span class="p">)</span> <span class="o">/</span> <span class="n">IPv4address</span>
+<span class="n">IPv4address</span> <span class="o">=</span> <span class="n">dec</span><span class="o">-</span><span class="n">octet</span> <span class="s2">&quot;.&quot;</span> <span class="n">dec</span><span class="o">-</span><span class="n">octet</span> <span class="s2">&quot;.&quot;</span> <span class="n">dec</span><span class="o">-</span><span class="n">octet</span> <span class="s2">&quot;.&quot;</span> <span class="n">dec</span><span class="o">-</span><span class="n">octet</span>
+
+<span class="n">dec</span><span class="o">-</span><span class="n">octet</span>   <span class="o">=</span>  <span class="n">DIGIT</span>               <span class="p">;</span> <span class="mi">0</span><span class="o">-</span><span class="mi">9</span>
+            <span class="o">/</span>  <span class="o">%</span><span class="n">x31</span><span class="o">-</span><span class="mi">39</span> <span class="n">DIGIT</span>       <span class="p">;</span> <span class="mi">10</span><span class="o">-</span><span class="mi">99</span>
+            <span class="o">/</span>  <span class="s2">&quot;1&quot;</span> <span class="mi">2</span><span class="n">DIGIT</span>          <span class="p">;</span> <span class="mi">100</span><span class="o">-</span><span class="mi">199</span>
+            <span class="o">/</span>  <span class="s2">&quot;2&quot;</span> <span class="o">%</span><span class="n">x30</span><span class="o">-</span><span class="mi">34</span> <span class="n">DIGIT</span>   <span class="p">;</span> <span class="mi">200</span><span class="o">-</span><span class="mi">249</span>
+            <span class="o">/</span>  <span class="s2">&quot;25&quot;</span> <span class="o">%</span><span class="n">x30</span><span class="o">-</span><span class="mi">35</span>        <span class="p">;</span> <span class="mi">250</span><span class="o">-</span><span class="mi">255</span>
+
+<span class="n">reg</span><span class="o">-</span><span class="n">name</span>    <span class="o">=</span> <span class="o">*</span><span class="p">(</span> <span class="n">unreserved</span> <span class="o">/</span> <span class="n">pct</span><span class="o">-</span><span class="n">encoded</span> <span class="o">/</span> <span class="n">sub</span><span class="o">-</span><span class="n">delims</span> <span class="p">)</span>
+
+<span class="n">path</span>        <span class="o">=</span> <span class="n">path</span><span class="o">-</span><span class="n">abempty</span>   <span class="p">;</span> <span class="n">begins</span> <span class="k">with</span> <span class="s2">&quot;/&quot;</span> <span class="ow">or</span> <span class="ow">is</span> <span class="n">empty</span>
+            <span class="o">/</span> <span class="n">path</span><span class="o">-</span><span class="n">absolute</span>  <span class="p">;</span> <span class="n">begins</span> <span class="k">with</span> <span class="s2">&quot;/&quot;</span> <span class="n">but</span> <span class="ow">not</span> <span class="s2">&quot;//&quot;</span>
+            <span class="o">/</span> <span class="n">path</span><span class="o">-</span><span class="n">noscheme</span>  <span class="p">;</span> <span class="n">begins</span> <span class="k">with</span> <span class="n">a</span> <span class="n">non</span><span class="o">-</span><span class="n">colon</span> <span class="n">segment</span>
+            <span class="o">/</span> <span class="n">path</span><span class="o">-</span><span class="n">rootless</span>  <span class="p">;</span> <span class="n">begins</span> <span class="k">with</span> <span class="n">a</span> <span class="n">segment</span>
+            <span class="o">/</span> <span class="n">path</span><span class="o">-</span><span class="n">empty</span>     <span class="p">;</span> <span class="n">zero</span> <span class="n">characters</span>
+
+<span class="n">path</span><span class="o">-</span><span class="n">abempty</span>  <span class="o">=</span> <span class="o">*</span><span class="p">(</span> <span class="s2">&quot;/&quot;</span> <span class="n">segment</span> <span class="p">)</span>
+<span class="n">path</span><span class="o">-</span><span class="n">absolute</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span> <span class="p">[</span> <span class="n">segment</span><span class="o">-</span><span class="n">nz</span> <span class="o">*</span><span class="p">(</span> <span class="s2">&quot;/&quot;</span> <span class="n">segment</span> <span class="p">)</span> <span class="p">]</span>
+<span class="n">path</span><span class="o">-</span><span class="n">noscheme</span> <span class="o">=</span> <span class="n">segment</span><span class="o">-</span><span class="n">nz</span><span class="o">-</span><span class="n">nc</span> <span class="o">*</span><span class="p">(</span> <span class="s2">&quot;/&quot;</span> <span class="n">segment</span> <span class="p">)</span>
+<span class="n">path</span><span class="o">-</span><span class="n">rootless</span> <span class="o">=</span> <span class="n">segment</span><span class="o">-</span><span class="n">nz</span> <span class="o">*</span><span class="p">(</span> <span class="s2">&quot;/&quot;</span> <span class="n">segment</span> <span class="p">)</span>
+<span class="n">path</span><span class="o">-</span><span class="n">empty</span>    <span class="o">=</span> <span class="mi">0</span><span class="o">&lt;</span><span class="n">pchar</span><span class="o">&gt;</span>
+
+<span class="n">segment</span>       <span class="o">=</span> <span class="o">*</span><span class="n">pchar</span>
+<span class="n">segment</span><span class="o">-</span><span class="n">nz</span>    <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">pchar</span>
+<span class="n">segment</span><span class="o">-</span><span class="n">nz</span><span class="o">-</span><span class="n">nc</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="p">(</span> <span class="n">unreserved</span> <span class="o">/</span> <span class="n">pct</span><span class="o">-</span><span class="n">encoded</span> <span class="o">/</span> <span class="n">sub</span><span class="o">-</span><span class="n">delims</span> <span class="o">/</span> <span class="s2">&quot;@&quot;</span> <span class="p">)</span>
+              <span class="p">;</span> <span class="n">non</span><span class="o">-</span><span class="n">zero</span><span class="o">-</span><span class="n">length</span> <span class="n">segment</span> <span class="n">without</span> <span class="nb">any</span> <span class="n">colon</span> <span class="s2">&quot;:&quot;</span>
+
+<span class="n">pchar</span>         <span class="o">=</span> <span class="n">unreserved</span> <span class="o">/</span> <span class="n">pct</span><span class="o">-</span><span class="n">encoded</span> <span class="o">/</span> <span class="n">sub</span><span class="o">-</span><span class="n">delims</span> <span class="o">/</span> <span class="s2">&quot;:&quot;</span> <span class="o">/</span> <span class="s2">&quot;@&quot;</span>
+
+<span class="n">query</span>         <span class="o">=</span> <span class="o">*</span><span class="p">(</span> <span class="n">pchar</span> <span class="o">/</span> <span class="s2">&quot;/&quot;</span> <span class="o">/</span> <span class="s2">&quot;?&quot;</span> <span class="p">)</span>
+
+<span class="n">fragment</span>      <span class="o">=</span> <span class="o">*</span><span class="p">(</span> <span class="n">pchar</span> <span class="o">/</span> <span class="s2">&quot;/&quot;</span> <span class="o">/</span> <span class="s2">&quot;?&quot;</span> <span class="p">)</span>
+
+<span class="n">pct</span><span class="o">-</span><span class="n">encoded</span>   <span class="o">=</span> <span class="s2">&quot;%&quot;</span> <span class="n">HEXDIG</span> <span class="n">HEXDIG</span>
+
+<span class="n">unreserved</span>    <span class="o">=</span> <span class="n">ALPHA</span> <span class="o">/</span> <span class="n">DIGIT</span> <span class="o">/</span> <span class="s2">&quot;-&quot;</span> <span class="o">/</span> <span class="s2">&quot;.&quot;</span> <span class="o">/</span> <span class="s2">&quot;_&quot;</span> <span class="o">/</span> <span class="s2">&quot;~&quot;</span>
+<span class="n">reserved</span>      <span class="o">=</span> <span class="n">gen</span><span class="o">-</span><span class="n">delims</span> <span class="o">/</span> <span class="n">sub</span><span class="o">-</span><span class="n">delims</span>
+<span class="n">gen</span><span class="o">-</span><span class="n">delims</span>    <span class="o">=</span> <span class="s2">&quot;:&quot;</span> <span class="o">/</span> <span class="s2">&quot;/&quot;</span> <span class="o">/</span> <span class="s2">&quot;?&quot;</span> <span class="o">/</span> <span class="s2">&quot;#&quot;</span> <span class="o">/</span> <span class="s2">&quot;[&quot;</span> <span class="o">/</span> <span class="s2">&quot;]&quot;</span> <span class="o">/</span> <span class="s2">&quot;@&quot;</span>
+<span class="n">sub</span><span class="o">-</span><span class="n">delims</span>    <span class="o">=</span> <span class="s2">&quot;!&quot;</span> <span class="o">/</span> <span class="s2">&quot;$&quot;</span> <span class="o">/</span> <span class="s2">&quot;&amp;&quot;</span> <span class="o">/</span> <span class="s2">&quot;’&quot;</span> <span class="o">/</span> <span class="s2">&quot;(&quot;</span> <span class="o">/</span> <span class="s2">&quot;)&quot;</span>
+              <span class="o">/</span> <span class="s2">&quot;*&quot;</span> <span class="o">/</span> <span class="s2">&quot;+&quot;</span> <span class="o">/</span> <span class="s2">&quot;,&quot;</span> <span class="o">/</span> <span class="s2">&quot;;&quot;</span> <span class="o">/</span> <span class="s2">&quot;=&quot;</span>
+</pre></div>
+</div>
+</div>
+<p>Thus for example the existing and functioning URL - at the time of writing - is not valid
+in accordance to RFC3986:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">bazaar</span><span class="o">.</span><span class="n">launchpad</span><span class="o">.</span><span class="n">net</span><span class="o">/~</span><span class="n">jakob</span><span class="o">-</span><span class="n">simon</span><span class="o">-</span><span class="n">gaarde</span><span class="o">/</span><span class="n">ladon</span><span class="o">/</span><span class="n">trunk</span><span class="o">/</span><span class="n">files</span><span class="o">/</span><span class="n">head</span><span class="p">:</span><span class="o">/</span><span class="n">frameworks</span><span class="o">/</span><span class="n">python</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>This is because the path <em>segment</em> &#8216;head:&#8217; contains a colon, while this is a <em>reserved</em>
+character, and though excluded from the use witin a <em>segment</em>.
+Therefore the <em>filesysobjects</em> standard procedure <em>splitapppathx()</em> fails to handle this URL,
+which is detected in URL/POSIX mode as two separate path entries due to the ambiguity of the
+path separator &#8216;:&#8217;.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span>
+  <span class="p">(</span><span class="s1">&#39;https&#39;</span><span class="p">,</span> <span class="s1">&#39;bazaar.launchpad.net&#39;</span><span class="p">,</span> <span class="s1">&#39;/~jakob-simon-gaarde/ladon/trunk/files/head&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+  <span class="p">(</span><span class="s1">&#39;lfsys&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;/frameworks/python&#39;</span><span class="p">)</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>The current version supports the following workarounds:</p>
+<ul>
+<li><p class="first"><em>cgi-representation</em>:</p>
+<p>The representation for &#8216;:&#8217; is &#8216;%3a&#8217;, which does not need to be unquoted.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">.../</span><span class="n">head</span><span class="o">%</span><span class="mi">3</span><span class="n">a</span><span class="o">/....</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first"><em>quotes</em>:</p>
+<p>The quoted parts are kept literally and could be un-quoted when required.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">.../</span><span class="s2">&quot;&quot;&quot;head:&quot;&quot;&quot;</span><span class="o">/....</span>
+<span class="o">.../</span><span class="s1">&#39;&#39;&#39;head:&#39;&#39;&#39;</span><span class="o">/....</span>
+</pre></div>
+</div>
+<p>This preserves the colon and keeps the path as one. While the application knows
+what to do and can unquote as required.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="smb">
+<h3>SMB<a class="headerlink" href="#smb" title="Permalink to this headline">¶</a></h3>
+<p>The Server name resolution of the Message Block (SMB) Protocol <a class="reference internal" href="references.html#ms-smb" id="id65">[MS-SMB]</a> is currently implemented
+as a limited version of the file scheme.
+Thus based on &#8220;SMB File Sharing URI Scheme - draft-crhertel-smb-url-07&#8221;.
+This is outdated, but for now the first attempt
+for start.</p>
+<div class="section" id="id66">
+<h4>Syntax<a class="headerlink" href="#id66" title="Permalink to this headline">¶</a></h4>
+<p>The latest standard is <a class="reference internal" href="references.html#ms-smb2" id="id67">[MS-SMB2]</a> <a class="reference internal" href="references.html#ms-smb" id="id68">[MS-SMB]</a></p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p>Message Block (SMB) Protocol <a class="reference internal" href="references.html#ms-smb" id="id69">[MS-SMB]</a></p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">smb_URI</span>        <span class="o">=</span> <span class="p">(</span> <span class="n">smb_absURI</span> <span class="o">|</span> <span class="n">smb_relURI</span> <span class="p">)</span>
+<span class="n">smb_absURI</span>     <span class="o">=</span> <span class="n">scheme</span> <span class="s2">&quot;://&quot;</span> <span class="n">smb_service</span> <span class="p">[</span> <span class="s2">&quot;?&quot;</span> <span class="p">[</span> <span class="n">nbt_context</span> <span class="p">]</span> <span class="p">]</span>
+<span class="n">smb_relURI</span>     <span class="o">=</span> <span class="n">abs_path</span> <span class="o">|</span> <span class="n">rel_path</span>
+
+<span class="n">scheme</span>         <span class="o">=</span> <span class="s2">&quot;smb&quot;</span> <span class="o">|</span> <span class="s2">&quot;cifs&quot;</span>
+<span class="n">smb_service</span>    <span class="o">=</span> <span class="p">(</span> <span class="n">smb_browse</span> <span class="o">|</span> <span class="n">smb_net_path</span> <span class="p">)</span>
+
+<span class="n">smb_browse</span>     <span class="o">=</span> <span class="p">[</span> <span class="n">smb_userinfo</span> <span class="s2">&quot;@&quot;</span> <span class="p">]</span> <span class="p">[</span> <span class="n">smb_srv_name</span> <span class="p">]</span>
+                   <span class="p">[</span> <span class="s2">&quot;:&quot;</span> <span class="n">port</span> <span class="p">]</span> <span class="p">[</span> <span class="s2">&quot;/&quot;</span> <span class="p">]</span>
+<span class="n">smb_net_path</span>   <span class="o">=</span> <span class="n">smb_server</span> <span class="p">[</span> <span class="n">abs_path</span> <span class="p">]</span>
+
+<span class="n">smb_server</span>     <span class="o">=</span> <span class="p">[</span> <span class="n">smb_userinfo</span> <span class="s2">&quot;@&quot;</span> <span class="p">]</span> <span class="n">smb_srv_name</span> <span class="p">[</span> <span class="s2">&quot;:&quot;</span> <span class="n">port</span> <span class="p">]</span>
+
+<span class="n">smb_srv_name</span>   <span class="o">=</span> <span class="n">nbt_name</span> <span class="o">|</span> <span class="n">host</span>
+<span class="n">nbt_name</span>       <span class="o">=</span> <span class="n">netbiosname</span> <span class="p">[</span> <span class="s2">&quot;.&quot;</span> <span class="n">scope_id</span> <span class="p">]</span>
+<span class="n">netbiosname</span>    <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="p">(</span> <span class="n">netbiosnamec</span> <span class="p">)</span> <span class="o">*</span><span class="p">(</span> <span class="n">netbiosnamec</span> <span class="o">|</span> <span class="s2">&quot;*&quot;</span> <span class="p">)</span>
+<span class="n">netbiosnamec</span>   <span class="o">=</span> <span class="p">(</span> <span class="n">alphanum</span> <span class="o">|</span> <span class="n">escaped</span>  <span class="o">|</span> <span class="s2">&quot;:&quot;</span> <span class="o">|</span> <span class="s2">&quot;=&quot;</span> <span class="o">|</span> <span class="s2">&quot;+&quot;</span> <span class="o">|</span> <span class="s2">&quot;$&quot;</span> <span class="o">|</span>
+                   <span class="s2">&quot;,&quot;</span> <span class="o">|</span> <span class="s2">&quot;-&quot;</span> <span class="o">|</span> <span class="s2">&quot;_&quot;</span> <span class="o">|</span> <span class="s2">&quot;!&quot;</span> <span class="o">|</span> <span class="s2">&quot;~&quot;</span> <span class="o">|</span> <span class="s2">&quot;&#39;&quot;</span> <span class="o">|</span> <span class="s2">&quot;(&quot;</span> <span class="o">|</span> <span class="s2">&quot;)&quot;</span> <span class="p">)</span>
+<span class="n">scope_id</span>       <span class="o">=</span> <span class="n">domainlabel</span> <span class="o">*</span><span class="p">(</span> <span class="s2">&quot;.&quot;</span> <span class="n">domainlabel</span> <span class="p">)</span>
+
+<span class="n">smb_userinfo</span>   <span class="o">=</span> <span class="p">[</span> <span class="n">auth_domain</span> <span class="s2">&quot;;&quot;</span> <span class="p">]</span> <span class="n">userinfo_nosem</span>
+<span class="n">auth_domain</span>    <span class="o">=</span> <span class="n">smb_srv_name</span>
+<span class="n">userinfo_nosem</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span> <span class="n">unreserved</span> <span class="o">|</span> <span class="n">escaped</span> <span class="o">|</span>
+                   <span class="s2">&quot;:&quot;</span> <span class="o">|</span> <span class="s2">&quot;&amp;&quot;</span> <span class="o">|</span> <span class="s2">&quot;=&quot;</span> <span class="o">|</span> <span class="s2">&quot;+&quot;</span> <span class="o">|</span> <span class="s2">&quot;$&quot;</span> <span class="o">|</span> <span class="s2">&quot;,&quot;</span> <span class="p">)</span>
+
+<span class="n">nbt_context</span>   <span class="o">=</span> <span class="n">nbt_param</span> <span class="o">*</span><span class="p">(</span><span class="s2">&quot;;&quot;</span> <span class="n">nbt_param</span> <span class="p">)</span>
+
+<span class="n">nbt_param</span>     <span class="o">=</span> <span class="p">(</span> <span class="s2">&quot;BROADCAST=&quot;</span> <span class="n">IPv4address</span> <span class="p">[</span> <span class="s2">&quot;:&quot;</span> <span class="n">port</span> <span class="p">]</span>
+                <span class="o">|</span> <span class="s2">&quot;CALLED=&quot;</span> <span class="n">netbiosname</span>
+                <span class="o">|</span> <span class="s2">&quot;CALLING=&quot;</span> <span class="n">netbiosname</span>
+                <span class="o">|</span> <span class="p">(</span> <span class="s2">&quot;NBNS=&quot;</span> <span class="o">|</span> <span class="s2">&quot;WINS=&quot;</span> <span class="p">)</span> <span class="n">host</span> <span class="p">[</span> <span class="s2">&quot;:&quot;</span> <span class="n">port</span> <span class="p">]</span>
+                <span class="o">|</span> <span class="s2">&quot;NODETYPE=&quot;</span> <span class="p">(</span><span class="s2">&quot;B&quot;</span> <span class="o">|</span> <span class="s2">&quot;P&quot;</span> <span class="o">|</span> <span class="s2">&quot;M&quot;</span> <span class="o">|</span> <span class="s2">&quot;H&quot;</span><span class="p">)</span>
+                <span class="o">|</span> <span class="p">(</span> <span class="s2">&quot;SCOPEID=&quot;</span> <span class="o">|</span> <span class="s2">&quot;SCOPE=&quot;</span> <span class="p">)</span> <span class="n">scope_id</span>
+                <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="resources">
+<span id="filesysobjects-references"></span><h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
+<p>The supported standards in accordance to <a class="reference internal" href="references.html#posix" id="id70">[POSIX]</a>/<a class="reference internal" href="references.html#ieee" id="id71">[IEEE]</a>, <a class="reference internal" href="references.html#ietf" id="id72">[IETF]</a>, and
+filesystem conventions <a class="reference internal" href="references.html#msdn" id="id73">[MSDN]</a> and <a class="reference internal" href="references.html#msospec" id="id74">[MSOSPEC]</a> are:</p>
+<ul class="simple">
+<li><a class="reference internal" href="references.html#cifs" id="id75">[CIFS]</a>: Common Internet File System</li>
+<li><a class="reference internal" href="references.html#cygwin" id="id76">[CYGWIN]</a>: Cygwin</li>
+<li><a class="reference internal" href="references.html#ieee1003c412" id="id77">[IEEE1003C412]</a>: IEEE Std 1003.1(TM), 2013 Edition; Chapter 4.12</li>
+<li><a class="reference internal" href="references.html#ieee1003" id="id78">[IEEE1003]</a>: IEEE Std 1003.1(TM), 2013 Edition</li>
+<li><a class="reference internal" href="references.html#issue26329" id="id79">[ISSUE26329]</a>: Python - Issue 26329: os.path.normpath(&#8220;//&#8221;) returns //</li>
+<li><a class="reference internal" href="references.html#ms-cifs" id="id80">[MS-CIFS]</a>: Common Internet File System (CIFS) Protocol; Microsoft Inc.</li>
+<li><a class="reference internal" href="references.html#ms-dtyp" id="id81">[MS-DTYP]</a>: Windows Data Types - Chap. 2.2.57 UNC; Microsoft Inc.</li>
+<li><a class="reference internal" href="references.html#ms-fscc" id="id82">[MS-FSCC]</a>: File System Control Codes</li>
+<li><a class="reference internal" href="references.html#ms-smb" id="id83">[MS-SMB]</a>: Server Message Block (SMB) Protocol; Microsoft Inc.</li>
+<li><a class="reference internal" href="references.html#msospec" id="id84">[MSOSPEC]</a> Open Specifications</li>
+<li><a class="reference internal" href="references.html#pathlib" id="id85">[pathlib]</a> lib/pathlib - Python3</li>
+<li><a class="reference internal" href="references.html#posix" id="id86">[POSIX]</a>: IEEE Std 1003.1(TM), 2013 Edition</li>
+<li><a class="reference internal" href="references.html#rfc1035" id="id87">[RFC1035]</a>: DOMAIN NAMES - IMPLEMENTATION AND SPECIFICATION</li>
+<li><a class="reference internal" href="references.html#rfc1630" id="id88">[RFC1630]</a>: Universal Resource Identifiers in WWW</li>
+<li><a class="reference internal" href="references.html#rfc1123" id="id89">[RFC1123]</a>: Requirements for Internet Hosts &#8211; Application and Support</li>
+<li><a class="reference internal" href="references.html#rfc1738" id="id90">[RFC1738]</a>: Uniform Resource Locators (URL)</li>
+<li><a class="reference internal" href="references.html#rfc1808" id="id91">[RFC1808]</a>: Relative Uniform Resource Locators</li>
+<li><a class="reference internal" href="references.html#rfc2141" id="id92">[RFC2141]</a>: URN Syntax</li>
+<li><a class="reference internal" href="references.html#rfc2279" id="id93">[RFC2279]</a>: UTF-8, a transformation format of ISO 10646</li>
+<li><a class="reference internal" href="references.html#rfc2396" id="id94">[RFC2396]</a>: Uniform Resource Identifiers (URI): Generic Syntax</li>
+<li><a class="reference internal" href="references.html#rfc2648" id="id95">[RFC2648]</a>: A URN Namespace for IETF Documents</li>
+<li><a class="reference internal" href="references.html#rfc3061" id="id96">[RFC3061]</a>: A URN Namespace of Object Identifiers</li>
+<li><a class="reference internal" href="references.html#rfc3305" id="id97">[RFC3305]</a>: Uniform Resource Identifiers (URIs), URLs, and Uniform Resource Names (URNs): Clarifications and Recommendations;</li>
+<li><a class="reference internal" href="references.html#rfc3492" id="id98">[RFC3492]</a>: Punycode: A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)</li>
+<li><a class="reference internal" href="references.html#rfc3530" id="id99">[RFC3530]</a>: Network File System (NFS) version 4 Protocol;</li>
+<li><a class="reference internal" href="references.html#rfc3986" id="id100">[RFC3986]</a>: Uniform Resource Identifier - URI: Generic Syntax</li>
+<li><a class="reference internal" href="references.html#rfc3987" id="id101">[RFC3987]</a>: Internationalized Resource Identifiers (IRIs)</li>
+<li><a class="reference internal" href="references.html#rfc4088" id="id102">[RFC4088]</a>: Uniform Resource Identifier (URI) Scheme for the Simple Network Management Protocol (SNMP)</li>
+<li><a class="reference internal" href="references.html#rfc4122" id="id103">[RFC4122]</a>: A Universally Unique IDentifier (UUID) URN Namespace</li>
+<li><a class="reference internal" href="references.html#rfc4291" id="id104">[RFC4291]</a>: IP Version 6 Addressing Architecture</li>
+<li><a class="reference internal" href="references.html#rfc5234" id="id105">[RFC5234]</a>: URIRFC 5234 - Augmented BNF for Syntax Specifications: ABNF</li>
+<li><a class="reference internal" href="references.html#rfc6570" id="id106">[RFC6570]</a>: URI Template</li>
+<li><a class="reference internal" href="references.html#rfc7320" id="id107">[RFC7320]</a>: URI Design and Ownership</li>
+<li><a class="reference internal" href="references.html#rfc8089" id="id108">[RFC8089]</a>: The &#8220;file&#8221; URI Scheme</li>
+<li><a class="reference internal" href="references.html#samba" id="id109">[SAMBA]</a>: Samba - opening windows to a wider world</li>
+<li><a class="reference internal" href="references.html#smbcifs" id="id110">[SMBCIFS]</a>: Microsoft SMB Protocol and CIFS Protocol</li>
+<li><a class="reference internal" href="references.html#smburi" id="id111">[SMBURI]</a>: SMB File Sharing URI Scheme - outdated</li>
+<li><a class="reference internal" href="references.html#unc" id="id112">[UNC]</a>: UNC: Common definition in <a class="reference internal" href="references.html#ms-dtyp" id="id113">[MS-DTYP]</a>: Windows Data Types - Chap. 2.2.57 UNC; Microsoft Inc.</li>
+<li><a class="reference internal" href="references.html#urischeme" id="id114">[URISCHEME]</a>: The file URI Scheme - draft-kerwin-file-scheme-13; IETF</li>
+<li><a class="reference internal" href="references.html#urlparsing" id="id115">[URLPARSING]</a>: Living Standard — Last Updated 27 November 2017 - 4.4. URL parsing</li>
+<li><a class="reference internal" href="references.html#urlvalidator" id="id116">[URLVALIDATOR]</a>: W3C Link Checker</li>
+<li><a class="reference internal" href="references.html#macpath" id="id117">[macpath]</a>: legacy lib/macpath - <em>macpath()</em> variants</li>
+<li><a class="reference internal" href="references.html#normpath" id="id118">[normpath]</a>: lib/os.path - <em>os.path.normpath()</em></li>
+<li><a class="reference internal" href="references.html#os-path" id="id119">[os.path]</a>: lib/os.path - <em>os.path.normpath()</em> variants</li>
+<li>updates and and additional others...</li>
+</ul>
+</div></div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">A Primer on File and Directory Resources</a><ul>
+<li><a class="reference internal" href="#common-path-addresses">Common Path Addresses</a></li>
+<li><a class="reference internal" href="#filesystem-paths">Filesystem Paths</a><ul>
+<li><a class="reference internal" href="#cygwin">Cygwin</a></li>
+<li><a class="reference internal" href="#fat">FAT</a></li>
+<li><a class="reference internal" href="#hfs-hfs">HFS/HFS+</a></li>
+<li><a class="reference internal" href="#nfs">NFS</a></li>
+<li><a class="reference internal" href="#ntfs">NTFS</a></li>
+<li><a class="reference internal" href="#posix-ieee-1003">Posix - IEEE-1003</a></li>
+<li><a class="reference internal" href="#unc">UNC</a></li>
+<li><a class="reference internal" href="#dos-windows">DOS/Windows</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#uri-url-urn">URI/URL/URN</a><ul>
+<li><a class="reference internal" href="#file-uri">FILE-URI</a><ul>
+<li><a class="reference internal" href="#syntax">Syntax</a></li>
+<li><a class="reference internal" href="#definitions-by-rfc8089">Definitions by RFC8089</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ftp">FTP</a></li>
+<li><a class="reference internal" href="#http-https">HTTP/HTTPS</a><ul>
+<li><a class="reference internal" href="#id63">Syntax</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#smb">SMB</a><ul>
+<li><a class="reference internal" href="#id66">Syntax</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#resources">Resources</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="shortcuts.html"
+                        title="previous chapter">Shortcuts</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="filesysobjects_multiplatform_api.html"
+                        title="next chapter">Filesystem Address Interfaces on Multiple Platforms</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/filesysobjects_doc.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="filesysobjects_multiplatform_api.html" title="Filesystem Address Interfaces on Multiple Platforms"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="shortcuts.html" title="Shortcuts"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

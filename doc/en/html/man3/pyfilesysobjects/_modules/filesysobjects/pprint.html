@@ -1,0 +1,653 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>filesysobjects.pprint &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="../../index.html" />
+    <link rel="up" title="filesysobjects" href="../filesysobjects.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="../filesysobjects.html" accesskey="U">filesysobjects</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for filesysobjects.pprint</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;The filesysobjects.pprint module provides pretty printer for paths.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<span class="kn">from</span> <span class="nn">filesysobjects</span> <span class="k">import</span> <span class="n">V3K</span><span class="p">,</span> <span class="n">ISSTR</span><span class="p">,</span> <span class="n">RTE</span><span class="p">,</span> <span class="n">PrettyPrintError</span>
+
+<span class="c1">#</span>
+<span class="c1"># for some display enhancements, for now uses the initial only</span>
+<span class="c1">#</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">V3K</span><span class="p">:</span>
+        <span class="n">columns</span><span class="p">,</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">get_terminal_size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># @UndefinedVariable</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">curses</span>
+        <span class="n">stdscr</span> <span class="o">=</span> <span class="n">curses</span><span class="o">.</span><span class="n">initscr</span><span class="p">()</span>
+        <span class="n">curses</span><span class="o">.</span><span class="n">cbreak</span><span class="p">()</span>
+        <span class="n">curses</span><span class="o">.</span><span class="n">noecho</span><span class="p">()</span>
+        <span class="n">stdscr</span><span class="o">.</span><span class="n">keypad</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">columns</span><span class="p">,</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">stdscr</span><span class="o">.</span><span class="n">getmaxyx</span><span class="p">()</span>
+        <span class="n">curses</span><span class="o">.</span><span class="n">endwin</span><span class="p">()</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="c1"># common defaults</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="mi">80</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="mi">24</span>
+
+
+<span class="kn">from</span> <span class="nn">filesysobjects.apppaths</span> <span class="k">import</span> <span class="n">splitapppathx</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Arno-Can Uestuensoez&#39;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;Artistic-License-2.0 + Forced-Fairplay-Constraints&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2010-2016 Arno-Can Uestuensoez&quot;</span> \
+                <span class="s2">&quot;@Ingenieurbuero Arno-Can Uestuensoez&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1.20&#39;</span>
+<span class="n">__uuid__</span> <span class="o">=</span> <span class="s2">&quot;4135ab0f-fbb8-45a2-a6b1-80d96c164b72&quot;</span>
+
+<span class="n">__docformat__</span> <span class="o">=</span> <span class="s2">&quot;restructuredtext en&quot;</span>
+
+
+<div class="viewcode-block" id="PPPathVar"><a class="viewcode-back" href="../../pprint.html#filesysobjects.pprint.PPPathVar">[docs]</a><span class="k">class</span> <span class="nc">PPPathVar</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Pretty printer for *PATH* variables.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PPPathVar.__init__"><a class="viewcode-back" href="../../pprint.html#filesysobjects.pprint.PPPathVar.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pretty print search path variables.</span>
+<span class="sd">        Splits and returns the formatted printable string for </span>
+<span class="sd">        search path variables of type *PATH*.</span>
+<span class="sd">        </span>
+<span class="sd">        The input: ::</span>
+
+<span class="sd">           posix: path = &quot;/path/entry/0:/path/entry/1&quot;</span>
+<span class="sd">           win32: path = &quot;\\path/entry\\0;\\path\\entry\\1&quot; </span>
+
+<span class="sd">        results in the output of &#39;format=console&#39;: ::</span>
+
+<span class="sd">           ...MYPATH = [</span>
+<span class="sd">           ...::::&quot;/path/entry/0&quot;,</span>
+<span class="sd">           ...::::&quot;/path/entry/1&quot;,</span>
+<span class="sd">           ...]</span>
+<span class="sd">           </span>
+<span class="sd">        for the output parameters: ::</span>
+
+<span class="sd">            &lt;format&gt;:        the output format, here format=&#39;console&#39;</span>
+<span class="sd">           &#39;MYPATH&#39;:         the prefix, here &#39;MYPATH&#39;</span>
+<span class="sd">           &#39;=&#39;:              the assignchar, here &#39;=&#39;</span>
+<span class="sd">           &quot;/path/entry/0&quot;:  first path entry</span>
+<span class="sd">           &quot;/path/entry/1&quot;:  second path entry</span>
+<span class="sd">           &#39;.&#39; * n:          &#39;n&#39; offset, here n=3</span>
+<span class="sd">           &#39;.&#39;:              offsetchar, here &#39;.&#39;</span>
+<span class="sd">           &#39;:&#39; * m:          &#39;m&#39; indent, here m=4</span>
+<span class="sd">           &#39;:&#39;:              indentchar, here &#39;:&#39;</span>
+<span class="sd">        </span>
+<span class="sd">        For further details and examples refer to the manual.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            **path**:</span>
+<span class="sd">                The search path to be pretty printed. ::</span>
+
+<span class="sd">                path := (</span>
+<span class="sd">                     &lt;search-path-string&gt;</span>
+<span class="sd">                   | &lt;list-of-search-paths&gt;</span>
+<span class="sd">                   | &lt;tuple-of-search-paths&gt;</span>
+<span class="sd">                )</span>
+
+<span class="sd">                search-path-string := &quot;string of PATH syntax, see &#39;tpf&#39; and &#39;spf&#39;&quot;</span>
+<span class="sd">                list-of-search-paths := [&lt;path-entry-0&gt;, &lt;path-entry-1&gt;, ...]</span>
+<span class="sd">                tuple-of-search-paths := (&lt;path-entry-0&gt;, &lt;path-entry-1&gt;, ...)</span>
+
+<span class="sd">            kargs:</span>
+<span class="sd">                **assignchar**:</span>
+<span class="sd">                    The character representing the assignment.</span>
+
+<span class="sd">                **format**:</span>
+<span class="sd">                    The output format.::</span>
+
+<span class="sd">                       format := (</span>
+<span class="sd">                             console    # formatted for console display</span>
+<span class="sd">                           | ini        # simple path print with normalized path</span>
+<span class="sd">                           | inix0      # multiline colon separated list</span>
+<span class="sd">                           | inix1      # multiple key repetition</span>
+<span class="sd">                           | json       # JSON syntax module</span>
+<span class="sd">                           | properties # </span>
+<span class="sd">                           | python     # same as json</span>
+<span class="sd">                           | xml        # XML syntax module</span>
+<span class="sd">                           | yaml       # YAML syntax module</span>
+<span class="sd">                       )</span>
+
+<span class="sd">                    See manual for details.</span>
+
+<span class="sd">                **indent**:</span>
+<span class="sd">                    Indention of each path item. ::</span>
+
+<span class="sd">                       indent := &lt;#int&gt;</span>
+
+<span class="sd">                    default := 4</span>
+
+<span class="sd">                **indentchar**:</span>
+<span class="sd">                    The character used for padding of the indention.</span>
+<span class="sd">                    The use of &#39;indentchar[0]&#39; only is forced. ::</span>
+
+<span class="sd">                       offsetchar := &lt;printable-character&gt;</span>
+
+<span class="sd">                    default := &#39; &#39;  # space</span>
+
+<span class="sd">                **indentclip**:</span>
+<span class="sd">                    Indention clipped overflows for of each individual</span>
+<span class="sd">                    path item. ::</span>
+
+<span class="sd">                       indent := &lt;#int&gt;</span>
+
+<span class="sd">                    default := 2</span>
+
+<span class="sd">                **indentclipchar**:</span>
+<span class="sd">                    The character user for extra padding of clipped </span>
+<span class="sd">                    items. The use of &#39;indentchar[0]&#39; only is forced. ::</span>
+
+<span class="sd">                       offsetchar := &lt;printable-character&gt;</span>
+
+<span class="sd">                    default := &#39; &#39;  # space</span>
+
+<span class="sd">                **keepentry**:</span>
+<span class="sd">                    Preserves path entries from overflow </span>
+<span class="sd">                    handling. ::</span>
+
+<span class="sd">                       keepentry := (</span>
+<span class="sd">                            True    # ignore overflow for single path entries</span>
+<span class="sd">                          | False   # applies overflow processing within single</span>
+<span class="sd">                                    # path entries</span>
+<span class="sd">                       )</span>
+
+<span class="sd">                **maxwidth**:</span>
+<span class="sd">                    The maximal line width.</span>
+
+<span class="sd">                    default := 80</span>
+
+<span class="sd">                **linesep**:</span>
+<span class="sd">                    The output line separator.</span>
+
+<span class="sd">                    default := os.linesep</span>
+
+<span class="sd">                **linesepfinal**:</span>
+<span class="sd">                    Controls the print of a line separator at the end</span>
+<span class="sd">                    of the string. ::</span>
+
+<span class="sd">                       linesepfinal := (</span>
+<span class="sd">                            True   # prints a line separator as last character</span>
+<span class="sd">                          | False  # suppress the final line separator</span>
+<span class="sd">                       )</span>
+
+<span class="sd">                    default := True</span>
+
+<span class="sd">                **offset**:</span>
+<span class="sd">                    The left side offset margin for all output strings. ::</span>
+
+<span class="sd">                       offset := &lt;#int&gt;</span>
+
+<span class="sd">                    default := 0</span>
+
+<span class="sd">                **offsetchar**:</span>
+<span class="sd">                    The character used for padding of a general offset.</span>
+<span class="sd">                    The use of &#39;offsetchar[0]&#39; only is forced. ::</span>
+
+<span class="sd">                       offsetchar := &lt;printable-character&gt;</span>
+
+<span class="sd">                    default := &#39; &#39;  # space</span>
+
+<span class="sd">                **overflow**:</span>
+<span class="sd">                    The behavior, when line is longer than </span>
+<span class="sd">                    *maxwidth*. ::</span>
+
+<span class="sd">                       overflow := (</span>
+<span class="sd">                             &#39;ignore&#39;     # ignores overflow</span>
+
+<span class="sd">                           | &#39;cut&#39;        # drops the overflow</span>
+
+<span class="sd">                           | &#39;clip&#39;       # continues with the overflow  </span>
+<span class="sd">                                          # in next line, starts new for</span>
+<span class="sd">                                          # next item</span>
+
+<span class="sd">                           | &#39;clipmerge&#39;  # continues with the overflow </span>
+<span class="sd">                                          # in next line, concatenates</span>
+<span class="sd">                                          # next item </span>
+<span class="sd">                       )</span>
+
+<span class="sd">                    default := &#39;ignore&#39;</span>
+
+<span class="sd">                **pathsepin**:</span>
+<span class="sd">                    The input path separator.</span>
+<span class="sd">                    </span>
+<span class="sd">                    default := os.pathsep</span>
+
+<span class="sd">                **pathsepout**:</span>
+<span class="sd">                    The output path separator.</span>
+<span class="sd">                    </span>
+<span class="sd">                    default := os.pathsep</span>
+
+<span class="sd">                **prefix**:</span>
+<span class="sd">                    The prefix to be printed first. ::</span>
+<span class="sd">                    </span>
+<span class="sd">                       prefix := &quot;string without line breaks&quot;</span>
+<span class="sd">    </span>
+<span class="sd">                    The output is: ::</span>
+<span class="sd">    </span>
+<span class="sd">                       &lt;prefix&gt; = [</span>
+<span class="sd">                          &quot;&lt;path-entry-0&gt;&quot;,</span>
+<span class="sd">                          &quot;&lt;path-entry-1&gt;&quot;,</span>
+<span class="sd">                       ]</span>
+<span class="sd">    </span>
+<span class="sd">                    default := &#39;PATH&#39;</span>
+<span class="sd">                </span>
+<span class="sd">                **spf**:</span>
+<span class="sd">                    Source platform.</span>
+
+<span class="sd">                **tpf**:</span>
+<span class="sd">                    Target platform.</span>
+
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Object/None</span>
+<span class="sd">            </span>
+<span class="sd">        Raises:</span>
+<span class="sd">            pass-through</span>
+<span class="sd">            </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assignchar</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;assignchar&quot;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;format&quot;</span><span class="p">,</span> <span class="s1">&#39;console&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;indent&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indentchar</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;indentchar&quot;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indentclip</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;indentclip&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indentclipchar</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;indentclipchar&quot;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keepentry</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;keepentry&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;linesep&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">linesep</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linesepfinal</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;linesepfinal&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxwidth</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;maxwidth&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;offset&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offsetchar</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;offsetchar&quot;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overflow</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;overflow&quot;</span><span class="p">,</span> <span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathsepin</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pathsepin&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pathsepout</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;pathsepout&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;prefix&quot;</span><span class="p">,</span> <span class="s1">&#39;PATH&#39;</span><span class="p">)</span>
+
+<span class="c1">#        self.tpf = kargs.get(&quot;tpf&quot;, RTE)</span>
+        
+        <span class="n">kw</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tpf</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;tpf&quot;</span><span class="p">)</span>
+            <span class="n">kw</span><span class="p">[</span><span class="s1">&#39;tpf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tpf</span> 
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tpf</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spf</span> <span class="o">=</span> <span class="n">kargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;spf&quot;</span><span class="p">)</span>
+            <span class="n">kw</span><span class="p">[</span><span class="s1">&#39;spf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spf</span> 
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spf</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ISSTR</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">splitapppathx</span><span class="p">(</span>
+                <span class="n">path</span><span class="p">,</span> <span class="n">apppre</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pathsep</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pathsepin</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kw</span>
+                <span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="c1"># lists and tuples are expected to be split resource paths.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">PrettyPrintError</span><span class="p">(</span><span class="s2">&quot;type not supported: &quot;</span> <span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="PPPathVar.__str__"><a class="viewcode-back" href="../../pprint.html#filesysobjects.pprint.PPPathVar.__str__">[docs]</a>    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pretty prints as defined by the creation parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;console&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_console</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;ini&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_ini</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;inix0&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_inix0</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;inix1&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_inix1</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;inix2&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_inix2</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;json&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_json</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;properties&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_properties</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;xml&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_xml</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;yaml&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_yaml</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_console</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span> <span class="nf">str_console</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates the string for standard display output.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        
+        <span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span>
+        <span class="n">offsetstr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">offsetchar</span>
+        <span class="n">indent</span> <span class="o">=</span> <span class="n">offset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">indent</span>
+        <span class="n">indentstr</span> <span class="o">=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentchar</span>
+        <span class="n">indentclip</span> <span class="o">=</span> <span class="n">indent</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentclip</span>
+        <span class="n">indentclipstr</span> <span class="o">=</span> <span class="n">indentstr</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentclip</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentclipchar</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">overflow</span> <span class="o">==</span> <span class="s1">&#39;clipmerge&#39;</span><span class="p">:</span>
+            <span class="c1"># the complete string</span>
+            <span class="n">resi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignchar</span> <span class="o">+</span> <span class="s1">&#39; &quot;&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathsepout</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">l0</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">resi</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">l0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxwidth</span><span class="p">:</span>
+                <span class="c1"># fits into current linen length</span>
+                <span class="k">return</span> <span class="n">resi</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+
+            <span class="c1">#</span>
+            <span class="c1"># needs clipping</span>
+            <span class="c1">#</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="n">resi</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">maxwidth</span> <span class="o">-</span> <span class="n">offset</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="c1"># + self.linesep</span>
+            <span class="n">plen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxwidth</span> <span class="o">-</span> <span class="n">indent</span>
+            <span class="n">lx</span> <span class="o">=</span> <span class="n">plen</span> <span class="o">+</span> <span class="n">offset</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># logically pushed back for an extra quote</span>
+            <span class="k">while</span> <span class="n">lx</span> <span class="o">&lt;</span> <span class="n">l0</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+                <span class="n">res</span> <span class="o">+=</span> <span class="n">indentstr</span> <span class="o">+</span> <span class="p">(</span>
+                    <span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="n">resi</span><span class="p">[</span><span class="n">lx</span> <span class="p">:</span> <span class="n">lx</span> <span class="o">+</span> <span class="n">plen</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>  <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+                    <span class="p">)</span> <span class="c1">#+ self.linesep</span>
+                <span class="n">lx</span> <span class="o">+=</span> <span class="n">plen</span> <span class="o">-</span> <span class="mi">2</span>
+            <span class="k">return</span> <span class="n">res</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+
+        <span class="n">res</span> <span class="o">+=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignchar</span> <span class="o">+</span> <span class="s1">&#39; [&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="n">resi</span> <span class="o">=</span> <span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+
+            <span class="n">l0</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">resi</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">overflow</span> <span class="o">==</span> <span class="s1">&#39;ignore&#39;</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">+=</span> <span class="n">indentstr</span> <span class="o">+</span> <span class="n">resi</span> <span class="o">+</span> <span class="s1">&#39;&quot;,&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+            <span class="k">elif</span> <span class="n">l0</span> <span class="o">&gt;</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maxwidth</span> <span class="o">-</span> <span class="n">indent</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">keepentry</span><span class="p">:</span>
+
+                <span class="n">plen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxwidth</span> <span class="o">-</span> <span class="n">indent</span>
+                <span class="n">res</span> <span class="o">+=</span> <span class="n">indentstr</span> <span class="o">+</span> <span class="n">resi</span><span class="p">[:</span><span class="n">plen</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">overflow</span> <span class="o">==</span> <span class="s1">&#39;cut&#39;</span><span class="p">:</span>
+                    <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;*&quot;&#39;</span>  <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+                    <span class="k">continue</span>
+
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">overflow</span> <span class="o">==</span> <span class="s1">&#39;clip&#39;</span><span class="p">:</span>
+                    <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>  <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+                    <span class="n">plen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxwidth</span> <span class="o">-</span> <span class="n">indentclip</span>
+                    <span class="n">lx</span> <span class="o">=</span> <span class="n">plen</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># extra quote</span>
+                    <span class="n">plen</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentclip</span>
+                    <span class="k">while</span> <span class="n">lx</span> <span class="o">&lt;</span> <span class="n">l0</span><span class="p">:</span>
+                        <span class="n">res</span> <span class="o">+=</span> <span class="n">indentclipstr</span> <span class="o">+</span> <span class="p">(</span>
+                            <span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="n">resi</span><span class="p">[</span><span class="n">lx</span> <span class="p">:</span> <span class="n">lx</span> <span class="o">+</span> <span class="n">plen</span><span class="p">]</span>  <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+                            <span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+                        <span class="n">lx</span> <span class="o">+=</span> <span class="n">plen</span>
+
+                <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linesep</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;&quot;,&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">+=</span> <span class="n">indentstr</span> <span class="o">+</span> <span class="n">resi</span> <span class="o">+</span> <span class="s1">&#39;&quot;,&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+
+        <span class="k">if</span> <span class="n">res</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span><span class="p">):</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span><span class="p">)]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesepfinal</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="s1">&#39;]&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="s1">&#39;]&#39;</span>
+
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">str_ini</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates the string for standard *INI* format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">offsetstr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">offsetchar</span>
+
+        <span class="c1"># the complete string</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesepfinal</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignchar</span> <span class="o">+</span> <span class="s1">&#39; &quot;&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathsepout</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>  <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignchar</span> <span class="o">+</span> <span class="s1">&#39; &quot;&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pathsepout</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>  <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">str_inix0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates the string for extended *INI* format </span>
+<span class="sd">        based on colon separated multi-line lists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">offsetstr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">offsetchar</span>
+        <span class="n">indentstr</span> <span class="o">=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentchar</span>
+
+        <span class="n">res</span> <span class="o">+=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignchar</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span> 
+            <span class="n">res</span> <span class="o">+=</span> <span class="n">indentstr</span> <span class="o">+</span> <span class="s1">&#39;:</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> 
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesepfinal</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">res</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">str_inix1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates the string for the extended *INI* format</span>
+<span class="sd">        based on multiple key repetition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">offsetstr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">offsetchar</span>
+
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="n">resi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignchar</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> 
+            <span class="n">res</span> <span class="o">+=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="n">resi</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesepfinal</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">res</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">res</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linesep</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">str_inix2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates the string for the extended *INI* format</span>
+<span class="sd">        based on multiple keys with incremented index extension.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">offsetstr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">offsetchar</span>
+
+        <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="n">resi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">assignchar</span> <span class="o">+</span> <span class="s1">&#39; </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> 
+            <span class="n">res</span> <span class="o">+=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="n">resi</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+            <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesepfinal</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">res</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">res</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linesep</span><span class="p">)]</span>
+
+    <span class="k">def</span> <span class="nf">str_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates the string for standard *INI* format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        
+        <span class="n">offsetstr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">offsetchar</span>
+        <span class="n">indentstr</span> <span class="o">=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentchar</span>
+
+        <span class="n">res</span> <span class="o">+=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;&quot;: [&#39;</span>
+        <span class="n">empty</span> <span class="o">=</span> <span class="kc">True</span> 
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="n">empty</span> <span class="o">=</span> <span class="kc">False</span> 
+            <span class="n">res</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+            <span class="n">resi</span> <span class="o">=</span> <span class="s1">&#39;&quot;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="n">indentstr</span> <span class="o">+</span> <span class="n">resi</span> <span class="o">+</span> <span class="s1">&#39;&quot;,&#39;</span>
+
+        <span class="k">if</span> <span class="n">empty</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span> <span class="o">+</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="s1">&#39;]&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span> <span class="o">+</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="s1">&#39;]&#39;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesepfinal</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">res</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">str_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates the string for standard *INI* format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        
+<span class="c1">#         self.assignchar = kargs.get(&quot;assignchar&quot;, &#39;=&#39;)</span>
+<span class="c1">#         self.format = kargs.get(&quot;format&quot;, &#39;print&#39;)</span>
+<span class="c1">#         self.indent = kargs.get(&quot;indent&quot;, 4)</span>
+<span class="c1">#         self.indent = kargs.get(&quot;indent&quot;, 4)</span>
+<span class="c1">#         self.indentchar = kargs.get(&quot;indentchar&quot;, &#39; &#39;)</span>
+<span class="c1">#        self.indentclip = kargs.get(&quot;indentclip&quot;, 2)</span>
+<span class="c1">#         self.keepentry = kargs.get(&quot;keepentry&quot;, True)</span>
+<span class="c1">#         self.keepentry = kargs.get(&quot;keepentry&quot;, True)</span>
+<span class="c1">#         self.linesep = kargs.get(&quot;linesep&quot;, os.linesep)</span>
+<span class="c1">#         self.maxwidth = kargs.get(&quot;maxwidth&quot;, 80)</span>
+<span class="c1">#         self.maxwidth = kargs.get(&quot;maxwidth&quot;, columns)</span>
+<span class="c1">#         self.offset = kargs.get(&quot;offset&quot;, 4)</span>
+<span class="c1">#         self.offsetchar = kargs.get(&quot;offsetchar&quot;, &#39; &#39;)</span>
+<span class="c1">#         self.overflow = kargs.get(&quot;overflow&quot;, &#39;clip&#39;)</span>
+<span class="c1">#         self.overflow = kargs.get(&quot;overflow&quot;, &#39;ignore&#39;)</span>
+<span class="c1">#         self.pathsepin = kargs.get(&quot;pathsepin&quot;, os.pathsep)</span>
+<span class="c1">#         self.pathsepout = kargs.get(&quot;pathsepout&quot;, os.pathsep)</span>
+<span class="c1">#         self.prefix = kargs.get(&quot;prefix&quot;, path.__name__)</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="nf">str_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates the string for standard *XML* format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        
+        <span class="n">offsetstr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">offsetchar</span>
+        <span class="n">indentstr</span> <span class="o">=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentchar</span>
+
+        <span class="n">res</span> <span class="o">+=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="s1">&#39;&lt;&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="n">resi</span> <span class="o">=</span> <span class="s1">&#39;&lt;entry idx=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;&lt;/entry&gt;&#39;</span> 
+            <span class="n">res</span> <span class="o">+=</span> <span class="n">indentstr</span> <span class="o">+</span> <span class="n">resi</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+            <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesepfinal</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="s1">&#39;&lt;/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span>  <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="s1">&#39;&lt;/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;&gt;&#39;</span>
+
+        <span class="k">return</span> <span class="n">res</span>
+
+
+    <span class="k">def</span> <span class="nf">str_yaml</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates the string for standard *INI* format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        
+        <span class="n">offsetstr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">offsetchar</span>
+        <span class="n">indentstr</span> <span class="o">=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">indent</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">indentchar</span>
+
+        <span class="n">res</span> <span class="o">+=</span> <span class="n">offsetstr</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="n">resi</span> <span class="o">=</span> <span class="s1">&#39;- &#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> 
+            <span class="n">res</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span> <span class="o">+</span> <span class="n">indentstr</span> <span class="o">+</span> <span class="n">resi</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesepfinal</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">res</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">linesep</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">res</span>
+        
+        <span class="k">return</span> <span class="n">res</span>
+
+<div class="viewcode-block" id="PPPathVar.__repr__"><a class="viewcode-back" href="../../pprint.html#filesysobjects.pprint.PPPathVar.__repr__">[docs]</a>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="../filesysobjects.html" >filesysobjects</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>filesysobjects.osdata &mdash; filesysobjects 0.1.34 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1.34',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="filesysobjects 0.1.34 documentation" href="../../index.html" />
+    <link rel="up" title="filesysobjects" href="../filesysobjects.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="../filesysobjects.html" accesskey="U">filesysobjects</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for filesysobjects.osdata</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;The filesysobjects.osdata module provides information on OS data locations.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pysourceinfo.fileinfo</span> <span class="k">import</span> <span class="n">getcaller_package_filename</span>
+
+<span class="kn">from</span> <span class="nn">filesysobjects</span> <span class="k">import</span> <span class="n">FileSysObjectsError</span>
+<span class="kn">from</span> <span class="nn">filesysobjects</span> <span class="k">import</span> <span class="n">RTE</span><span class="p">,</span> <span class="n">RTE_CYGWIN</span><span class="p">,</span> <span class="n">RTE_DARWIN</span><span class="p">,</span> <span class="n">RTE_LINUX</span><span class="p">,</span> \
+    <span class="n">RTE_WIN32</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Arno-Can Uestuensoez&#39;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;Artistic-License-2.0 + Forced-Fairplay-Constraints&quot;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s2">&quot;Copyright (C) 2010-2016 Arno-Can Uestuensoez&quot;</span> \
+                <span class="s2">&quot;@Ingenieurbuero Arno-Can Uestuensoez&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1.20&#39;</span>
+<span class="n">__uuid__</span> <span class="o">=</span> <span class="s2">&quot;4135ab0f-fbb8-45a2-a6b1-80d96c164b72&quot;</span>
+
+<span class="n">__docformat__</span> <span class="o">=</span> <span class="s2">&quot;restructuredtext en&quot;</span>
+
+
+<div class="viewcode-block" id="OsDataError"><a class="viewcode-back" href="../../osdata.html#filesysobjects.osdata.OsDataError">[docs]</a><span class="k">class</span> <span class="nc">OsDataError</span><span class="p">(</span><span class="n">FileSysObjectsError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="getdir_osconfigdata"><a class="viewcode-back" href="../../osdata.html#filesysobjects.osdata.getdir_osconfigdata">[docs]</a><span class="k">def</span> <span class="nf">getdir_osconfigdata</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Gets data directory for configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">RTE_WIN32</span> <span class="o">|</span> <span class="n">RTE_CYGWIN</span><span class="p">):</span>
+        <span class="c1"># ALLUSERSPROFILE=C:\ProgramData</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;ALLUSERSPROFILE&#39;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_LINUX</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;/etc&#39;</span>
+    <span class="k">elif</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_DARWIN</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;/etc&#39;</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># eventually may not yet work if not unix</span>
+        <span class="k">return</span> <span class="s1">&#39;/etc&#39;</span></div>
+
+
+<div class="viewcode-block" id="getdir_osappconfigdata"><a class="viewcode-back" href="../../osdata.html#filesysobjects.osdata.getdir_osappconfigdata">[docs]</a><span class="k">def</span> <span class="nf">getdir_osappconfigdata</span><span class="p">(</span><span class="n">appname</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gets configuration directory for applications.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">appname</span><span class="p">:</span>
+        <span class="n">appname</span> <span class="o">=</span> <span class="n">getcaller_package_filename</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">RTE_WIN32</span> <span class="o">|</span> <span class="n">RTE_CYGWIN</span><span class="p">):</span>
+        <span class="c1"># CommonProgramFiles=C:\Program Files\Common Files</span>
+        <span class="c1"># CommonProgramFiles(x86)=C:\Program Files (x86)\Common Files</span>
+        <span class="c1"># CommonProgramW6432=C:\Program Files\Common Files</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CommonProgramFiles&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">appname</span>
+    <span class="k">elif</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_LINUX</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;/etc/&#39;</span> <span class="o">+</span> <span class="n">appname</span>
+    <span class="k">elif</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_DARWIN</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;/etc/&#39;</span> <span class="o">+</span> <span class="n">appname</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># eventually may not yet work if not unix</span>
+        <span class="k">return</span> <span class="s1">&#39;/etc/&#39;</span> <span class="o">+</span> <span class="n">appname</span></div>
+
+
+<div class="viewcode-block" id="getdir_osappdata"><a class="viewcode-back" href="../../osdata.html#filesysobjects.osdata.getdir_osappdata">[docs]</a><span class="k">def</span> <span class="nf">getdir_osappdata</span><span class="p">(</span><span class="n">appname</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Gets data directory for applications.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">appname</span><span class="p">:</span>
+        <span class="n">appname</span> <span class="o">=</span> <span class="n">getcaller_package_filename</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">RTE_WIN32</span> <span class="o">|</span> <span class="n">RTE_CYGWIN</span><span class="p">):</span>
+        <span class="c1"># CommonProgramFiles=C:\Program Files\Common Files</span>
+        <span class="c1"># CommonProgramFiles(x86)=C:\Program Files (x86)\Common Files</span>
+        <span class="c1"># CommonProgramW6432=C:\Program Files\Common Files</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CommonProgramFiles&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span> <span class="o">+</span> <span class="n">appname</span>
+    <span class="k">elif</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_LINUX</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;/etc/&#39;</span> <span class="o">+</span> <span class="n">appname</span>
+    <span class="k">elif</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_DARWIN</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;/etc/&#39;</span> <span class="o">+</span> <span class="n">appname</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># eventually may not yet work if not unix</span>
+        <span class="k">return</span> <span class="s1">&#39;/etc/&#39;</span> <span class="o">+</span> <span class="n">appname</span></div>
+
+<span class="k">def</span> <span class="nf">getdir_ospath</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Gets standard data directories for executables.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">RTE_WIN32</span> <span class="o">|</span> <span class="n">RTE_CYGWIN</span><span class="p">):</span>
+        <span class="c1"># CommonProgramFiles=C:\Program Files\Common Files</span>
+        <span class="c1"># CommonProgramFiles(x86)=C:\Program Files (x86)\Common Files</span>
+        <span class="c1"># CommonProgramW6432=C:\Program Files\Common Files</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CommonProgramFiles&#39;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_LINUX</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;/etc&#39;</span>
+    <span class="k">elif</span> <span class="n">RTE</span> <span class="o">&amp;</span> <span class="n">RTE_DARWIN</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;/etc&#39;</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># eventually may not yet work if not unix</span>
+        <span class="k">return</span> <span class="s1">&#39;/etc&#39;</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/pyfilesysobjects-64x64.png" alt="Logo"/>
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">filesysobjects 0.1.34 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="../filesysobjects.html" >filesysobjects</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2018, Arno-Can Uestuensoez.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.5.
+    </div>
+  </body>
+</html>
